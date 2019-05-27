@@ -5,17 +5,17 @@ https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
 
-# Always prefer setuptools over distutils
-from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
 from os import path
+# Always prefer setuptools over distutils
+from setuptools import setup, find_packages
 
-here = path.abspath(path.dirname(__file__))
+HERE = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+with open(path.join(HERE, 'README.md'), encoding='utf-8') as f:
+    LONG_DESCRIPTION = f.read()
 
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
@@ -24,7 +24,7 @@ setup(
     name='saturnin',
     version= '0.1',
     description='Reference implementation of selected Firebird Butler services in Python',
-    long_description=long_description,
+    long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     url='https://github.com/FirebirdSQL/saturnin',
     author='Pavel Císař',
@@ -45,6 +45,8 @@ setup(
         'Operating System :: Microsoft :: Windows',
         'Operating System :: MacOS',
 
+        'Framework :: Saturnin SDK',
+
         'Topic :: Database',
         'Topic :: System :: Systems Administration',
         'Topic :: System :: Monitoring',
@@ -52,14 +54,20 @@ setup(
 ],
     keywords='Firebird Butler Services ZeroMQ',  # Optional
     packages=find_packages(),  # Required
-    install_requires=[],  # Optional
-    python_requires='>=3.0, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4',
+    install_requires=['pyzmq>=18.0.0', 'protobuf>=3.6.1', 'saturnin-sdk>=0.3'],  # Optional
+    python_requires='>=3.6, <4',
     test_suite='nose.collector',
     data_files=[],
+    namespace_packages=['saturnin'],
     project_urls={
-        #'Documentation': 'http://fdb2.readthedocs.io/en/latest/',
+        'Documentation': 'http://saturnin.readthedocs.io/en/latest/',
         'Bug Reports': 'https://github.com/FirebirdSQL/saturnin/issues',
         'Funding': 'https://www.firebirdsql.org/en/donate/',
         'Source': 'https://github.com/FirebirdSQL/saturnin',
     },
+    entry_points={'console_scripts': ['saturnin-node = saturnin.service.node.runner:main',
+                                     ],
+                  'saturnin.service': ['saturnin-node = saturnin.service.node.api:SERVICE_DESCRIPTION',
+                                      ],
+                 }
 )

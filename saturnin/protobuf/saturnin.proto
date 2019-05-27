@@ -1,0 +1,82 @@
+// Protocol Buffers for Saturnin
+// Copyright 2019 Firebird Project.  All rights reserved.
+// https://www.firebirdsql.org/
+// https://saturnin.rtfd.io
+//
+// License: The MIT License
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom
+// the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto3";
+
+package firebird.saturnin;
+
+option csharp_namespace = "Saturnin";
+option java_package = "org.firebird.saturnin";
+option java_outer_classname = "SaturninProto";
+option java_multiple_files = true;
+option objc_class_prefix = "SPB";
+
+import "google/protobuf/any.proto";
+// import "google/protobuf/struct.proto";
+import public "saturnin/sdk/fbsp.proto";
+
+// Dependency type enumeration
+
+enum DependencyType {
+  UNKNOWN = 0 ;
+  REQUIRED = 1 ;
+  PREFERRED = 2 ;
+  OPTIONAL = 3 ;
+}
+
+// Dependency
+
+message Dependency {
+  DependencyType type = 1 ;
+  bytes uid           = 2 ; // Interface uid
+}
+
+// Interface
+
+message RequestCode {
+  uint32 code = 1 ;
+  string name = 2 ;
+}
+
+message InterfaceDescriptor {
+  bytes uid                     = 1 ; // Unique interface ID (uuid5 - SHA1, namespace OID)
+  string name                   = 2 ; // Interface name
+  uint32 revision               = 3 ; // Revision number
+  repeated RequestCode requests = 4 ; // Request codes
+}
+
+// Installed service specification
+
+message InstalledService {
+  firebird.butler.AgentIdentification agent = 1 ;
+  repeated InterfaceDescriptor api          = 2 ;
+  repeated Dependency dependencies          = 3 ; // List of dependencies
+  repeated google.protobuf.Any supplement   = 4 ; // additional information about service
+}
+

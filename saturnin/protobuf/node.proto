@@ -1,0 +1,97 @@
+// Protocol Buffers for Saturnin Node Service
+// Copyright 2019 Firebird Project.  All rights reserved.
+// https://www.firebirdsql.org/
+// https://saturnin.rtfd.io
+//
+// License: The MIT License
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom
+// the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto3";
+
+package firebird.saturnin.service.node;
+
+option csharp_namespace = "Saturnin.Service.Node";
+option java_package = "org.firebird.saturnin.node";
+option java_outer_classname = "SaturninNodeProto";
+option java_multiple_files = true;
+option objc_class_prefix = "SNodePB";
+
+//import "google/protobuf/any.proto";
+//import "google/protobuf/struct.proto";
+import "saturnin/protobuf/saturnin.proto";
+
+// Enums
+
+// Service start mode
+
+enum StartMode {
+  DEFAULT = 0 ;
+  THREAD  = 1 ;
+  PROCESS = 2 ;
+}
+
+// INSTALLED_SERVICES Message Data
+
+message ReplyInstalledServices {
+  repeated saturnin.InstalledService services = 1 ;
+}
+
+// RUNNING_SERVICES Message Data
+
+message RunningService {
+  firebird.butler.PeerIdentification peer   = 1 ; // Peer description
+  firebird.butler.AgentIdentification agent = 2 ; // Agent description
+  StartMode mode                            = 3 ; // Service start mode
+  repeated string endpoints                 = 4 ; // ZMQ endpoints used by service
+}
+
+message ReplyRunningServices {
+  repeated RunningService services = 1 ;
+}
+
+// INTERFACE_PROVIDERS Message Data
+
+message RequestInterfaceProviders {
+  bytes interface_uid = 1 ; // Interface ID (uuid5 - SHA1, namespace OID)
+}
+
+message ReplyInterfaceProviders {
+  repeated bytes agent_uid = 1 ; // Agent ID (uuid5 - SHA1, namespace OID)
+}
+
+// START_SERVICE Message Data
+
+message RequestStartService {
+  bytes agent_uid           = 1 ; // Agent ID (uuid5 - SHA1, namespace OID)
+  StartMode mode            = 2 ; // Service start mode
+  repeated string endpoints = 3 ; // ZMQ endpoints that service should use, could be empty
+  uint32 timeout            = 4 ; // Timeout in milliseconds, zero means default timeout
+  bool multiinstance        = 5 ; // Start new service instance even if some instance is already running
+}
+
+message ReplyStartService {
+  bytes peer_uid            = 1 ; // Peer ID assigned to service (uuid1)
+  StartMode mode            = 2 ; // Service start mode (THREAD or PROCESS)
+  repeated string endpoints = 3 ; // ZMQ endpoints that service actually uses
+}
