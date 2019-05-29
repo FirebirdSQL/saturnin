@@ -393,27 +393,23 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
             timeout: int = START_TIMEOUT if dframe.timeout == 0 else dframe.timeout
             svc.start(dframe.endpoints, timeout)
         except SaturninError as exc:
-            errmsg = self.protocol.create_error_for(msg, ErrorCode.INTERNAL_SERVICE_ERROR)
+            errmsg = self.protocol.create_error_for(msg, ErrorCode.ERROR)
             errdesc = errmsg.add_error()
-            errdesc.code = 1
             errdesc.description = str(exc)
             self.send(errmsg, session)
         except ValueError as exc:
-            errmsg = self.protocol.create_error_for(msg, ErrorCode.INTERNAL_SERVICE_ERROR)
+            errmsg = self.protocol.create_error_for(msg, ErrorCode.NOT_FOUND)
             errdesc = errmsg.add_error()
-            errdesc.code = 1
             errdesc.description = str(exc)
             self.send(errmsg, session)
         except TimeoutError:
             errmsg = self.protocol.create_error_for(msg, ErrorCode.REQUEST_TIMEOUT)
             errdesc = errmsg.add_error()
-            errdesc.code = 1
             errdesc.description = str(exc)
             self.send(errmsg, session)
         except Exception as exc:
             errmsg = self.protocol.create_error_for(msg, ErrorCode.INTERNAL_SERVICE_ERROR)
             errdesc = errmsg.add_error()
-            errdesc.code = 1
             errdesc.description = str(exc)
             self.send(errmsg, session)
         else:
