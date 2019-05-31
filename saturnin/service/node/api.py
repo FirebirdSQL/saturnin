@@ -61,17 +61,25 @@ SERVICE_VERSION: str = '0.1'
 NODE_INTERFACE_OID: str = '1.3.6.1.4.1.53446.1.1.1.0' # firebird.butler.service.node.interface
 NODE_INTERFACE_UID: UUID = uuid5(NAMESPACE_OID, NODE_INTERFACE_OID)
 
-#  Request Codes
+#  Enums (Request and Error Codes)
 
-class SaturninNodeRequest(IntEnum):
+class NodeRequest(IntEnum):
     "Saturnin Node Service Request Code"
     INSTALLED_SERVICES = 1
     RUNNING_SERVICES = 2
     INTERFACE_PROVIDERS = 3
     START_SERVICE = 4
     STOP_SERVICE = 5
-    REQUEST_PROVIDER = 6
+    GET_PROVIDER = 6
     SHUTDOWN = 7
+
+class NodeError(IntEnum):
+    "Saturnin Node Service Error Code"
+    ALREADY_RUNNING = 1
+    START_FAILED = 2
+    TERMINATION_FAILED = 3
+    UNCERTAIN_RESULT = 4
+    RESOURCE_NOT_AVAILABLE = 5
 
 #  Service description
 
@@ -79,10 +87,10 @@ SERVICE_AGENT = AgentDescriptor(SERVICE_UID,
                                 "saturnin-node",
                                 SERVICE_VERSION,
                                 VENDOR_UID,
-                                "saturnin/runtime",
+                                "system/runtime",
                                )
 SERVICE_INTERFACE = InterfaceDescriptor(NODE_INTERFACE_UID, "Saturnin Node service API", 1,
-                                        SaturninNodeRequest)
+                                        NodeRequest)
 SERVICE_API = [SERVICE_INTERFACE]
 
 SERVICE_DESCRIPTION = ServiceDescriptor(SERVICE_AGENT, SERVICE_API, [],

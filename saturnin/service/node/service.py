@@ -41,15 +41,15 @@ Supported requests:
     :INSTALLED_SERVICES:  REPLY with list of installed services available for execution on the node.
     :RUNNING_SERVICES:    REPLY with list of services actually running on the node.
     :INTERFACE_PROVIDERS: REPLY with list of services that provide specified interface.
-    :START_SERVICE:       Start service on node.
-    :STOP_SERVICE:        Stop service running on node.
-    :REQUEST_PROVIDER:    REPLY with address for most efficient connection to the servie
+    :START_SERVICE:       Start service on node. REPLY with service instance information.
+    :STOP_SERVICE:        Stop service running on node. REPLY with stop state.
+    :GET_PROVIDER:        REPLY with address for most efficient connection to the servie
                           that provides specified interface. Starts the service if necessary.
     :SHUTDOWN:            Shuts down the NODE service.
 """
 
 import logging
-from typing import Any, Optional, Dict
+from typing import Any, Optional, Dict, List
 from uuid import uuid1, UUID
 from os import getpid
 import ctypes
@@ -57,17 +57,19 @@ import platform
 import threading
 import multiprocessing
 import zmq
+from functools import reduce
 from pkg_resources import iter_entry_points
-from saturnin.sdk.types import SaturninError, ServiceError, InvalidMessageError, MsgType, \
-     ErrorCode, TService, TSession, TServiceImpl, TChannel, ZMQAddressList, PeerDescriptor, \
+from saturnin.sdk.types import ServiceError, InvalidMessageError, MsgType, ErrorCode, \
+     TService, TSession, TServiceImpl, TChannel, ZMQAddressList, PeerDescriptor, \
      ServiceDescriptor, ExecutionMode
-from saturnin.service.node.api import SaturninNodeRequest, SERVICE_AGENT, SERVICE_API, \
-     NODE_INTERFACE_UID
 from saturnin.sdk.base import BaseChannel, BaseService, load
 from saturnin.sdk.service import SimpleServiceImpl
 from saturnin.sdk.fbsp import ServiceMessagelHandler, HelloMessage, \
-     CancelMessage, RequestMessage, bb2h
+     CancelMessage, RequestMessage, bb2h, note_exception
+from saturnin.sdk import fbsp_pb2 as fbsp_pb
 from saturnin.protobuf import node_pb2 as pb
+from .api import NodeRequest, NodeError, SERVICE_AGENT, SERVICE_API, \
+     NODE_INTERFACE_UID
 
 # Logger
 
@@ -75,7 +77,7 @@ log = logging.getLogger(__name__)
 
 # Constants
 
-START_TIMEOUT = 5000
+DEFAULT_TIMEOUT = 5000
 
 # Functions
 
@@ -135,6 +137,7 @@ Attributes:
     :descriptor: Service descriptor.
     :mode:       Service execution mode.
     :remotes:    Dictionary that maps interface ID to service address.
+    :peer:       PeerDescriptor for running services or None
     :runtime:    None, or threading.Thread or multiprocessing.Process instance.
 """
     def __init__(self, svc_descriptor: ServiceDescriptor,
@@ -165,7 +168,7 @@ Attributes:
         # It's dead, so dispose the runtime
         self.runtime = None
         return False
-    def start(self, endpoints: ZMQAddressList, timeout=START_TIMEOUT):
+    def start(self, timeout=DEFAULT_TIMEOUT):
         """Start the service.
 
 If `mode` is ANY or THREAD, the service is executed in it's own thread. Otherwise it is
@@ -175,11 +178,11 @@ Arguments:
     :timeout: The timeout (in milliseconds) to wait for service to start [Default: 5000].
 
 Raises:
-    :SaturninError: The service is already running.
+    :ServiceError: The service is already running.
     :TimeoutError:  The service did not start on time.
 """
         if self.is_running():
-            raise SaturninError("The service is already running")
+            raise ServiceError("The service is already running", code=NodeError.ALREADY_RUNNING)
         ctx = zmq.Context.instance()
         pipe = ctx.socket(zmq.DEALER)
         uid = bytes(uuid1().hex, 'ascii')
@@ -219,7 +222,7 @@ Raises:
                     self.peer = msg
                 else: # Exception
                     msg = pipe.recv_pyobj()
-                    raise ServiceError("Service start failed") from msg
+                    raise ServiceError("Service start failed", code=NodeError.START_FAILED) from msg
         finally:
             pipe.LINGER = 0
             pipe.close()
@@ -247,23 +250,26 @@ Terminate should be called ONLY when call to stop() (with sensible timeout) fail
 Does nothing when service is not running.
 
 Raises:
-    :SaturninError:  When service termination fails.
+    :ServiceError:  When service termination fails.
 """
         if self.is_running():
             tid = ctypes.c_long(self.runtime.ident)
             if isinstance(self.runtime, threading.Thread):
                 res = ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, ctypes.py_object(SystemExit))
                 if res == 0:
-                    raise SaturninError("Service termination failed due to invalid thread ID.")
+                    raise ServiceError("Service termination failed due to invalid thread ID.",
+                                        code=NodeError.TERMINATION_FAILED)
                 elif res != 1:
                     # if it returns a number greater than one, you're in trouble,
                     # and you should call it again with exc=NULL to revert the effect
                     ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, None)
-                    raise SaturninError("Service termination failed due to PyThreadState_SetAsyncExc failure")
+                    raise ServiceError("Service termination failed due to PyThreadState_SetAsyncExc failure",
+                                       code=NodeError.TERMINATION_FAILED)
             elif isinstance(self.runtime, multiprocessing.Process):
                 self.runtime.terminate()
             else:
-                raise SaturninError("Service termination faileddue to invalid runtime.")
+                raise ServiceError("Service termination failed - invalid runtime.",
+                                   code=NodeError.TERMINATION_FAILED)
     uid: UUID = property(fget=lambda self: self.__peer_uid, doc="Peer ID")
     agent_uid: UUID = property(fget=lambda self: self.descriptor.agent.uid, doc="Agent ID")
     name: str = property(fget=lambda self: self.descriptor.agent.name, doc="Service name")
@@ -274,36 +280,44 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
     def __init__(self, chn: TChannel, service: TServiceImpl):
         super().__init__(chn, service)
         # Our message handlers
-        self.handlers.update({(MsgType.REQUEST, bb2h(1, SaturninNodeRequest.INSTALLED_SERVICES)):
+        self.handlers.update({(MsgType.REQUEST, bb2h(1, NodeRequest.INSTALLED_SERVICES)):
                               self.on_installed,
-                              (MsgType.REQUEST, bb2h(1, SaturninNodeRequest.RUNNING_SERVICES)):
+                              (MsgType.REQUEST, bb2h(1, NodeRequest.RUNNING_SERVICES)):
                               self.on_running,
-                              (MsgType.REQUEST, bb2h(1, SaturninNodeRequest.INTERFACE_PROVIDERS)):
+                              (MsgType.REQUEST, bb2h(1, NodeRequest.INTERFACE_PROVIDERS)):
                               self.on_providers,
-                              (MsgType.REQUEST, bb2h(1, SaturninNodeRequest.START_SERVICE)):
+                              (MsgType.REQUEST, bb2h(1, NodeRequest.START_SERVICE)):
                               self.on_start,
-                              (MsgType.REQUEST, bb2h(1, SaturninNodeRequest.STOP_SERVICE)):
+                              (MsgType.REQUEST, bb2h(1, NodeRequest.STOP_SERVICE)):
                               self.on_stop,
-                              (MsgType.REQUEST, bb2h(1, SaturninNodeRequest.REQUEST_PROVIDER)):
-                              self.on_req_provider,
-                              (MsgType.REQUEST, bb2h(1, SaturninNodeRequest.SHUTDOWN)):
+                              (MsgType.REQUEST, bb2h(1, NodeRequest.GET_PROVIDER)):
+                              self.on_get_provider,
+                              (MsgType.REQUEST, bb2h(1, NodeRequest.SHUTDOWN)):
                               self.on_shutdown,
                               MsgType.DATA: self.send_protocol_violation,
                              })
+    def get_providers(self, interface_uid: bytes) -> List[ServiceDescriptor]:
+        """Returns list of ServiceDescriptors of services that implement interface."""
+        result = []
+        for svc_desc in (svc for svc in self.impl.installed_services):
+            for api in svc_desc.api:
+                if api.uid.bytes == interface_uid:
+                    result.append(svc_desc)
+        return result
     def on_invalid_message(self, session: TSession, exc: InvalidMessageError):
         "Invalid Message event."
         log.error("%s.on_invalid_message(%s/%s)", self.__class__.__name__,
                   session.routing_id, exc)
-        raise ServiceError("Invalid message") from exc
+        raise InvalidMessageError("Invalid message") from exc
     def on_invalid_greeting(self, exc: InvalidMessageError):
         "Invalid Greeting event."
         log.error("%s.on_invalid_greeting(%s)", self.__class__.__name__, exc)
-        raise ServiceError("Invalid Greeting") from exc
+        raise InvalidMessageError("Invalid Greeting") from exc
     def on_dispatch_error(self, session: TSession, exc: Exception):
         "Exception unhandled by `dispatch()`."
         log.error("%s.on_dispatch_error(%s/%s)", self.__class__.__name__,
                   session.routing_id, exc)
-        raise ServiceError("Unhandled exception") from exc
+        raise ServiceError("Unexpected exception") from exc
     def on_hello(self, session: TSession, msg: HelloMessage):
         "HELLO message handler. Sends WELCOME message back to the client."
         log.debug("%s.on_hello(%s)", self.__class__.__name__, session.routing_id)
@@ -327,7 +341,7 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
         dframe = pb.ReplyInstalledServices()
         for svc_desc in (svc for svc in self.impl.installed_services):
             svc_data = dframe.services.add()
-            #  Agent
+            # Agent
             svc_data.agent.uid = svc_desc.agent.uid.bytes
             svc_data.agent.name = svc_desc.agent.name
             svc_data.agent.version = svc_desc.agent.version
@@ -335,7 +349,7 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
             svc_data.agent.platform.uid = svc_desc.agent.platform_uid.bytes
             svc_data.agent.platform.version = svc_desc.agent.platform_version
             svc_data.agent.classification = svc_desc.agent.classification
-            #  API
+            # API
             for api in svc_desc.api:
                 api_pb = svc_data.api.add()
                 api_pb.uid = api.uid.bytes
@@ -358,7 +372,26 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
 """
         log.debug("%s.on_running(%s)", self.__class__.__name__, session.routing_id)
         reply = self.protocol.create_reply_for(msg)
-        # create reply data frames
+        dframe = pb.ReplyRunningServices()
+        for svc in self.impl.services.values():
+            if svc.is_running():
+                svc_data = dframe.services.add()
+                # Peer
+                svc_data.peer.uid = svc.peer.uid.bytes
+                svc_data.peer.pid = svc.peer.pid
+                svc_data.peer.host = svc.peer.host
+                # Agent
+                svc_data.agent.uid = svc.descriptor.agent.uid.bytes
+                svc_data.agent.name = svc.descriptor.agent.name
+                svc_data.agent.version = svc.descriptor.agent.version
+                svc_data.agent.vendor.uid = svc.descriptor.agent.vendor_uid.bytes
+                svc_data.agent.platform.uid = svc.descriptor.agent.platform_uid.bytes
+                svc_data.agent.platform.version = svc.descriptor.agent.platform_version
+                svc_data.agent.classification = svc.descriptor.agent.classification
+                # Rest
+                svc_data.mode = svc.mode.value
+                svc_data.endpoints.extend(svc.endpoints)
+        reply.data.append(dframe.SerializeToString())
         self.send(reply, session)
     def on_providers(self, session: TSession, msg: RequestMessage):
         """Handle REQUEST/INTERFACE_PROVIDERS message.
@@ -367,13 +400,11 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
         dframe = pb.RequestInterfaceProviders()
         dframe.ParseFromString(msg.data[0])
         interface_uid = dframe.interface_uid
+        # create reply
         reply = self.protocol.create_reply_for(msg)
-        # create reply data frames
         dframe = pb.ReplyInterfaceProviders()
-        for svc_desc in (svc for svc in self.impl.installed_services):
-            for api in svc_desc.api:
-                if api.uid.bytes == interface_uid:
-                    dframe.agent_uid.append(svc_desc.agent.uid.bytes)
+        for svc_desc in self.get_providers(interface_uid):
+            dframe.agent_uids.append(svc_desc.agent.uid.bytes)
         reply.data.append(dframe.SerializeToString())
         self.send(reply, session)
     def on_start(self, session: TSession, msg: RequestMessage):
@@ -384,33 +415,32 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
         svc: NodeService
         dframe = pb.RequestStartService()
         dframe.ParseFromString(msg.data[0])
-        agent_uid = UUID(bytes=dframe.agent_uid)
         try:
-            svc_desc = self.impl.get_service(agent_uid)
-            if dframe.multiinstance and self.impl.is_running(agent_uid):
-                raise SaturninError("Service %s is already running" % agent_uid)
+            agent_uid = UUID(bytes=dframe.agent_uid)
+            svc_desc = self.impl.get_service_descriptor(agent_uid)
+            if not dframe.multiinstance and self.impl.is_running(agent_uid):
+                raise ServiceError("Service %s is already running" % agent_uid,
+                                   code=NodeError.ALREADY_RUNNING)
             svc = self.impl.add_service(svc_desc, ExecutionMode(dframe.mode))
-            timeout: int = START_TIMEOUT if dframe.timeout == 0 else dframe.timeout
-            svc.start(dframe.endpoints, timeout)
-        except SaturninError as exc:
-            errmsg = self.protocol.create_error_for(msg, ErrorCode.ERROR)
-            errdesc = errmsg.add_error()
-            errdesc.description = str(exc)
-            self.send(errmsg, session)
-        except ValueError as exc:
+            timeout: int = DEFAULT_TIMEOUT if dframe.timeout == 0 else dframe.timeout
+            if dframe.endpoints:
+                svc.endpoints = dframe.endpoints
+            svc.start(timeout)
+        except ValueError as exc: # Service not installed
             errmsg = self.protocol.create_error_for(msg, ErrorCode.NOT_FOUND)
-            errdesc = errmsg.add_error()
-            errdesc.description = str(exc)
+            note_exception(errmsg, exc)
             self.send(errmsg, session)
-        except TimeoutError:
+        except TimeoutError as exc:
             errmsg = self.protocol.create_error_for(msg, ErrorCode.REQUEST_TIMEOUT)
-            errdesc = errmsg.add_error()
-            errdesc.description = str(exc)
+            note_exception(errmsg, exc)
             self.send(errmsg, session)
-        except Exception as exc:
+        except ServiceError as exc: # Expected error condition
+            errmsg = self.protocol.create_error_for(msg, ErrorCode.ERROR)
+            note_exception(errmsg, exc)
+            self.send(errmsg, session)
+        except Exception as exc: # Unexpected error condition
             errmsg = self.protocol.create_error_for(msg, ErrorCode.INTERNAL_SERVICE_ERROR)
-            errdesc = errmsg.add_error()
-            errdesc.description = str(exc)
+            note_exception(errmsg, exc)
             self.send(errmsg, session)
         else:
             # all ok, create reply
@@ -425,23 +455,114 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
         """Handle REQUEST/STOP_SERVICE message.
 """
         log.debug("%s.on_stop(%s)", self.__class__.__name__, session.routing_id)
-        reply = self.protocol.create_reply_for(msg)
-        # create reply
-        self.send(reply, session)
-    def on_req_provider(self, session: TSession, msg: RequestMessage):
-        """Handle REQUEST/REQUEST_PROVIDER message.
+        svc: NodeService
+        dframe = pb.RequestStopService()
+        dframe.ParseFromString(msg.data[0])
+        try:
+            peer_uid = UUID(bytes=dframe.peer_uid)
+            timeout: int = DEFAULT_TIMEOUT if dframe.timeout == 0 else dframe.timeout
+            svc = self.impl.services[peer_uid]
+            svc.stop(timeout)
+        except ValueError as exc: # Service instance not found
+            errmsg = self.protocol.create_error_for(msg, ErrorCode.NOT_FOUND)
+            note_exception(errmsg, exc)
+            self.send(errmsg, session)
+        except TimeoutError as exc: # Service did not stop on time
+            if not dframe.forced:
+                errmsg = self.protocol.create_error_for(msg, ErrorCode.REQUEST_TIMEOUT)
+                note_exception(errmsg, exc)
+                self.send(errmsg, session)
+            else:
+                try:
+                    svc.terminate()
+                except ServiceError as exc: # Expected error condition
+                    errmsg = self.protocol.create_error_for(msg, ErrorCode.ERROR)
+                    note_exception(errmsg, exc)
+                    self.send(errmsg, session)
+                except Exception as exc: # Unexpected error condition
+                    errmsg = self.protocol.create_error_for(msg, ErrorCode.INTERNAL_SERVICE_ERROR)
+                    note_exception(errmsg, exc)
+                    self.send(errmsg, session)
+                else:
+                    # all ok, create reply
+                    reply = self.protocol.create_reply_for(msg)
+                    dframe = pb.ReplyStopService()
+                    dframe.result = fbsp_pb.TERMINATED
+                    reply.data.append(dframe.SerializeToString())
+                    self.send(reply, session)
+        except ServiceError as exc: # Expected error condition
+            errmsg = self.protocol.create_error_for(msg, ErrorCode.ERROR)
+            note_exception(errmsg, exc)
+            self.send(errmsg, session)
+        except Exception as exc: # Unexpected error condition
+            errmsg = self.protocol.create_error_for(msg, ErrorCode.INTERNAL_SERVICE_ERROR)
+            note_exception(errmsg, exc)
+            self.send(errmsg, session)
+        else:
+            # all ok, create reply
+            reply = self.protocol.create_reply_for(msg)
+            dframe = pb.ReplyStopService()
+            dframe.result = fbsp_pb.STOPPED
+            reply.data.append(dframe.SerializeToString())
+            self.send(reply, session)
+            self.impl.on_idle()
+    def on_get_provider(self, session: TSession, msg: RequestMessage):
+        """Handle REQUEST/GET_PROVIDER message.
 """
-        log.debug("%s.on_req_provider(%s)", self.__class__.__name__, session.routing_id)
-        reply = self.protocol.create_reply_for(msg)
+        log.debug("%s.on_get_provider(%s)", self.__class__.__name__, session.routing_id)
+        dframe = pb.RequestGetProvider()
+        dframe.ParseFromString(msg.data[0])
+        interface_uid = dframe.interface_uid
+        endpoint = ''
         # create reply
-        self.send(reply, session)
+        try:
+            providers = self.get_providers(interface_uid)
+            if len(providers) != 1:
+                raise ServiceError("Multiple providers available",
+                                   code=NodeError.UNCERTAIN_RESULT)
+            agent_uid = providers[0].agent.uid
+            running_svc = None
+            for svc in self.impl.services.values():
+                if svc.is_running() and svc.agent_uid == agent_uid:
+                    running_svc = svc
+            if not running_svc:
+                if not dframe.required:
+                    raise ServiceError("Provider is not running",
+                                       code=NodeError.RESOURCE_NOT_AVAILABLE)
+                running_svc = self.impl.add_service(providers[0], ExecutionMode.ANY)
+                running_svc.start(DEFAULT_TIMEOUT)
+            endpoint = get_best_endpoint(running_svc.endpoints, ExecutionMode.THREAD,
+                                         running_svc.mode)
+            if not endpoint:
+                raise ServiceError("Provider has no accessible endpoint",
+                                   code=NodeError.RESOURCE_NOT_AVAILABLE)
+        except TimeoutError as exc:
+            errmsg = self.protocol.create_error_for(msg, ErrorCode.REQUEST_TIMEOUT)
+            note_exception(errmsg, exc)
+            self.send(errmsg, session)
+        except ServiceError as exc: # Expected error condition
+            errmsg = self.protocol.create_error_for(msg, ErrorCode.ERROR)
+            note_exception(errmsg, exc)
+            self.send(errmsg, session)
+        except Exception as exc: # Unexpected error condition
+            errmsg = self.protocol.create_error_for(msg, ErrorCode.INTERNAL_SERVICE_ERROR)
+            note_exception(errmsg, exc)
+            self.send(errmsg, session)
+        else:
+            reply = self.protocol.create_reply_for(msg)
+            dframe = pb.ReplyGetProvider()
+            dframe.endpoint = endpoint
+            reply.data.append(dframe.SerializeToString())
+            self.send(reply, session)
     def on_shutdown(self, session: TSession, msg: RequestMessage):
         """Handle REQUEST/SHUTDOWN message.
 """
         log.debug("%s.on_shutdown(%s)", self.__class__.__name__, session.routing_id)
+        # send reply to confirm that shutdown was initiated
         reply = self.protocol.create_reply_for(msg)
-        # create reply
         self.send(reply, session)
+        # commence shutdown
+        self.impl.stop_event.set()
 
 class SaturninNodeServiceImpl(SimpleServiceImpl):
     """Implementation of Saturnin NODE service."""
@@ -450,7 +571,7 @@ class SaturninNodeServiceImpl(SimpleServiceImpl):
         self.agent = SERVICE_AGENT
         self.api = SERVICE_API
         self.installed_services: List[ServiceDescriptor] = []
-        self.services: List[NodeService] = []
+        self.services: Dict[UUID, NodeService] = {}
     def initialize(self, svc: BaseService):
         super().initialize(svc)
         self.msg_handler = SaturninNodeMessageHandler(self.svc_chn, self)
@@ -458,16 +579,28 @@ class SaturninNodeServiceImpl(SimpleServiceImpl):
         self.installed_services = [entry.load() for entry in
                                    iter_entry_points('saturnin.service')]
     def finalize(self, svc: TService) -> None:
-        """Service finalization.
+        """Service finalization. Stops/terminates all services running on node.
 """
         log.debug("%s.finalize", self.__class__.__name__)
-        for svc in self.services:
+        for svc in self.services.values():
             try:
-                svc.stop()
+                svc.stop(DEFAULT_TIMEOUT)
             except:
-                svc.terminate()
+                try:
+                    log.info("Service %s did not stop on time, terminating...", svc.uid)
+                    svc.terminate()
+                except:
+                    log.warning("Could't stop service %s", svc.uid)
         super().finalize(svc)
-    def get_service(self, agent_uid: UUID) -> ServiceDescriptor:
+    def on_idle(self) -> None:
+        """Called by service when waiting for messages exceeds timeout. Performs check
+for running services. Dead services are removed from list of running services.
+"""
+        if not reduce(lambda result, svc: result and svc.is_running(),
+                      self.services.values(), True):
+            self.services = dict((key, svc) for key, svc in self.services.items()
+                                 if svc.is_running())
+    def get_service_descriptor(self, agent_uid: UUID) -> ServiceDescriptor:
         """Returns descriptor for installed service.
 
 Raises:
@@ -484,11 +617,11 @@ Raises:
                                                                   ExecutionMode.THREAD,
                                                                   svc.mode)
 
-        self.services.append(svc)
+        self.services[svc.uid] = svc
         return svc
     def is_running(self, agent_uid: UUID) -> bool:
         """Returns True if service is running."""
-        for svc in self.services:
+        for svc in self.services.values():
             if svc.agent_uid == agent_uid:
                 return True
         return False

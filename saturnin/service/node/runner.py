@@ -70,6 +70,7 @@ def main():
             print("\nTerminating...")
         stop_event.set()
 
+    logging.basicConfig(format='%(levelname)s:%(threadName)s:%(name)s:%(message)s')
     signal.signal(signal.SIGINT, handle_signal)
     signal.signal(signal.SIGTERM, handle_signal)
     stop_event = DummyEvent()
@@ -98,7 +99,7 @@ def main():
     node_service.initialize()
     try:
         args = parser.parse_args()
-        print(f"Saturnin node runner v{__VERSION__}")
+        print(f"Saturnin node v{__VERSION__}")
         for addr in node_service.impl.endpoints:
             print(f"Node address: {addr}")
         node_service.start()

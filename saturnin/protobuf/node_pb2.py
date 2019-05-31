@@ -25,7 +25,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='node.proto',
   package='firebird.saturnin.service.node',
   syntax='proto3',
-  serialized_pb=_b('\n\nnode.proto\x12\x1e\x66irebird.saturnin.service.node\x1a saturnin/protobuf/saturnin.proto\"O\n\x16ReplyInstalledServices\x12\x35\n\x08services\x18\x01 \x03(\x0b\x32#.firebird.saturnin.InstalledService\"\xc4\x01\n\x0eRunningService\x12\x31\n\x04peer\x18\x01 \x01(\x0b\x32#.firebird.butler.PeerIdentification\x12\x33\n\x05\x61gent\x18\x02 \x01(\x0b\x32$.firebird.butler.AgentIdentification\x12\x37\n\x04mode\x18\x03 \x01(\x0e\x32).firebird.saturnin.service.node.StartMode\x12\x11\n\tendpoints\x18\x04 \x03(\t\"X\n\x14ReplyRunningServices\x12@\n\x08services\x18\x01 \x03(\x0b\x32..firebird.saturnin.service.node.RunningService\"2\n\x19RequestInterfaceProviders\x12\x15\n\rinterface_uid\x18\x01 \x01(\x0c\",\n\x17ReplyInterfaceProviders\x12\x11\n\tagent_uid\x18\x01 \x03(\x0c\"\x9c\x01\n\x13RequestStartService\x12\x11\n\tagent_uid\x18\x01 \x01(\x0c\x12\x37\n\x04mode\x18\x02 \x01(\x0e\x32).firebird.saturnin.service.node.StartMode\x12\x11\n\tendpoints\x18\x03 \x03(\t\x12\x0f\n\x07timeout\x18\x04 \x01(\r\x12\x15\n\rmultiinstance\x18\x05 \x01(\x08\"q\n\x11ReplyStartService\x12\x10\n\x08peer_uid\x18\x01 \x01(\x0c\x12\x37\n\x04mode\x18\x02 \x01(\x0e\x32).firebird.saturnin.service.node.StartMode\x12\x11\n\tendpoints\x18\x03 \x03(\t*1\n\tStartMode\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x00\x12\n\n\x06THREAD\x10\x01\x12\x0b\n\x07PROCESS\x10\x02\x42S\n\x1aorg.firebird.saturnin.nodeB\x11SaturninNodeProtoP\x01\xa2\x02\x07SNodePB\xaa\x02\x15Saturnin.Service.Nodeb\x06proto3')
+  serialized_pb=_b('\n\nnode.proto\x12\x1e\x66irebird.saturnin.service.node\x1a saturnin/protobuf/saturnin.proto\"O\n\x16ReplyInstalledServices\x12\x35\n\x08services\x18\x01 \x03(\x0b\x32#.firebird.saturnin.InstalledService\"\xc4\x01\n\x0eRunningService\x12\x31\n\x04peer\x18\x01 \x01(\x0b\x32#.firebird.butler.PeerIdentification\x12\x33\n\x05\x61gent\x18\x02 \x01(\x0b\x32$.firebird.butler.AgentIdentification\x12\x37\n\x04mode\x18\x03 \x01(\x0e\x32).firebird.saturnin.service.node.StartMode\x12\x11\n\tendpoints\x18\x04 \x03(\t\"X\n\x14ReplyRunningServices\x12@\n\x08services\x18\x01 \x03(\x0b\x32..firebird.saturnin.service.node.RunningService\"2\n\x19RequestInterfaceProviders\x12\x15\n\rinterface_uid\x18\x01 \x01(\x0c\"-\n\x17ReplyInterfaceProviders\x12\x12\n\nagent_uids\x18\x01 \x03(\x0c\"\x9c\x01\n\x13RequestStartService\x12\x11\n\tagent_uid\x18\x01 \x01(\x0c\x12\x37\n\x04mode\x18\x02 \x01(\x0e\x32).firebird.saturnin.service.node.StartMode\x12\x11\n\tendpoints\x18\x03 \x03(\t\x12\x0f\n\x07timeout\x18\x04 \x01(\r\x12\x15\n\rmultiinstance\x18\x05 \x01(\x08\"q\n\x11ReplyStartService\x12\x10\n\x08peer_uid\x18\x01 \x01(\x0c\x12\x37\n\x04mode\x18\x02 \x01(\x0e\x32).firebird.saturnin.service.node.StartMode\x12\x11\n\tendpoints\x18\x03 \x03(\t\"G\n\x12RequestStopService\x12\x10\n\x08peer_uid\x18\x01 \x01(\x0c\x12\x0f\n\x07timeout\x18\x02 \x01(\r\x12\x0e\n\x06\x66orced\x18\x03 \x01(\x08\":\n\x10ReplyStopService\x12&\n\x06result\x18\x01 \x01(\x0e\x32\x16.firebird.butler.State\"=\n\x12RequestGetProvider\x12\x15\n\rinterface_uid\x18\x01 \x01(\x0c\x12\x10\n\x08required\x18\x02 \x01(\x08\"$\n\x10ReplyGetProvider\x12\x10\n\x08\x65ndpoint\x18\x01 \x01(\t*1\n\tStartMode\x12\x0b\n\x07\x44\x45\x46\x41ULT\x10\x00\x12\n\n\x06THREAD\x10\x01\x12\x0b\n\x07PROCESS\x10\x02\x42S\n\x1aorg.firebird.saturnin.nodeB\x11SaturninNodeProtoP\x01\xa2\x02\x07SNodePB\xaa\x02\x15Saturnin.Service.Nodeb\x06proto3')
   ,
   dependencies=[saturnin_dot_protobuf_dot_saturnin__pb2.DESCRIPTOR,])
 
@@ -50,8 +50,8 @@ _STARTMODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=822,
-  serialized_end=871,
+  serialized_start=1057,
+  serialized_end=1106,
 )
 _sym_db.RegisterEnumDescriptor(_STARTMODE)
 
@@ -215,7 +215,7 @@ _REPLYINTERFACEPROVIDERS = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='agent_uid', full_name='firebird.saturnin.service.node.ReplyInterfaceProviders.agent_uid', index=0,
+      name='agent_uids', full_name='firebird.saturnin.service.node.ReplyInterfaceProviders.agent_uids', index=0,
       number=1, type=12, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -234,7 +234,7 @@ _REPLYINTERFACEPROVIDERS = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=502,
-  serialized_end=546,
+  serialized_end=547,
 )
 
 
@@ -292,8 +292,8 @@ _REQUESTSTARTSERVICE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=549,
-  serialized_end=705,
+  serialized_start=550,
+  serialized_end=706,
 )
 
 
@@ -337,8 +337,153 @@ _REPLYSTARTSERVICE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=707,
-  serialized_end=820,
+  serialized_start=708,
+  serialized_end=821,
+)
+
+
+_REQUESTSTOPSERVICE = _descriptor.Descriptor(
+  name='RequestStopService',
+  full_name='firebird.saturnin.service.node.RequestStopService',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='peer_uid', full_name='firebird.saturnin.service.node.RequestStopService.peer_uid', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='timeout', full_name='firebird.saturnin.service.node.RequestStopService.timeout', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='forced', full_name='firebird.saturnin.service.node.RequestStopService.forced', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=823,
+  serialized_end=894,
+)
+
+
+_REPLYSTOPSERVICE = _descriptor.Descriptor(
+  name='ReplyStopService',
+  full_name='firebird.saturnin.service.node.ReplyStopService',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='result', full_name='firebird.saturnin.service.node.ReplyStopService.result', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=896,
+  serialized_end=954,
+)
+
+
+_REQUESTGETPROVIDER = _descriptor.Descriptor(
+  name='RequestGetProvider',
+  full_name='firebird.saturnin.service.node.RequestGetProvider',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='interface_uid', full_name='firebird.saturnin.service.node.RequestGetProvider.interface_uid', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='required', full_name='firebird.saturnin.service.node.RequestGetProvider.required', index=1,
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=956,
+  serialized_end=1017,
+)
+
+
+_REPLYGETPROVIDER = _descriptor.Descriptor(
+  name='ReplyGetProvider',
+  full_name='firebird.saturnin.service.node.ReplyGetProvider',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='endpoint', full_name='firebird.saturnin.service.node.ReplyGetProvider.endpoint', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1019,
+  serialized_end=1055,
 )
 
 _REPLYINSTALLEDSERVICES.fields_by_name['services'].message_type = saturnin_dot_protobuf_dot_saturnin__pb2._INSTALLEDSERVICE
@@ -348,6 +493,7 @@ _RUNNINGSERVICE.fields_by_name['mode'].enum_type = _STARTMODE
 _REPLYRUNNINGSERVICES.fields_by_name['services'].message_type = _RUNNINGSERVICE
 _REQUESTSTARTSERVICE.fields_by_name['mode'].enum_type = _STARTMODE
 _REPLYSTARTSERVICE.fields_by_name['mode'].enum_type = _STARTMODE
+_REPLYSTOPSERVICE.fields_by_name['result'].enum_type = saturnin_dot_sdk_dot_fbsp__pb2._STATE
 DESCRIPTOR.message_types_by_name['ReplyInstalledServices'] = _REPLYINSTALLEDSERVICES
 DESCRIPTOR.message_types_by_name['RunningService'] = _RUNNINGSERVICE
 DESCRIPTOR.message_types_by_name['ReplyRunningServices'] = _REPLYRUNNINGSERVICES
@@ -355,6 +501,10 @@ DESCRIPTOR.message_types_by_name['RequestInterfaceProviders'] = _REQUESTINTERFAC
 DESCRIPTOR.message_types_by_name['ReplyInterfaceProviders'] = _REPLYINTERFACEPROVIDERS
 DESCRIPTOR.message_types_by_name['RequestStartService'] = _REQUESTSTARTSERVICE
 DESCRIPTOR.message_types_by_name['ReplyStartService'] = _REPLYSTARTSERVICE
+DESCRIPTOR.message_types_by_name['RequestStopService'] = _REQUESTSTOPSERVICE
+DESCRIPTOR.message_types_by_name['ReplyStopService'] = _REPLYSTOPSERVICE
+DESCRIPTOR.message_types_by_name['RequestGetProvider'] = _REQUESTGETPROVIDER
+DESCRIPTOR.message_types_by_name['ReplyGetProvider'] = _REPLYGETPROVIDER
 DESCRIPTOR.enum_types_by_name['StartMode'] = _STARTMODE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -406,6 +556,34 @@ ReplyStartService = _reflection.GeneratedProtocolMessageType('ReplyStartService'
   # @@protoc_insertion_point(class_scope:firebird.saturnin.service.node.ReplyStartService)
   ))
 _sym_db.RegisterMessage(ReplyStartService)
+
+RequestStopService = _reflection.GeneratedProtocolMessageType('RequestStopService', (_message.Message,), dict(
+  DESCRIPTOR = _REQUESTSTOPSERVICE,
+  __module__ = 'node_pb2'
+  # @@protoc_insertion_point(class_scope:firebird.saturnin.service.node.RequestStopService)
+  ))
+_sym_db.RegisterMessage(RequestStopService)
+
+ReplyStopService = _reflection.GeneratedProtocolMessageType('ReplyStopService', (_message.Message,), dict(
+  DESCRIPTOR = _REPLYSTOPSERVICE,
+  __module__ = 'node_pb2'
+  # @@protoc_insertion_point(class_scope:firebird.saturnin.service.node.ReplyStopService)
+  ))
+_sym_db.RegisterMessage(ReplyStopService)
+
+RequestGetProvider = _reflection.GeneratedProtocolMessageType('RequestGetProvider', (_message.Message,), dict(
+  DESCRIPTOR = _REQUESTGETPROVIDER,
+  __module__ = 'node_pb2'
+  # @@protoc_insertion_point(class_scope:firebird.saturnin.service.node.RequestGetProvider)
+  ))
+_sym_db.RegisterMessage(RequestGetProvider)
+
+ReplyGetProvider = _reflection.GeneratedProtocolMessageType('ReplyGetProvider', (_message.Message,), dict(
+  DESCRIPTOR = _REPLYGETPROVIDER,
+  __module__ = 'node_pb2'
+  # @@protoc_insertion_point(class_scope:firebird.saturnin.service.node.ReplyGetProvider)
+  ))
+_sym_db.RegisterMessage(ReplyGetProvider)
 
 
 DESCRIPTOR.has_options = True
