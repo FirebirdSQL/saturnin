@@ -40,14 +40,14 @@ purposes. It will be replaced with daemon (POSIX) / service (Windows) runners.
 """
 
 import logging
-from typing import Dict, List, Optional
+#from typing import Dict, List, Optional
 import signal
-from uuid import UUID, uuid1
+from uuid import uuid1
 from os import getpid
 import socket
 import platform
 from argparse import ArgumentParser, Action
-from saturnin.sdk.types import PeerDescriptor
+from saturnin.sdk.types import PeerDescriptor, ZMQAddress
 from saturnin.sdk.base import load, DummyEvent
 from saturnin.service.node.api import SERVICE_DESCRIPTION
 
@@ -75,11 +75,12 @@ def main():
     signal.signal(signal.SIGTERM, handle_signal)
     stop_event = DummyEvent()
     node_uid = uuid1()
-    node_endpoints = ['inproc://%s' % node_uid.hex]
-    if platform.system == 'Linux':
-        node_endpoints.append('ipc://@%s' % node_uid.hex)
+    local_address = ZMQAddress('inproc://%s' % node_uid.hex)
+    node_endpoints = [local_address]
+    if platform.system() == 'Linux':
+        node_endpoints.append(ZMQAddress('ipc://@%s' % node_uid.hex))
     else:
-        node_endpoints.append('tcp://127.0.0.1:*')
+        node_endpoints.append(ZMQAddress('tcp://127.0.0.1:*'))
     description = """Saturnin NODE runner."""
     parser = ArgumentParser(description=description)
     parser.add_argument('-e', '--endpoint', nargs='+', help="ZMQ addresses for the service")
@@ -94,6 +95,8 @@ def main():
 
     node_implementation = load(SERVICE_DESCRIPTION.implementation)(stop_event)
     node_implementation.endpoints = args.endpoint
+    if local_address not in  node_implementation.endpoints:
+        node_implementation.endpoints.insert(0, local_address)
     node_implementation.peer = PeerDescriptor(node_uid, getpid(), socket.getfqdn())
     node_service = load(SERVICE_DESCRIPTION.container)(node_implementation)
     node_service.initialize()
@@ -103,7 +106,7 @@ def main():
         for addr in node_service.impl.endpoints:
             print(f"Node address: {addr}")
         node_service.start()
-    except Exception as exc:
+    except Exception:
         logger.exception("Fatal exception, node terminated.")
     logging.shutdown()
     print('Done.')

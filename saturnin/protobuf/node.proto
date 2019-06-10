@@ -29,13 +29,7 @@
 
 syntax = "proto3";
 
-package firebird.saturnin.service.node;
-
-option csharp_namespace = "Saturnin.Service.Node";
-option java_package = "org.firebird.saturnin.node";
-option java_outer_classname = "SaturninNodeProto";
-option java_multiple_files = true;
-option objc_class_prefix = "SNodePB";
+package saturnin.node;
 
 //import "google/protobuf/any.proto";
 //import "google/protobuf/struct.proto";
@@ -47,23 +41,23 @@ import "saturnin/protobuf/saturnin.proto";
 
 enum StartMode {
   DEFAULT = 0 ;
-  THREAD  = 1 ;
+  THREAD = 1 ;
   PROCESS = 2 ;
 }
 
 // INSTALLED_SERVICES Message Data
 
 message ReplyInstalledServices {
-  repeated saturnin.InstalledService services = 1 ;
+  repeated InstalledService services = 1 ;
 }
 
 // RUNNING_SERVICES Message Data
 
 message RunningService {
-  firebird.butler.PeerIdentification peer   = 1 ; // Peer description
-  firebird.butler.AgentIdentification agent = 2 ; // Agent description
-  StartMode mode                            = 3 ; // Service start mode
-  repeated string endpoints                 = 4 ; // ZMQ endpoints used by service
+  fbsp.PeerIdentification peer = 1 ;   // Peer description
+  fbsp.AgentIdentification agent = 2 ; // Agent description
+  StartMode mode = 3 ;                 // Service start mode
+  repeated string endpoints = 4 ;      // ZMQ endpoints used by service
 }
 
 message ReplyRunningServices {
@@ -83,36 +77,36 @@ message ReplyInterfaceProviders {
 // START_SERVICE Message Data
 
 message RequestStartService {
-  bytes agent_uid           = 1 ; // Agent ID (uuid5 - SHA1, namespace OID)
-  StartMode mode            = 2 ; // Service start mode
+  bytes agent_uid = 1 ;           // Agent ID (uuid5 - SHA1, namespace OID)
+  StartMode mode = 2 ;            // Service start mode
   repeated string endpoints = 3 ; // ZMQ endpoints that service should use, could be empty
-  uint32 timeout            = 4 ; // Timeout in milliseconds, zero means default timeout
-  bool multiinstance        = 5 ; // Start new service instance even if some instance is already running
+  uint32 timeout = 4 ;            // Timeout in milliseconds, zero means default timeout
+  bool multiinstance = 5 ;        // Start new service instance even if some instance is already running
 }
 
 message ReplyStartService {
-  bytes peer_uid            = 1 ; // Peer ID assigned to service (uuid1)
-  StartMode mode            = 2 ; // Service start mode (THREAD or PROCESS)
+  bytes peer_uid = 1 ;            // Peer ID assigned to service (uuid1)
+  StartMode mode = 2 ;            // Service start mode (THREAD or PROCESS)
   repeated string endpoints = 3 ; // ZMQ endpoints that service actually uses
 }
 
 // STOP_SERVICE Message Data
 
 message RequestStopService {
-  bytes peer_uid            = 1 ; // Peer ID assigned to service (uuid1)
-  uint32 timeout            = 2 ; // Timeout in milliseconds, zero means default timeout
-  bool forced               = 3 ; // True to kill the service if it does not stop in time
+  bytes peer_uid = 1 ; // Peer ID assigned to service (uuid1)
+  uint32 timeout = 2 ; // Timeout in milliseconds, zero means default timeout
+  bool forced = 3 ;    // True to kill the service if it does not stop in time
 }
 
 message ReplyStopService {
-  firebird.butler.State result = 1 ; // STOPPED (SUSPENDED) or TERMINATED (ABORTED)
+  fbsp.State result = 1 ; // STOPPED (SUSPENDED) or TERMINATED (ABORTED)
 }
 
 // GET_PROVIDER Message Data
 
 message RequestGetProvider {
   bytes interface_uid = 1 ; // Interface ID (uuid5 - SHA1, namespace OID)
-  bool required       = 2 ; // If True, the service is started if necessary
+  bool required = 2 ;       // If True, the service is started if necessary
 }
 
 message ReplyGetProvider {

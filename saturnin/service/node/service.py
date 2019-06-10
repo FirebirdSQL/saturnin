@@ -56,13 +56,13 @@ import ctypes
 import platform
 import threading
 import multiprocessing
-import zmq
 from functools import reduce
+import zmq
 from pkg_resources import iter_entry_points
 from saturnin.sdk.types import ServiceError, InvalidMessageError, MsgType, ErrorCode, \
-     TService, TSession, TServiceImpl, TChannel, ZMQAddressList, PeerDescriptor, \
-     ServiceDescriptor, ExecutionMode
-from saturnin.sdk.base import BaseChannel, BaseService, load
+     TService, TSession, TServiceImpl, TChannel, PeerDescriptor, \
+     ServiceDescriptor, ExecutionMode, DependencyType, ZMQAddress
+from saturnin.sdk.base import BaseService, load
 from saturnin.sdk.service import SimpleServiceImpl
 from saturnin.sdk.fbsp import ServiceMessagelHandler, HelloMessage, \
      CancelMessage, RequestMessage, bb2h, note_exception
@@ -88,6 +88,10 @@ def protocol_name(address: str) -> str:
 def get_best_endpoint(endpoints, client_mode=ExecutionMode.PROCESS,
                       service_mode=ExecutionMode.PROCESS) -> Optional[str]:
     "Returns endpoint that uses the best protocol from available options."
+    if client_mode == ExecutionMode.ANY:
+        client_mode = ExecutionMode.THREAD
+    if service_mode == ExecutionMode.ANY:
+        service_mode = ExecutionMode.THREAD
     inproc = [x for x in endpoints if protocol_name(x) == 'inproc']
     if (inproc and client_mode == ExecutionMode.THREAD and service_mode == ExecutionMode.THREAD):
         return inproc[0]
@@ -97,7 +101,7 @@ def get_best_endpoint(endpoints, client_mode=ExecutionMode.PROCESS,
     tcp = [x for x in endpoints if protocol_name(x) == 'tcp']
     return tcp[0]
 
-def service_run(peer_uid: UUID, endpoints: ZMQAddressList, svc_descriptor: ServiceDescriptor,
+def service_run(peer_uid: UUID, endpoints: List[ZMQAddress], svc_descriptor: ServiceDescriptor,
                 stop_event: Any, remotes: Dict[bytes, str], ctrl_addr: bytes):
     "Process or thread target code to run the service."
     ctx = zmq.Context.instance()
@@ -143,9 +147,9 @@ Attributes:
     def __init__(self, svc_descriptor: ServiceDescriptor,
                  mode: ExecutionMode = ExecutionMode.ANY):
         self.__peer_uid = uuid1()
-        self.endpoints: ZMQAddressList = []
+        self.endpoints: List[ZMQAddress] = []
         self.endpoints.append('inproc://%s' % self.uid.hex)
-        if platform.system == 'Linux':
+        if platform.system() == 'Linux':
             self.endpoints.append('ipc://@%s' % self.uid.hex)
         else:
             self.endpoints.append('tcp://127.0.0.1:*')
@@ -157,6 +161,8 @@ Attributes:
         else:
             self.mode = ExecutionMode.THREAD
         self.remotes: Dict[bytes, str] = {}
+        self.ready_event = None
+        self.stop_event = None
         self.runtime = None
         self.peer: Optional[PeerDescriptor] = None
     def is_running(self) -> bool:
@@ -188,7 +194,7 @@ Raises:
         uid = bytes(uuid1().hex, 'ascii')
         try:
             if self.mode in (ExecutionMode.ANY, ExecutionMode.THREAD):
-                addr = b'inproc://%s' % uid
+                addr = ZMQAddress('inproc://%s' % uid)
                 pipe.bind(addr)
                 self.ready_event = threading.Event()
                 self.stop_event = threading.Event()
@@ -197,10 +203,10 @@ Raises:
                                                       self.descriptor,
                                                       self.stop_event, self.remotes, addr))
             else:
-                if platform.system == 'Linux':
-                    addr = b'ipc://@%s' % uid
+                if platform.system() == 'Linux':
+                    addr = ZMQAddress('ipc://@%s' % uid)
                 else:
-                    self.endpoints.append(b'tcp://127.0.0.1:*')
+                    self.endpoints.append(ZMQAddress('tcp://127.0.0.1:*'))
                 pipe.bind(addr)
                 addr = pipe.LAST_ENDPOINT
                 self.ready_event = multiprocessing.Event()
@@ -213,16 +219,15 @@ Raises:
             self.runtime.start()
             if pipe.poll(timeout, zmq.POLLIN) == 0:
                 raise TimeoutError("The service did not start on time")
-            else:
+            msg = pipe.recv_pyobj()
+            if msg == 0: # OK
                 msg = pipe.recv_pyobj()
-                if msg == 0: # OK
-                    msg = pipe.recv_pyobj()
-                    self.endpoints = msg
-                    msg = pipe.recv_pyobj()
-                    self.peer = msg
-                else: # Exception
-                    msg = pipe.recv_pyobj()
-                    raise ServiceError("Service start failed", code=NodeError.START_FAILED) from msg
+                self.endpoints = msg
+                msg = pipe.recv_pyobj()
+                self.peer = msg
+            else: # Exception
+                msg = pipe.recv_pyobj()
+                raise ServiceError("Service start failed", code=NodeError.START_FAILED) from msg
         finally:
             pipe.LINGER = 0
             pipe.close()
@@ -241,8 +246,7 @@ Raises:
             self.runtime.join(timeout=timeout)
             if self.runtime.is_alive():
                 raise TimeoutError("The service did not stop on time")
-            else:
-                self.runtime = None
+            self.runtime = None
     def terminate(self):
         """Terminate the service.
 
@@ -258,8 +262,8 @@ Raises:
                 res = ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, ctypes.py_object(SystemExit))
                 if res == 0:
                     raise ServiceError("Service termination failed due to invalid thread ID.",
-                                        code=NodeError.TERMINATION_FAILED)
-                elif res != 1:
+                                       code=NodeError.TERMINATION_FAILED)
+                if res != 1:
                     # if it returns a number greater than one, you're in trouble,
                     # and you should call it again with exc=NULL to revert the effect
                     ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, None)
@@ -296,28 +300,6 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
                               self.on_shutdown,
                               MsgType.DATA: self.send_protocol_violation,
                              })
-    def get_providers(self, interface_uid: bytes) -> List[ServiceDescriptor]:
-        """Returns list of ServiceDescriptors of services that implement interface."""
-        result = []
-        for svc_desc in (svc for svc in self.impl.installed_services):
-            for api in svc_desc.api:
-                if api.uid.bytes == interface_uid:
-                    result.append(svc_desc)
-        return result
-    def on_invalid_message(self, session: TSession, exc: InvalidMessageError):
-        "Invalid Message event."
-        log.error("%s.on_invalid_message(%s/%s)", self.__class__.__name__,
-                  session.routing_id, exc)
-        raise InvalidMessageError("Invalid message") from exc
-    def on_invalid_greeting(self, exc: InvalidMessageError):
-        "Invalid Greeting event."
-        log.error("%s.on_invalid_greeting(%s)", self.__class__.__name__, exc)
-        raise InvalidMessageError("Invalid Greeting") from exc
-    def on_dispatch_error(self, session: TSession, exc: Exception):
-        "Exception unhandled by `dispatch()`."
-        log.error("%s.on_dispatch_error(%s/%s)", self.__class__.__name__,
-                  session.routing_id, exc)
-        raise ServiceError("Unexpected exception") from exc
     def on_hello(self, session: TSession, msg: HelloMessage):
         "HELLO message handler. Sends WELCOME message back to the client."
         log.debug("%s.on_hello(%s)", self.__class__.__name__, session.routing_id)
@@ -403,7 +385,7 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
         # create reply
         reply = self.protocol.create_reply_for(msg)
         dframe = pb.ReplyInterfaceProviders()
-        for svc_desc in self.get_providers(interface_uid):
+        for svc_desc in self.impl.get_providers(interface_uid):
             dframe.agent_uids.append(svc_desc.agent.uid.bytes)
         reply.data.append(dframe.SerializeToString())
         self.send(reply, session)
@@ -516,7 +498,7 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
         endpoint = ''
         # create reply
         try:
-            providers = self.get_providers(interface_uid)
+            providers = self.impl.get_providers(interface_uid)
             if len(providers) != 1:
                 raise ServiceError("Multiple providers available",
                                    code=NodeError.UNCERTAIN_RESULT)
@@ -582,15 +564,15 @@ class SaturninNodeServiceImpl(SimpleServiceImpl):
         """Service finalization. Stops/terminates all services running on node.
 """
         log.debug("%s.finalize", self.__class__.__name__)
-        for svc in self.services.values():
+        for service in self.services.values():
             try:
-                svc.stop(DEFAULT_TIMEOUT)
+                service.stop(DEFAULT_TIMEOUT)
             except:
                 try:
-                    log.info("Service %s did not stop on time, terminating...", svc.uid)
-                    svc.terminate()
+                    log.info("Service %s did not stop on time, terminating...", service.uid)
+                    service.terminate()
                 except:
-                    log.warning("Could't stop service %s", svc.uid)
+                    log.warning("Could't stop service %s", service.uid)
         super().finalize(svc)
     def on_idle(self) -> None:
         """Called by service when waiting for messages exceeds timeout. Performs check
@@ -610,13 +592,41 @@ Raises:
             if svc.agent.uid == agent_uid:
                 return svc
         raise ValueError("Service %s not installed" % agent_uid)
+    def get_providers(self, interface_uid: bytes) -> List[ServiceDescriptor]:
+        """Returns list of ServiceDescriptors of services that implement interface."""
+        result = []
+        for svc_desc in (svc for svc in self.installed_services):
+            for api in svc_desc.api:
+                if api.uid.bytes == interface_uid:
+                    result.append(svc_desc)
+        return result
     def add_service(self, svc_descriptor: ServiceDescriptor, mode: ExecutionMode) -> NodeService:
-        """Create and return new NodeService instance."""
+        """Create and return new NodeService instance.
+
+Raises:
+    :ServiceError: If the service has declared the required dependencies that are not running.
+"""
+        def find_provider_address(interface_uid):
+            providers = self.get_providers(interface_uid.bytes)
+            for provider in providers:
+                for svc in self.services.values():
+                    if svc.agent_uid == provider.agent.uid:
+                        return get_best_endpoint(svc.endpoints, mode, svc.mode)
+            return None
+
+        # Find endpoints to running dependencies
         svc = NodeService(svc_descriptor, mode)
+        for dtype, interface_uid in svc_descriptor.dependencies:
+            addr = find_provider_address(interface_uid)
+            if addr:
+                svc.remotes[interface_uid.bytes] = addr
+            else:
+                if dtype == DependencyType.REQUIRED:
+                    raise ServiceError("Provider for required interface %s not available"
+                                       % interface_uid)
         svc.remotes[NODE_INTERFACE_UID.bytes] = get_best_endpoint(self.endpoints,
                                                                   ExecutionMode.THREAD,
                                                                   svc.mode)
-
         self.services[svc.uid] = svc
         return svc
     def is_running(self, agent_uid: UUID) -> bool:

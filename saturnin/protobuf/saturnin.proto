@@ -29,22 +29,70 @@
 
 syntax = "proto3";
 
-package firebird.saturnin;
-
-option csharp_namespace = "Saturnin";
-option java_package = "org.firebird.saturnin";
-option java_outer_classname = "SaturninProto";
-option java_multiple_files = true;
-option objc_class_prefix = "SPB";
+package saturnin;
 
 import "google/protobuf/any.proto";
 // import "google/protobuf/struct.proto";
 import public "saturnin/sdk/fbsp.proto";
 
+// Address domain enumeration
+
+enum AddressDomain {
+  UNKNOWN_DOMAIN = 0 ; // Not a valid option, defined only to handle undefined values
+  LOCAL = 1 ;          // Within process (inproc)
+  NODE = 2 ;           // On single node (ipc or tcp loopback)
+  NETWORK = 3 ;        // Network-wide (ip address or domain name)
+}
+
+// Transport protocol
+
+enum TransportProtocol {
+  UNKNOWN_PROTOCOL = 0 ; // Not a valid option, defined only to handle undefined values
+  INPROC = 1 ;
+  IPC = 2 ;
+  TCP = 3 ;
+  PGM = 4 ;
+  EPGM = 5 ;
+  VMCI = 6 ;
+}
+
+// Socket type
+
+enum SocketType {
+  UNKNOWN_TYPE = 0 ; // Not a valid option, defined only to handle undefined values
+  DEALER = 1 ;
+  ROUTER = 2 ;
+  PUB = 3 ;
+  SUB = 4 ;
+  XPUB = 5 ;
+  XSUB = 6 ;
+  PUSH = 7 ;
+  PULL = 8 ;
+  STREAM = 9 ;
+  PAIR = 10 ;
+}
+
+// Socket use
+
+enum SocketUse {
+  UNKNOWN_USE = 0 ; // Not a valid option, defined only to handle undefined values
+  PRODUCER = 1 ;    // Socket used to provide data to peers
+  CONSUMER = 2 ;    // Socket used to get data prom peers
+  EXCHANGE = 3 ;    // Socket used for data exchange
+}
+
+// ZMQ endpoint address
+
+message EndpointAddress {
+  AddressDomain domain = 1 ;       // [required]
+  TransportProtocol protocol = 2 ; // [required]
+  string address = 3 ;             // [required]
+}
+
 // Dependency type enumeration
 
 enum DependencyType {
-  UNKNOWN = 0 ;
+  UNKNOWN_DEPTYPE = 0 ; // Not a valid option, defined only to handle undefined values
   REQUIRED = 1 ;
   PREFERRED = 2 ;
   OPTIONAL = 3 ;
@@ -53,30 +101,46 @@ enum DependencyType {
 // Dependency
 
 message Dependency {
-  DependencyType type = 1 ;
-  bytes uid           = 2 ; // Interface uid
+  DependencyType type = 1 ; // [required]
+  bytes uid = 2 ;           // [required] Interface uid
 }
 
 // Interface
 
 message RequestCode {
-  uint32 code = 1 ;
-  string name = 2 ;
+  uint32 code = 1 ; // [required]
+  string name = 2 ; // [required]
 }
 
 message InterfaceDescriptor {
-  bytes uid                     = 1 ; // Unique interface ID (uuid5 - SHA1, namespace OID)
-  string name                   = 2 ; // Interface name
-  uint32 revision               = 3 ; // Revision number
-  repeated RequestCode requests = 4 ; // Request codes
+  bytes uid = 1 ;                     // [required] Interface ID (uuid5 - SHA1, namespace OID)
+  string name = 2 ;                   // [required] Interface name
+  uint32 revision = 3 ;               // [required] Revision number
+  repeated RequestCode requests = 4 ; // [required] Request codes
 }
 
 // Installed service specification
 
 message InstalledService {
-  firebird.butler.AgentIdentification agent = 1 ;
-  repeated InterfaceDescriptor api          = 2 ;
-  repeated Dependency dependencies          = 3 ; // List of dependencies
-  repeated google.protobuf.Any supplement   = 4 ; // additional information about service
+  fbsp.AgentIdentification agent = 1 ;          // [required]
+  repeated InterfaceDescriptor api = 2 ;        // [required]
+  repeated Dependency dependencies = 3 ;        // List of dependencies
+  repeated google.protobuf.Any supplement = 5 ; // additional information about service
 }
 
+// Data pipe
+
+message DataPipe {
+  string name = 1 ;                             // [required] Pipe name
+  SocketType socket_type = 2 ;                  // [required] Socket type
+  SocketUse use = 3 ;                           // [required] PRODUCER/CONSUMER
+  string protocol = 4 ;                         // [required] Protocol description
+  bytes owner = 5 ;                             // [required] if pipe is owned by Saturnin service
+                                                // ID of the peer that owns the pipe
+  uint32 pid = 6 ;                              // ID of the process that manages the pipe
+                                                // if it's different from owner's or owner is not defined
+  string host = 7 ;                             // [required] if owner is not defined,
+                                                // host (network node) identification where the pipe resides
+  repeated EndpointAddress endpoints = 8 ;      // [required] Binded endpoints
+  repeated google.protobuf.Any supplement = 9 ; // additional information about pipe
+}

@@ -21,21 +21,185 @@ from saturnin.sdk.fbsp_pb2 import *
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='saturnin.proto',
-  package='firebird.saturnin',
+  package='saturnin',
   syntax='proto3',
-  serialized_pb=_b('\n\x0esaturnin.proto\x12\x11\x66irebird.saturnin\x1a\x19google/protobuf/any.proto\x1a\x17saturnin/sdk/fbsp.proto\"J\n\nDependency\x12/\n\x04type\x18\x01 \x01(\x0e\x32!.firebird.saturnin.DependencyType\x12\x0b\n\x03uid\x18\x02 \x01(\x0c\")\n\x0bRequestCode\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0c\n\x04name\x18\x02 \x01(\t\"t\n\x13InterfaceDescriptor\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08revision\x18\x03 \x01(\r\x12\x30\n\x08requests\x18\x04 \x03(\x0b\x32\x1e.firebird.saturnin.RequestCode\"\xdb\x01\n\x10InstalledService\x12\x33\n\x05\x61gent\x18\x01 \x01(\x0b\x32$.firebird.butler.AgentIdentification\x12\x33\n\x03\x61pi\x18\x02 \x03(\x0b\x32&.firebird.saturnin.InterfaceDescriptor\x12\x33\n\x0c\x64\x65pendencies\x18\x03 \x03(\x0b\x32\x1d.firebird.saturnin.Dependency\x12(\n\nsupplement\x18\x04 \x03(\x0b\x32\x14.google.protobuf.Any*H\n\x0e\x44\x65pendencyType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0c\n\x08REQUIRED\x10\x01\x12\r\n\tPREFERRED\x10\x02\x12\x0c\n\x08OPTIONAL\x10\x03\x42\x39\n\x15org.firebird.saturninB\rSaturninProtoP\x01\xa2\x02\x03SPB\xaa\x02\x08SaturninP\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0esaturnin.proto\x12\x08saturnin\x1a\x19google/protobuf/any.proto\x1a\x17saturnin/sdk/fbsp.proto\"z\n\x0f\x45ndpointAddress\x12\'\n\x06\x64omain\x18\x01 \x01(\x0e\x32\x17.saturnin.AddressDomain\x12-\n\x08protocol\x18\x02 \x01(\x0e\x32\x1b.saturnin.TransportProtocol\x12\x0f\n\x07\x61\x64\x64ress\x18\x03 \x01(\t\"A\n\nDependency\x12&\n\x04type\x18\x01 \x01(\x0e\x32\x18.saturnin.DependencyType\x12\x0b\n\x03uid\x18\x02 \x01(\x0c\")\n\x0bRequestCode\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0c\n\x04name\x18\x02 \x01(\t\"k\n\x13InterfaceDescriptor\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08revision\x18\x03 \x01(\r\x12\'\n\x08requests\x18\x04 \x03(\x0b\x32\x15.saturnin.RequestCode\"\xbe\x01\n\x10InstalledService\x12(\n\x05\x61gent\x18\x01 \x01(\x0b\x32\x19.fbsp.AgentIdentification\x12*\n\x03\x61pi\x18\x02 \x03(\x0b\x32\x1d.saturnin.InterfaceDescriptor\x12*\n\x0c\x64\x65pendencies\x18\x03 \x03(\x0b\x32\x14.saturnin.Dependency\x12(\n\nsupplement\x18\x05 \x03(\x0b\x32\x14.google.protobuf.Any\"\xf9\x01\n\x08\x44\x61taPipe\x12\x0c\n\x04name\x18\x01 \x01(\t\x12)\n\x0bsocket_type\x18\x02 \x01(\x0e\x32\x14.saturnin.SocketType\x12 \n\x03use\x18\x03 \x01(\x0e\x32\x13.saturnin.SocketUse\x12\x10\n\x08protocol\x18\x04 \x01(\t\x12\r\n\x05owner\x18\x05 \x01(\x0c\x12\x0b\n\x03pid\x18\x06 \x01(\r\x12\x0c\n\x04host\x18\x07 \x01(\t\x12,\n\tendpoints\x18\x08 \x03(\x0b\x32\x19.saturnin.EndpointAddress\x12(\n\nsupplement\x18\t \x03(\x0b\x32\x14.google.protobuf.Any*E\n\rAddressDomain\x12\x12\n\x0eUNKNOWN_DOMAIN\x10\x00\x12\t\n\x05LOCAL\x10\x01\x12\x08\n\x04NODE\x10\x02\x12\x0b\n\x07NETWORK\x10\x03*d\n\x11TransportProtocol\x12\x14\n\x10UNKNOWN_PROTOCOL\x10\x00\x12\n\n\x06INPROC\x10\x01\x12\x07\n\x03IPC\x10\x02\x12\x07\n\x03TCP\x10\x03\x12\x07\n\x03PGM\x10\x04\x12\x08\n\x04\x45PGM\x10\x05\x12\x08\n\x04VMCI\x10\x06*\x86\x01\n\nSocketType\x12\x10\n\x0cUNKNOWN_TYPE\x10\x00\x12\n\n\x06\x44\x45\x41LER\x10\x01\x12\n\n\x06ROUTER\x10\x02\x12\x07\n\x03PUB\x10\x03\x12\x07\n\x03SUB\x10\x04\x12\x08\n\x04XPUB\x10\x05\x12\x08\n\x04XSUB\x10\x06\x12\x08\n\x04PUSH\x10\x07\x12\x08\n\x04PULL\x10\x08\x12\n\n\x06STREAM\x10\t\x12\x08\n\x04PAIR\x10\n*F\n\tSocketUse\x12\x0f\n\x0bUNKNOWN_USE\x10\x00\x12\x0c\n\x08PRODUCER\x10\x01\x12\x0c\n\x08\x43ONSUMER\x10\x02\x12\x0c\n\x08\x45XCHANGE\x10\x03*P\n\x0e\x44\x65pendencyType\x12\x13\n\x0fUNKNOWN_DEPTYPE\x10\x00\x12\x0c\n\x08REQUIRED\x10\x01\x12\r\n\tPREFERRED\x10\x02\x12\x0c\n\x08OPTIONAL\x10\x03P\x01\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_any__pb2.DESCRIPTOR,saturnin_dot_sdk_dot_fbsp__pb2.DESCRIPTOR,],
   public_dependencies=[saturnin_dot_sdk_dot_fbsp__pb2.DESCRIPTOR,])
 
-_DEPENDENCYTYPE = _descriptor.EnumDescriptor(
-  name='DependencyType',
-  full_name='firebird.saturnin.DependencyType',
+_ADDRESSDOMAIN = _descriptor.EnumDescriptor(
+  name='AddressDomain',
+  full_name='saturnin.AddressDomain',
   filename=None,
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='UNKNOWN', index=0, number=0,
+      name='UNKNOWN_DOMAIN', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='LOCAL', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='NODE', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='NETWORK', index=3, number=3,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=868,
+  serialized_end=937,
+)
+_sym_db.RegisterEnumDescriptor(_ADDRESSDOMAIN)
+
+AddressDomain = enum_type_wrapper.EnumTypeWrapper(_ADDRESSDOMAIN)
+_TRANSPORTPROTOCOL = _descriptor.EnumDescriptor(
+  name='TransportProtocol',
+  full_name='saturnin.TransportProtocol',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='UNKNOWN_PROTOCOL', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='INPROC', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='IPC', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TCP', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PGM', index=4, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='EPGM', index=5, number=5,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='VMCI', index=6, number=6,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=939,
+  serialized_end=1039,
+)
+_sym_db.RegisterEnumDescriptor(_TRANSPORTPROTOCOL)
+
+TransportProtocol = enum_type_wrapper.EnumTypeWrapper(_TRANSPORTPROTOCOL)
+_SOCKETTYPE = _descriptor.EnumDescriptor(
+  name='SocketType',
+  full_name='saturnin.SocketType',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='UNKNOWN_TYPE', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DEALER', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ROUTER', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PUB', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='SUB', index=4, number=4,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='XPUB', index=5, number=5,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='XSUB', index=6, number=6,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PUSH', index=7, number=7,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PULL', index=8, number=8,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='STREAM', index=9, number=9,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PAIR', index=10, number=10,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=1042,
+  serialized_end=1176,
+)
+_sym_db.RegisterEnumDescriptor(_SOCKETTYPE)
+
+SocketType = enum_type_wrapper.EnumTypeWrapper(_SOCKETTYPE)
+_SOCKETUSE = _descriptor.EnumDescriptor(
+  name='SocketUse',
+  full_name='saturnin.SocketUse',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='UNKNOWN_USE', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PRODUCER', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='CONSUMER', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='EXCHANGE', index=3, number=3,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=1178,
+  serialized_end=1248,
+)
+_sym_db.RegisterEnumDescriptor(_SOCKETUSE)
+
+SocketUse = enum_type_wrapper.EnumTypeWrapper(_SOCKETUSE)
+_DEPENDENCYTYPE = _descriptor.EnumDescriptor(
+  name='DependencyType',
+  full_name='saturnin.DependencyType',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='UNKNOWN_DEPTYPE', index=0, number=0,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
@@ -53,35 +217,106 @@ _DEPENDENCYTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=548,
-  serialized_end=620,
+  serialized_start=1250,
+  serialized_end=1330,
 )
 _sym_db.RegisterEnumDescriptor(_DEPENDENCYTYPE)
 
 DependencyType = enum_type_wrapper.EnumTypeWrapper(_DEPENDENCYTYPE)
-UNKNOWN = 0
+UNKNOWN_DOMAIN = 0
+LOCAL = 1
+NODE = 2
+NETWORK = 3
+UNKNOWN_PROTOCOL = 0
+INPROC = 1
+IPC = 2
+TCP = 3
+PGM = 4
+EPGM = 5
+VMCI = 6
+UNKNOWN_TYPE = 0
+DEALER = 1
+ROUTER = 2
+PUB = 3
+SUB = 4
+XPUB = 5
+XSUB = 6
+PUSH = 7
+PULL = 8
+STREAM = 9
+PAIR = 10
+UNKNOWN_USE = 0
+PRODUCER = 1
+CONSUMER = 2
+EXCHANGE = 3
+UNKNOWN_DEPTYPE = 0
 REQUIRED = 1
 PREFERRED = 2
 OPTIONAL = 3
 
 
 
-_DEPENDENCY = _descriptor.Descriptor(
-  name='Dependency',
-  full_name='firebird.saturnin.Dependency',
+_ENDPOINTADDRESS = _descriptor.Descriptor(
+  name='EndpointAddress',
+  full_name='saturnin.EndpointAddress',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='firebird.saturnin.Dependency.type', index=0,
+      name='domain', full_name='saturnin.EndpointAddress.domain', index=0,
       number=1, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='uid', full_name='firebird.saturnin.Dependency.uid', index=1,
+      name='protocol', full_name='saturnin.EndpointAddress.protocol', index=1,
+      number=2, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='address', full_name='saturnin.EndpointAddress.address', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=80,
+  serialized_end=202,
+)
+
+
+_DEPENDENCY = _descriptor.Descriptor(
+  name='Dependency',
+  full_name='saturnin.Dependency',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='type', full_name='saturnin.Dependency.type', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='uid', full_name='saturnin.Dependency.uid', index=1,
       number=2, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
@@ -99,27 +334,27 @@ _DEPENDENCY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=89,
-  serialized_end=163,
+  serialized_start=204,
+  serialized_end=269,
 )
 
 
 _REQUESTCODE = _descriptor.Descriptor(
   name='RequestCode',
-  full_name='firebird.saturnin.RequestCode',
+  full_name='saturnin.RequestCode',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='code', full_name='firebird.saturnin.RequestCode.code', index=0,
+      name='code', full_name='saturnin.RequestCode.code', index=0,
       number=1, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='name', full_name='firebird.saturnin.RequestCode.name', index=1,
+      name='name', full_name='saturnin.RequestCode.name', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -137,41 +372,41 @@ _REQUESTCODE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=165,
-  serialized_end=206,
+  serialized_start=271,
+  serialized_end=312,
 )
 
 
 _INTERFACEDESCRIPTOR = _descriptor.Descriptor(
   name='InterfaceDescriptor',
-  full_name='firebird.saturnin.InterfaceDescriptor',
+  full_name='saturnin.InterfaceDescriptor',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='uid', full_name='firebird.saturnin.InterfaceDescriptor.uid', index=0,
+      name='uid', full_name='saturnin.InterfaceDescriptor.uid', index=0,
       number=1, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='name', full_name='firebird.saturnin.InterfaceDescriptor.name', index=1,
+      name='name', full_name='saturnin.InterfaceDescriptor.name', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='revision', full_name='firebird.saturnin.InterfaceDescriptor.revision', index=2,
+      name='revision', full_name='saturnin.InterfaceDescriptor.revision', index=2,
       number=3, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='requests', full_name='firebird.saturnin.InterfaceDescriptor.requests', index=3,
+      name='requests', full_name='saturnin.InterfaceDescriptor.requests', index=3,
       number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -189,42 +424,42 @@ _INTERFACEDESCRIPTOR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=208,
-  serialized_end=324,
+  serialized_start=314,
+  serialized_end=421,
 )
 
 
 _INSTALLEDSERVICE = _descriptor.Descriptor(
   name='InstalledService',
-  full_name='firebird.saturnin.InstalledService',
+  full_name='saturnin.InstalledService',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='agent', full_name='firebird.saturnin.InstalledService.agent', index=0,
+      name='agent', full_name='saturnin.InstalledService.agent', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='api', full_name='firebird.saturnin.InstalledService.api', index=1,
+      name='api', full_name='saturnin.InstalledService.api', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='dependencies', full_name='firebird.saturnin.InstalledService.dependencies', index=2,
+      name='dependencies', full_name='saturnin.InstalledService.dependencies', index=2,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='supplement', full_name='firebird.saturnin.InstalledService.supplement', index=3,
-      number=4, type=11, cpp_type=10, label=3,
+      name='supplement', full_name='saturnin.InstalledService.supplement', index=3,
+      number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -241,52 +476,163 @@ _INSTALLEDSERVICE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=327,
-  serialized_end=546,
+  serialized_start=424,
+  serialized_end=614,
 )
 
+
+_DATAPIPE = _descriptor.Descriptor(
+  name='DataPipe',
+  full_name='saturnin.DataPipe',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='name', full_name='saturnin.DataPipe.name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='socket_type', full_name='saturnin.DataPipe.socket_type', index=1,
+      number=2, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='use', full_name='saturnin.DataPipe.use', index=2,
+      number=3, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='protocol', full_name='saturnin.DataPipe.protocol', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='owner', full_name='saturnin.DataPipe.owner', index=4,
+      number=5, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='pid', full_name='saturnin.DataPipe.pid', index=5,
+      number=6, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='host', full_name='saturnin.DataPipe.host', index=6,
+      number=7, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='endpoints', full_name='saturnin.DataPipe.endpoints', index=7,
+      number=8, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='supplement', full_name='saturnin.DataPipe.supplement', index=8,
+      number=9, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=617,
+  serialized_end=866,
+)
+
+_ENDPOINTADDRESS.fields_by_name['domain'].enum_type = _ADDRESSDOMAIN
+_ENDPOINTADDRESS.fields_by_name['protocol'].enum_type = _TRANSPORTPROTOCOL
 _DEPENDENCY.fields_by_name['type'].enum_type = _DEPENDENCYTYPE
 _INTERFACEDESCRIPTOR.fields_by_name['requests'].message_type = _REQUESTCODE
 _INSTALLEDSERVICE.fields_by_name['agent'].message_type = saturnin_dot_sdk_dot_fbsp__pb2._AGENTIDENTIFICATION
 _INSTALLEDSERVICE.fields_by_name['api'].message_type = _INTERFACEDESCRIPTOR
 _INSTALLEDSERVICE.fields_by_name['dependencies'].message_type = _DEPENDENCY
 _INSTALLEDSERVICE.fields_by_name['supplement'].message_type = google_dot_protobuf_dot_any__pb2._ANY
+_DATAPIPE.fields_by_name['socket_type'].enum_type = _SOCKETTYPE
+_DATAPIPE.fields_by_name['use'].enum_type = _SOCKETUSE
+_DATAPIPE.fields_by_name['endpoints'].message_type = _ENDPOINTADDRESS
+_DATAPIPE.fields_by_name['supplement'].message_type = google_dot_protobuf_dot_any__pb2._ANY
+DESCRIPTOR.message_types_by_name['EndpointAddress'] = _ENDPOINTADDRESS
 DESCRIPTOR.message_types_by_name['Dependency'] = _DEPENDENCY
 DESCRIPTOR.message_types_by_name['RequestCode'] = _REQUESTCODE
 DESCRIPTOR.message_types_by_name['InterfaceDescriptor'] = _INTERFACEDESCRIPTOR
 DESCRIPTOR.message_types_by_name['InstalledService'] = _INSTALLEDSERVICE
+DESCRIPTOR.message_types_by_name['DataPipe'] = _DATAPIPE
+DESCRIPTOR.enum_types_by_name['AddressDomain'] = _ADDRESSDOMAIN
+DESCRIPTOR.enum_types_by_name['TransportProtocol'] = _TRANSPORTPROTOCOL
+DESCRIPTOR.enum_types_by_name['SocketType'] = _SOCKETTYPE
+DESCRIPTOR.enum_types_by_name['SocketUse'] = _SOCKETUSE
 DESCRIPTOR.enum_types_by_name['DependencyType'] = _DEPENDENCYTYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+EndpointAddress = _reflection.GeneratedProtocolMessageType('EndpointAddress', (_message.Message,), dict(
+  DESCRIPTOR = _ENDPOINTADDRESS,
+  __module__ = 'saturnin_pb2'
+  # @@protoc_insertion_point(class_scope:saturnin.EndpointAddress)
+  ))
+_sym_db.RegisterMessage(EndpointAddress)
 
 Dependency = _reflection.GeneratedProtocolMessageType('Dependency', (_message.Message,), dict(
   DESCRIPTOR = _DEPENDENCY,
   __module__ = 'saturnin_pb2'
-  # @@protoc_insertion_point(class_scope:firebird.saturnin.Dependency)
+  # @@protoc_insertion_point(class_scope:saturnin.Dependency)
   ))
 _sym_db.RegisterMessage(Dependency)
 
 RequestCode = _reflection.GeneratedProtocolMessageType('RequestCode', (_message.Message,), dict(
   DESCRIPTOR = _REQUESTCODE,
   __module__ = 'saturnin_pb2'
-  # @@protoc_insertion_point(class_scope:firebird.saturnin.RequestCode)
+  # @@protoc_insertion_point(class_scope:saturnin.RequestCode)
   ))
 _sym_db.RegisterMessage(RequestCode)
 
 InterfaceDescriptor = _reflection.GeneratedProtocolMessageType('InterfaceDescriptor', (_message.Message,), dict(
   DESCRIPTOR = _INTERFACEDESCRIPTOR,
   __module__ = 'saturnin_pb2'
-  # @@protoc_insertion_point(class_scope:firebird.saturnin.InterfaceDescriptor)
+  # @@protoc_insertion_point(class_scope:saturnin.InterfaceDescriptor)
   ))
 _sym_db.RegisterMessage(InterfaceDescriptor)
 
 InstalledService = _reflection.GeneratedProtocolMessageType('InstalledService', (_message.Message,), dict(
   DESCRIPTOR = _INSTALLEDSERVICE,
   __module__ = 'saturnin_pb2'
-  # @@protoc_insertion_point(class_scope:firebird.saturnin.InstalledService)
+  # @@protoc_insertion_point(class_scope:saturnin.InstalledService)
   ))
 _sym_db.RegisterMessage(InstalledService)
 
+DataPipe = _reflection.GeneratedProtocolMessageType('DataPipe', (_message.Message,), dict(
+  DESCRIPTOR = _DATAPIPE,
+  __module__ = 'saturnin_pb2'
+  # @@protoc_insertion_point(class_scope:saturnin.DataPipe)
+  ))
+_sym_db.RegisterMessage(DataPipe)
 
-DESCRIPTOR.has_options = True
-DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\025org.firebird.saturninB\rSaturninProtoP\001\242\002\003SPB\252\002\010Saturnin'))
+
 # @@protoc_insertion_point(module_scope)

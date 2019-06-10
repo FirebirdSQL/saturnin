@@ -34,13 +34,14 @@
 """Test runner for NODE service (classic version)
 """
 
-from uuid import UUID, uuid1
+from uuid import UUID
 from saturnin.sdk.types import MsgType, TClient, TChannel
-from saturnin.sdk.fbsptest import BaseTestRunner, zmq, print_msg, print_title
+from saturnin.sdk.fbsptest import BaseTestRunner, zmq, print_msg, print_title, print_data
 from saturnin.protobuf import node_pb2 as pb
 from .api import NodeRequest, NODE_INTERFACE_UID
 from .client import SaturninNodeClient
 import saturnin.service.roman.api as roman_api
+import saturnin.service.echo.api as echo_api
 
 class TestRunner(BaseTestRunner):
     """Test Runner for ROMAN Service and Client.
@@ -57,7 +58,7 @@ class TestRunner(BaseTestRunner):
         try:
             data = api_call(*args, **kwargs)
             print('Received:')
-            print(data)
+            print_data(data)
             return data
         except Exception as exc:
             print_title("ERROR", char="*")
