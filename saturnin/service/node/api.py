@@ -90,7 +90,7 @@ SERVICE_AGENT = AgentDescriptor(SERVICE_UID,
                                 "system/runtime",
                                )
 SERVICE_INTERFACE = InterfaceDescriptor(NODE_INTERFACE_UID, "Saturnin Node service API", 1,
-                                        NodeRequest)
+                                        1, NodeRequest)
 SERVICE_API = [SERVICE_INTERFACE]
 
 SERVICE_DESCRIPTION = ServiceDescriptor(SERVICE_AGENT, SERVICE_API, [],

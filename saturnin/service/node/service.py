@@ -337,6 +337,7 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
                 api_pb.uid = api.uid.bytes
                 api_pb.name = api.name
                 api_pb.revision = api.revision
+                api_pb.number = api.number
                 # Request codes
                 for rcode in api.requests:
                     rc_pb = api_pb.requests.add()

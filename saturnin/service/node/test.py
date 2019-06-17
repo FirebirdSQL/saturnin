@@ -44,7 +44,7 @@ import saturnin.service.roman.api as roman_api
 import saturnin.service.echo.api as echo_api
 
 class TestRunner(BaseTestRunner):
-    """Test Runner for ROMAN Service and Client.
+    """Test Runner for NODE Service and Client.
 """
     def __init__(self, context):
         super().__init__(context)

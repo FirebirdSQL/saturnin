@@ -116,7 +116,8 @@ message InterfaceDescriptor {
   bytes uid = 1 ;                     // [required] Interface ID (uuid5 - SHA1, namespace OID)
   string name = 2 ;                   // [required] Interface name
   uint32 revision = 3 ;               // [required] Revision number
-  repeated RequestCode requests = 4 ; // [required] Request codes
+  uint32 number = 4 ;                 // [required] Identification Number assigned by Service
+  repeated RequestCode requests = 5 ; // [required] Request codes
 }
 
 // Installed service specification
@@ -137,10 +138,8 @@ message DataPipe {
   string protocol = 4 ;                         // [required] Protocol description
   bytes owner = 5 ;                             // [required] if pipe is owned by Saturnin service
                                                 // ID of the peer that owns the pipe
-  uint32 pid = 6 ;                              // ID of the process that manages the pipe
-                                                // if it's different from owner's or owner is not defined
-  string host = 7 ;                             // [required] if owner is not defined,
-                                                // host (network node) identification where the pipe resides
+  uint32 pid = 6 ;                              // [required] ID of the process that manages the pipe
+  string host = 7 ;                             // [required] host (network node) identification where the pipe resides
   repeated EndpointAddress endpoints = 8 ;      // [required] Binded endpoints
   repeated google.protobuf.Any supplement = 9 ; // additional information about pipe
 }

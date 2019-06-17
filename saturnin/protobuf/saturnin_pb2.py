@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='saturnin.proto',
   package='saturnin',
   syntax='proto3',
-  serialized_pb=_b('\n\x0esaturnin.proto\x12\x08saturnin\x1a\x19google/protobuf/any.proto\x1a\x17saturnin/sdk/fbsp.proto\"z\n\x0f\x45ndpointAddress\x12\'\n\x06\x64omain\x18\x01 \x01(\x0e\x32\x17.saturnin.AddressDomain\x12-\n\x08protocol\x18\x02 \x01(\x0e\x32\x1b.saturnin.TransportProtocol\x12\x0f\n\x07\x61\x64\x64ress\x18\x03 \x01(\t\"A\n\nDependency\x12&\n\x04type\x18\x01 \x01(\x0e\x32\x18.saturnin.DependencyType\x12\x0b\n\x03uid\x18\x02 \x01(\x0c\")\n\x0bRequestCode\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0c\n\x04name\x18\x02 \x01(\t\"k\n\x13InterfaceDescriptor\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08revision\x18\x03 \x01(\r\x12\'\n\x08requests\x18\x04 \x03(\x0b\x32\x15.saturnin.RequestCode\"\xbe\x01\n\x10InstalledService\x12(\n\x05\x61gent\x18\x01 \x01(\x0b\x32\x19.fbsp.AgentIdentification\x12*\n\x03\x61pi\x18\x02 \x03(\x0b\x32\x1d.saturnin.InterfaceDescriptor\x12*\n\x0c\x64\x65pendencies\x18\x03 \x03(\x0b\x32\x14.saturnin.Dependency\x12(\n\nsupplement\x18\x05 \x03(\x0b\x32\x14.google.protobuf.Any\"\xf9\x01\n\x08\x44\x61taPipe\x12\x0c\n\x04name\x18\x01 \x01(\t\x12)\n\x0bsocket_type\x18\x02 \x01(\x0e\x32\x14.saturnin.SocketType\x12 \n\x03use\x18\x03 \x01(\x0e\x32\x13.saturnin.SocketUse\x12\x10\n\x08protocol\x18\x04 \x01(\t\x12\r\n\x05owner\x18\x05 \x01(\x0c\x12\x0b\n\x03pid\x18\x06 \x01(\r\x12\x0c\n\x04host\x18\x07 \x01(\t\x12,\n\tendpoints\x18\x08 \x03(\x0b\x32\x19.saturnin.EndpointAddress\x12(\n\nsupplement\x18\t \x03(\x0b\x32\x14.google.protobuf.Any*E\n\rAddressDomain\x12\x12\n\x0eUNKNOWN_DOMAIN\x10\x00\x12\t\n\x05LOCAL\x10\x01\x12\x08\n\x04NODE\x10\x02\x12\x0b\n\x07NETWORK\x10\x03*d\n\x11TransportProtocol\x12\x14\n\x10UNKNOWN_PROTOCOL\x10\x00\x12\n\n\x06INPROC\x10\x01\x12\x07\n\x03IPC\x10\x02\x12\x07\n\x03TCP\x10\x03\x12\x07\n\x03PGM\x10\x04\x12\x08\n\x04\x45PGM\x10\x05\x12\x08\n\x04VMCI\x10\x06*\x86\x01\n\nSocketType\x12\x10\n\x0cUNKNOWN_TYPE\x10\x00\x12\n\n\x06\x44\x45\x41LER\x10\x01\x12\n\n\x06ROUTER\x10\x02\x12\x07\n\x03PUB\x10\x03\x12\x07\n\x03SUB\x10\x04\x12\x08\n\x04XPUB\x10\x05\x12\x08\n\x04XSUB\x10\x06\x12\x08\n\x04PUSH\x10\x07\x12\x08\n\x04PULL\x10\x08\x12\n\n\x06STREAM\x10\t\x12\x08\n\x04PAIR\x10\n*F\n\tSocketUse\x12\x0f\n\x0bUNKNOWN_USE\x10\x00\x12\x0c\n\x08PRODUCER\x10\x01\x12\x0c\n\x08\x43ONSUMER\x10\x02\x12\x0c\n\x08\x45XCHANGE\x10\x03*P\n\x0e\x44\x65pendencyType\x12\x13\n\x0fUNKNOWN_DEPTYPE\x10\x00\x12\x0c\n\x08REQUIRED\x10\x01\x12\r\n\tPREFERRED\x10\x02\x12\x0c\n\x08OPTIONAL\x10\x03P\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x0esaturnin.proto\x12\x08saturnin\x1a\x19google/protobuf/any.proto\x1a\x17saturnin/sdk/fbsp.proto\"z\n\x0f\x45ndpointAddress\x12\'\n\x06\x64omain\x18\x01 \x01(\x0e\x32\x17.saturnin.AddressDomain\x12-\n\x08protocol\x18\x02 \x01(\x0e\x32\x1b.saturnin.TransportProtocol\x12\x0f\n\x07\x61\x64\x64ress\x18\x03 \x01(\t\"A\n\nDependency\x12&\n\x04type\x18\x01 \x01(\x0e\x32\x18.saturnin.DependencyType\x12\x0b\n\x03uid\x18\x02 \x01(\x0c\")\n\x0bRequestCode\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0c\n\x04name\x18\x02 \x01(\t\"{\n\x13InterfaceDescriptor\x12\x0b\n\x03uid\x18\x01 \x01(\x0c\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08revision\x18\x03 \x01(\r\x12\x0e\n\x06number\x18\x04 \x01(\r\x12\'\n\x08requests\x18\x05 \x03(\x0b\x32\x15.saturnin.RequestCode\"\xbe\x01\n\x10InstalledService\x12(\n\x05\x61gent\x18\x01 \x01(\x0b\x32\x19.fbsp.AgentIdentification\x12*\n\x03\x61pi\x18\x02 \x03(\x0b\x32\x1d.saturnin.InterfaceDescriptor\x12*\n\x0c\x64\x65pendencies\x18\x03 \x03(\x0b\x32\x14.saturnin.Dependency\x12(\n\nsupplement\x18\x05 \x03(\x0b\x32\x14.google.protobuf.Any\"\xf9\x01\n\x08\x44\x61taPipe\x12\x0c\n\x04name\x18\x01 \x01(\t\x12)\n\x0bsocket_type\x18\x02 \x01(\x0e\x32\x14.saturnin.SocketType\x12 \n\x03use\x18\x03 \x01(\x0e\x32\x13.saturnin.SocketUse\x12\x10\n\x08protocol\x18\x04 \x01(\t\x12\r\n\x05owner\x18\x05 \x01(\x0c\x12\x0b\n\x03pid\x18\x06 \x01(\r\x12\x0c\n\x04host\x18\x07 \x01(\t\x12,\n\tendpoints\x18\x08 \x03(\x0b\x32\x19.saturnin.EndpointAddress\x12(\n\nsupplement\x18\t \x03(\x0b\x32\x14.google.protobuf.Any*E\n\rAddressDomain\x12\x12\n\x0eUNKNOWN_DOMAIN\x10\x00\x12\t\n\x05LOCAL\x10\x01\x12\x08\n\x04NODE\x10\x02\x12\x0b\n\x07NETWORK\x10\x03*d\n\x11TransportProtocol\x12\x14\n\x10UNKNOWN_PROTOCOL\x10\x00\x12\n\n\x06INPROC\x10\x01\x12\x07\n\x03IPC\x10\x02\x12\x07\n\x03TCP\x10\x03\x12\x07\n\x03PGM\x10\x04\x12\x08\n\x04\x45PGM\x10\x05\x12\x08\n\x04VMCI\x10\x06*\x86\x01\n\nSocketType\x12\x10\n\x0cUNKNOWN_TYPE\x10\x00\x12\n\n\x06\x44\x45\x41LER\x10\x01\x12\n\n\x06ROUTER\x10\x02\x12\x07\n\x03PUB\x10\x03\x12\x07\n\x03SUB\x10\x04\x12\x08\n\x04XPUB\x10\x05\x12\x08\n\x04XSUB\x10\x06\x12\x08\n\x04PUSH\x10\x07\x12\x08\n\x04PULL\x10\x08\x12\n\n\x06STREAM\x10\t\x12\x08\n\x04PAIR\x10\n*F\n\tSocketUse\x12\x0f\n\x0bUNKNOWN_USE\x10\x00\x12\x0c\n\x08PRODUCER\x10\x01\x12\x0c\n\x08\x43ONSUMER\x10\x02\x12\x0c\n\x08\x45XCHANGE\x10\x03*P\n\x0e\x44\x65pendencyType\x12\x13\n\x0fUNKNOWN_DEPTYPE\x10\x00\x12\x0c\n\x08REQUIRED\x10\x01\x12\r\n\tPREFERRED\x10\x02\x12\x0c\n\x08OPTIONAL\x10\x03P\x01\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_any__pb2.DESCRIPTOR,saturnin_dot_sdk_dot_fbsp__pb2.DESCRIPTOR,],
   public_dependencies=[saturnin_dot_sdk_dot_fbsp__pb2.DESCRIPTOR,])
@@ -53,8 +53,8 @@ _ADDRESSDOMAIN = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=868,
-  serialized_end=937,
+  serialized_start=884,
+  serialized_end=953,
 )
 _sym_db.RegisterEnumDescriptor(_ADDRESSDOMAIN)
 
@@ -96,8 +96,8 @@ _TRANSPORTPROTOCOL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=939,
-  serialized_end=1039,
+  serialized_start=955,
+  serialized_end=1055,
 )
 _sym_db.RegisterEnumDescriptor(_TRANSPORTPROTOCOL)
 
@@ -155,8 +155,8 @@ _SOCKETTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1042,
-  serialized_end=1176,
+  serialized_start=1058,
+  serialized_end=1192,
 )
 _sym_db.RegisterEnumDescriptor(_SOCKETTYPE)
 
@@ -186,8 +186,8 @@ _SOCKETUSE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1178,
-  serialized_end=1248,
+  serialized_start=1194,
+  serialized_end=1264,
 )
 _sym_db.RegisterEnumDescriptor(_SOCKETUSE)
 
@@ -217,8 +217,8 @@ _DEPENDENCYTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1250,
-  serialized_end=1330,
+  serialized_start=1266,
+  serialized_end=1346,
 )
 _sym_db.RegisterEnumDescriptor(_DEPENDENCYTYPE)
 
@@ -406,8 +406,15 @@ _INTERFACEDESCRIPTOR = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='requests', full_name='saturnin.InterfaceDescriptor.requests', index=3,
-      number=4, type=11, cpp_type=10, label=3,
+      name='number', full_name='saturnin.InterfaceDescriptor.number', index=3,
+      number=4, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='requests', full_name='saturnin.InterfaceDescriptor.requests', index=4,
+      number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -425,7 +432,7 @@ _INTERFACEDESCRIPTOR = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=314,
-  serialized_end=421,
+  serialized_end=437,
 )
 
 
@@ -476,8 +483,8 @@ _INSTALLEDSERVICE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=424,
-  serialized_end=614,
+  serialized_start=440,
+  serialized_end=630,
 )
 
 
@@ -563,8 +570,8 @@ _DATAPIPE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=617,
-  serialized_end=866,
+  serialized_start=633,
+  serialized_end=882,
 )
 
 _ENDPOINTADDRESS.fields_by_name['domain'].enum_type = _ADDRESSDOMAIN

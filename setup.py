@@ -67,6 +67,7 @@ setup(
         'Source': 'https://github.com/FirebirdSQL/saturnin',
     },
     entry_points={'console_scripts': ['saturnin-node = saturnin.service.node.runner:main',
+                                      'node-mngr = saturnin.utils.nodemngr:main',
                                      ],
                   'saturnin.service': ['saturnin-node = saturnin.service.node.api:SERVICE_DESCRIPTION',
                                        'firebird-log = saturnin.service.fblog.api:SERVICE_DESCRIPTION',

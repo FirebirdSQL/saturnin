@@ -34,3 +34,94 @@
 
 """Test runner for Firebird log service (classic version)
 """
+
+from uuid import UUID
+from saturnin.sdk.types import MsgType, TClient, TChannel
+from saturnin.sdk.fbsptest import BaseTestRunner, zmq, print_msg, print_title, print_data
+from saturnin.protobuf import fblog_pb2 as pb
+from .api import FbLogRequest, FBLOG_INTERFACE_UID
+from .client import FirebirdLogClient
+
+class TestRunner(BaseTestRunner):
+    """Test Runner for Firebird log Service and Client.
+"""
+    def __init__(self, context):
+        super().__init__(context)
+        self.interface_uid = FBLOG_INTERFACE_UID.bytes
+        self.peer_uid = None
+    def create_client(self, channel: TChannel) -> TClient:
+        return FirebirdLogClient(channel, self.peer, self.agent)
+    def run_request(self, api_call, *args, **kwargs):
+        "Execute Client API call."
+        print('Sending request..')
+        try:
+            data = api_call(*args, **kwargs)
+            print('Received:')
+            print_data(data)
+            return data
+        except Exception as exc:
+            print_title("ERROR", char="*")
+            print(exc)
+    #def raw_01_imonitor(self, socket: zmq.Socket):
+        #"Raw test of MONITOR request."
+        #print("Sending MONITOR request:")
+        #msg = self.protocol.create_request_for(self.interface_id,
+                                               #FbLogRequest.MONITOR,
+                                               #self.get_token())
+        #dframe = pb.RequestMonitor()
+        #msg.data.append(dframe.SerializeToString())
+        #print_msg(msg)
+        #socket.send_multipart(msg.as_zmsg())
+        #print("Receiving reply:")
+        #zmsg = socket.recv_multipart()
+        #msg = self.protocol.parse(zmsg)
+        #dframe = pb.ReplyMonitor()
+        #dframe.ParseFromString(msg.data[0])
+        #print_msg(msg, str(dframe))
+    #def raw_02_stop_monitor(self, socket: zmq.Socket):
+        #"Raw test of STOP_MONITOR request."
+        #print("Sending STOP_MONITOR request:")
+        #msg = self.protocol.create_request_for(self.interface_id,
+                                               #FbLogRequest.STOP_MONITOR,
+                                               #self.get_token())
+        #dframe = pb.RequestStopMonitor()
+        #msg.data.append(dframe.SerializeToString())
+        #print_msg(msg, str(dframe))
+        #socket.send_multipart(msg.as_zmsg())
+        #print("Receiving reply:")
+        #zmsg = socket.recv_multipart()
+        #msg = self.protocol.parse(zmsg)
+        #dframe = pb.ReplyInterfaceProviders()
+        #dframe.ParseFromString(msg.data[0])
+        #print_msg(msg, str(dframe))
+    def raw_03_entries(self, socket: zmq.Socket):
+        "Raw test of ENTRIES request."
+        print("Sending ENTRIES request:")
+        msg = self.protocol.create_request_for(self.interface_id,
+                                               FbLogRequest.ENTRIES,
+                                               self.get_token())
+        dframe = pb.RequestEntries()
+        msg.data.append(dframe.SerializeToString())
+        print_msg(msg, str(dframe))
+        socket.send_multipart(msg.as_zmsg())
+        print("Receiving reply:")
+        zmsg = socket.recv_multipart()
+        msg = self.protocol.parse(zmsg)
+        if msg.message_type == MsgType.REPLY:
+            #dframe = pb.ReplyStartService()
+            #dframe.ParseFromString(msg.data[0])
+            #self.peer_uid = dframe.peer_uid
+            data = str(dframe)
+        elif msg.message_type == MsgType.ERROR:
+            data = None
+        print_msg(msg, data)
+    #def client_01_installed_services(self, client: TClient):
+        #"Client test of get_installed() API call."
+        #self.run_request(client.get_installed)
+    #def client_02_interface_providers(self, client: TClient):
+        #"Client test of get_providers() API call."
+        #self.run_request(client.get_providers, roman_api.ROMAN_INTERFACE_UID)
+    #def client_03_start_service(self, client: TClient):
+        #"Client test of start_service() API call."
+        #data = self.run_request(client.start_service, roman_api.SERVICE_UID)
+        #self.peer_uid = UUID(bytes=data.peer_uid)

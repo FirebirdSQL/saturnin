@@ -38,9 +38,11 @@ Firebird log Service monitors firebird.log file and emits log events into data p
 
 Supported requests:
 
-    :MONITOR:     Starts contionuous monitoring of firebird.log file. New entries are parsed
-                  and sent to data pipeline.
-    :GET_ENTRIES: Send parsed (selected) entries from firebird.log as stream of DATA messages.
+    :MONITOR:      Starts contionuous monitoring of firebird.log file. New entries are parsed
+                   and sent to data pipeline.
+    :STOP_MONITOR: Stops contionuous monitoring of firebird.log file previously started by
+                   MONITOR request.
+    :ENTRIES:      Sends parsed (selected) entries from firebird.log as stream of DATA messages.
 """
 
 from enum import IntEnum
@@ -62,12 +64,12 @@ FBLOG_INTERFACE_UID: UUID = uuid5(NAMESPACE_OID, FBLOG_INTERFACE_OID)
 class FbLogRequest(IntEnum):
     "Saturnin Firebird Log Service Request Code"
     MONITOR = 1
-    GET_ENTRIES = 2
+    STOP_MONITOR = 2
+    ENTRIES = 3
 
 class FbLogError(IntEnum):
     "Saturnin Firebird Log Service Error Code"
-    ALREADY_RUNNING = 1
-    RESOURCE_NOT_AVAILABLE = 2
+    RESOURCE_NOT_AVAILABLE = 1
 
 #  Service description
 
@@ -78,7 +80,7 @@ SERVICE_AGENT = AgentDescriptor(SERVICE_UID,
                                 "firebird/log",
                                )
 SERVICE_INTERFACE = InterfaceDescriptor(FBLOG_INTERFACE_UID,
-                                        "Saturnin Firebird Log service API", 1,
+                                        "Saturnin Firebird Log service API", 1, 1,
                                         FbLogRequest)
 SERVICE_API = [SERVICE_INTERFACE]
 
