@@ -51,12 +51,12 @@ from saturnin.sdk import VENDOR_UID
 from saturnin.sdk.types import AgentDescriptor, InterfaceDescriptor, ServiceDescriptor, \
      ExecutionMode, ServiceType
 
-SERVICE_OID: str = '1.3.6.1.4.1.53446.1.1.3' # firebird.butler.service.firebird-log
+SERVICE_OID: str = '1.3.6.1.4.1.53446.1.1.4' # firebird.butler.service.firebird-log
 SERVICE_UID: UUID = uuid5(NAMESPACE_OID, SERVICE_OID)
 SERVICE_VERSION: str = '0.1'
 
 # firebird.butler.service.firebird-log.interface
-FBLOG_INTERFACE_OID: str = '1.3.6.1.4.1.53446.1.1.3.0'
+FBLOG_INTERFACE_OID: str = '1.3.6.1.4.1.53446.1.1.4.0'
 FBLOG_INTERFACE_UID: UUID = uuid5(NAMESPACE_OID, FBLOG_INTERFACE_OID)
 
 #  Enums (Request and Error Codes)

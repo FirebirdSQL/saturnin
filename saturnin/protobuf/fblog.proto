@@ -33,7 +33,7 @@ package saturnin.fblog;
 
 import public "google/protobuf/struct.proto";
 import public "google/protobuf/timestamp.proto";
-import public "saturnin/protobuf/saturnin.proto";
+import public "saturnin/sdk/fbsd.proto";
 
 // Firebird Log Entry
 
@@ -49,7 +49,7 @@ message LogSource {
   oneof source {
     string filespec = 1 ;
     google.protobuf.Struct server = 2 ;
-    saturnin.DataPipe pipe = 3 ;
+    fbsd.DataPipe pipe = 3 ;
   }
 }
 
@@ -57,12 +57,12 @@ message LogSource {
 
 message RequestMonitor {
   LogSource source = 1 ;           // [required] Source for log entries
-  saturnin.DataPipe push_to = 2 ;  // Optional data pipe specification
+  fbsd.DataPipe push_to = 2 ;  // Optional data pipe specification
 }
 
 message ReplyMonitor {
   int32 handle = 1 ;           // Handle assigned to monitoring request
-  saturnin.DataPipe pipe = 2 ; // Optional data pipe specification
+  fbsd.DataPipe pipe = 2 ; // Optional data pipe specification
 }
 
 // STOP_MONITOR Message Data
@@ -75,7 +75,7 @@ message RequestStopMonitor {
 
 message RequestEntries {
   LogSource source = 1 ;           // [required] Source for log entries
-  saturnin.DataPipe push_to = 2 ;  // Optional data pipe specification
+  fbsd.DataPipe push_to = 2 ;  // Optional data pipe specification
 }
 
 

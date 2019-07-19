@@ -31,9 +31,10 @@ syntax = "proto3";
 
 package saturnin.node;
 
-//import "google/protobuf/any.proto";
+import "google/protobuf/any.proto";
 //import "google/protobuf/struct.proto";
-import "saturnin/protobuf/saturnin.proto";
+//import public "saturnin/protobuf/saturnin.proto";
+import public "saturnin/sdk/fbsd.proto";
 
 // Enums
 
@@ -45,6 +46,37 @@ enum StartMode {
   PROCESS = 2 ;
 }
 
+// Dependency
+
+message Dependency {
+  fbsd.DependencyType type = 1 ; // [required]
+  bytes uid = 2 ;                // [required] Interface uid
+}
+
+// Interface
+
+message RequestCode {
+  uint32 code = 1 ; // [required]
+  string name = 2 ; // [required]
+}
+
+message InterfaceDescriptor {
+  bytes uid = 1 ;                     // [required] Interface ID (uuid5 - SHA1, namespace OID)
+  string name = 2 ;                   // [required] Interface name
+  uint32 revision = 3 ;               // [required] Revision number
+  uint32 number = 4 ;                 // [required] Identification Number assigned by Service
+  repeated RequestCode requests = 5 ; // [required] Request codes
+}
+
+// Installed service specification
+
+message InstalledService {
+  fbsd.AgentIdentification agent = 1 ;          // [required]
+  repeated InterfaceDescriptor api = 2 ;        // [required]
+  repeated Dependency dependencies = 3 ;        // List of dependencies
+  repeated google.protobuf.Any supplement = 5 ; // additional information about service
+}
+
 // INSTALLED_SERVICES Message Data
 
 message ReplyInstalledServices {
@@ -54,8 +86,8 @@ message ReplyInstalledServices {
 // RUNNING_SERVICES Message Data
 
 message RunningService {
-  fbsp.PeerIdentification peer = 1 ;   // Peer description
-  fbsp.AgentIdentification agent = 2 ; // Agent description
+  fbsd.PeerIdentification peer = 1 ;   // Peer description
+  fbsd.AgentIdentification agent = 2 ; // Agent description
   StartMode mode = 3 ;                 // Service start mode
   repeated string endpoints = 4 ;      // ZMQ endpoints used by service
 }
@@ -99,7 +131,7 @@ message RequestStopService {
 }
 
 message ReplyStopService {
-  fbsp.State result = 1 ; // STOPPED (SUSPENDED) or TERMINATED (ABORTED)
+  fbsd.State result = 1 ; // STOPPED (SUSPENDED) or TERMINATED (ABORTED)
 }
 
 // GET_PROVIDER Message Data

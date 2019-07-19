@@ -55,7 +55,7 @@ from datetime import datetime
 from functools import reduce
 import zmq
 from saturnin.sdk.types import ServiceError, MsgType, TMessage, TService, TServiceImpl, \
-     TSession, TChannel, ZMQAddress, Origin, ErrorCode, MsgFlag, \
+     TSession, TChannel, ZMQAddress, Origin, State, ErrorCode, MsgFlag, \
      ExecutionMode, AddressDomain
 from saturnin.sdk.base import BaseService, BaseMessageHandler, RouterChannel
 from saturnin.sdk.service import SimpleServiceImpl
@@ -73,6 +73,9 @@ class ParseError(Exception):
     "Exception raised on Firebird log parsing error"
 
 # Constants
+
+EOF = b'EOF'
+TERMINATED = b'TERMINATED'
 
 #  Functions
 
@@ -170,15 +173,24 @@ def process_log(context: zmq.Context, identity: bytes,
         else: # Pipe
             pass
         try:
+            entry_in = 0
+            entry_out = 0
             for source_id, timestamp, message in parse_log(log_gen):
+                while can_send.wait(1) != True:
+                    log.info('can_send.wait(1) TIMEOUT')
+                    if stop.is_set():
+                        log.info('can_send.wait(1) with STOP')
+                        break
                 if stop.is_set():
+                    log.info('Worker STOP')
                     break
-                can_send.wait()
                 entry.Clear()
                 entry.source_id = source_id
                 entry.timestamp.FromDatetime(timestamp)
                 entry.message = message
+                entry_in += 1
                 socket.send(entry.SerializeToString())
+                entry_out += 1
         except ParseError as exc:
             entry.Clear()
             entry.source_id = 'ERROR/firebird-log'
@@ -189,10 +201,10 @@ def process_log(context: zmq.Context, identity: bytes,
         else:
             if stop.is_set():
                 if can_send.is_set():
-                    socket.send(b'TERMINATED')
+                    socket.send(TERMINATED)
             else:
                 can_send.wait()
-                socket.send(b'EOF')
+                socket.send(EOF)
     finally:
         socket.close()
 
@@ -222,10 +234,12 @@ Attributes:
         self.deffered_msg = None
     def disable(self) -> None:
         """Disable worker so it does not send messages."""
+        log.debug("%s.disable", self.__class__.__name__)
         if self.can_send_event:
             self.can_send_event.clear()
     def enable(self) -> None:
         """Enable worker so it can send messages."""
+        log.debug("%s.enable", self.__class__.__name__)
         if self.can_send_event:
             self.can_send_event.set()
     def is_enabled(self) -> None:
@@ -246,6 +260,7 @@ Attributes:
 If `mode` is ANY or THREAD, the worker is executed in it's own thread. Otherwise it is
 executed in separate child process.
 """
+        log.info("%s.start", self.__class__.__name__)
         if self.is_running():
             raise ServiceError("The worker is already running")
         args = self.args.copy()
@@ -273,12 +288,14 @@ Arguments:
 Raises:
     :TimeoutError:  The service did not stop on time.
 """
+        log.info("%s.stop", self.__class__.__name__)
         if self.is_running():
             self.stop_event.set()
             self.runtime.join(timeout=timeout)
             if self.runtime.is_alive():
                 raise TimeoutError("The worker did not stop on time")
             self.runtime = None
+        log.info("Worker stopped")
     def terminate(self):
         """Terminate the service.
 
@@ -288,6 +305,7 @@ Does nothing when service is not running.
 Raises:
     :ServiceError:  When service termination fails.
 """
+        log.info("%s.terminate", self.__class__.__name__)
         if self.is_running():
             tid = ctypes.c_long(self.runtime.ident)
             if isinstance(self.runtime, threading.Thread):
@@ -317,18 +335,42 @@ class FirebirdLogMessageHandler(ServiceMessagelHandler):
                               self.on_entries,
                               MsgType.DATA: self.send_protocol_violation,
                               })
+    def suspend_session(self, session: TSession) -> None:
+        """Called by send() when message must be deferred for later delivery.
+
+Disables the worker to do not send further messages.
+"""
+        worker = self.impl.get_worker(session)
+        if worker:
+            worker.disable()
+    def resume_session(self, session: TSession) -> None:
+        """Called by __resend() when deferred message is sent successfully.
+
+Enables the worker to send further messages.
+"""
+        worker = self.impl.get_worker(session)
+        if worker:
+            worker.enable()
+    def cancel_session(self, session: TSession) -> None:
+        """Called by __resend() when attempts to send the message keep failing over specified
+time threashold.
+
+Stops the worker and discards the session."""
+        worker = self.impl.get_worker(session)
+        self.impl.drop_worker(worker)
+        self.discard_session(session)
     def on_ack_reply(self, session: TSession, msg: TMessage) -> None:
         """Called by `on_reply()` to handle REPLY/ACK_REPLY message.
 
 When acknowledged message is REPLY/ENTRIES, lets worker to start sending messages.
 """
-        log.debug("%s.on_ack_reply", self.__class__.__name__)
-        if ((msg.msg_type == MsgType.REPLY) and
+        log.info("%s.on_ack_reply", self.__class__.__name__)
+        if ((msg.message_type == MsgType.REPLY) and
                 (msg.type_data == bb2h(1, FbLogRequest.ENTRIES))):
             self.impl.get_worker(session).enable()
     def on_hello(self, session: TSession, msg: HelloMessage):
         "HELLO message handler. Sends WELCOME message back to the client."
-        log.debug("%s.on_hello(%s)", self.__class__.__name__, session.routing_id)
+        log.info("%s.on_hello(%s)", self.__class__.__name__, session.routing_id)
         super().on_hello(session, msg)
         welcome = self.protocol.create_welcome_reply(msg)
         welcome.peer.CopyFrom(self.impl.welcome_df)
@@ -336,7 +378,7 @@ When acknowledged message is REPLY/ENTRIES, lets worker to start sending message
     def on_cancel(self, session: TSession, msg: CancelMessage):
         "Handle CANCEL message."
         # We support CANCEL for ENTRIES requests
-        log.debug("%s.on_cancel(%s)", self.__class__.__name__, session.routing_id)
+        log.info("%s.on_cancel(%s)", self.__class__.__name__, session.routing_id)
     def on_monitor(self, session: TSession, msg: RequestMessage):
         "Handle REQUEST/MONITOR message."
         log.debug("%s.on_monitor(%s)", self.__class__.__name__, session.routing_id)
@@ -355,7 +397,7 @@ When acknowledged message is REPLY/ENTRIES, lets worker to start sending message
         self.send(reply, session)
     def on_entries(self, session: TSession, msg: RequestMessage):
         "Handle REQUEST/ENTRIES message."
-        log.debug("%s.on_entries(%s)", self.__class__.__name__, session.routing_id)
+        log.info("%s.on_entries(%s)", self.__class__.__name__, session.routing_id)
         dframe = pb.RequestEntries()
         dframe.ParseFromString(msg.data[0])
         try:
@@ -365,7 +407,7 @@ When acknowledged message is REPLY/ENTRIES, lets worker to start sending message
                                             dframe.push_to.host, dframe.push_to.pid)
             else:
                 address = self.impl.worker_chn.endpoints[0]
-            worker = self.impl.add_worker(session, process_log, dframe.source, address)
+            worker = self.impl.add_worker(session, msg, process_log, dframe.source, address)
             worker.start()
         except ServiceError as exc: # Expected error condition
             errmsg = self.protocol.create_error_for(msg, ErrorCode.ERROR)
@@ -378,7 +420,7 @@ When acknowledged message is REPLY/ENTRIES, lets worker to start sending message
         else:
             # Send reply
             reply = self.protocol.create_reply_for(msg)
-            reply.set_flag(MsgFlag.ACK_REPLY)
+            reply.set_flag(MsgFlag.ACK_REQ)
             self.send(reply, session)
 
 class WorkerMessageHandler(BaseMessageHandler):
@@ -386,6 +428,7 @@ class WorkerMessageHandler(BaseMessageHandler):
     def __init__(self, chn: TChannel, service_impl: TServiceImpl):
         super().__init__(chn, Origin.CONSUMER)
         self.impl: TServiceImpl = service_impl
+        self.fbsp = service_impl.msg_handler.protocol
     def dispatch(self, session: TSession, msg: TMessage) -> None:
         """Process message received from worker.
 
@@ -394,14 +437,19 @@ Arguments:
     :msg:     Received message.
 """
         worker = self.impl.get_worker(session)
-        try:
-            data_msg = self.protocol.create_data_for(worker.request)
-            data_msg.data.extend(msg.data)
+        if worker:
+            if msg.data[0] == EOF:
+                data_msg = self.fbsp.create_state_for(worker.request, State.FINISHED)
+                self.impl.drop_worker(worker)
+            elif msg.data[0] == TERMINATED:
+                data_msg = self.fbsp.create_state_for(worker.request, State.TERMINATED)
+                self.impl.drop_worker(worker)
+            else:
+                data_msg = self.fbsp.create_data_for(worker.request)
+                data_msg.data.extend(msg.data)
             self.impl.msg_handler.send(data_msg, worker.session)
-        except zmq.ZMQError:
-            worker.disable()
-            worker.deffered_msg = data_msg
-
+        else:
+            log.info("Ignoring message from dead worker")
 
 class FirebirdLogServiceImpl(SimpleServiceImpl):
     """Implementation of Firebird Log service."""
@@ -412,10 +460,14 @@ class FirebirdLogServiceImpl(SimpleServiceImpl):
         self.workers: Dict[UUID, Worker] = {}
         self.worker_chn = None
         self.worker_handler = None
+    def get_sock_opts(self) -> Dict[str, Any]:
+        "Return socket options for main service (router) channel."
+        return {'sndhwm': 100, 'rcvhwm': 30, }
     def initialize(self, svc: BaseService):
         super().initialize(svc)
         self.msg_handler = FirebirdLogMessageHandler(self.svc_chn, self)
-        self.worker_chn = RouterChannel(self.instance_id)
+        self.worker_chn = RouterChannel(self.instance_id,
+                                        sock_opts={'sndhwm': 10, 'rcvhwm': 30})
         self.worker_handler = WorkerMessageHandler(self.worker_chn, self)
         self.mngr.add(self.worker_chn)
         self.worker_chn.bind(ZMQAddress('inproc://%s:workers' % self.peer.uid))
@@ -434,32 +486,22 @@ class FirebirdLogServiceImpl(SimpleServiceImpl):
                 except:
                     log.warning("Could't stop worker %s", worker.name)
         super().finalize(svc)
-    def on_idle(self) -> None:
-        """Called by service when waiting for messages exceeds timeout.
-
-- Performs an attempt to resend any deffered worker messages. If resend is successful, worker
-  is enabled.
-- Performs check for running workers. Dead workers are removed from list of running workers.
-"""
-        for worker in self.workers.values():
-            if worker.deffered_msg:
-                try:
-                    self.msg_handler.send(worker.deffered_msg, worker.session)
-                    worker.enable()
-                    worker.deffered_msg = None
-                except zmq.ZMQError:
-                    pass
-        #if not reduce(lambda result, worker: result and worker.is_running(),
-                      #self.workers.values(), True):
-            #self.workers = dict((key, worker) for key, worker in self.workers.items()
-                                #if worker.is_running())
     def add_worker(self, session: TSession, request: TMessage, task: Callable,
                    source: pb.LogSource, address: ZMQAddress) -> Worker:
         """Returns newly created worker."""
+        log.info("%s.add_worker", self.__class__.__name__)
         worker = Worker(session, request, task, args=[self.mngr.ctx, session.routing_id,
                                                       source, address])
         self.workers[session.routing_id] = worker
         return worker
+    def drop_worker(self, worker: Worker) -> None:
+        "Stops and then drops the worker"
+        log.info("%s.drop_worker", self.__class__.__name__)
+        try:
+            worker.stop(5)
+        except TimeoutError:
+            worker.terminate()
+        del self.workers[worker.session.routing_id]
     def get_worker(self, session) -> Worker:
-        """Returns worker associated session."""
-        return self.workers[session.routing_id]
+        """Returns worker associated session or None."""
+        return self.workers.get(session.routing_id)

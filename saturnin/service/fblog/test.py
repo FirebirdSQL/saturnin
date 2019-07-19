@@ -35,8 +35,12 @@
 """Test runner for Firebird log service (classic version)
 """
 
-from uuid import UUID
-from saturnin.sdk.types import MsgType, TClient, TChannel
+#from uuid import UUID
+from tempfile import gettempdir
+from os import remove
+import os.path
+from time import sleep
+from saturnin.sdk.types import MsgType, TClient, TChannel, ClientError
 from saturnin.sdk.fbsptest import BaseTestRunner, zmq, print_msg, print_title, print_data
 from saturnin.protobuf import fblog_pb2 as pb
 from .api import FbLogRequest, FBLOG_INTERFACE_UID
@@ -96,11 +100,28 @@ class TestRunner(BaseTestRunner):
         #print_msg(msg, str(dframe))
     def raw_03_entries(self, socket: zmq.Socket):
         "Raw test of ENTRIES request."
+        #tempfile = os.path.join(gettempdir(), 'fblog-testlog.tmp')
+        #logfile = open(tempfile, mode = "w")
+        #logfile.writelines(["machine (Client)	Fri Jul 12 17:55:43 2019\n",
+                            #"\t/opt/firebird/bin/fbguard: guardian starting /opt/firebird/bin/fbserver\n",
+                            #"\n\n\n",
+                            #"machine (Client)	Sat Jul 13 10:51:56 2019\n",
+                            #"\t/opt/firebird/bin/fbguard: guardian starting /opt/firebird/bin/fbserver\n",
+                            #"\n\n\n",
+                            #"machine (Client)	Sat Jul 13 14:19:08 2019\n"
+                            #"\t/opt/firebird/bin/fbguard: /opt/firebird/bin/fbserver normal shutdown.\n"
+                            #"\n\n\n"
+                            #])
+        #logfile.close()
+        #try:
+        #tempfile = '/opt/firebird/firebird.log'
+        tempfile = '/home/job/python/projects/saturnin/fblog-test.log'
         print("Sending ENTRIES request:")
         msg = self.protocol.create_request_for(self.interface_id,
                                                FbLogRequest.ENTRIES,
                                                self.get_token())
         dframe = pb.RequestEntries()
+        dframe.source.filespec = tempfile
         msg.data.append(dframe.SerializeToString())
         print_msg(msg, str(dframe))
         socket.send_multipart(msg.as_zmsg())
@@ -108,14 +129,47 @@ class TestRunner(BaseTestRunner):
         zmsg = socket.recv_multipart()
         msg = self.protocol.parse(zmsg)
         if msg.message_type == MsgType.REPLY:
-            #dframe = pb.ReplyStartService()
-            #dframe.ParseFromString(msg.data[0])
-            #self.peer_uid = dframe.peer_uid
             data = str(dframe)
         elif msg.message_type == MsgType.ERROR:
             data = None
         print_msg(msg, data)
-    #def client_01_installed_services(self, client: TClient):
+        if msg.has_ack_req():
+            print("Sending ACK reply.")
+            reply = self.protocol.create_ack_reply(msg)
+            socket.send_multipart(reply.as_zmsg())
+        log_entry = pb.FirebirdLogEntry()
+        stop = False
+        receive_cnt = 0
+        msg_cnt = 0
+        while not stop:
+            if receive_cnt == 0:
+                cnt = input('How many messages should be received?')
+                if cnt.isnumeric():
+                    receive_cnt = int(cnt)
+                else:
+                    receive_cnt = 1
+            msg_cnt += 1
+            print("Receiving [%s]:" % msg_cnt)
+            event = socket.poll(5000)
+            if event != 0:
+                zmsg = socket.recv_multipart()
+                receive_cnt -= 1
+                msg = self.protocol.parse(zmsg)
+                if msg.message_type == MsgType.DATA:
+                    log_entry.ParseFromString(msg.data[0])
+                    data = str(log_entry)
+                elif msg.message_type == MsgType.STATE:
+                    data = None
+                    stop = True
+                elif msg.message_type == MsgType.ERROR:
+                    data = None
+                    stop = True
+                print_msg(msg, data)
+            else:
+                raise ClientError("Service did not respond in time.")
+        #finally:
+            #remove(tempfile)
+        #def client_01_installed_services(self, client: TClient):
         #"Client test of get_installed() API call."
         #self.run_request(client.get_installed)
     #def client_02_interface_providers(self, client: TClient):

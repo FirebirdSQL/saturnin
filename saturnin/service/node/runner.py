@@ -70,7 +70,7 @@ def main():
             print("\nTerminating...")
         stop_event.set()
 
-    logging.basicConfig(format='%(levelname)s:%(threadName)s:%(name)s:%(message)s')
+    logging.basicConfig(format='%(levelname)s:%(processName)s:%(threadName)s:%(name)s:%(message)s')
     signal.signal(signal.SIGINT, handle_signal)
     signal.signal(signal.SIGTERM, handle_signal)
     stop_event = DummyEvent()
@@ -109,7 +109,6 @@ def main():
     except Exception:
         logger.exception("Fatal exception, node terminated.")
     logging.shutdown()
-    print('Done.')
 
 if __name__ == '__main__':
     main()

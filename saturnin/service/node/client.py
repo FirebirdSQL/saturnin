@@ -209,7 +209,7 @@ Returns:
             raise TimeoutError("The service did not respond on time to START_SERVICE request")
         return msg.response
     def stop_service(self, peer_uid: UUID, timeout: Optional[int] = None, forced: bool = False,
-                      **kwargs) -> pb.ReplyStartService:
+                      **kwargs) -> pb.ReplyStopService:
         """Starts specified service.
 
 Returns:

@@ -77,7 +77,7 @@ log = logging.getLogger(__name__)
 
 # Constants
 
-DEFAULT_TIMEOUT = 5000
+DEFAULT_TIMEOUT = 10000
 
 # Functions
 
@@ -85,7 +85,8 @@ def protocol_name(address: str) -> str:
     "Returns protocol name from address."
     return address.split(':', 1)[0].lower()
 
-def get_best_endpoint(endpoints, client_mode=ExecutionMode.PROCESS,
+def get_best_endpoint(endpoints: List[ZMQAddress],
+                      client_mode: ExecutionMode = ExecutionMode.PROCESS,
                       service_mode=ExecutionMode.PROCESS) -> Optional[str]:
     "Returns endpoint that uses the best protocol from available options."
     if client_mode == ExecutionMode.ANY:
@@ -102,17 +103,27 @@ def get_best_endpoint(endpoints, client_mode=ExecutionMode.PROCESS,
     return tcp[0]
 
 def service_run(peer_uid: UUID, endpoints: List[ZMQAddress], svc_descriptor: ServiceDescriptor,
-                stop_event: Any, remotes: Dict[bytes, str], ctrl_addr: bytes):
+                stop_event: Any, remotes: Dict[bytes, str], ctrl_addr: bytes,
+                mode: ExecutionMode):
     "Process or thread target code to run the service."
-    ctx = zmq.Context.instance()
+    if mode == ExecutionMode.PROCESS:
+        ctx = zmq.Context()
+    else:
+        ctx = zmq.Context.instance()
     pipe = ctx.socket(zmq.DEALER)
+    pipe.CONNECT_TIMEOUT = 5000 # 5sec
     pipe.IMMEDIATE = 1
+    pipe.LINGER = 5000 # 5sec
+    pipe.SNDTIMEO = 5000 # 5sec
+    log.debug("Connecting service control socket at %s", ctrl_addr)
     pipe.connect(ctrl_addr)
     #
     try:
         svc_implementation = load(svc_descriptor.implementation)
         svc_class = load(svc_descriptor.container)
         svc_impl = svc_implementation(stop_event)
+        if mode == ExecutionMode.PROCESS:
+            svc_impl.zmq_context = ctx
         svc_impl.endpoints = endpoints
         svc_impl.peer = PeerDescriptor(peer_uid, getpid(), platform.node())
         svc = svc_class(svc_impl)
@@ -123,11 +134,21 @@ def service_run(peer_uid: UUID, endpoints: List[ZMQAddress], svc_descriptor: Ser
         pipe.send_pyobj(svc_impl.peer)
         pipe.close()
         svc.start()
+    except zmq.ZMQError as zmqerr:
+        log.error("Send to service control socket failed, error: [%s] %s",
+                  zmqerr.errno, zmqerr)
     except Exception as exc:
-        if not pipe.closed():
+        log.exception("Service execution failed")
+        if not pipe.closed:
             pipe.send_pyobj(1)
             pipe.send_pyobj(exc)
             pipe.close()
+    finally:
+        if not pipe.closed:
+            pipe.close()
+        if mode == ExecutionMode.PROCESS:
+            log.debug("Terminating ZMQ context")
+            ctx.term()
 
 # Classes
 
@@ -169,6 +190,8 @@ Attributes:
         """Returns True if service is running."""
         if self.runtime is None:
             return False
+        if self.peer is None:
+            return False
         if self.runtime.is_alive():
             return True
         # It's dead, so dispose the runtime
@@ -181,7 +204,7 @@ If `mode` is ANY or THREAD, the service is executed in it's own thread. Otherwis
 executed in separate child process.
 
 Arguments:
-    :timeout: The timeout (in milliseconds) to wait for service to start [Default: 5000].
+    :timeout: The timeout (in milliseconds) to wait for service to start [Default: DEFAULT_TIMEOUT].
 
 Raises:
     :ServiceError: The service is already running.
@@ -191,31 +214,34 @@ Raises:
             raise ServiceError("The service is already running", code=NodeError.ALREADY_RUNNING)
         ctx = zmq.Context.instance()
         pipe = ctx.socket(zmq.DEALER)
-        uid = bytes(uuid1().hex, 'ascii')
+        uid_bytes = uuid1().hex.encode('ascii')
         try:
             if self.mode in (ExecutionMode.ANY, ExecutionMode.THREAD):
-                addr = ZMQAddress('inproc://%s' % uid)
+                addr = ZMQAddress('inproc://%s' % uid_bytes)
                 pipe.bind(addr)
                 self.ready_event = threading.Event()
                 self.stop_event = threading.Event()
                 self.runtime = threading.Thread(target=service_run, name=self.name,
                                                 args=(self.uid, self.endpoints,
                                                       self.descriptor,
-                                                      self.stop_event, self.remotes, addr))
+                                                      self.stop_event, self.remotes, addr,
+                                                      ExecutionMode.THREAD))
             else:
                 if platform.system() == 'Linux':
-                    addr = ZMQAddress('ipc://@%s' % uid)
+                    addr = ZMQAddress('ipc://@%s' % uid_bytes)
                 else:
-                    self.endpoints.append(ZMQAddress('tcp://127.0.0.1:*'))
+                    addr = ZMQAddress('tcp://127.0.0.1:*')
+                log.debug("Binding service control socket to %s", addr)
                 pipe.bind(addr)
                 addr = pipe.LAST_ENDPOINT
+                log.debug("Binded to %s", addr)
                 self.ready_event = multiprocessing.Event()
                 self.stop_event = multiprocessing.Event()
                 self.runtime = multiprocessing.Process(target=service_run, name=self.name,
                                                        args=(self.uid, self.endpoints,
                                                              self.descriptor,
                                                              self.stop_event, self.remotes,
-                                                             addr))
+                                                             addr, ExecutionMode.PROCESS))
             self.runtime.start()
             if pipe.poll(timeout, zmq.POLLIN) == 0:
                 raise TimeoutError("The service did not start on time")
@@ -231,12 +257,12 @@ Raises:
         finally:
             pipe.LINGER = 0
             pipe.close()
-    def stop(self, timeout=None):
+    def stop(self, timeout=DEFAULT_TIMEOUT):
         """Stop the service. Does nothing if service is not running.
 
 Arguments:
     :timeout: None (infinity), or a floating point number specifying a timeout for
-              the operation in seconds (or fractions thereof) [Default: None].
+              the operation in seconds (or fractions thereof) [Default: DEFAULT_TIMEOUT].
 
 Raises:
     :TimeoutError:  The service did not stop on time.
@@ -407,7 +433,18 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
             svc = self.impl.add_service(svc_desc, ExecutionMode(dframe.mode))
             timeout: int = DEFAULT_TIMEOUT if dframe.timeout == 0 else dframe.timeout
             if dframe.endpoints:
-                svc.endpoints = dframe.endpoints
+                svc.endpoints = []
+                for endpoint in dframe.endpoints:
+                    if endpoint == 'inproc://*':
+                        endpoint = ZMQAddress('inproc://%s' % svc.uid)
+                    elif endpoint == 'ipc://*':
+                        if platform.system() == 'Linux':
+                            endpoint = ZMQAddress('ipc://@%s' % svc.uid)
+                        else:
+                            endpoint = ZMQAddress('tcp://127.0.0.1:*')
+                    else:
+                        endpoint = ZMQAddress(endpoint)
+                    svc.endpoints.append(endpoint)
             svc.start(timeout)
         except ValueError as exc: # Service not installed
             errmsg = self.protocol.create_error_for(msg, ErrorCode.NOT_FOUND)
@@ -513,7 +550,7 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
                     raise ServiceError("Provider is not running",
                                        code=NodeError.RESOURCE_NOT_AVAILABLE)
                 running_svc = self.impl.add_service(providers[0], ExecutionMode.ANY)
-                running_svc.start(DEFAULT_TIMEOUT)
+                running_svc.start()
             endpoint = get_best_endpoint(running_svc.endpoints, ExecutionMode.THREAD,
                                          running_svc.mode)
             if not endpoint:
@@ -567,7 +604,7 @@ class SaturninNodeServiceImpl(SimpleServiceImpl):
         log.debug("%s.finalize", self.__class__.__name__)
         for service in self.services.values():
             try:
-                service.stop(DEFAULT_TIMEOUT)
+                service.stop()
             except:
                 try:
                     log.info("Service %s did not stop on time, terminating...", service.uid)
@@ -581,6 +618,7 @@ for running services. Dead services are removed from list of running services.
 """
         if not reduce(lambda result, svc: result and svc.is_running(),
                       self.services.values(), True):
+            log.debug("on_idle: Dead services detected, removing them")
             self.services = dict((key, svc) for key, svc in self.services.items()
                                  if svc.is_running())
     def get_service_descriptor(self, agent_uid: UUID) -> ServiceDescriptor:
