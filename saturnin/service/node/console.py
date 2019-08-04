@@ -46,12 +46,13 @@ from socket import getfqdn
 from argparse import ArgumentParser, Action, Namespace
 import zmq
 from tabulate import tabulate
-import saturnin.sdk
+from firebird.butler.fbsd_pb2 import StateEnum
+from saturnin.sdk import VENDOR_UID, PLATFORM_UID, PLATFORM_VERSION
 from saturnin.sdk.types import PeerDescriptor, AgentDescriptor, SaturninError, \
      ExecutionMode
 from saturnin.sdk.base import ChannelManager, DealerChannel
+from saturnin.service.node import node_pb2 as pb
 from saturnin.service.node.client import SaturninNodeClient
-from saturnin.protobuf import node_pb2 as pb
 
 __VERSION__ = '0.1'
 
@@ -90,10 +91,10 @@ Attributes:
         self.agent: AgentDescriptor = AgentDescriptor(CONSOLE_AGENT_UID,
                                                       "Saturnin node console",
                                                       __VERSION__,
-                                                      saturnin.sdk.VENDOR_UID,
+                                                      VENDOR_UID,
                                                       'system/console',
-                                                      saturnin.sdk.PLATFORM_UID,
-                                                      saturnin.sdk.PLATFORM_VERSION
+                                                      PLATFORM_UID,
+                                                      PLATFORM_VERSION
                                                      )
         self.node = SaturninNodeClient(self.chn, self.peer, self.agent)
         self.file = None
@@ -195,7 +196,7 @@ Format:
                     self.note_agent(service.agent)
                     self.note_peer(service.peer)
                     table.append([UUID(bytes=service.peer.uid), service.peer.host,
-                                  service.peer.pid, pb.StartMode.Name(service.mode),
+                                  service.peer.pid, pb.StartModeEnum.Name(service.mode),
                                   service.agent.name, service.agent.version,
                                   '\n'.join(service.endpoints)])
                 print("Services running on node:")
@@ -246,7 +247,7 @@ Format:
             reply = self.node.start_service(uid, args, mode)
             table = []
             table.append(['peer uid', UUID(bytes=reply.peer_uid)])
-            table.append(['mode', pb.StartMode.Name(reply.mode)])
+            table.append(['mode', pb.StartModeEnum.Name(reply.mode)])
             table.append(['endpoints', '\n'.join(reply.endpoints)])
             print("Service started:")
             print(tabulate(table, tablefmt="grid"))
@@ -276,7 +277,7 @@ Format:
                 return
         try:
             reply = self.node.stop_service(uid)
-            print(pb.State.Name(reply))
+            print(StateEnum.Name(reply))
         except Exception as exc:
             print('ERROR:', exc)
     def complete_stop(self, text: str, line: str, begidx: int, endidx: int) -> List:

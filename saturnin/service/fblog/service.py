@@ -54,15 +54,16 @@ import multiprocessing
 from datetime import datetime
 from functools import reduce
 import zmq
-from saturnin.sdk.types import ServiceError, MsgType, TMessage, TService, TServiceImpl, \
-     TSession, TChannel, ZMQAddress, Origin, State, ErrorCode, MsgFlag, \
-     ExecutionMode, AddressDomain
+from firebird.butler import fbsd_pb2 as fbsd
+from saturnin.sdk.types import ServiceError, TMessage, TService, TServiceImpl, \
+     TSession, TChannel, ZMQAddress, Origin, State, SocketType, \
+     SocketUse, ExecutionMode, AddressDomain
 from saturnin.sdk.base import BaseService, BaseMessageHandler, RouterChannel
 from saturnin.sdk.service import SimpleServiceImpl
-from saturnin.sdk.fbsp import ServiceMessagelHandler, HelloMessage, \
-     CancelMessage, RequestMessage, bb2h, note_exception
-from saturnin.protobuf import fblog_pb2 as pb
-from saturnin.service.fblog.api import FbLogRequest, FbLogError, SERVICE_AGENT, SERVICE_API
+from saturnin.sdk.fbsp import MsgType, ErrorCode, MsgFlag, ServiceMessagelHandler, \
+     HelloMessage, CancelMessage, RequestMessage, bb2h, note_exception
+from saturnin.service.fblog.api import FbLogRequest, SERVICE_AGENT, SERVICE_API
+from . import fblog_pb2 as pb
 import fdb
 
 # Logger
@@ -79,11 +80,11 @@ TERMINATED = b'TERMINATED'
 
 #  Functions
 
-_PROTOCOL_MAP = dict((value, key) for key, value in pb.TransportProtocol.items())
+_PROTOCOL_MAP = dict((value, key) for key, value in fbsd.TransportProtocolEnum.items())
 
-def toZMQAddress(endpoint: pb.EndpointAddress) -> ZMQAddress:
+def toZMQAddress(endpoint: fbsd.EndpointAddress) -> ZMQAddress:
     "Converts protobuf saturnin.EndpointAddress to ZMQAddress"
-    return '%s://%s' % (_PROTOCOL_MAP[endpoint.protocol], endpoint.address)
+    return ZMQAddress('%s://%s' % (_PROTOCOL_MAP[endpoint.protocol].lower(), endpoint.address))
 
 def get_best_endpoint(endpoints: Iterable[ZMQAddress], host1: str, pid1: int,
                       host2: str, pid2: int) -> Optional[ZMQAddress]:
@@ -92,10 +93,12 @@ def get_best_endpoint(endpoints: Iterable[ZMQAddress], host1: str, pid1: int,
     if (local_addr and host1 == host2 and pid1 == pid2):
         return local_addr[0]
     node_addr = [x for x in endpoints if x.domain == AddressDomain.NODE]
-    if (node_addr and host1 == host2):
+    if node_addr and (node_addr and host1 == host2):
         return node_addr[0]
     net_addr = [x for x in endpoints if x.domain == AddressDomain.NETWORK]
-    return net_addr[0]
+    if net_addr:
+        return net_addr[0]
+    return None
 
 def parse_log(lines):
     "Parses the Firebird log and yields tuples with parsed log entry values."
@@ -158,9 +161,19 @@ def process_log(context: zmq.Context, identity: bytes,
             for line in logfile:
                 yield line
 
+    def send_fuse(seconds=1):
+        while not stop.is_set() and socket.poll(seconds * 1000, zmq.POLLOUT) == 0:
+            log.debug("poll(POLLOUT) TIMEOUT")
+        if stop.is_set():
+            return True
+        while not stop.is_set() and can_send.wait(seconds) != True:
+            log.debug('can_send.wait() TIMEOUT')
+        return stop.is_set()
+
     #
+    log.debug("process_log(%s, %s)", source, target_address)
     entry = pb.FirebirdLogEntry()
-    socket = context.socket(zmq.PUSH)
+    socket = context.socket(zmq.DEALER)
     socket.IDENTITY = identity
     socket.LINGER = 10000 # 10s
     socket.SNDHWM = 50
@@ -176,13 +189,7 @@ def process_log(context: zmq.Context, identity: bytes,
             entry_in = 0
             entry_out = 0
             for source_id, timestamp, message in parse_log(log_gen):
-                while can_send.wait(1) != True:
-                    log.info('can_send.wait(1) TIMEOUT')
-                    if stop.is_set():
-                        log.info('can_send.wait(1) with STOP')
-                        break
-                if stop.is_set():
-                    log.info('Worker STOP')
+                if send_fuse():
                     break
                 entry.Clear()
                 entry.source_id = source_id
@@ -196,16 +203,20 @@ def process_log(context: zmq.Context, identity: bytes,
             entry.source_id = 'ERROR/firebird-log'
             entry.timestamp.GetCurrentTime()
             entry.message = str(exc)
+            log.debug("sending 'ERROR/firebird-log' message")
             socket.send(entry.SerializeToString())
             raise
         else:
             if stop.is_set():
-                if can_send.is_set():
+                if can_send.is_set() and socket.poll(10, zmq.POLLOUT) != 0:
+                    log.debug("sending TERMINATED message")
                     socket.send(TERMINATED)
             else:
-                can_send.wait()
-                socket.send(EOF)
+                if not send_fuse():
+                    log.debug("sending EOF message")
+                    socket.send(EOF)
     finally:
+        log.debug("closing socket, going home")
         socket.close()
 
 # Classes
@@ -397,16 +408,45 @@ When acknowledged message is REPLY/ENTRIES, lets worker to start sending message
         self.send(reply, session)
     def on_entries(self, session: TSession, msg: RequestMessage):
         "Handle REQUEST/ENTRIES message."
-        log.info("%s.on_entries(%s)", self.__class__.__name__, session.routing_id)
+        log.debug("%s.on_entries(%s)", self.__class__.__name__, session.routing_id)
+        address = self.impl.worker_chn.endpoints[0]
         dframe = pb.RequestEntries()
         dframe.ParseFromString(msg.data[0])
+        # validate request
+        if dframe.HasField('push_to'):
+            if dframe.push_to.protocol != "pb-stream:fblog:FirebirdLogEntry":
+                errmsg = self.create_error_message(msg, "Data pipe protocol not supported")
+                self.send(errmsg, session)
+                return
+            if SocketType(dframe.push_to.socket_type) not in [SocketType.DEALER,
+                                                              SocketType.PULL,
+                                                              SocketType.ROUTER]:
+                errmsg = self.create_error_message(msg, "Data pipe uses unsupported socket type")
+                self.send(errmsg, session)
+                return
+            if SocketUse(dframe.push_to.use) != SocketUse.CONSUMER:
+                errmsg = self.create_error_message(msg, "CONSUMER data pipe required")
+                self.send(errmsg, session)
+                return
+            address = get_best_endpoint([toZMQAddress(e) for e in dframe.push_to.endpoints],
+                                        self.impl.peer.host, self.impl.peer.pid,
+                                        dframe.push_to.host, dframe.push_to.pid)
+            if address is None:
+                errmsg = self.create_error_message(msg, "No accessible data pipe address found")
+                self.send(errmsg, session)
+                return
+        if dframe.source.WhichOneof('source') == 'server':
+            errmsg = self.create_error_message(msg, "Source 'server' not supported")
+            self.send(errmsg, session)
+            return
+        if dframe.source.WhichOneof('source') == 'pipe':
+            errmsg = self.create_error_message(msg, "Source 'pipe' not supported")
+            self.send(errmsg, session)
+            return
+        #
         try:
-            if dframe.HasField('push_to'):
-                address = get_best_endpoint((ZMQAddress(e) for e in dframe.push_to.endpoints),
-                                            self.impl.peer.host, self.impl.peer.pid,
-                                            dframe.push_to.host, dframe.push_to.pid)
-            else:
-                address = self.impl.worker_chn.endpoints[0]
+            log.debug("%s.on_entries(%s) worker sends to '%s'",
+                      self.__class__.__name__, session.routing_id, address)
             worker = self.impl.add_worker(session, msg, process_log, dframe.source, address)
             worker.start()
         except ServiceError as exc: # Expected error condition

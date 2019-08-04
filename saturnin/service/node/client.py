@@ -42,7 +42,7 @@ from uuid import UUID
 from saturnin.sdk.types import State, ExecutionMode, InterfaceDescriptor
 from saturnin.sdk.fbsp import Session, MsgType, bb2h, ReplyMessage, ErrorMessage, exception_for
 from saturnin.sdk.client import ServiceClient
-from saturnin.protobuf import node_pb2 as pb
+from . import node_pb2 as pb
 from .api import NodeRequest, SERVICE_INTERFACE
 
 class SaturninNodeClient(ServiceClient):

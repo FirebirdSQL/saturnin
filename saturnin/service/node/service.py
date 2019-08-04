@@ -59,15 +59,14 @@ import multiprocessing
 from functools import reduce
 import zmq
 from pkg_resources import iter_entry_points
-from saturnin.sdk.types import ServiceError, InvalidMessageError, MsgType, ErrorCode, \
-     TService, TSession, TServiceImpl, TChannel, PeerDescriptor, \
-     ServiceDescriptor, ExecutionMode, DependencyType, ZMQAddress
+from firebird.butler.fbsd_pb2 import STATE_STOPPED, STATE_TERMINATED
+from saturnin.sdk.types import ServiceError, TService, TSession, TServiceImpl, TChannel, \
+     PeerDescriptor, ServiceDescriptor, ExecutionMode, DependencyType, ZMQAddress
 from saturnin.sdk.base import BaseService, load
 from saturnin.sdk.service import SimpleServiceImpl
-from saturnin.sdk.fbsp import ServiceMessagelHandler, HelloMessage, \
+from saturnin.sdk.fbsp import MsgType, ErrorCode, ServiceMessagelHandler, HelloMessage, \
      CancelMessage, RequestMessage, bb2h, note_exception
-from saturnin.sdk import fbsp_pb2 as fbsp_pb
-from saturnin.protobuf import node_pb2 as pb
+from . import node_pb2 as pb
 from .api import NodeRequest, NodeError, SERVICE_AGENT, SERVICE_API, \
      NODE_INTERFACE_UID
 
@@ -507,7 +506,7 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
                     # all ok, create reply
                     reply = self.protocol.create_reply_for(msg)
                     dframe = pb.ReplyStopService()
-                    dframe.result = fbsp_pb.TERMINATED
+                    dframe.result = STATE_TERMINATED
                     reply.data.append(dframe.SerializeToString())
                     self.send(reply, session)
         except ServiceError as exc: # Expected error condition
@@ -522,7 +521,7 @@ class SaturninNodeMessageHandler(ServiceMessagelHandler):
             # all ok, create reply
             reply = self.protocol.create_reply_for(msg)
             dframe = pb.ReplyStopService()
-            dframe.result = fbsp_pb.STOPPED
+            dframe.result = STATE_STOPPED
             reply.data.append(dframe.SerializeToString())
             self.send(reply, session)
             self.impl.on_idle()

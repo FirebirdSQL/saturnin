@@ -22,7 +22,7 @@ with open(path.join(HERE, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='saturnin',
-    version='0.1',
+    version='0.2.0',
     description='Reference implementation of selected Firebird Butler services in Python',
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
@@ -31,7 +31,7 @@ setup(
     author_email='pcisar@users.sourceforge.net',
     license='MIT',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
 
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
@@ -53,13 +53,13 @@ setup(
         'Topic :: System :: Logging'
         ],
     keywords='Firebird Butler Services ZeroMQ',  # Optional
-    packages=find_packages(),  # Required
-    install_requires=['pyzmq>=18.0.0', 'protobuf>=3.6.1', 'saturnin-sdk>=0.3',
+    packages=['saturnin.protobuf', 'saturnin.service.node', 'saturnin.service.fblog'],  # Required
+    install_requires=['pyzmq>=18.0.0', 'protobuf>=3.9.0', 'saturnin-sdk>=0.3',
                       'tabulate>=0.8.3'],
     python_requires='>=3.6, <4',
     test_suite='nose.collector',
     data_files=[],
-    namespace_packages=['saturnin'],
+    namespace_packages=[],
     project_urls={
         'Documentation': 'http://saturnin.readthedocs.io/en/latest/',
         'Bug Reports': 'https://github.com/FirebirdSQL/saturnin/issues',
@@ -71,7 +71,6 @@ setup(
                                      ],
                   'saturnin.service': ['saturnin-node = saturnin.service.node.api:SERVICE_DESCRIPTION',
                                        'firebird-log = saturnin.service.fblog.api:SERVICE_DESCRIPTION',
-                                       'datagen = saturnin.service.datagen.api:SERVICE_DESCRIPTION',
                                       ],
                  }
 )

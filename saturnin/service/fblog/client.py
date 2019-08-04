@@ -40,7 +40,7 @@ from typing import Dict
 from saturnin.sdk.types import InterfaceDescriptor
 from saturnin.sdk.fbsp import Session, MsgType, bb2h, ReplyMessage, ErrorMessage, exception_for
 from saturnin.sdk.client import ServiceClient
-from saturnin.protobuf import fblog_pb2 as pb
+from . import fblog_pb2 as pb
 from .api import FbLogRequest, SERVICE_INTERFACE
 
 class FirebirdLogClient(ServiceClient):
