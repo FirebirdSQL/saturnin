@@ -45,7 +45,7 @@ setup(
         'Operating System :: Microsoft :: Windows',
         'Operating System :: MacOS',
 
-        'Framework :: Saturnin SDK',
+#        'Framework :: Saturnin SDK',
 
         'Topic :: Database',
         'Topic :: System :: Systems Administration',
