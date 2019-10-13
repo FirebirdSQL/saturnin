@@ -37,44 +37,45 @@ NODE Service manages Saturnin runtime node. It provides environment for executio
 management of other Saturnin services.
 """
 
-from typing import Optional, List, Dict
+import typing as t
 from uuid import UUID
-from saturnin.sdk.types import State, ExecutionMode, InterfaceDescriptor
-from saturnin.sdk.fbsp import Session, MsgType, bb2h, ReplyMessage, ErrorMessage, exception_for
+from saturnin.sdk.types import State, InterfaceDescriptor
+from saturnin.sdk.config import Config
+from saturnin.sdk.protocol.fbsp import Session, MsgType, bb2h, ReplyMessage, ErrorMessage, exception_for
 from saturnin.sdk.client import ServiceClient
 from . import node_pb2 as pb
 from .api import NodeRequest, SERVICE_INTERFACE
 
 class SaturninNodeClient(ServiceClient):
-    """Message handler for ROMAN client."""
+    """Message handler for NODE client."""
     def get_interface(self) -> InterfaceDescriptor:
         return SERVICE_INTERFACE
-    def get_handlers(self, api_number: int) -> Dict:
+    def get_handlers(self, api_number: int) -> t.Dict:
         return {(MsgType.REPLY, bb2h(api_number, NodeRequest.INSTALLED_SERVICES)):
-                self.on_installed,
+                self.handle_installed,
                 (MsgType.REPLY, bb2h(api_number, NodeRequest.RUNNING_SERVICES)):
-                self.on_running,
+                self.handle_running,
                 (MsgType.REPLY, bb2h(api_number, NodeRequest.INTERFACE_PROVIDERS)):
-                self.on_providers,
+                self.handle_providers,
                 (MsgType.REPLY, bb2h(api_number, NodeRequest.START_SERVICE)):
-                self.on_start,
+                self.handle_start,
                 (MsgType.REPLY, bb2h(api_number, NodeRequest.STOP_SERVICE)):
-                self.on_stop,
-                (MsgType.REPLY, bb2h(api_number, NodeRequest.GET_PROVIDER)):
-                self.on_get_provider,
+                self.handle_stop,
                 (MsgType.REPLY, bb2h(api_number, NodeRequest.SHUTDOWN)):
-                self.on_shutdown,
+                self.handle_shutdown,
                 MsgType.DATA: self.raise_protocol_violation,
                 MsgType.REPLY: self.raise_protocol_violation,
                 MsgType.STATE: self.raise_protocol_violation,
                }
-    def on_error(self, session: Session, msg: ErrorMessage):
+    def handle_error(self, session: Session, msg: ErrorMessage):
         "Handle ERROR message received from Service."
         self.last_token_seen = msg.token
+        req = session.get_request(msg.token)
+        req.response = None
         if msg.token != session.greeting.token:
-            session.request_done(msg.token)
+            session.request_done(req)
         raise exception_for(msg)
-    def on_installed(self, session: Session, msg: ReplyMessage):
+    def handle_installed(self, session: Session, msg: ReplyMessage):
         "INSTALLED_SERVICES reply handler."
         self.last_token_seen = msg.token
         req = session.get_request(msg.token)
@@ -82,7 +83,7 @@ class SaturninNodeClient(ServiceClient):
         dframe.ParseFromString(msg.data.pop(0))
         req.response = dframe
         session.request_done(req)
-    def on_running(self, session: Session, msg: ReplyMessage):
+    def handle_running(self, session: Session, msg: ReplyMessage):
         "RUNNING_SERVICES reply handler."
         self.last_token_seen = msg.token
         req = session.get_request(msg.token)
@@ -90,7 +91,7 @@ class SaturninNodeClient(ServiceClient):
         dframe.ParseFromString(msg.data.pop(0))
         req.response = dframe
         session.request_done(req)
-    def on_providers(self, session: Session, msg: ReplyMessage):
+    def handle_providers(self, session: Session, msg: ReplyMessage):
         "INTERFACE_PROVIDERS reply handler."
         self.last_token_seen = msg.token
         req = session.get_request(msg.token)
@@ -98,7 +99,7 @@ class SaturninNodeClient(ServiceClient):
         dframe.ParseFromString(msg.data.pop(0))
         req.response = [UUID(bytes=uid) for uid in dframe.agent_uids]
         session.request_done(req)
-    def on_start(self, session: Session, msg: ReplyMessage):
+    def handle_start(self, session: Session, msg: ReplyMessage):
         "START_SERVICE reply handler."
         self.last_token_seen = msg.token
         req = session.get_request(msg.token)
@@ -106,7 +107,7 @@ class SaturninNodeClient(ServiceClient):
         dframe.ParseFromString(msg.data.pop(0))
         req.response = dframe
         session.request_done(req)
-    def on_stop(self, session: Session, msg: ReplyMessage):
+    def handle_stop(self, session: Session, msg: ReplyMessage):
         "STOP_SERVICE reply handler."
         self.last_token_seen = msg.token
         req = session.get_request(msg.token)
@@ -114,15 +115,7 @@ class SaturninNodeClient(ServiceClient):
         dframe.ParseFromString(msg.data.pop(0))
         req.response = State(dframe.result)
         session.request_done(req)
-    def on_get_provider(self, session: Session, msg: ReplyMessage):
-        "REQUEST_PROVIDER reply handler."
-        self.last_token_seen = msg.token
-        req = session.get_request(msg.token)
-        dframe = pb.ReplyGetProvider()
-        dframe.ParseFromString(msg.data.pop(0))
-        req.response = dframe.endpoint
-        session.request_done(req)
-    def on_shutdown(self, session: Session, msg: ReplyMessage):
+    def handle_shutdown(self, session: Session, msg: ReplyMessage):
         "SHUTDOWN reply handler."
         self.last_token_seen = msg.token
         req = session.get_request(msg.token)
@@ -161,7 +154,7 @@ Returns:
         if not self.get_response(token, kwargs.get('timeout')):
             raise TimeoutError("The service did not respond on time to RUNNING_SERVICES request")
         return msg.response
-    def get_providers(self, interface_uid: UUID, **kwargs) -> List[bytes]:
+    def get_providers(self, interface_uid: UUID, **kwargs) -> t.List[UUID]:
         """Get list of services that provider specified interface.
 
 Returns:
@@ -180,10 +173,10 @@ Returns:
         if not self.get_response(token, kwargs.get('timeout')):
             raise TimeoutError("The service did not respond on time to INTERFACE_PROVIDERS request")
         return msg.response
-    def start_service(self, agent_uid: UUID, endpoints: Optional[List[str]] = None,
-                      mode: ExecutionMode = ExecutionMode.ANY,
-                      timeout: Optional[int] = None, multiinstance: bool = False,
-                      **kwargs) -> pb.ReplyStartService:
+    def start_service(self, agent_uid: UUID, config: Config,
+                      name: str = None,
+                      start_timeout: int = None,
+                      singleton: bool = False, **kwargs) -> pb.ReplyStartService:
         """Starts specified service.
 
 Returns:
@@ -195,20 +188,20 @@ Returns:
         msg = self.protocol.create_request_for(self.interface_id,
                                                NodeRequest.START_SERVICE, token)
         session.note_request(msg)
-        dframe = pb.RequestStartService()
+        dframe: pb.RequestStartService = pb.RequestStartService()
         dframe.agent_uid = agent_uid.bytes
-        dframe.mode = mode.value
-        if endpoints:
-            dframe.endpoints.extend(endpoints)
-        if timeout:
-            dframe.timeout = timeout
-        dframe.multiinstance = multiinstance
+        config.save_proto(dframe.config)
+        if name:
+            dframe.name = name
+        if start_timeout:
+            dframe.timeout = start_timeout
+        dframe.singleton = singleton
         msg.data.append(dframe.SerializeToString())
         self.send(msg)
         if not self.get_response(token, kwargs.get('timeout')):
             raise TimeoutError("The service did not respond on time to START_SERVICE request")
         return msg.response
-    def stop_service(self, peer_uid: UUID, timeout: Optional[int] = None, forced: bool = False,
+    def stop_service(self, peer_uid: UUID, stop_timeout: int = None, forced: bool = False,
                       **kwargs) -> pb.ReplyStopService:
         """Starts specified service.
 
@@ -223,33 +216,13 @@ Returns:
         session.note_request(msg)
         dframe = pb.RequestStopService()
         dframe.peer_uid = peer_uid.bytes
-        if timeout:
-            dframe.timeout = timeout
+        if stop_timeout:
+            dframe.timeout = stop_timeout
         dframe.forced = forced
         msg.data.append(dframe.SerializeToString())
         self.send(msg)
         if not self.get_response(token, kwargs.get('timeout')):
             raise TimeoutError("The service did not respond on time to STOP_SERVICE request")
-        return msg.response
-    def get_provider(self, interface_uid: UUID, required: bool = False, **kwargs) -> str:
-        """Get endpoint to interface provider.
-
-Returns:
-    Optimal Service endpoint.
-"""
-        session: Session = self.get_session()
-        assert session
-        token = self.new_token()
-        msg = self.protocol.create_request_for(self.interface_id,
-                                               NodeRequest.GET_PROVIDER, token)
-        session.note_request(msg)
-        dframe = pb.RequestGetProvider()
-        dframe.interface_uid = interface_uid.bytes
-        dframe.required = required
-        msg.data.append(dframe.SerializeToString())
-        self.send(msg)
-        if not self.get_response(token, kwargs.get('timeout')):
-            raise TimeoutError("The service did not respond on time to GET_PROVIDER request")
         return msg.response
     def shutdown(self, **kwargs) -> True:
         """Stops the Saturnin node."""

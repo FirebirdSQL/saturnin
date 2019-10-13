@@ -29,20 +29,43 @@
 
 syntax = "proto3";
 
-package saturnin.service.node;
+package saturnin.protobuf;
 
 import "google/protobuf/any.proto";
-//import "google/protobuf/struct.proto";
+import "google/protobuf/struct.proto";
 import "firebird/butler/fbsd.proto";
 
 // Enums
 
 // Service start mode
 
-enum StartModeEnum {
-  START_MODE_DEFAULT = 0 ;
-  START_MODE_THREAD  = 1 ;
-  START_MODE_PROCESS = 2 ;
+enum ExecutionModeEnum {
+  EXEC_MODE_ANY     = 0 ;
+  EXEC_MODE_THREAD  = 1 ;
+  EXEC_MODE_PROCESS = 2 ;
+}
+
+// Service type
+
+enum ServiceTypeEnum {
+  SVC_TYPE_UNKNOWN       = 0 ; // Not a valid option, defined only to handle undefined values
+  SVC_TYPE_DATA_PROVIDER = 1 ; // Data Pipe Service that collects and pass on data.
+  SVC_TYPE_DATA_FILTER   = 2 ; // Data Pipe Service that process data from input and sends results to output
+  SVC_TYPE_DATA_CONSUMER = 3 ; // Data Pipe Servuce that consumes input data
+  SVC_TYPE_PROCESSING    = 4 ; // Service for REQEST/REPLY data processing
+  SVC_TYPE_EXECUTOR      = 5 ; // Service that does things on request
+  SVC_TYPE_CONTROL       = 6 ; // Service that manages other services
+}
+
+// Service Facilities
+
+enum ServiceFacilitiesEnum {
+  SVC_FACILITY_NONE          = 0 ;
+  SVC_FACILITY_FBSP_SOCKET   = 1 ; // Standard Butler Service with one socket for FBSP communication
+  SVC_FACILITY_INPUT_SERVER  = 2 ; // Service has/can have standard data pipe INPUT in SERVER mode
+  SVC_FACILITY_INPUT_CLIENT  = 3 ; // Service has/can have standard data pipe INPUT in CLIENT mode
+  SVC_FACILITY_OUTPUT_SERVER = 4 ; // Service has/can have standard data pipe OUTPUT in SERVER mode
+  SVC_FACILITY_OUTPUT_CLIENT = 5 ; // Service has/can have standard data pipe OUTPUT in CLIENT mode
 }
 
 // Dependency
@@ -73,7 +96,11 @@ message InstalledService {
   firebird.butler.AgentIdentification agent        = 1 ; // [required]
   repeated InterfaceDescriptor        api          = 2 ; // [required]
   repeated Dependency                 dependencies = 3 ; // List of dependencies
-  repeated google.protobuf.Any        supplement   = 5 ; // additional information about service
+  ServiceTypeEnum                     service_type = 4 ; // Service type
+  string                              description  = 5 ; // Textual service description
+  ExecutionModeEnum                   mode         = 6 ; // Default execution mode
+  repeated ServiceFacilitiesEnum      facilities   = 7 ; // Declared service facilities
+  repeated google.protobuf.Any        supplement   = 8 ; // Additional information about service
 }
 
 // INSTALLED_SERVICES Message Data
@@ -85,10 +112,15 @@ message ReplyInstalledServices {
 // RUNNING_SERVICES Message Data
 
 message RunningService {
-  firebird.butler.PeerIdentification  peer      = 1 ; // Peer description
-  firebird.butler.AgentIdentification agent     = 2 ; // Agent description
-  StartModeEnum                       mode      = 3 ; // Service start mode
-  repeated string                     endpoints = 4 ; // ZMQ endpoints used by service
+  firebird.butler.PeerIdentification  peer         = 1 ; // Peer descriptor
+  firebird.butler.AgentIdentification agent        = 2 ; // Agent descriptor
+  ServiceTypeEnum                     service_type = 3 ; // Service type
+  string                              description  = 4 ; // Textual service description
+  ExecutionModeEnum                   mode         = 5 ; // Service execution mode
+  repeated ServiceFacilitiesEnum      facilities   = 6 ; // Service runtime facilities
+  google.protobuf.Struct              config       = 7 ; // Service runtime configuration
+  repeated string                     endpoints    = 8 ; // ZMQ endpoints used by service, if any
+  repeated google.protobuf.Any        supplement   = 9 ; // Additional information about service
 }
 
 message ReplyRunningServices {
@@ -98,7 +130,7 @@ message ReplyRunningServices {
 // INTERFACE_PROVIDERS Message Data
 
 message RequestInterfaceProviders {
-  bytes interface_uid = 1 ; // Interface ID (uuid5 - SHA1, namespace OID)
+  bytes interface_uid = 1 ; // [required] Interface ID (uuid5 - SHA1, namespace OID)
 }
 
 message ReplyInterfaceProviders {
@@ -108,23 +140,22 @@ message ReplyInterfaceProviders {
 // START_SERVICE Message Data
 
 message RequestStartService {
-  bytes           agent_uid     = 1 ; // Agent ID (uuid5 - SHA1, namespace OID)
-  StartModeEnum   mode          = 2 ; // Service start mode
-  repeated string endpoints     = 3 ; // ZMQ endpoints that service should use, could be empty
-  uint32          timeout       = 4 ; // Timeout in milliseconds, zero means default timeout
-  bool            multiinstance = 5 ; // Start new service instance even if some instance is already running
+  bytes                  agent_uid     = 1 ; // [required] Agent ID (uuid5 - SHA1, namespace OID)
+  google.protobuf.Struct config        = 2 ; // [required] Service runtime configuration
+  string                 name          = 3 ; // Name for the service instance
+  uint32                 timeout       = 4 ; // Timeout in milliseconds, zero means default timeout
+  bool                   singleton     = 5 ; // False: start new instance of teh service
+                                             // True: do not start new instance if one is already running
 }
 
 message ReplyStartService {
-  bytes           peer_uid  = 1 ; // Peer ID assigned to service (uuid1)
-  StartModeEnum   mode      = 2 ; // Service start mode (THREAD or PROCESS)
-  repeated string endpoints = 3 ; // ZMQ endpoints that service actually uses
+  RunningService  service = 1 ; // Information about running service
 }
 
 // STOP_SERVICE Message Data
 
 message RequestStopService {
-  bytes  peer_uid = 1 ; // Peer ID assigned to service (uuid1)
+  bytes  peer_uid = 1 ; // [required] Peer ID assigned to service (uuid1)
   uint32 timeout  = 2 ; // Timeout in milliseconds, zero means default timeout
   bool   forced   = 3 ; // True to kill the service if it does not stop in time
 }
@@ -133,13 +164,3 @@ message ReplyStopService {
   firebird.butler.StateEnum result = 1 ; // STOPPED (SUSPENDED) or TERMINATED (ABORTED)
 }
 
-// GET_PROVIDER Message Data
-
-message RequestGetProvider {
-  bytes interface_uid = 1 ; // Interface ID (uuid5 - SHA1, namespace OID)
-  bool  required      = 2 ; // If True, the service is started if necessary
-}
-
-message ReplyGetProvider {
-  string endpoint = 1 ; // Optimal ZMQ endpoint to service that provides required interface
-}

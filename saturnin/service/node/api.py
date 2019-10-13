@@ -40,63 +40,75 @@ Supported requests:
 
     :INSTALLED_SERVICES:  REPLY with list of installed services available for execution on the node.
     :RUNNING_SERVICES:    REPLY with list of services actually running on the node.
-    :INTERFACE_PROVIDERS: REPLY with list of services that provide specified interface.
+    :INTERFACE_PROVIDERS: REPLY with list of installed services that provide specified interface.
     :START_SERVICE:       Start service on node.
     :STOP_SERVICE:        Stop service running on node.
-    :REQUEST_PROVIDER:    REPLY with address for most efficient connection to the servie
-                          that provides specified interface. Starts the service if necessary.
     :SHUTDOWN:            Shuts down the NODE service.
 """
 
-from enum import IntEnum
-from uuid import UUID, NAMESPACE_OID, uuid5
+import uuid
+from functools import partial
 from saturnin.sdk import VENDOR_UID
-from saturnin.sdk.types import AgentDescriptor, InterfaceDescriptor, ServiceDescriptor, \
-     ExecutionMode, ServiceType
+from saturnin.sdk.types import Enum, ExecutionMode, ServiceType, ServiceFacilities, \
+     AgentDescriptor, InterfaceDescriptor, ServiceDescriptor
+from saturnin.sdk.config import ServiceConfig, create_config
 
-SERVICE_OID: str = '1.3.6.1.4.1.53446.1.1.1' # firebird.butler.service.node
-SERVICE_UID: UUID = uuid5(NAMESPACE_OID, SERVICE_OID)
+
+# OID: iso.org.dod.internet.private.enterprise.firebird.butler.service.node
+SERVICE_OID: str = '1.3.6.1.4.1.53446.1.1.1'
+SERVICE_UID: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_OID, SERVICE_OID)
 SERVICE_VERSION: str = '0.1'
 
-NODE_INTERFACE_OID: str = '1.3.6.1.4.1.53446.1.1.1.0' # firebird.butler.service.node.interface
-NODE_INTERFACE_UID: UUID = uuid5(NAMESPACE_OID, NODE_INTERFACE_OID)
+# firebird.butler.service.node.interface
+NODE_INTERFACE_OID: str = '1.3.6.1.4.1.53446.1.1.1.0'
+NODE_INTERFACE_UID: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_OID, NODE_INTERFACE_OID)
 
-#  Enums (Request and Error Codes)
+# Enums (Request and Error Codes)
 
-class NodeRequest(IntEnum):
+class NodeRequest(Enum):
     "Saturnin Node Service Request Code"
     INSTALLED_SERVICES = 1
     RUNNING_SERVICES = 2
     INTERFACE_PROVIDERS = 3
     START_SERVICE = 4
     STOP_SERVICE = 5
-    GET_PROVIDER = 6
-    SHUTDOWN = 7
+    SHUTDOWN = 6
 
-class NodeError(IntEnum):
+class NodeError(Enum):
     "Saturnin Node Service Error Code"
     ALREADY_RUNNING = 1
     START_FAILED = 2
     TERMINATION_FAILED = 3
-    UNCERTAIN_RESULT = 4
-    RESOURCE_NOT_AVAILABLE = 5
 
-#  Service description
+# Service description
 
-SERVICE_AGENT = AgentDescriptor(SERVICE_UID,
-                                "saturnin-node",
-                                SERVICE_VERSION,
-                                VENDOR_UID,
-                                "system/runtime",
-                               )
-SERVICE_INTERFACE = InterfaceDescriptor(NODE_INTERFACE_UID, "Saturnin Node service API", 1,
-                                        1, NodeRequest)
+SERVICE_AGENT: AgentDescriptor = \
+    AgentDescriptor(uid=SERVICE_UID,
+                    name="saturnin-node",
+                    version=SERVICE_VERSION,
+                    vendor_uid=VENDOR_UID,
+                    classification="system/runtime")
+
+SERVICE_INTERFACE: InterfaceDescriptor = \
+    InterfaceDescriptor(uid=NODE_INTERFACE_UID,
+                        name="Saturnin Node service API",
+                        revision=1, number=1,
+                        requests=NodeRequest)
+
 SERVICE_API = [SERVICE_INTERFACE]
 
-SERVICE_DESCRIPTION = ServiceDescriptor(SERVICE_AGENT, SERVICE_API, [],
-                                        ExecutionMode.ANY, ServiceType.CONTROL,
-                                        "Saturnin runtime node service",
-                                        'saturnin.service.node.service:SaturninNodeServiceImpl',
-                                        'saturnin.sdk.classic:SimpleService',
-                                        'saturnin.service.node.client:SaturninNodeClient',
-                                        'saturnin.service.node.test:TestRunner')
+SERVICE_DESCRIPTION: ServiceDescriptor = \
+    ServiceDescriptor(agent=SERVICE_AGENT,
+                      api=SERVICE_API,
+                      dependencies=[],
+                      execution_mode=ExecutionMode.ANY,
+                      service_type=ServiceType.CONTROL,
+                      facilities=ServiceFacilities.FBSP_SOCKET,
+                      description="Saturnin runtime node service",
+                      implementation='saturnin.service.node.service:SaturninNodeServiceImpl',
+                      container='saturnin.sdk.classic:SimpleService',
+                      config=partial(create_config, ServiceConfig,
+                                     '%s_service' % SERVICE_AGENT.name,
+                                     "NODE service."),
+                      client='saturnin.service.node.client:SaturninNodeClient',
+                      tests='saturnin.service.node.test:TestRunner')

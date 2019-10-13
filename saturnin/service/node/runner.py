@@ -44,11 +44,13 @@ import logging
 import signal
 from uuid import uuid1
 from os import getpid
-import socket
+from functools import reduce
 import platform
+import zmq
 from argparse import ArgumentParser, Action
-from saturnin.sdk.types import PeerDescriptor, ZMQAddress
-from saturnin.sdk.base import load, DummyEvent
+from saturnin.sdk.types import PeerDescriptor, ZMQAddress, AddressDomain
+from saturnin.sdk.config import ServiceConfig
+from saturnin.sdk.service import load, Event, SimpleServiceImpl, BaseService
 from saturnin.service.node.api import SERVICE_DESCRIPTION
 
 __VERSION__ = '0.1'
@@ -73,37 +75,46 @@ def main():
     logging.basicConfig(format='%(levelname)s:%(processName)s:%(threadName)s:%(name)s:%(message)s')
     signal.signal(signal.SIGINT, handle_signal)
     signal.signal(signal.SIGTERM, handle_signal)
-    stop_event = DummyEvent()
+    stop_event = Event()
     node_uid = uuid1()
+
     local_address = ZMQAddress('inproc://%s' % node_uid.hex)
-    node_endpoints = [local_address]
     if platform.system() == 'Linux':
-        node_endpoints.append(ZMQAddress('ipc://@%s' % node_uid.hex))
+        node_address = ZMQAddress('ipc://@%s' % node_uid.hex)
     else:
-        node_endpoints.append(ZMQAddress('tcp://127.0.0.1:*'))
-    description = """Saturnin NODE runner."""
-    parser = ArgumentParser(description=description)
-    parser.add_argument('-e', '--endpoint', nargs='+', help="ZMQ addresses for the service")
+        node_address = ZMQAddress('tcp://127.0.0.1:9001')
+    parser = ArgumentParser(description="Saturnin NODE runner")
+    parser.add_argument('-e', '--endpoint', nargs='+', help="ZMQ addresses for the node service")
     parser.add_argument('-l', '--log-level', action=UpperAction,
                         choices=[x.lower() for x in logging._nameToLevel
                                  if isinstance(x, str)],
                         help="Logging level")
-    parser.set_defaults(log_level='ERROR', endpoint=node_endpoints)
+    parser.set_defaults(log_level='WARNING')
     args = parser.parse_args()
     logger = logging.getLogger()
     logger.setLevel(args.log_level)
 
-    node_implementation = load(SERVICE_DESCRIPTION.implementation)(stop_event)
-    node_implementation.endpoints = args.endpoint
-    if local_address not in  node_implementation.endpoints:
-        node_implementation.endpoints.insert(0, local_address)
-    node_implementation.peer = PeerDescriptor(node_uid, getpid(), socket.getfqdn())
-    node_service = load(SERVICE_DESCRIPTION.container)(node_implementation)
+    node_endpoints = [] if args.endpoint is None else [ZMQAddress(addr) for addr in args.endpoint]
+    if not reduce(lambda result, addr: result or addr.domain == AddressDomain.LOCAL,
+                  node_endpoints, False):
+        node_endpoints.append(local_address)
+    if not reduce(lambda result, addr: result or addr.domain == AddressDomain.NODE,
+                  node_endpoints, False):
+        node_endpoints.append(node_address)
+    node_cfg: ServiceConfig = SERVICE_DESCRIPTION.config()
+    node_cfg.endpoints.set_value(node_endpoints)
+
+    node_implementation: SimpleServiceImpl = \
+        load(SERVICE_DESCRIPTION.implementation)(SERVICE_DESCRIPTION, stop_event)
+    node_implementation.peer = PeerDescriptor(uuid1(), getpid(), platform.node())
+    node_service:BaseService = \
+        load(SERVICE_DESCRIPTION.container)(node_implementation, zmq.Context.instance(),
+                                            node_cfg)
     node_service.initialize()
     try:
         args = parser.parse_args()
         print(f"Saturnin node v{__VERSION__}")
-        for addr in node_service.impl.endpoints:
+        for addr in node_implementation.endpoints:
             print(f"Node address: {addr}")
         node_service.start()
     except Exception:
