@@ -53,8 +53,8 @@ setup(
         'Topic :: System :: Logging'
         ],
     keywords='Firebird Butler Services ZeroMQ',  # Optional
-    packages=['saturnin.service.node'],  # Required
-    install_requires=['pyzmq>=18.0.0', 'protobuf>=3.9.0', 'saturnin-sdk>=0.4',
+    packages=['saturnin'],  # Required
+    install_requires=['pyzmq>=18.0.0', 'protobuf>=3.9.0', 'saturnin-sdk>=0.4.0',
                       'tabulate>=0.8.3'],
     python_requires='>=3.6, <4',
     test_suite='nose.collector',
@@ -70,6 +70,7 @@ setup(
                                       'nodeconsole = saturnin.service.node.console:main',
                                      ],
                   'saturnin.service': ['saturnin-node = saturnin.service.node.api:SERVICE_DESCRIPTION',
+                                       'firebird-log = saturnin.micro.fblog.api:SERVICE_DESCRIPTION',
                                       ],
                  }
 )
