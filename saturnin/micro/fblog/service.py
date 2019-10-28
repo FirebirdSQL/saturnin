@@ -46,12 +46,12 @@ PRINT_PARSED    - Pipe INPUT: Parsed log, Pipe OUTPUT: Text log
 import logging
 import typing as t
 from datetime import datetime
-from saturnin.sdk.types import Enum, SocketMode, ZMQAddress, ServiceDescriptor, StopError
+from saturnin.sdk.types import SocketMode, ServiceDescriptor, StopError
 from saturnin.sdk.config import MIMEOption
 from saturnin.sdk.base import DealerChannel
-from saturnin.sdk.protocol.fbdp import PipeSocket, BaseFBDPHandler, PipeClientHandler, \
-     PipeServerHandler, Session, ErrorCode, MsgType, Message
 from saturnin.sdk.service import MicroserviceImpl, BaseService
+from saturnin.sdk.datapipe import END_OF_DATA, DataPipe, InputPipe, OutputPipe, \
+     Session, ErrorCode, Message
 from .api import FbLogConfig, FbLogOperation
 from . import fblog_pb2 as pb
 
@@ -61,212 +61,28 @@ log = logging.getLogger(__name__)
 
 LOG_FORMAT = 'application/x.fb.proto;type=saturnin.micro.fblog.FirebirdLogEntry'
 
-END_OF_DATA = object()
-
-# Enums
-
-class PipeState(Enum):
-    "Data Pipe state"
-    UNKNOWN = 0
-    OPEN = 1
-    READY = 2
-    TRANSMITTING = 3
-    CLOSED = 4
-
-# Types
-
-TOnPipeClosed = t.Callable[['DataPipe', Session, Message], None]
-TOnAcceptClient = t.Callable[['DataPipe', Session, MIMEOption], int]
-TOnServerReady = t.Callable[['DataPipe', Session, int], int]
-TOnAcceptData = t.Callable[['DataPipe', Session, bytes], int]
-TOnProduceData = t.Callable[['DataPipe', Session], t.Any]
-
-# Functions
-
-def value(value: t.Any, default: t.Any) -> t.Any:
-    return default if value is None else value
-
 # Classes
 
-class DataPipe:
-    """Data pipe descriptor.
+class FbLogServiceImpl(MicroserviceImpl):
+    """Implementation of FBLOG microservice.
 
 Attributes:
-    :state:       Pipe state
-    :pipe_id:     Pipe identification
-    :mode:        Pipe mode
-    :address:     Pipe ZMQ address
-    :socket:      Pipe socket
-    :data_format: Data format
-    :mime_type:   MIME type
-    :mime_params: MIME type parameters
-    :chn:         Pipe channel
-
-Abstract methods:
-    :on_pipe_closed:   General callback called when pipe is closed.
-    :on_accept_client: SERVER callback. Validates and processes client connection request.
-    :on_server_ready:  CLIENT callback executed when non-zero READY is received from server.
-    :on_accept_data:   CONSUMER callback that process DATA from producer.
-    :on_produce_data:  PRODUCER callback that returns DATA for consumer.
+    :in_pipe:       Input data pipe
+    :out_pipe:      Output data pipe
+    :in_chn:        Input data pipe channel
+    :out_chn:       Output data pipe channel
+    :stop_on_close: Whether microservice should stop when data pipe is closed
+    :operation:     Operation this fblog instance should perform
+    :in_que:        Input data queue
+    :send_que:      Output data queue
+    :proto:         protobuf message for log entry
+    :post_process:  callable for processing accumulated input when input queue is closed
+                    normally, used by PARSE_LOG
+    :print_format:  format string for PRINT_PARSED
+    :filter_expr:   filter expression for FILTER_PARSED
+    :print_cnt:     line counter for PRINT_PARSED
+    :svc:           Firebird service instance
 """
-    def __init__(self, on_close: TOnPipeClosed = None):
-        self.state = PipeState.UNKNOWN
-        self.chn: DealerChannel = None
-        self.hnd: BaseFBDPHandler = None
-        self.pipe_id: str = None
-        self.mode: SocketMode = None
-        self.address: ZMQAddress = None
-        self.socket: PipeSocket = None
-        self.batch_size: int = 50
-        self.data_format: str = ''
-        self.mime_type: str = None
-        self.mime_params: t.Dict[str, str] = None
-        self.active: bool = False
-        #
-        self.on_pipe_closed: TOnPipeClosed = on_close
-        self.on_accept_client: TOnAcceptClient = None
-        self.on_server_ready: TOnServerReady = None
-        self.on_accept_data: TOnAcceptData = None
-        self.on_produce_data: TOnProduceData = None
-    def __on_accept_client(self, handler: BaseFBDPHandler, session: Session,
-                         data_pipe: str, pipe_stream: PipeSocket, data_format: str) -> int:
-        "SERVER callback. Validates and processes client connection request."
-        log.debug('%s._on_accept_client(%s,%s,%s) [%s]', self.__class__.__name__, data_pipe,
-                  pipe_stream, data_format, self.pipe_id)
-        if data_pipe != self.pipe_id:
-            raise StopError("Unknown data pipe '%s'" % data_pipe,
-                            code = ErrorCode.PIPE_ENDPOINT_UNAVAILABLE)
-        elif pipe_stream != self.socket:
-            raise StopError("'%s' stream not available" % pipe_stream.name,
-                            code = ErrorCode.PIPE_ENDPOINT_UNAVAILABLE)
-        mime = MIMEOption('data_format', '')
-        try:
-            mime.set_value(data_format)
-        except:
-            StopError("Only MIME data formats supported",
-                      code = ErrorCode.DATA_FORMAT_NOT_SUPPORTED)
-        result = session.batch_size
-        if self.on_accept_client:
-            result = self.on_accept_client(self, session, mime)
-        self.active = True
-        return result
-    def __on_server_ready(self, handler: PipeClientHandler, session: Session, batch_size: int) -> int:
-        self.active = True
-        if self.on_server_ready:
-            return self.on_server_ready(self, session, batch_size)
-        return min(batch_size, session.batch_size)
-    def __on_batch_start(self, handler: BaseFBDPHandler, session: Session) -> None:
-        while session.transmit > 0:
-            try:
-                data: t.Any = self.on_produce_data(self, session)
-            except StopError:
-                handler.send_close(session, ErrorCode.OK)
-                return
-            except Exception as exc:
-                handler.send_close(session, ErrorCode.INVALID_DATA, exc=exc)
-                return
-            if data is None:
-                # Data are not available at this time, schedule for later
-                self.chn.manager.defer(self.__on_batch_start, handler, session)
-                return
-            msg = handler.protocol.create_message_for(MsgType.DATA)
-            msg.data_frame = data
-            session.transmit -= 1
-            handler.send(msg, session)
-        if self.mode == SocketMode.BIND and session.transmit == 0:
-            try:
-                self.hnd.send_ready(session, handler.batch_size)
-            except Exception as exc:
-                exc.__traceback__ = None
-                log.error("Pipe READY send failed [SRV:%s:%s]", session.pipe_stream,
-                          session.data_pipe, exc_info=exc)
-    def __on_accept_data(self, handler: BaseFBDPHandler, session: Session, data: t.Any) -> int:
-        assert self.on_accept_data
-        return self.on_accept_data(self, session, data)
-    def __on_pipe_closed(self, handler: BaseFBDPHandler, session: Session, msg: Message) -> None:
-        log.debug('%s.__on_pipe_closed() [%s]', self.__class__.__name__, self.pipe_id)
-        self.active = False
-        if self.on_pipe_closed:
-            self.on_pipe_closed(self, session, msg)
-    def set_channel(self, channel: DealerChannel) -> None:
-        "Assign transmission channel for data pipe."
-        self.chn = channel
-    def set_mode(self, mode: SocketMode) -> None:
-        assert self.chn is not None
-        self.mode = mode
-        if mode == SocketMode.BIND:
-            self.hnd = PipeServerHandler(self.batch_size)
-            self.hnd.on_accept_client = self.__on_accept_client
-        else:
-            self.hnd = PipeClientHandler(self.batch_size)
-            self.hnd.on_server_ready = self.__on_server_ready
-        self.hnd.on_batch_start = self.__on_batch_start
-        self.hnd.on_accept_data = self.__on_accept_data
-        self.hnd.on_pipe_closed = self.__on_pipe_closed
-        self.chn.set_handler(self.hnd)
-    def set_format(self, mime: MIMEOption, default: str = None) -> None:
-        "Set MIME data format"
-        fmt = mime
-        if mime.value is None and default:
-            fmt = MIMEOption('', '')
-            fmt.set_value(default)
-        if fmt.value is None:
-            raise ValueError("MIME format not specified")
-        self.data_format = fmt.value
-        self.mime_type = fmt.mime_type
-        self.mime_params = dict(fmt.mime_params)
-    def close(self) -> None:
-        "Close the data pipe"
-        self.hnd.close()
-    def open(self) -> None:
-        "Open the data pipe"
-        assert self.chn is not None
-        assert self.hnd is not None
-        assert self.pipe_id is not None
-        assert self.mode is not None
-        assert self.address is not None
-        assert self.socket is not None
-        if self.mode == SocketMode.CONNECT:
-            self.hnd.open(self.address, self.pipe_id, self.socket, self.data_format)
-        else:
-            self.chn.bind(self.address)
-
-class InputPipe(DataPipe):
-    "INPUT data pipe"
-    def open(self) -> None:
-        "Open the data pipe"
-        assert self.chn is not None
-        assert self.hnd is not None
-        assert self.pipe_id is not None
-        assert self.mode is not None
-        assert self.address is not None
-        if self.mode == SocketMode.CONNECT:
-            self.socket = PipeSocket.OUTPUT
-            self.hnd.open(self.address, self.pipe_id, self.socket, self.data_format)
-        else:
-            self.socket = PipeSocket.INPUT
-            log.info("Pipe BIND [%s:%s]", t.cast(PipeSocket, self.socket).name, self.pipe_id)
-            self.chn.bind(self.address)
-
-class OutputPipe(DataPipe):
-    "OUTPUT data pipe"
-    def open(self) -> None:
-        "Open the data pipe"
-        assert self.chn is not None
-        assert self.hnd is not None
-        assert self.pipe_id is not None
-        assert self.mode is not None
-        assert self.address is not None
-        if self.mode == SocketMode.CONNECT:
-            self.socket = PipeSocket.INPUT
-            self.hnd.open(self.address, self.pipe_id, self.socket, self.data_format)
-        else:
-            self.socket = PipeSocket.OUTPUT
-            log.info("Pipe BIND [%s:%s]", t.cast(PipeSocket, self.socket).name, self.pipe_id)
-            self.chn.bind(self.address)
-
-class FbLogServiceImpl(MicroserviceImpl):
-    """Implementation of FBLOG microservice."""
     def __init__(self, descriptor: ServiceDescriptor, stop_event: t.Any):
         super().__init__(descriptor, stop_event)
         self.in_pipe: InputPipe = InputPipe(self.on_pipe_closed)
@@ -282,7 +98,7 @@ class FbLogServiceImpl(MicroserviceImpl):
         self.post_process = None
         self.print_format: str = None
         self.filter_expr: str = None
-        self.print_cnt = 0
+        self.print_cnt: int = 0
         self.svc = None
         #
     def __parse(self) -> None:
@@ -489,10 +305,10 @@ class FbLogServiceImpl(MicroserviceImpl):
                 else:
                     self.mngr.defer(pipe.open)
         #
-    def validate(self) -> None:
-        ""
     def finalize(self, svc: BaseService) -> None:
         """Service finalization."""
         for pipe in (self.in_pipe, self.out_pipe):
             pipe.close()
+        if self.svc:
+            self.svc.close()
         super().finalize(svc)
