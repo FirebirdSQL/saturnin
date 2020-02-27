@@ -52,13 +52,13 @@ from uuid import UUID
 from pkg_resources import iter_entry_points
 from firebird.butler.fbsd_pb2 import STATE_STOPPED, STATE_TERMINATED, STATE_UNKNOWN, \
      STATE_RUNNING
-from saturnin.sdk.types import ExecutionMode, DependencyType, AddressDomain, ZMQAddress, \
+from saturnin.core.types import ExecutionMode, DependencyType, AddressDomain, ZMQAddress, \
      ZMQAddressList, ServiceFacilities, ServiceDescriptor, ServiceError, SaturninError
-from saturnin.sdk.collections import Registry
-from saturnin.sdk.protocol.fbsp import fbsp_proto, MsgType, ErrorCode, Session, \
+from saturnin.core.collections import Registry
+from saturnin.core.protocol.fbsp import fbsp_proto, MsgType, ErrorCode, Session, \
      ServiceMessagelHandler, HelloMessage, CancelMessage, RequestMessage, bb2h
-from saturnin.sdk.service import TEvent, BaseService, SimpleServiceImpl
-from saturnin.sdk.classic import ServiceExecutor
+from saturnin.core.service import TEvent, BaseService, SimpleServiceImpl
+from saturnin.core.classic import ServiceExecutor
 from . import node_pb2 as pb
 from .api import NodeRequest, NodeError
 

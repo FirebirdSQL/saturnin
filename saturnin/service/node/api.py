@@ -48,10 +48,10 @@ Supported requests:
 
 import uuid
 from functools import partial
-from saturnin.sdk import VENDOR_UID
-from saturnin.sdk.types import Enum, ExecutionMode, ServiceType, ServiceFacilities, \
+from saturnin.core import VENDOR_UID
+from saturnin.core.types import Enum, ExecutionMode, ServiceType, ServiceFacilities, \
      AgentDescriptor, InterfaceDescriptor, ServiceDescriptor
-from saturnin.sdk.config import ServiceConfig, create_config
+from saturnin.core.config import ServiceConfig, create_config
 
 
 # OID: iso.org.dod.internet.private.enterprise.firebird.butler.service.node
@@ -97,7 +97,7 @@ SERVICE_INTERFACE: InterfaceDescriptor = \
 
 SERVICE_API = [SERVICE_INTERFACE]
 
-SERVICE_DESCRIPTION: ServiceDescriptor = \
+SERVICE_DESCRIPTOR: ServiceDescriptor = \
     ServiceDescriptor(agent=SERVICE_AGENT,
                       api=SERVICE_API,
                       dependencies=[],
@@ -106,7 +106,7 @@ SERVICE_DESCRIPTION: ServiceDescriptor = \
                       facilities=ServiceFacilities.FBSP_SOCKET,
                       description="Saturnin runtime node service",
                       implementation='saturnin.service.node.service:SaturninNodeServiceImpl',
-                      container='saturnin.sdk.classic:SimpleService',
+                      container='saturnin.core.classic:SimpleService',
                       config=partial(create_config, ServiceConfig,
                                      '%s_service' % SERVICE_AGENT.name,
                                      "NODE service."),

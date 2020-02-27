@@ -48,10 +48,10 @@ from functools import reduce
 import platform
 import zmq
 from argparse import ArgumentParser, Action
-from saturnin.sdk.types import PeerDescriptor, ZMQAddress, AddressDomain
-from saturnin.sdk.config import ServiceConfig
-from saturnin.sdk.service import load, Event, SimpleServiceImpl, BaseService
-from saturnin.service.node.api import SERVICE_DESCRIPTION
+from saturnin.core.types import PeerDescriptor, ZMQAddress, AddressDomain
+from saturnin.core.config import ServiceConfig
+from saturnin.core.service import load, Event, SimpleServiceImpl, BaseService
+from saturnin.service.node.api import SERVICE_DESCRIPTOR
 
 __VERSION__ = '0.1'
 
@@ -101,14 +101,14 @@ def main():
     if not reduce(lambda result, addr: result or addr.domain == AddressDomain.NODE,
                   node_endpoints, False):
         node_endpoints.append(node_address)
-    node_cfg: ServiceConfig = SERVICE_DESCRIPTION.config()
+    node_cfg: ServiceConfig = SERVICE_DESCRIPTOR.config()
     node_cfg.endpoints.set_value(node_endpoints)
 
     node_implementation: SimpleServiceImpl = \
-        load(SERVICE_DESCRIPTION.implementation)(SERVICE_DESCRIPTION, stop_event)
+        load(SERVICE_DESCRIPTOR.implementation)(SERVICE_DESCRIPTOR, stop_event)
     node_implementation.peer = PeerDescriptor(uuid1(), getpid(), platform.node())
     node_service:BaseService = \
-        load(SERVICE_DESCRIPTION.container)(node_implementation, zmq.Context.instance(),
+        load(SERVICE_DESCRIPTOR.container)(node_implementation, zmq.Context.instance(),
                                             node_cfg)
     node_service.initialize()
     try:

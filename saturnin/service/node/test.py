@@ -109,7 +109,7 @@ class TestRunner(BaseTestRunner):
                                                self.get_token())
         dframe: pb.RequestStartService = pb.RequestStartService()
         dframe.agent_uid = roman_api.SERVICE_UID.bytes
-        cfg: ServiceConfig = roman_api.SERVICE_DESCRIPTION.config()
+        cfg: ServiceConfig = roman_api.SERVICE_DESCRIPTOR.config()
         cfg.endpoints.set_value([ZMQAddress('tcp://127.0.0.1:7001')])
         cfg.save_proto(dframe.config)
         dframe.name = 'roman-test'
@@ -185,7 +185,7 @@ class TestRunner(BaseTestRunner):
         self.run_request(client.get_providers, roman_api.ROMAN_INTERFACE_UID)
     def client_03_start_service(self, client: SaturninNodeClient):
         "Client test of start_service() API call."
-        cfg: ServiceConfig = roman_api.SERVICE_DESCRIPTION.config()
+        cfg: ServiceConfig = roman_api.SERVICE_DESCRIPTOR.config()
         cfg.endpoints.set_value([ZMQAddress('tcp://127.0.0.1:*')])
         data = self.run_request(client.start_service, roman_api.SERVICE_UID, cfg)
         self.peer_uid = UUID(bytes=data.service.peer.uid)

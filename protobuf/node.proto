@@ -34,39 +34,9 @@ package saturnin.protobuf;
 import "google/protobuf/any.proto";
 import "google/protobuf/struct.proto";
 import "firebird/butler/fbsd.proto";
+import "saturnin/protobuf/common.proto";
 
 // Enums
-
-// Service start mode
-
-enum ExecutionModeEnum {
-  EXEC_MODE_ANY     = 0 ;
-  EXEC_MODE_THREAD  = 1 ;
-  EXEC_MODE_PROCESS = 2 ;
-}
-
-// Service type
-
-enum ServiceTypeEnum {
-  SVC_TYPE_UNKNOWN       = 0 ; // Not a valid option, defined only to handle undefined values
-  SVC_TYPE_DATA_PROVIDER = 1 ; // Data Pipe Service that collects and pass on data.
-  SVC_TYPE_DATA_FILTER   = 2 ; // Data Pipe Service that process data from input and sends results to output
-  SVC_TYPE_DATA_CONSUMER = 3 ; // Data Pipe Servuce that consumes input data
-  SVC_TYPE_PROCESSING    = 4 ; // Service for REQEST/REPLY data processing
-  SVC_TYPE_EXECUTOR      = 5 ; // Service that does things on request
-  SVC_TYPE_CONTROL       = 6 ; // Service that manages other services
-}
-
-// Service Facilities
-
-enum ServiceFacilitiesEnum {
-  SVC_FACILITY_NONE          = 0 ;
-  SVC_FACILITY_FBSP_SOCKET   = 1 ; // Standard Butler Service with one socket for FBSP communication
-  SVC_FACILITY_INPUT_SERVER  = 2 ; // Service has/can have standard data pipe INPUT in SERVER mode
-  SVC_FACILITY_INPUT_CLIENT  = 3 ; // Service has/can have standard data pipe INPUT in CLIENT mode
-  SVC_FACILITY_OUTPUT_SERVER = 4 ; // Service has/can have standard data pipe OUTPUT in SERVER mode
-  SVC_FACILITY_OUTPUT_CLIENT = 5 ; // Service has/can have standard data pipe OUTPUT in CLIENT mode
-}
 
 // Dependency
 

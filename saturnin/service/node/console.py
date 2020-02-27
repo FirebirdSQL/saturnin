@@ -49,12 +49,12 @@ from argparse import ArgumentParser, Action, Namespace, FileType
 from configparser import ConfigParser, ExtendedInterpolation, DEFAULTSECT
 from pkg_resources import iter_entry_points
 from tabulate import tabulate
-from saturnin.sdk import VENDOR_UID
-from saturnin.sdk.types import State, ZMQAddress, AddressDomain, PeerDescriptor, \
+from saturnin.core import VENDOR_UID
+from saturnin.core.types import State, ZMQAddress, AddressDomain, PeerDescriptor, \
      AgentDescriptor, ServiceDescriptor, SaturninError, StopError
-from saturnin.sdk.collections import Registry
-from saturnin.sdk.config import Config, ServiceConfig, UUIDOption, BoolOption
-from saturnin.sdk.base import ChannelManager, DealerChannel
+from saturnin.core.collections import Registry
+from saturnin.core.config import Config, ServiceConfig, UUIDOption, BoolOption
+from saturnin.core.base import ChannelManager, DealerChannel
 from . import node_pb2 as pb
 from .client import SaturninNodeClient
 
@@ -73,6 +73,17 @@ def title(text: str, size: int = 80, char: str = '='):
     return f"  {text}  ".center(size, char)
 
 # Classes
+
+class ConsoleConfig(Config):
+    """Console configuration"""
+    def __init__(self, name: str, description: str):
+        super().__init__(name, description)
+        self.service_uid = UUIDOption('service_uid',
+                                      "Service UID (agent.uid in the Service Descriptor)",
+                                      required=True)
+        self.singleton = BoolOption('singleton',
+                                    "When True, start only one service instance",
+                                    default=False)
 
 class UpperAction(Action):
     "Converts argument to uppercase."
@@ -111,17 +122,8 @@ Attributes:
         self.file: t.IO = None
         self.log: logging.Logger = logging.getLogger('nodeconsole')
         self.conf: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
-        self.ext_cfg: Config = Config('console_cfg', "Node console configuration")
+        self.ext_cfg: ConsoleConfig = ConsoleConfig('console_cfg', "Node console configuration")
 
-        self.opt_svc_uid: UUIDOption = \
-            self.ext_cfg.add_option(UUIDOption('service_uid',
-                                                   "Service UID (agent.uid in the Service Descriptor)",
-                                                   required=True))
-
-        self.opt_svc_single: BoolOption = \
-            self.ext_cfg.add_option(BoolOption('singleton',
-                                               "When True, start only one service instance",
-                                               default=False))
         self.service_registry: Registry = Registry()
         #
         self.__show_completion: t.List = ['installed', 'running', 'providers']
@@ -316,14 +318,14 @@ Arguments:
             # Validate configuration of services
             services = []
             for svc_section in sections:
-                if not self.conf.has_option(svc_section, self.opt_svc_uid.name):
-                    raise StopError("Missing '%s' option in section '%s'" % (self.opt_svc_uid.name,
+                if not self.conf.has_option(svc_section, self.ext_cfg.service_uid.name):
+                    raise StopError("Missing '%s' option in section '%s'" % (self.ext_cfg.service_uid.name,
                                                                              svc_section))
                 self.ext_cfg.clear()
                 self.ext_cfg.load_from(self.conf, svc_section)
-                svc: ServiceDescriptor = self.service_registry.get(self.opt_svc_uid.value)
+                svc: ServiceDescriptor = self.service_registry.get(self.ext_cfg.service_uid.value)
                 if svc is None:
-                    raise StopError("Unknown service '%s'" % self.opt_svc_uid.value)
+                    raise StopError("Unknown service '%s'" % self.ext_cfg.service_uid.value)
                 cfg: ServiceConfig = svc.config()
                 try:
                     cfg.load_from(self.conf, svc_section)
@@ -331,7 +333,7 @@ Arguments:
                 except (SaturninError, TypeError, ValueError) as exc:
                     raise StopError("Error in configuration section '%s'\n%s" % \
                                     (svc_section, str(exc)))
-                services.append((svc_section, svc, cfg, self.opt_svc_single.value))
+                services.append((svc_section, svc, cfg, self.ext_cfg.singleton.value))
             #
             for section_name, svc, cfg, singleton in services:
                 # print configuration
@@ -340,7 +342,7 @@ Arguments:
                 self.verbose(title("Task '%s'" % section_name, char='-'))
                 self.verbose("service_uid = %s [%s]" % (svc.agent.uid, svc.agent.name))
                 self.verbose("singleton   = %s" % ('Yes' if singleton else 'No'))
-                for option in cfg.options.values():
+                for option in cfg.options:
                     self.verbose("%s" % option.get_printout())
             self.verbose(title("Starting services"))
             #

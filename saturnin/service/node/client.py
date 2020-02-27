@@ -39,10 +39,10 @@ management of other Saturnin services.
 
 import typing as t
 from uuid import UUID
-from saturnin.sdk.types import State, InterfaceDescriptor
-from saturnin.sdk.config import Config
-from saturnin.sdk.protocol.fbsp import Session, MsgType, bb2h, ReplyMessage, ErrorMessage, exception_for
-from saturnin.sdk.client import ServiceClient
+from saturnin.core.types import State, InterfaceDescriptor
+from saturnin.core.config import Config
+from saturnin.core.protocol.fbsp import Session, MsgType, bb2h, ReplyMessage, ErrorMessage, exception_for
+from saturnin.core.client import ServiceClient
 from . import node_pb2 as pb
 from .api import NodeRequest, SERVICE_INTERFACE
 

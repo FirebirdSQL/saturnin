@@ -1,4 +1,4 @@
-// Protocol Buffers for Saturnin firebird-log microservice
+// Protocol Buffers for Saturnin firebird.log microservices
 // Copyright 2019 Firebird Project.  All rights reserved.
 // https://www.firebirdsql.org/
 // https://saturnin.rtfd.io
@@ -29,19 +29,38 @@
 
 syntax = "proto3";
 
-package saturnin.protobuf;
+package saturnin.protobuf.fblog;
 
- import "google/protobuf/timestamp.proto";
- import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+import "saturnin/protobuf/common.proto";
+
+// Firebird facility codes
+
+enum FirebirdFacility {
+  FACILITY_UNKNOWN    = 0 ;
+  FACILITY_SYSTEM     = 1 ;
+  FACILITY_CONFIG     = 2 ;
+  FACILITY_INTL       = 3 ;
+  FACILITY_FILEIO     = 4 ;
+  FACILITY_USER       = 5 ;
+  FACILITY_VALIDATION = 6 ;
+  FACILITY_SWEEP      = 7 ;
+  FACILITY_PLUGIN     = 8 ;
+  FACILITY_GUARDIAN   = 9 ;
+  FACILITY_NET        = 10 ;
+  FACILITY_AUTH       = 11 ;
+}
 
 // Firebird log entry
 
-message FirebirdLogEntry {
+message LogEntry {
   string                    origin    = 1 ; // [required] Identification of entry source
   google.protobuf.Timestamp timestamp = 2 ; // [required] Creation time
-  uint32                    level     = 3 ; // Message severity level
+  SeverityLevel             level     = 3 ; // Message severity level
   uint32                    code      = 4 ; // Message code
-  string                    message   = 5 ; // [required] Message text / pattern
-  google.protobuf.Struct    params    = 6 ; // Message parameters
+  FirebirdFacility          facility  = 5 ; // Firebird facility code
+  string                    message   = 6 ; // [required] Message text / pattern
+  google.protobuf.Struct    params    = 7 ; // Message parameters
 }
 
