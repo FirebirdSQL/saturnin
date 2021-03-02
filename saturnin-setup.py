@@ -1,0 +1,441 @@
+#!/usr/bin/env python
+#coding:utf-8
+#
+# PROGRAM/MODULE: saturnin
+# FILE:           saturnin-setup.py
+# DESCRIPTION:    Saturnin platform installation script
+# CREATED:        9.2.2021
+#
+# The contents of this file are subject to the MIT License
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+# Copyright (c) 2021 Firebird Project (www.firebirdsql.org)
+# All Rights Reserved.
+#
+# Contributor(s): Pavel Císař (original code)
+#                 ______________________________________
+
+"""Saturnin platform installation script
+
+
+"""
+
+from __future__ import annotations
+from typing import List
+import venv
+import sys
+import os
+import subprocess
+import platform
+from pathlib import Path
+
+# copied from firebird.base.config
+class DirectoryScheme:
+    """Class that provide paths to typically used application directories.
+
+    Default scheme uses HOME directory as root for other directories. The HOME is
+    determined as follows:
+
+    1. If environment variable "<app_name>_HOME" exists, its value is used as HOME directory.
+    2. HOME directory is set to current working directory.
+
+    Note:
+        All paths are set when the instance is created and can be changed later.
+    """
+    def __init__(self, name: str, version: str=None):
+        """
+        Arguments:
+            name: Appplication name.
+            version: Application version.
+        """
+        self.name: str = name
+        self.version: str = version
+        home = self.home
+        self.dir_map: Dict[str, Path] = {'config': home / 'config',
+                                         'run_data': home / 'run_data',
+                                         'logs': home / 'logs',
+                                         'data': home / 'data',
+                                         'tmp': home / 'tmp',
+                                         'cache': home / 'cache',
+                                         'srv': home / 'srv',
+                                         'user_config': home / 'user_config',
+                                         'user_data': home / 'user_data',
+                                         'user_sync': home / 'user_sync',
+                                         'user_cache': home / 'user_cache',
+                                      }
+    def has_home_env(self) -> bool:
+        """Returns True if HOME directory is set by "<app_name>_HOME" environment variable.
+        """
+        return os.getenv(f'{self.name.upper()}_HOME') is not None
+    @property
+    def home(self) -> Path:
+        """HOME directory. Either path set by "<app_name>_HOME" environment variable, or
+        current working directory.
+        """
+        home = os.getenv(f'{self.name.upper()}_HOME')
+        return Path(home) if home is not None else Path(os.getcwd())
+    @property
+    def config(self) -> Path:
+        """Directory for host-specific system-wide configuration files.
+        """
+        return self.dir_map['config']
+    @config.setter
+    def config(self, path: Path) -> None:
+        self.dir_map['config'] = path
+    @property
+    def run_data(self) -> Path:
+        """Directory for run-time variable data that may not persist over boot.
+        """
+        return self.dir_map['run_data']
+    @run_data.setter
+    def run_data(self, path: Path) -> None:
+        self.dir_map['run_data'] = path
+    @property
+    def logs(self) -> Path:
+        """Directory for log files.
+        """
+        return self.dir_map['logs']
+    @logs.setter
+    def logs(self, path: Path) -> None:
+        self.dir_map['logs'] = path
+    @property
+    def data(self) -> Path:
+        """Directory for state information / persistent data modified by application as
+        it runs.
+        """
+        return self.dir_map['data']
+    @data.setter
+    def data(self, path: Path) -> None:
+        self.dir_map['data'] = path
+    @property
+    def tmp(self) -> Path:
+        """Directory for temporary files to be preserved between reboots.
+        """
+        return self.dir_map['tmp']
+    @tmp.setter
+    def tmp(self, path: Path) -> None:
+        self.dir_map['tmp'] = path
+    @property
+    def cache(self) -> Path:
+        """Directory for application cache data.
+
+        Such data are locally generated as a result of time-consuming I/O or calculation.
+        The application must be able to regenerate or restore the data. The cached files
+        can be deleted without loss of data.
+        """
+        return self.dir_map['cache']
+    @cache.setter
+    def cache(self, path: Path) -> None:
+        self.dir_map['cache'] = path
+    @property
+    def srv(self) -> Path:
+        """Directory for site-specific data served by this system, such as data and
+        scripts for web servers, data offered by FTP servers, and repositories for
+        version control systems etc.
+        """
+        return self.dir_map['srv']
+    @srv.setter
+    def srv(self, path: Path) -> None:
+        self.dir_map['srv'] = path
+    @property
+    def user_config(self) -> Path:
+        """Directory for user-specific configuration.
+        """
+        return self.dir_map['user_config']
+    @user_config.setter
+    def user_config(self, path: Path) -> None:
+        self.dir_map['user_config'] = path
+    @property
+    def user_data(self) -> Path:
+        """Directory for User local data.
+        """
+        return self.dir_map['user_data']
+    @user_data.setter
+    def user_data(self, path: Path) -> None:
+        self.dir_map['user_data'] = path
+    @property
+    def user_sync(self) -> Path:
+        """Directory for user data synced accross systems (roaming).
+        """
+        return self.dir_map['user_sync']
+    @user_sync.setter
+    def user_sync(self, path: Path) -> None:
+        self.dir_map['user_sync'] = path
+    @property
+    def user_cache(self) -> Path:
+        """Directory for user-specific application cache data.
+        """
+        return self.dir_map['user_cache']
+    @user_cache.setter
+    def user_cache(self, path: Path) -> None:
+        self.dir_map['user_cache'] = path
+
+
+class WindowsDirectoryScheme(DirectoryScheme):
+    """Directory scheme that conforms to Windows standards.
+
+    If HOME is defined using "<app_name>_HOME" environment variable, only user-specific
+    directories and TMP are set according to platform standars, while general directories
+    remain as defined by base `DirectoryScheme`.
+    """
+    def __init__(self, name: str, version: str=None):
+        """
+        Arguments:
+            name: Appplication name.
+            version: Application version.
+        """
+        super().__init__(name, version)
+        app_dir = Path(self.name)
+        if self.version is not None:
+            app_dir /= self.version
+        pd = Path(os.path.expandvars('%PROGRAMDATA%'))
+        lad = Path(os.path.expandvars('%LOCALAPPDATA%'))
+        ad = Path(os.path.expandvars('%APPDATA%'))
+        # Set general directories only when HOME is not forced by environment variable.
+        if not self.has_home_env():
+            self.dir_map.update({'config': pd / app_dir / 'config',
+                                 'run_data': pd / app_dir / 'run',
+                                 'logs': pd / app_dir / 'log',
+                                 'data': pd / app_dir / 'data',
+                                 'cache': pd / app_dir / 'cache',
+                                 'srv': pd / app_dir / 'srv',
+                                 })
+        # Always set user-specific directories and TMP
+        self.dir_map.update({'tmp': lad / app_dir / 'tmp',
+                             'user_config': lad / app_dir / 'config',
+                             'user_data': lad / app_dir / 'data',
+                             'user_sync': ad / app_dir,
+                             'user_cache': lad / app_dir / 'cache',
+                             })
+
+class LinuxDirectoryScheme(DirectoryScheme):
+    """Directory scheme that conforms to Linux standards.
+
+    If HOME is defined using "<app_name>_HOME" environment variable, only user-specific
+    directories and TMP are set according to platform standars, while general directories
+    remain as defined by base `DirectoryScheme`.
+    """
+    def __init__(self, name: str, version: str=None):
+        """
+        Arguments:
+            name: Appplication name.
+            version: Application version.
+        """
+        super().__init__(name, version)
+        app_dir = Path(self.name)
+        if self.version is not None:
+            app_dir /= self.version
+        # Set general directories only when HOME is not forced by environment variable.
+        if not self.has_home_env():
+            self.dir_map.update({'config': Path('/etc') / app_dir,
+                                 'run_data': Path('/run') / app_dir,
+                                 'logs': Path('/var/log') / app_dir,
+                                 'data': Path('/var/lib') / app_dir,
+                                 'cache': Path('/var/cache') / app_dir,
+                                 'srv': Path('/srv') / app_dir,
+                                 })
+        # Always set user-specific directories and TMP
+        self.dir_map.update({'tmp': Path('/var/tmp') / app_dir,
+                             'user_config': Path('~/.config').expanduser() / app_dir,
+                             'user_data': Path('~/.local/share').expanduser() / app_dir,
+                             'user_sync': Path('~/.local/sync').expanduser() / app_dir,
+                             'user_cache': Path('~/.cache').expanduser() / app_dir,
+                             })
+
+class MacOSDirectoryScheme(DirectoryScheme):
+    """Directory scheme that conforms to MacOS standards.
+
+    If HOME is defined using "<app_name>_HOME" environment variable, only user-specific
+    directories and TMP are set according to platform standars, while general directories
+    remain as defined by base `DirectoryScheme`.
+    """
+    def __init__(self, name: str, version: str=None):
+        """
+        Arguments:
+            name: Appplication name.
+            version: Application version.
+        """
+        super().__init__(name, version)
+        app_dir = Path(self.name)
+        if self.version is not None:
+            app_dir /= self.version
+        pd = Path('/Library/Application Support')
+        lad = Path('~/Library/Application Support').expanduser()
+        # Set general directories only when HOME is not forced by environment variable.
+        if not self.has_home_env():
+            self.dir_map.update({'config': pd / app_dir / 'config',
+                                 'run_data': pd / app_dir / 'run',
+                                 'logs': pd / app_dir / 'log',
+                                 'data': pd / app_dir / 'data',
+                                 'cache': pd / app_dir / 'cache',
+                                 'srv': pd / app_dir / 'srv',
+                                 })
+        # Always set user-specific directories and TMP
+        self.dir_map.update({'tmp': Path(os.getenv('TMPDIR')) / app_dir,
+                             'user_config': lad / app_dir / 'config',
+                             'user_data': lad / app_dir / 'data',
+                             'user_sync': lad / app_dir,
+                             'user_cache': Path('~/Library/Caches').expanduser() / app_dir / 'cache',
+                             })
+
+def get_directory_scheme(app_name: str, version: str=None) -> DirectoryScheme:
+    """Returns directory scheme for current platform.
+    """
+    return {'Windows': WindowsDirectoryScheme,
+            'Linux':LinuxDirectoryScheme,
+            'Darwin': MacOSDirectoryScheme}.get(platform.system(), DirectoryScheme)(app_name, version)
+
+# copied from saturnin.site
+SATURNIN_CFG = 'saturnin.conf'
+
+class SaturninScheme(DirectoryScheme):
+    """Saturnin platform directory scheme.
+    """
+    def __init__(self):
+        super().__init__('saturnin')
+        self.dir_map.update(get_directory_scheme('saturnin').dir_map)
+    @property
+    def pids(self) -> Path:
+        """Path to directory with PID files for running daemons.
+        """
+        return self.run_data / 'pids'
+    @property
+    def site_components_toml(self) -> Path:
+        """Saturnin package registry file.
+        """
+        return self.data / 'components.toml'
+    @property
+    def site_conf(self) -> Path:
+        """Saturni site configuration file.
+        """
+        return self.config / SATURNIN_CFG
+    @property
+    def user_conf(self) -> Path:
+        """Saturnin user configuration file.
+        """
+        return self.user_config / SATURNIN_CFG
+
+#
+
+class ExtendedEnvBuilder(venv.EnvBuilder):
+    def post_setup(self, context):
+        print("Updating package management...")
+        bin_path = Path(context.bin_path)
+        self.bin_path = bin_path
+        subprocess.run([str(bin_path / 'pip'),'install','-U','pip','setuptools','wheel'],
+                       stdout=sys.stdout,stderr=sys.stderr)
+
+def main(args=None):
+    compatible = True
+    if sys.version_info < (3, 8):
+        compatible = False
+    elif not hasattr(sys, 'base_prefix'):
+        compatible = False
+    if not compatible:
+        raise ValueError('This script is only for use with Python >= 3.8')
+    else:
+        import argparse
+
+        parser = argparse.ArgumentParser(prog='saturnin-setup',
+                                         description='Installs Saturnin in separate '
+                                                     'virtual Python environment')
+        parser.add_argument('--system-site-packages', default=False,
+                            action='store_true', dest='system_site',
+                            help='Give the virtual environment access to the '
+                                 'system site-packages dir.')
+        if platform.system() == 'Windows':
+            use_symlinks = False
+        else:
+            use_symlinks = True
+        group = parser.add_mutually_exclusive_group()
+        group.add_argument('--symlinks', default=use_symlinks,
+                           action='store_true', dest='symlinks',
+                           help='Try to use symlinks rather than copies, '
+                                'when symlinks are not the default for '
+                                'the platform.')
+        group.add_argument('--copies', default=not use_symlinks,
+                           action='store_false', dest='symlinks',
+                           help='Try to use copies rather than symlinks, '
+                                'even when symlinks are the default for '
+                                'the platform.')
+        parser.add_argument('--clear', default=False, action='store_true',
+                            dest='clear', help='Delete the contents of the '
+                                               'environment directory if it '
+                                               'already exists, before '
+                                               'environment creation.')
+        parser.add_argument('--upgrade', default=False, action='store_true',
+                            dest='upgrade', help='Upgrade the environment '
+                                                 'directory to use this version '
+                                                 'of Python, assuming Python '
+                                                 'has been upgraded in-place.')
+        parser.add_argument('--prompt', default='saturnin-venv',
+                            help='Provides an alternative prompt prefix for '
+                                 'this environment.')
+        parser.add_argument('--home', metavar='PATH',
+                            help='Saturnin HOME directory.')
+        parser.add_argument('-f','--find-links', metavar='<url>',
+                            help="If a URL or path to an html file, "
+                            "then parse for links to archives such as sdist (.tar.gz) "
+                            "or wheel (.whl) files. If a local path or file:// URL "
+                            "that's a directory,  then look for archives in the directory "
+                            "listing. Links to VCS project URLs are not supported.")
+        options = parser.parse_args(args)
+        use_home = options.home is not None
+        if options.upgrade and options.clear:
+            raise ValueError('you cannot supply --upgrade and --clear together.')
+        if use_home and os.getenv('SATURNIN_HOME') is not None:
+            raise ValueError('you cannot supply --home when SATURNIN_HOME is defined.')
+        #
+        if use_home:
+            os.environ['SATURNIN_HOME'] = options.home
+        scheme = get_directory_scheme('saturnin')
+        builder = ExtendedEnvBuilder(system_site_packages=options.system_site,
+                                     clear=options.clear,
+                                     symlinks=options.symlinks,
+                                     upgrade=options.upgrade,
+                                     with_pip=True,
+                                     prompt=options.prompt)
+        builder.bin_path: Path = None
+        venv_home = scheme.data / 'venv'
+        print("Creating Saturnin virtual environment...")
+        builder.create(venv_home)
+        home_file: Path = venv_home / '.saturnin-bin'
+        home_file.write_text(str(builder.bin_path))
+        if use_home:
+            home_file: Path = venv_home / '.saturnin-home'
+            home_file.write_text(options.home)
+        print("Installing Saturnin...")
+        cmd = [str(builder.bin_path / 'pip'), 'install']
+        if options.find_links is not None:
+            cmd.extend(['-f', options.find_links])
+        cmd.append('saturnin>=0.7.0')
+        subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
+        print("Saturnin site initialization...")
+        cmd = [str(builder.bin_path / 'saturnin-init')]
+        subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
+
+if __name__ == '__main__':
+    rc = 1
+    try:
+        main()
+        rc = 0
+    except Exception as e:
+        print(f'Error: {e}', file=sys.stderr)
+    sys.exit(rc)

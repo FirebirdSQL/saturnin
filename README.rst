@@ -1,5 +1,5 @@
 ========
-saturnin
+Saturnin
 ========
 
-Saturnin is a reference implementation of selected Firebird Butler services in Python
+Saturnin is an implementation of Firebird Butler platform for Python.

@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools >= 53.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saturnin"
+version = "0.7.0"
+description = "Firebird Butler platform for Python"
+readme = "README.rst"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+authors = [{ name = "Pavel Císař", email = "pcisar@users.sourceforge.net"}]
+keywords = ["Saturnin", "Firebird", "Butler", "Platform", "ZeroMQ"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Topic :: System :: Systems Administration",
+    "Topic :: System :: Monitoring",
+    "Topic :: System :: Logging",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Object Brokering"
+    ]
+dependencies = [
+    "build",
+    "toml",
+    "pyzmq>=22.0.0",
+    "protobuf>=3.14.0, <4",
+    "firebird-butler-protobuf>=0.3.0",
+    "firebird-base>=1.1.0, <2"
+    ]
+
+[project.urls]
+Home = "http://firebirdsql.org/en/saturnin/"
+Documentation = "https://saturnin.rtfd.io"
+"Bug Reports" = "https://github.com/FirebirdSQL/saturnin/issues"
+Funding = "https://www.firebirdsql.org/en/donate/"
+Source = "https://github.com/FirebirdSQL/saturnin"
+
+[project.scripts]
+saturnin = "saturnin._scripts.cli:main"
+saturnin-init = "saturnin._scripts.init:main"
+saturnin-pkg = "saturnin._scripts.pkg:main"
+saturnin-daemon = "saturnin._scripts.daemon:main"
+saturnin-service = "saturnin._scripts.svcrun:main"
+saturnin-bundle = "saturnin._scripts.bundlerun:main"
+
+[project.entry-points."saturnin.commands.cli"]
+saturnin.list = "saturnin._scripts.commands.cli:ListCommand"
+saturnin.help = "saturnin.lib.command:HelpCommand"
+
+[project.entry-points."saturnin.commands.pkg"]
+saturnin.install = "saturnin._scripts.commands.pkg:InstallCommand"
+saturnin.help = "saturnin.lib.command:HelpCommand"

@@ -1,0 +1,47 @@
+# Map of Firebird Foundation Inc. OID namespace
+# segment: Saturnin SDK - Firebird Butler Development Platform
+# origin: https://raw.githubusercontent.com/FirebirdSQL/saturnin/master/oid/saturnin.oid
+# oid-name: iso.org.dod.internet.private.enterprise.firebird.butler.platform.saturnin
+#
+# Description of root node for this sub-tree
+node:
+  oid: 1.3.6.1.4.1.53446.1.2.0
+  name: saturnin
+  description: Firebird Butler Development & Deployment Platform in Python 3, also provides reference implementations for Firebird Burtler standards
+  contact: Pavel Císař
+  email: pcisar@users.sourceforge.net
+  site: https://firebirdsql.org/en/saturnin/
+  parent-spec: https://raw.githubusercontent.com/FirebirdSQL/Butler/master/oid/platforms.oid
+  type: node     # enumeration: "root", "node", "leaf"
+
+# List of children nodes in order of numbers assigned to them
+# could be omitted for leaf node (see node.type)
+children:
+  - number: 0
+    name: internal
+    description: Reserved for internal purposes of Saturnin
+    contact: Pavel Císař
+    email: pcisar@users.sourceforge.net
+    site: https://firebirdsql.org/en/saturnin/
+    node-spec: leaf
+  - number: 1
+    name: protocol
+    description: Root node for registered Saturnin protocols
+    contact: Pavel Císař
+    email: pcisar@users.sourceforge.net
+    site: https://firebirdsql.org/en/saturnin/
+    node-spec: https://raw.githubusercontent.com/FirebirdSQL/saturnin/master/oid/protocols.oid
+  - number: 2
+    name: service
+    description: Root node for registered Saturnin services
+    contact: Pavel Císař
+    email: pcisar@users.sourceforge.net
+    site: https://firebirdsql.org/en/saturnin/
+    node-spec: https://raw.githubusercontent.com/FirebirdSQL/saturnin-core/master/oid/services.oid
+  - number: 3
+    name: micro
+    description: Root node for registered Saturnin microservices
+    contact: Pavel Císař
+    email: pcisar@users.sourceforge.net
+    site: https://firebirdsql.org/en/saturnin/
+    node-spec: https://raw.githubusercontent.com/FirebirdSQL/saturnin-core/master/oid/micros.oid
