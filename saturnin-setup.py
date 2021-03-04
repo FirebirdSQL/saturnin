@@ -38,13 +38,65 @@
 """
 
 from __future__ import annotations
-from typing import List
+#from typing import List
 import venv
 import sys
 import os
 import subprocess
 import platform
+import ctypes
+import enum
 from pathlib import Path
+
+class SW(enum.IntEnum):
+    HIDE = 0
+    MAXIMIZE = 3
+    MINIMIZE = 6
+    RESTORE = 9
+    SHOW = 5
+    SHOWDEFAULT = 10
+    SHOWMAXIMIZED = 3
+    SHOWMINIMIZED = 2
+    SHOWMINNOACTIVE = 7
+    SHOWNA = 8
+    SHOWNOACTIVATE = 4
+    SHOWNORMAL = 1
+
+class ERROR(enum.IntEnum):
+    ZERO = 0
+    FILE_NOT_FOUND = 2
+    PATH_NOT_FOUND = 3
+    BAD_FORMAT = 11
+    ACCESS_DENIED = 5
+    ASSOC_INCOMPLETE = 27
+    DDE_BUSY = 30
+    DDE_FAIL = 29
+    DDE_TIMEOUT = 28
+    DLL_NOT_FOUND = 32
+    NO_ASSOC = 31
+    OOM = 8
+    SHARE = 26
+
+def elevate(*args, **kwargs):
+    if platform.system() == 'Windows':
+        if ctypes.windll.shell32.IsUserAnAdmin():
+            main(*args, **kwargs)
+            return True
+        else:
+            hinstance = ctypes.windll.shell32.ShellExecuteW(
+                None,
+                'runas',
+                sys.executable,
+                subprocess.list2cmdline(sys.argv),
+                None,
+                SW.SHOWNORMAL
+            )
+            if hinstance <= 32:
+                raise RuntimeError(ERROR(hinstance))
+            return False
+    else:
+        main(*args, **kwargs)
+        return True
 
 # copied from firebird.base.config
 class DirectoryScheme:
@@ -342,7 +394,8 @@ class ExtendedEnvBuilder(venv.EnvBuilder):
         subprocess.run([str(bin_path / 'pip'),'install','-U','pip','setuptools','wheel'],
                        stdout=sys.stdout,stderr=sys.stderr)
 
-def main(args=None):
+
+def init(args=None):
     compatible = True
     if sys.version_info < (3, 8):
         compatible = False
@@ -356,6 +409,14 @@ def main(args=None):
         parser = argparse.ArgumentParser(prog='saturnin-setup',
                                          description='Installs Saturnin in separate '
                                                      'virtual Python environment')
+        parser.add_argument('--home', metavar='PATH',
+                            help='Saturnin HOME directory.')
+        parser.add_argument('--prompt', default='saturnin',
+                            help='Provides an alternative prompt prefix for '
+                                 'Saturnin environment.')
+        if platform.system() == 'Windows':
+            parser.add_argument('--no-shortcut', default=False, action='store_true',
+                                help='Do not create desktop shortcut.')
         parser.add_argument('--system-site-packages', default=False,
                             action='store_true', dest='system_site',
                             help='Give the virtual environment access to the '
@@ -385,27 +446,38 @@ def main(args=None):
                                                  'directory to use this version '
                                                  'of Python, assuming Python '
                                                  'has been upgraded in-place.')
-        parser.add_argument('--prompt', default='saturnin-venv',
-                            help='Provides an alternative prompt prefix for '
-                                 'this environment.')
-        parser.add_argument('--home', metavar='PATH',
-                            help='Saturnin HOME directory.')
         parser.add_argument('-f','--find-links', metavar='<url>',
                             help="If a URL or path to an html file, "
                             "then parse for links to archives such as sdist (.tar.gz) "
                             "or wheel (.whl) files. If a local path or file:// URL "
                             "that's a directory,  then look for archives in the directory "
                             "listing. Links to VCS project URLs are not supported.")
-        options = parser.parse_args(args)
+        return parser.parse_args(args)
+
+def main(options):
         use_home = options.home is not None
         if options.upgrade and options.clear:
             raise ValueError('you cannot supply --upgrade and --clear together.')
         if use_home and os.getenv('SATURNIN_HOME') is not None:
             raise ValueError('you cannot supply --home when SATURNIN_HOME is defined.')
+        if platform.system() == 'Windows' and not options.no_shortcut:
+            try:
+                import winreg
+                from win32com.client import Dispatch
+            except Exception as exc:
+                raise ValueError("PyWin32 package not installed. "
+                                 "Execute 'pip install pywin32' or "
+                                 "use --no-shortcut option.") from exc
         #
         if use_home:
             os.environ['SATURNIN_HOME'] = options.home
         scheme = get_directory_scheme('saturnin')
+        venv_home = scheme.data / 'venv'
+        # If venv already exists, either --upgrade or --clear is required
+        if venv_home.is_dir() and not (options.upgrade or options.clear):
+            raise ValueError("Target virtual environment already exists, "
+                             "either --upgrade or --clear is required")
+        #
         builder = ExtendedEnvBuilder(system_site_packages=options.system_site,
                                      clear=options.clear,
                                      symlinks=options.symlinks,
@@ -413,7 +485,6 @@ def main(args=None):
                                      with_pip=True,
                                      prompt=options.prompt)
         builder.bin_path: Path = None
-        venv_home = scheme.data / 'venv'
         print("Creating Saturnin virtual environment...")
         builder.create(venv_home)
         home_file: Path = venv_home / '.saturnin-bin'
@@ -421,6 +492,12 @@ def main(args=None):
         if use_home:
             home_file: Path = venv_home / '.saturnin-home'
             home_file.write_text(options.home)
+        print("Ensuring latest setuptools, pip and build...")
+        cmd = [str(builder.bin_path / 'pip'), 'install', '-U', 'setuptools',
+               'pip', 'build']
+        if options.find_links is not None:
+            cmd.extend(['-f', options.find_links])
+        subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
         print("Installing Saturnin...")
         cmd = [str(builder.bin_path / 'pip'), 'install']
         if options.find_links is not None:
@@ -430,12 +507,35 @@ def main(args=None):
         print("Saturnin site initialization...")
         cmd = [str(builder.bin_path / 'saturnin-init')]
         subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
+        if platform.system() == 'Windows' and not options.no_shortcut:
+            print("Creating desktop shortcut...")
+            pth = r'Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders'
+            registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, pth, 0,
+                                          winreg.KEY_READ)
+            reg_value, _ = winreg.QueryValueEx(registry_key, 'Common Desktop')
+            winreg.CloseKey(registry_key)
+            desktop_dir = os.path.normpath(reg_value)
+            shortcut_path = os.path.expandvars(os.path.join(desktop_dir,
+                                                            'saturnin-shell.lnk'))
+            #
+            shell = Dispatch('WScript.Shell')
+            shortcut = shell.CreateShortCut(shortcut_path)
+            shortcut.Description = 'Saturnin shell'
+            shortcut.TargetPath = 'cmd.exe'
+            shortcut.Arguments = f"/K {str(venv_home / 'Scripts' / 'activate.bat')}"
+            shortcut.save()
 
 if __name__ == '__main__':
     rc = 1
+    elevated = False
     try:
-        main()
+        options = init()
+        elevated = elevate(options)
         rc = 0
     except Exception as e:
         print(f'Error: {e}', file=sys.stderr)
+    else:
+        if elevated:
+            print("\nSaturnin installation complete!")
+            print(input('Press any key...'))
     sys.exit(rc)
