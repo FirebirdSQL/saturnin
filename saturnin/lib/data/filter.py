@@ -130,8 +130,9 @@ class DataFilterMicro(MicroService):
         self.input_pipe_format: MIME = config.input_pipe_format.value
         self.input_batch_size: int = config.input_batch_size.value
         self.input_ready_schedule_interval: int = config.input_ready_schedule_interval.value
-        #
+        # Set up FBDP protocol
         if self.input_pipe_mode == SocketMode.BIND:
+            # server
             self.input_protocol = FBDPServer()
             self.input_protocol.on_exception = self.handle_exception
             self.input_protocol.on_accept_client = self.handle_input_accept_client
@@ -139,7 +140,9 @@ class DataFilterMicro(MicroService):
             # We have an endpoint to bind
             self.endpoints[INPUT_PIPE_CHN] = [self.input_pipe_address]
         else:
+            # client
             self.input_protocol = FBDPClient()
+        # common parts
         self.input_protocol.batch_size = self.input_batch_size
         self.input_protocol.on_pipe_closed = self.handle_input_pipe_closed
         self.input_protocol.on_accept_data = self.handle_input_accept_data
@@ -156,8 +159,9 @@ class DataFilterMicro(MicroService):
         self.output_pipe_format: MIME = config.output_pipe_format.value
         self.output_batch_size: int = config.output_batch_size.value
         self.output_ready_schedule_interval: int = config.output_ready_schedule_interval.value
-        #
+        # Set up FBDP protocol
         if self.output_pipe_mode == SocketMode.BIND:
+            # server
             self.output_protocol = FBDPServer()
             self.output_protocol.on_exception = self.handle_exception
             self.output_protocol.on_accept_client = self.handle_output_accept_client
@@ -165,7 +169,9 @@ class DataFilterMicro(MicroService):
             # We have an endpoint to bind
             self.endpoints[OUTPUT_PIPE_CHN] = [self.output_pipe_address]
         else:
+            # client
             self.output_protocol = FBDPClient()
+        # common parts
         self.output_protocol.batch_size = self.output_batch_size
         self.output_protocol.on_pipe_closed = self.handle_output_pipe_closed
         self.output_protocol.on_produce_data = self.handle_output_produce_data
@@ -417,7 +423,7 @@ class DataFilterMicro(MicroService):
             msg: DATA message that will be sent to client.
 
         Important:
-            The base implementation simply raises StopError with ErrorCode.OK code, so
+            The base implementation simply raises `StopError` with `ErrorCode.OK` code, so
             the descendant class must override this method without super() call.
 
             The event handler must `popleft()` data from `output` queue and store them in
@@ -429,7 +435,7 @@ class DataFilterMicro(MicroService):
             CLOSE message.
 
         Note:
-            To indicate end of data, raise StopError with ErrorCode.OK code.
+            To indicate end of data, raise `StopError` with `ErrorCode.OK` code.
         """
         raise StopError('OK', code=ErrorCode.OK)
     def handle_input_accept_data(self, channel: Channel, session: FBDPSession, data: bytes) -> None:
@@ -444,7 +450,7 @@ class DataFilterMicro(MicroService):
             Any output data produced by event handler must be stored into output queue via
             `store_output()` method.
 
-            The base implementation simply raises StopError with ErrorCode.OK code, so
+            The base implementation simply raises `StopError` with `ErrorCode.OK` code, so
             the descendant class must override this method without super() call.
 
             The event handler may cancel the transmission by raising the `StopError`

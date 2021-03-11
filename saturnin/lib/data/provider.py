@@ -99,8 +99,9 @@ class DataProviderMicro(MicroService):
         self.pipe_format: MIME = config.pipe_format.value
         self.batch_size: int = config.batch_size.value
         self.ready_schedule_interval: int = config.ready_schedule_interval.value
-        #
+        # Set up FBDP protocol
         if self.pipe_mode == SocketMode.BIND:
+            # server
             self.protocol = FBDPServer()
             self.protocol.on_exception = self.handle_exception
             self.protocol.on_accept_client = self.handle_accept_client
@@ -108,7 +109,9 @@ class DataProviderMicro(MicroService):
             # We have an endpoint to bind
             self.endpoints[PIPE_CHN] = [self.pipe_address]
         else:
+            # client
             self.protocol = FBDPClient()
+        # common parts
         self.protocol.batch_size = self.batch_size
         self.protocol.on_pipe_closed = self.handle_pipe_closed
         self.protocol.on_produce_data = self.handle_produce_data
@@ -122,7 +125,8 @@ class DataProviderMicro(MicroService):
                                                            'sndhwm': sndhwm,})
         chn.protocol.log_context = self.logging_id
     def aquire_resources(self) -> None:
-        """Aquire resources required by component (open files, connect to other services etc.).
+        """Aquire resources required by component (open files, connect to other services
+        etc.).
 
         Must raise an exception when resource aquisition fails.
         """
@@ -135,7 +139,8 @@ class DataProviderMicro(MicroService):
             cast(FBDPClient, chn.protocol).send_open(chn, session, self.pipe,
                                                      PipeSocket.INPUT, self.pipe_format)
     def release_resources(self) -> None:
-        """Release resources aquired by component (close files, disconnect from other services etc.)
+        """Release resources aquired by component (close files, disconnect from other
+        services etc.)
         """
         # CLOSE all active data pipe sessions
         chn: Channel = self.mngr.channels[PIPE_CHN]
@@ -223,8 +228,8 @@ class DataProviderMicro(MicroService):
             UnicodeError into StopError.
 
         Important:
-            The base implementation simply raises StopError with ErrorCode.OK code, so
-            the descendant class must override this method without super() call.
+            The base implementation simply raises `.StopError` with `ErrorCode.OK` code,
+            so the descendant class must override this method without super() call.
         """
         raise StopError('OK', code=ErrorCode.OK)
     def handle_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage,

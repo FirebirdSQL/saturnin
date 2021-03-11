@@ -112,8 +112,9 @@ class BaseDataPipeMicro(MicroService):
         self.pipe_format: MIME = config.pipe_format.value
         self.batch_size: int = config.batch_size.value
         self.ready_schedule_interval: int = config.ready_schedule_interval.value
-        #
+        # Set up FBDP protocol
         if self.pipe_mode == SocketMode.BIND:
+            # server
             self.protocol = FBDPServer()
             self.protocol.on_exception = self.handle_exception
             self.protocol.on_accept_client = self.handle_accept_client
@@ -121,7 +122,9 @@ class BaseDataPipeMicro(MicroService):
             # We have an endpoint to bind
             self.endpoints[PIPE_CHN] = [self.pipe_address]
         else:
+            # client
             self.protocol = FBDPClient()
+        # common parts
         self.protocol.log_context = self.logging_id
         self.protocol.batch_size = self.batch_size
         self.protocol.on_pipe_closed = self.handle_pipe_closed
@@ -233,7 +236,7 @@ class BaseDataPipeMicro(MicroService):
             UnicodeError into StopError.
 
         Important:
-            The base implementation simply raises StopError with ErrorCode.OK code, so
+            The base implementation simply raises `StopError` with `ErrorCode.OK` code, so
             the descendant class must override this method without super() call.
         """
         raise StopError('OK', code=ErrorCode.OK)
