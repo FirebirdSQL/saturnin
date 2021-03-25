@@ -45,7 +45,7 @@ from logging.config import fileConfig
 import zmq
 from firebird.base.logging import get_logger, Logger
 from firebird.base.trace import trace_manager
-from saturnin.base import StopError, ServiceDescriptor
+from saturnin.base import site, StopError, ServiceDescriptor
 from saturnin.component.registry import get_service_desciptors
 from saturnin.component.controller import Outcome, DirectController, ThreadController, \
      ServiceExecConfig
@@ -91,6 +91,7 @@ def main():
     try:
         # Read config
         cfg_files = []
+        cfg_files.append(str(site.scheme.logging_conf))
         if args.config:
             cfg_files.extend(args.config)
         cfg_files.append(args.service)

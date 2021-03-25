@@ -45,7 +45,7 @@ from datetime import datetime
 import zmq
 from firebird.base.logging import get_logger, Logger
 from firebird.base.trace import trace_manager
-from saturnin.base import ChannelManager
+from saturnin.base import ChannelManager, site
 from saturnin.component.bundle import BundleThreadController
 from saturnin.component.controller import Outcome
 
@@ -84,6 +84,7 @@ def main():
     log: Logger = None
     try:
         cfg_files = []
+        cfg_files.append(str(site.scheme.logging_conf))
         if args.config:
             cfg_files.extend(args.config)
         cfg_files.append(args.service)
