@@ -48,8 +48,6 @@ def main():
     parser: ArgumentParser = ArgumentParser(PROG_NAME, description=main.__doc__,
                                             formatter_class=ArgumentDefaultsHelpFormatter,
                                             usage="\n  saturnin-pkg <command> [options]")
-    #go = parser.add_argument_group("General options")
-    #go.add_argument('-h', '--help', action='help', help="Show this help and exit.")
     cmds = CommandManager(parser)
     cmds.load_commands('saturnin.commands.pkg')
     cmds.run()

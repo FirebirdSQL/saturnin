@@ -47,6 +47,7 @@ from packaging import version
 from argparse import ArgumentParser, Namespace, REMAINDER
 from configparser import ConfigParser, ExtendedInterpolation
 from saturnin.base import Error, site
+from saturnin.component.registry import get_service_desciptors
 from saturnin.lib.command import Command, CommandManager
 from saturnin.lib.pyproject import PyProjectTOML
 
@@ -317,9 +318,16 @@ class ListCommand(BasePkgCommand):
             args: Collected argument values.
         """
         self.load_components()
-        self.print_table(['Component', 'Version', 'Package'],
-                         [[cmp[CMP_NAME], cmp[CMP_VERSION], cmp[CMP_PACKAGE]]
-                          for cmp in self.components])
+        components = [[cmp[CMP_NAME], cmp[CMP_VERSION], cmp[CMP_UID], cmp[CMP_PACKAGE]]
+                      for cmp in self.components]
+        managed = {cmp[CMP_UID]: None for cmp in self.components}
+        # components not installed via saturnin-pkg, i.e. registered directly, for example
+        # by saturnin-sdk
+        for svc in get_service_desciptors():
+            if str(svc.agent.uid) not in managed:
+                components.append([svc.agent.name, svc.agent.version,
+                                   str(svc.agent.uid), svc.package])
+        self.print_table(['Component', 'Version', 'UID', 'Package'], components)
 
 class PipCommand(BasePkgCommand):
     """saturnin-pkg PIP command.
