@@ -49,7 +49,8 @@ from configparser import ConfigParser
 from firebird.base.config import UUIDOption
 from firebird.base.trace import TracedMixin
 from saturnin.base import ZMQAddress, load, Error, ServiceError, PeerDescriptor, Outcome, \
-     ServiceDescriptor, Direction, ChannelManager, PairChannel, INVALID, Component, Config
+     ServiceDescriptor, Direction, ChannelManager, PairChannel, INVALID, Component, Config, \
+     site
 from saturnin.protocol.iccp import ICCPComponent, ICCPController, ICCPMessage, MsgType
 
 #: Service control channel name
@@ -89,7 +90,8 @@ class ServiceController(TracedMixin):
     def __str__(self):
         return self.logging_id
     def configure(self, config: ConfigParser, section: str=None) -> None:
-        """Loads and validates service configuration.
+        """Loads and validates service configuration, and ensures that Saturnin facilities
+        required by service are available and properly configured.
 
         Arguments:
             config: ConfigParser instance with service configuration.
@@ -98,6 +100,10 @@ class ServiceController(TracedMixin):
         """
         self.config.load_config(config, self.name if section is None else section)
         self.config.validate()
+        # prepare facilities used by service
+        for facility in self.service.facilities:
+            if facility.lower() == 'firebird':
+                site.configure_firebird_driver()
     @property
     def logging_id(self) -> str:
         "Returns qualified class name and agent name."
