@@ -44,8 +44,11 @@ from pathlib import Path
 from configparser import ConfigParser, ExtendedInterpolation
 from firebird.base.config import DirectoryScheme, get_directory_scheme, Config, StrOption
 from firebird.base.logging import LoggingIdMixin
+from .types import Error
 
 SATURNIN_CFG = 'saturnin.conf'
+FIREBIRD_CFG = 'firebird.conf'
+LOGGING_CFG = 'logging.conf'
 
 CONFIG_HDR = """;
 ; A configuration file consists of sections, each led by a [section] header, followed by
@@ -89,6 +92,16 @@ class SaturninScheme(DirectoryScheme):
         """Saturnin user configuration file.
         """
         return self.user_config / SATURNIN_CFG
+    @property
+    def firebird_conf(self) -> Path:
+        """Firebird driver configuration file.
+        """
+        return self.config / FIREBIRD_CFG
+    @property
+    def logging_conf(self) -> Path:
+        """Python logging configuration file.
+        """
+        return self.config / LOGGING_CFG
 
 class SaturninConfig(Config):
     """Saturnin (a Firebird Butler platform) configuration.
@@ -136,6 +149,14 @@ class SiteManager(LoggingIdMixin):
         """
         # Check supports venv && virtualenv >= 20.0.0
         return getattr(sys, 'base_prefix', sys.prefix) != sys.prefix
+    def configure_firebird_driver(self) -> None:
+        """Configure the firebird-driver.
+        """
+        try:
+            from firebird.driver import driver_config
+        except ImportError:
+            raise Error("Firebird driver not installed.")
+        driver_config.read(self.scheme.firebird_conf, encoding='utf8')
     @property
     def venv(self) -> Optional[Path]:
         """Path to Saturnin virtual environment.
