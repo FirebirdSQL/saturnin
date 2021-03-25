@@ -318,7 +318,8 @@ class ListCommand(BasePkgCommand):
             args: Collected argument values.
         """
         self.load_components()
-        components = [[cmp[CMP_NAME], cmp[CMP_VERSION], cmp[CMP_UID], cmp[CMP_PACKAGE]]
+        components = [[cmp[CMP_NAME], cmp[CMP_VERSION], cmp[CMP_UID], cmp[CMP_PACKAGE],
+                       cmp[CMP_TOPLEVEL]]
                       for cmp in self.components]
         managed = {cmp[CMP_UID]: None for cmp in self.components}
         # components not installed via saturnin-pkg, i.e. registered directly, for example
@@ -326,8 +327,8 @@ class ListCommand(BasePkgCommand):
         for svc in get_service_desciptors():
             if str(svc.agent.uid) not in managed:
                 components.append([svc.agent.name, svc.agent.version,
-                                   str(svc.agent.uid), svc.package])
-        self.print_table(['Component', 'Version', 'UID', 'Package'], components)
+                                   str(svc.agent.uid), '', svc.package])
+        self.print_table(['Component', 'Version', 'UID', 'Package', 'Top-level'], components)
 
 class PipCommand(BasePkgCommand):
     """saturnin-pkg PIP command.
