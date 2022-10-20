@@ -30,6 +30,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
+# pylint: disable=R0903, R0902, C0301
 
 """Saturnin base class for data provider microservices
 """
@@ -37,13 +38,15 @@
 from __future__ import annotations
 from typing import cast
 from functools import partial
-from firebird.base.config import MIME, StrOption, EnumOption, \
-     IntOption, BoolOption, ZMQAddressOption, MIMEOption
-from saturnin.base import Error, StopError, Direction, SocketMode, PipeSocket, Outcome, \
-     ZMQAddress, MIME, ComponentConfig, Channel, DealerChannel
+import uuid
+import zmq
+from firebird.base.config import (StrOption, EnumOption, IntOption, BoolOption,
+    ZMQAddressOption, MIMEOption)
+from saturnin.base import (Error, StopError, Direction, SocketMode, PipeSocket, Outcome,
+     ZMQAddress, MIME, ComponentConfig, Channel, DealerChannel, ServiceDescriptor)
 from saturnin.component.micro import MicroService
-from saturnin.protocol.fbdp import ErrorCode, FBDPServer, FBDPClient, \
-     FBDPSession, FBDPMessage
+from saturnin.protocol.fbdp import (ErrorCode, FBDPServer, FBDPClient, FBDPSession,
+    FBDPMessage)
 
 PIPE_CHN = 'pipe'
 
@@ -86,6 +89,26 @@ class DataProviderMicro(MicroService):
     - `handle_produce_data` to produce data for outgoing DATA message.
     - `handle_pipe_closed` to release resource assiciated with pipe.
     """
+    def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
+                 peer_uid: uuid.UUID=None):
+        """
+        Arguments:
+            zmq_context: ZeroMQ Context.
+            descriptor: Service descriptor.
+            peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
+        """
+        super().__init__(zmq_context, descriptor, peer_uid=peer_uid)
+        self.outcome = Outcome.UNKNOWN
+        self.details = None
+        # Next members are set in initialize()
+        self.stop_on_close = None
+        self.pipe: str = None
+        self.pipe_mode: SocketMode = None
+        self.pipe_address: ZMQAddress = None
+        self.pipe_format: MIME = None
+        self.batch_size: int = None
+        self.ready_schedule_interval: int = None
+        self.protocol = None
     def initialize(self, config: DataProviderConfig) -> None:
         """Verify configuration and assemble component structural parts.
         """
@@ -149,7 +172,7 @@ class DataProviderMicro(MicroService):
             # We have to report error here, because normal is to close pipes before
             # shutdown is commenced. Mind that service shutdown could be also caused by error!
             cast(FBDPServer, chn.protocol).send_close(chn, session, ErrorCode.ERROR)
-    def handle_exception(self, channel: Channel, session: FBDPSession, msg: FBDPMessage,
+    def handle_exception(self, channel: Channel, session: FBDPSession, msg: FBDPMessage, # pylint: disable=W0613
                          exc: Exception) -> None:
         """Event handler called by `.handle_msg()` on exception in message handler.
 
@@ -181,7 +204,7 @@ class DataProviderMicro(MicroService):
             raise StopError(f"Unknown data pipe '{session.data_pipe}'",
                             code = ErrorCode.PIPE_ENDPOINT_UNAVAILABLE)
         # We're PRODUCER server, so clients can only attach to our OUTPUT
-        elif session.socket is not PipeSocket.OUTPUT:
+        if session.socket is not PipeSocket.OUTPUT:
             raise StopError(f"'{session.socket}' socket not available",
                             code = ErrorCode.PIPE_ENDPOINT_UNAVAILABLE)
         # We work with MIME formats, so we'll convert the format specification to MIME
@@ -229,10 +252,10 @@ class DataProviderMicro(MicroService):
 
         Important:
             The base implementation simply raises `.StopError` with `ErrorCode.OK` code,
-            so the descendant class must override this method without super() call.
+            so the descendant class must override this method without `super` call.
         """
         raise StopError('OK', code=ErrorCode.OK)
-    def handle_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage,
+    def handle_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage, # pylint: disable=W0613
                            exc: Exception=None) -> None:
         """Event handler executed when CLOSE message is received or sent, to release any
         resources associated with current transmission.
@@ -261,4 +284,3 @@ class DataProviderMicro(MicroService):
         #
         if self.stop_on_close:
             self.stop.set()
-
