@@ -30,26 +30,28 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
+# pylint: disable=R0902
 
 """Saturnin - Type definitions
 """
 
 from __future__ import annotations
-from typing import List, Dict, Optional, NewType, Callable, Any
+from typing import List, Dict, Optional, Callable, Any, ByteString
 from enum import IntEnum, IntFlag, Enum, auto
 import uuid
-import zmq
 from dataclasses import dataclass, field, replace as _dcls_replace
+import zmq
 from firebird.base.types import Error, Distinct, MIME, Sentinel
+from firebird.base.config import Config
 from firebird.base.protobuf import PROTO_STRUCT, load_registered, create_message, \
      struct2dict, dict2struct
 
 # Type annotation types
 TSupplement = Optional[Dict[str, Any]]
 """name/value dictionary"""
-Token = NewType('Token', bytearray)
+Token = ByteString
 """Message token"""
-RoutingID = NewType('RoutingID', bytes)
+RoutingID = ByteString
 """Routing ID"""
 
 # Constants
@@ -57,7 +59,7 @@ PLATFORM_OID: str = '1.3.6.1.4.1.53446.1.2.0'
 "Platform OID (`firebird.butler.platform.saturnin`)"
 PLATFORM_UID: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_OID, PLATFORM_OID)
 "Platform UID (:func:`~uuid.uuid5` - NAMESPACE_OID)"
-PLATFORM_VERSION: str = '0.6.0'
+PLATFORM_VERSION: str = '0.7.0'
 "Platform version (semver)"
 
 VENDOR_OID: str = '1.3.6.1.4.1.53446.1.3.0'
@@ -69,6 +71,7 @@ MIME_TYPE_PROTO = MIME('application/x.fb.proto')
 MIME_TYPE_TEXT = MIME('text/plain')
 MIME_TYPE_BINARY = MIME('application/octet-stream')
 
+#: protobuf ID for peer information message
 PROTO_PEER = 'firebird.butler.PeerIdentification'
 
 #  Exceptions
@@ -100,10 +103,14 @@ class Origin(IntEnum):
     PROVIDER = SERVICE
     CONSUMER = CLIENT
     def peer_role(self) -> Origin:
-        if self == Origin.ANY:
+        """Returns peer's role, i.e. complementary to current (CLIENT/SERVICE,
+        PROVIDER/CONSULER) value.
+
+        Note: Returns current value if it's `ANY` or `UNKNOWN`.
+        """
+        if self in (Origin.ANY, Origin.UNKNOWN):
             return self
-        else:
-            return Origin.CLIENT if self == Origin.SERVICE else Origin.SERVICE
+        return Origin.CLIENT if self == Origin.SERVICE else Origin.SERVICE
 
 class SocketMode(IntEnum):
     """ZeroMQ socket mode."""
@@ -174,6 +181,7 @@ class ButlerInterface(IntEnum):
     """
     @classmethod
     def get_uid(cls) -> uuid.UUID:
+        "Returns interface UUID."
         raise NotImplementedError()
 
 # Dataclasses
@@ -259,9 +267,9 @@ class PeerDescriptor(Distinct):
         if proto.supplement:
             for i in proto.supplement:
                 if i.TypeName() == PROTO_STRUCT:
-                    s = create_message(PROTO_STRUCT)
-                    i.Unpack(s)
-                    data = struct2dict(s)
+                    msg = create_message(PROTO_STRUCT)
+                    i.Unpack(msg)
+                    data = struct2dict(msg)
                     break
         return cls(uuid.UUID(bytes=proto.uid), proto.pid, proto.host, data)
 
@@ -282,7 +290,7 @@ class ServiceDescriptor(Distinct):
     #: Locator string for service factory
     factory: str
     #: Service configuration factory
-    config: Callable[[], 'firebird.base.config.Config']
+    config: Callable[[], Config]
     def get_key(self) -> Any:
         """Returns `agent.uid` (instance key). Used for instance hash computation."""
         return self.agent.uid

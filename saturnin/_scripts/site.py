@@ -40,6 +40,7 @@ from __future__ import annotations
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from saturnin.lib.command import CommandManager
 
+#: Program name
 PROG_NAME = 'saturnin-site'
 
 def main():
@@ -54,4 +55,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

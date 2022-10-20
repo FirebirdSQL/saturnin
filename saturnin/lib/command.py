@@ -37,8 +37,9 @@
 """
 
 from __future__ import annotations
-from typing import Dict
+from typing import Dict, List
 from weakref import proxy
+from contextlib import suppress
 from argparse import ArgumentParser, Namespace
 from traceback import format_exception_only
 from pkg_resources import iter_entry_points
@@ -88,6 +89,7 @@ class HelpCommand(Command):
     def __init__(self):
         super().__init__('help', "Show help for commands.")
         self.parser: ArgumentParser = None
+        self.manager: CommandManager = None
     def set_arguments(self, manager: CommandManager, parser: ArgumentParser) -> None:
         """Set command arguments.
         """
@@ -165,11 +167,8 @@ class CommandManager:
         try:
             args.runner(args)
         except Exception as exc:
-            try:
+            with suppress(Exception):
                 args.err_handler(exc)
-            except:
-                pass
             msg = ''.join(format_exception_only(type(exc), exc))
             _, msg = msg.split(': ', 1)
             self.parser.exit(1, msg)
-

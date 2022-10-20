@@ -30,6 +30,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
+# pylint: disable=R0912, R0902, R0903
 
 """Saturnin service controllers
 """
@@ -38,19 +39,20 @@ from __future__ import annotations
 from typing import Dict, List, cast
 import sys
 import uuid
-import zmq
 import signal
 import warnings
 import ctypes
 import weakref
+from contextlib import suppress
 from time import monotonic
 from threading import Thread
 from configparser import ConfigParser
+import zmq
 from firebird.base.config import UUIDOption
 from firebird.base.trace import TracedMixin
-from saturnin.base import ZMQAddress, load, Error, ServiceError, PeerDescriptor, Outcome, \
-     ServiceDescriptor, Direction, ChannelManager, PairChannel, INVALID, Component, Config, \
-     site
+from saturnin.base import (ZMQAddress, load, Error, ServiceError, PeerDescriptor, Outcome,
+     ServiceDescriptor, Direction, ChannelManager, PairChannel, INVALID, Component, Config,
+     site)
 from saturnin.protocol.iccp import ICCPComponent, ICCPController, ICCPMessage, MsgType
 
 #: Service control channel name
@@ -64,7 +66,7 @@ class ServiceExecConfig(Config):
         self.agent: UUIDOption = UUIDOption('agent', "Agent UID", required=True)
 
 class ServiceController(TracedMixin):
-    """
+    """Base service controller.
     """
     def __init__(self, service: ServiceDescriptor, *, name: str=None,
                  peer_uid: uuid.UUID=None, manager: ChannelManager=None):
@@ -118,8 +120,8 @@ class DirectController(ServiceController):
     Important:
         The service could be stopped only via automatically installed SIGINT handler.
     """
-    def stop_signal_handler(self, signum: int, param) -> None:
-        """The `signal.signal()` SIGINT handler that sends ICCP STOP message to the service.
+    def stop_signal_handler(self, signum: int, param) -> None: # pylint: disable=W0613
+        """The `signal.signal` SIGINT handler that sends ICCP STOP message to the service.
         """
         chn: PairChannel = self.mngr.channels[SVC_CTRL]
         chn.send(cast(ICCPController, chn.protocol).stop_msg(), chn.session)
@@ -130,7 +132,7 @@ class DirectController(ServiceController):
            exc: Exception that describes the reason why component should stop.
         """
         raise ServiceError("Internal controller error") from exc
-    def start(self, *, timeout: int=10000) -> None:
+    def start(self, *, timeout: int=10000) -> None: # pylint: disable=W0613
         """Start the service.
 
         Arguments:
@@ -166,7 +168,7 @@ class DirectController(ServiceController):
                 msg: ICCPMessage = chn.receive()
                 if msg is INVALID:
                     raise ServiceError("Invalid response from service")
-                elif msg.msg_type is MsgType.READY:
+                if msg.msg_type is MsgType.READY:
                     self.peer = msg.peer.copy()
                     self.endpoints = msg.endpoints.copy()
                 elif msg.msg_type is MsgType.ERROR:
@@ -185,7 +187,7 @@ class DirectController(ServiceController):
                     msg: ICCPMessage = chn.receive()
                     if msg is INVALID:
                         raise ServiceError("Invalid response from service")
-                    elif msg.msg_type is MsgType.ERROR:
+                    if msg.msg_type is MsgType.ERROR:
                         raise ServiceError(msg.error)
                 else:
                     warnings.warn("Service shutdown not confirmed", RuntimeWarning)
@@ -205,7 +207,7 @@ def service_thread(service: ServiceDescriptor, config: Config, ctrl_addr: ZMQAdd
         ctrl_addr:      Address for control ZMQ socket.
         peer_uid:       Peer ID.
     """
-    try:
+    with suppress(Exception):
         ctx = zmq.Context.instance()
         pipe = ctx.socket(zmq.DEALER)
         pipe.CONNECT_TIMEOUT = 5000 # 5sec
@@ -225,8 +227,6 @@ def service_thread(service: ServiceDescriptor, config: Config, ctrl_addr: ZMQAdd
             pipe.close(100)
         svc.warm_up(ctrl_addr) # Creates sockets, connects to `iccp`
         svc.run()
-    except:
-        pass
 
 class ThreadController(ServiceController):
     """Service controller that starts the service in separate thread.
@@ -291,7 +291,7 @@ class ThreadController(ServiceController):
                 msg: ICCPMessage = chn.receive()
                 if msg is INVALID:
                     raise ServiceError("Invalid response from service")
-                elif msg.msg_type is MsgType.READY:
+                if msg.msg_type is MsgType.READY:
                     self.peer = msg.peer.copy()
                     self.endpoints = msg.endpoints.copy()
                 elif msg.msg_type is MsgType.ERROR:
@@ -316,7 +316,7 @@ class ThreadController(ServiceController):
             ServiceError: On error in communication with service.
             TimeoutError: When service does not stop in time.
         """
-        s = monotonic()
+        _start = monotonic()
         try:
             chn: PairChannel = self.mngr.channels[f'{self.name}.{SVC_CTRL}']
             if self.is_running():
@@ -328,22 +328,21 @@ class ThreadController(ServiceController):
                         self.outcome = Outcome.ERROR
                         self.details = ["Invalid response from service"]
                         raise ServiceError("Invalid response from service")
-                    elif msg.msg_type is MsgType.ERROR:
+                    if msg.msg_type is MsgType.ERROR:
                         self.outcome = Outcome.ERROR
                         self.details = [msg.error]
                         raise ServiceError(msg.error)
-                    elif msg.msg_type is MsgType.FINISHED:
+                    if msg.msg_type is MsgType.FINISHED:
                         self.outcome = msg.outcome
                         self.details = msg.details
                 else:
                     warnings.warn("Service shutdown not confirmed", RuntimeWarning)
                 #
                 if self.is_running():
-                    e = monotonic()
+                    _end = monotonic()
                     if timeout is not None:
-                        timeout = timeout - int((e-s) * 1000)
-                        if timeout < 0:
-                            timeout = 0
+                        timeout = timeout - int((_end-_start) * 1000)
+                        timeout = max(timeout, 0)
                     self.runtime.join(timeout)
                     if self.runtime.is_alive():
                         raise TimeoutError("The service did not stop in time")
@@ -355,11 +354,11 @@ class ThreadController(ServiceController):
                         self.outcome = Outcome.ERROR
                         self.details = ["Invalid response from service"]
                         raise ServiceError("Invalid response from service")
-                    elif msg.msg_type is MsgType.ERROR:
+                    if msg.msg_type is MsgType.ERROR:
                         self.outcome = Outcome.ERROR
                         self.details = [msg.error]
                         raise ServiceError(msg.error)
-                    elif msg.msg_type is MsgType.FINISHED:
+                    if msg.msg_type is MsgType.FINISHED:
                         self.outcome = msg.outcome
                         self.details = msg.details
         finally:

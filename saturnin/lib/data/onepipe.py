@@ -30,20 +30,26 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
+# pylint: disable=R0903, R0902
 
-"""Saturnin base class for data provider and consumer microservices
+"""Saturnin base classes for data provider and consumer microservices
+
+This is extended description.
 """
 
 from __future__ import annotations
-from typing import cast
+from typing import cast, Union
 from functools import partial
-from firebird.base.config import MIME, StrOption, EnumOption, \
-     IntOption, BoolOption, ZMQAddressOption, MIMEOption
-from saturnin.base import Error, StopError, Direction, SocketMode, PipeSocket, Outcome, \
-     ZMQAddress, MIME, ComponentConfig, Channel, Session, Message, DealerChannel
+import uuid
+import zmq
+from firebird.base.config import (StrOption, EnumOption, IntOption, BoolOption,
+    ZMQAddressOption, MIMEOption)
+from saturnin.base import (Error, StopError, Direction, SocketMode, PipeSocket, Outcome,
+     ZMQAddress, MIME, ComponentConfig, Channel, Session, Message, DealerChannel,
+     ServiceDescriptor)
 from saturnin.component.micro import MicroService
-from saturnin.protocol.fbdp import ErrorCode, FBDPServer, FBDPClient, \
-     FBDPSession, FBDPMessage
+from saturnin.protocol.fbdp import (ErrorCode, FBDPServer, FBDPClient, FBDPSession,
+    FBDPMessage)
 
 PIPE_CHN = 'pipe'
 
@@ -52,18 +58,25 @@ class BaseDataPipeConfig(ComponentConfig):
     """
     def __init__(self, name: str):
         super().__init__(name)
+        #: Stop service when pipe is closed
         self.stop_on_close: BoolOption = \
             BoolOption('stop_on_close', "Stop service when pipe is closed", default=True)
+        #: Data Pipe Identification
         self.pipe: StrOption = \
             StrOption('pipe', "Data Pipe Identification", required=True)
+        #: Data Pipe endpoint address
         self.pipe_address: ZMQAddressOption = \
             ZMQAddressOption('pipe_address', "Data Pipe endpoint address", required=True)
+        #: Data Pipe Mode
         self.pipe_mode: EnumOption = \
             EnumOption('pipe_mode', SocketMode, "Data Pipe Mode", required=True)
+        #: Pipe data format specification
         self.pipe_format: MIMEOption = \
             MIMEOption('pipe_format', "Pipe data format specification")
+        #: Data batch size
         self.batch_size: IntOption = \
             IntOption('batch_size', "Data batch size", required=True, default=50)
+        #: READY message schedule interval in milliseconds
         self.ready_schedule_interval: IntOption = \
             IntOption('ready_schedule_interval',
                       "READY message schedule interval in milliseconds", required=True,
@@ -96,14 +109,40 @@ class BaseDataPipeMicro(MicroService):
     - `handle_accept_data` to process received data. CONSUMER only.
     - `handle_pipe_closed` to release resource assiciated with pipe.
     """
+    def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
+                 peer_uid: uuid.UUID=None):
+        """
+        Arguments:
+            zmq_context: ZeroMQ Context.
+            descriptor: Service descriptor.
+            peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
+        """
+        super().__init__(zmq_context, descriptor, peer_uid=peer_uid)
+        #: Pipe socket this service handles if operated as server (bind). Must be set
+        #: in descendant class.
+        #: For PROVIDER it's `.PipeSocket.OUTPUT`, for CONSUMER it's `.PipeSocket.INPUT`
+        self.server_socket: PipeSocket = None
+        #: FDBP protocol handler (server or client)
+        self.protocol: Union[FBDPServer, FBDPClient] = None
+        # Next members are set in initialize()
+        #: [Configuration] Whether service should stop when pipe is closed
+        self.stop_on_close: bool = None
+        #: [Configuration] Data Pipe Identification
+        self.pipe: str = None
+        #: [Configuration] Data Pipe Mode
+        self.pipe_mode: SocketMode = None
+        #: [Configuration] Data Pipe endpoint address
+        self.pipe_address: ZMQAddress = None
+        #: [Configuration] Pipe data format specification
+        self.pipe_format: MIME = None
+        #: [Configuration] Data batch size
+        self.batch_size: int = None
+        #: [Configuration] READY message schedule interval in milliseconds
+        self.ready_schedule_interval: int = None
     def initialize(self, config: BaseDataPipeConfig) -> None:
         """Verify configuration and assemble component structural parts.
         """
         super().initialize(config)
-        #: Pipe socket this service handles if operated as server (bind). Must be set
-        #: in descendant class.
-        #: For PROVIDER it's PipeSocket.OUTPUT, for CONSUMER it's PipeSocket.INPUT
-        self.server_socket: PipeSocket = None
         # Configuration
         self.stop_on_close = config.stop_on_close.value
         self.pipe: str = config.pipe.value
@@ -133,9 +172,10 @@ class BaseDataPipeMicro(MicroService):
         # Create pipe channel
         self.mngr.create_channel(DealerChannel, PIPE_CHN, self.protocol, wait_for=Direction.IN)
     def aquire_resources(self) -> None:
-        """Aquire resources required by component (open files, connect to other services etc.).
+        """Aquire resources required by component:
 
-        Must raise an exception when resource aquisition fails.
+        1. If `.pipe_mode` is `~SocketMode.CONNECT`, it will connect to the end of the pipe
+           that is the inverse of `.server_socket`.
         """
         # Connect to the data pipe
         if self.pipe_mode == SocketMode.CONNECT:
@@ -148,7 +188,9 @@ class BaseDataPipeMicro(MicroService):
             cast(FBDPClient, chn.protocol).send_open(chn, session, self.pipe,
                                                      client_socket, self.pipe_format)
     def release_resources(self) -> None:
-        """Release resources aquired by component (close files, disconnect from other services etc.)
+        """Release resources aquired by component:
+
+        1. CLOSE all active pipe sessions.
         """
         # CLOSE all active data pipe sessions
         chn: Channel = self.mngr.channels[PIPE_CHN]
@@ -157,39 +199,48 @@ class BaseDataPipeMicro(MicroService):
             # We have to report error here, because normal is to close pipes before
             # shutdown is commenced. Mind that service shutdown could be also caused by error!
             cast(FBDPServer, chn.protocol).send_close(chn, session, ErrorCode.ERROR)
-    def handle_exception(self, channel: Channel, session: Session, msg: Message,
+    def handle_exception(self, channel: Channel, session: Session, msg: Message, # pylint: disable=W0613
                          exc: Exception) -> None:
         """Event handler called by `.handle_msg()` on exception in message handler.
+
+        Arguments:
+            channel: Channel associated with data pipe.
+            session: Session associated with connection.
+            msg:     Message.
+            exc:     Exception.
 
         Sets service outcome to ERROR and notes exception as details.
         """
         self.outcome = Outcome.ERROR
         self.details = exc
     # FBDP server only
-    def handle_accept_client(self, channel: Channel, session: FBDPSession) -> None:
+    def handle_accept_client(self, channel: Channel, session: FBDPSession) -> None: # pylint: disable=W0613
         """Event handler executed when client connects to the data pipe via OPEN message.
 
         Arguments:
             session: Session associated with client.
 
-        The session attributes `data_pipe`, `pipe_socket`, `data_format` and `params`
-        contain information sent by client, and the event handler validates the request.
+        The session attributes `~.FBDPSession.pipe`, `~.FBDPSession.socket`,
+        `~.FBDPSession.data_format` and `~.FBDPSession.params` contain information sent by
+        client, and the event handler validates the request.
 
-        If request should be rejected, it raises the `StopError` exception with `code`
-        attribute containing the `ErrorCode` to be returned in CLOSE message.
+        If request should be rejected, it raises the `.StopError` exception with `~Error.code`
+        attribute containing the `~saturnin.protocol.fbdp.ErrorCode` to be returned in
+        CLOSE message.
 
         Important:
             Base implementation validates pipe identification and pipe socket, and converts
             data format from string to MIME (in session).
 
-            The descendant class that overrides this method must call super() as first
+            The descendant class that overrides this method must call `super` as first
             action.
         """
+
         if session.pipe != self.pipe:
             raise StopError(f"Unknown data pipe '{session.data_pipe}'",
                             code = ErrorCode.PIPE_ENDPOINT_UNAVAILABLE)
-        # We're PRODUCER server, so clients can only attach to our OUTPUT
-        elif session.socket is not self.server_socket:
+        # We're server, so clients can only attach to our server_socket
+        if session.socket is not self.server_socket:
             raise StopError(f"'{session.socket}' socket not available",
                             code = ErrorCode.PIPE_ENDPOINT_UNAVAILABLE)
         # We work with MIME formats, so we'll convert the format specification to MIME
@@ -202,12 +253,13 @@ class BaseDataPipeMicro(MicroService):
             session: Session associated with client.
             msg:     Message that triggered the scheduling.
 
-        The event handler may cancel the transmission by raising the `StopError` exception
-        with `code` attribute containing the `ErrorCode` to be returned in CLOSE message.
+        The event handler may cancel the transmission by raising the `.StopError` exception
+        with `~Error.code` attribute containing the `~saturnin.protocol.fbdp.ErrorCode` to be
+        returned in CLOSE message.
 
         Important:
-            The base implementation schedules `resend_ready()` according to
-            `ready_schedule_interval` configuration option.
+            The base implementation schedules `~.FBDPServer.resend_ready()` according to
+            `.ready_schedule_interval` configuration option.
         """
         self.schedule(partial(cast(FBDPServer, channel.protocol).resend_ready,
                               channel, session),
@@ -224,8 +276,9 @@ class BaseDataPipeMicro(MicroService):
         The event handler must store the data in `msg.data_frame` attribute. It may also
         set ACK-REQUEST flag and `type_data` attribute.
 
-        The event handler may cancel the transmission by raising the `StopError` exception
-        with `code` attribute containing the `ErrorCode` to be returned in CLOSE message.
+        The event handler may cancel the transmission by raising the `.StopError` exception
+        with `code` attribute containing the `~saturnin.protocol.fbdp.ErrorCode` to be
+        returned in CLOSE message.
 
         Note:
             To indicate end of data, raise StopError with ErrorCode.OK code.
@@ -236,8 +289,8 @@ class BaseDataPipeMicro(MicroService):
             UnicodeError into StopError.
 
         Important:
-            The base implementation simply raises `StopError` with `ErrorCode.OK` code, so
-            the descendant class must override this method without super() call.
+            The base implementation simply raises `.StopError` with `ErrorCode.OK` code,
+            so the descendant class must override this method without `super` call.
         """
         raise StopError('OK', code=ErrorCode.OK)
     def handle_accept_data(self, channel: Channel, session: FBDPSession, data: bytes) -> None:
@@ -248,18 +301,19 @@ class BaseDataPipeMicro(MicroService):
             session: Session associated with client.
             data: Data received from client.
 
-        The event handler may cancel the transmission by raising the `StopError` exception
-        with `code` attribute containing the `ErrorCode` to be returned in CLOSE message.
+        The event handler may cancel the transmission by raising the `.StopError` exception
+        with `~Error.code` attribute containing the `~saturnin.protocol.fbdp.ErrorCode` to
+        be returned in CLOSE message.
 
         Note:
             The ACK-REQUEST in received DATA message is handled automatically by protocol.
 
         Important:
-            The base implementation simply raises StopError with ErrorCode.OK code, so
-            the descendant class must override this method without super() call.
+            The base implementation simply raises `.StopError` with `ErrorCode.OK` code,
+            so the descendant class must override this method without `super` call.
         """
         raise StopError('OK', code=ErrorCode.OK)
-    def handle_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage,
+    def handle_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage, # pylint: disable=W0613
                            exc: Exception=None) -> None:
         """Event handler executed when CLOSE message is received or sent, to release any
         resources associated with current transmission.
@@ -275,9 +329,9 @@ class BaseDataPipeMicro(MicroService):
 
             - If exception is provided, sets service execution outcome to ERROR
               and notes exception in details.
-            - Stops the service if `stop_on_close` is True.
+            - Stops the service if `.stop_on_close` is True.
 
-            The descendant class that overrides this method must call super().
+            The descendant class that overrides this method must call `super`.
         """
         # FDBP converts exceptions raised in our event handler to CLOSE messages, so
         # here is the central place to handle errors in data pipe processing.
@@ -295,10 +349,10 @@ class DataProviderMicro(BaseDataPipeMicro):
 
     Descendant classes should override:
 
-    - `handle_accept_client` to validate client request and aquire resources associated
-      with pipe.
-    - `handle_produce_data` to produce data for outgoing DATA message.
-    - `handle_pipe_closed` to release resource assiciated with pipe.
+    - `~.BaseDataPipeMicro.handle_accept_client` to validate client request and aquire
+      resources associated with pipe.
+    - `~.BaseDataPipeMicro.handle_produce_data` to produce data for outgoing DATA message.
+    - `~.BaseDataPipeMicro.handle_pipe_closed` to release resource assiciated with pipe.
     """
     def initialize(self, config: DataProviderConfig) -> None:
         """Verify configuration and assemble component structural parts.
@@ -315,10 +369,10 @@ class DataConsumerMicro(BaseDataPipeMicro):
 
     Descendant classes should override:
 
-    - `handle_accept_client` to validate client request and aquire resources associated
-      with pipe.
-    - `handle_accept_data` to process received data.
-    - `handle_pipe_closed` to release resource assiciated with pipe.
+    - `~.BaseDataPipeMicro.handle_accept_client` to validate client request and aquire
+      resources associated with pipe.
+    - `~.BaseDataPipeMicro.handle_accept_data` to process received data.
+    - `~.BaseDataPipeMicro.handle_pipe_closed` to release resource assiciated with pipe.
     """
     def initialize(self, config: DataConsumerConfig) -> None:
         """Verify configuration and assemble component structural parts.

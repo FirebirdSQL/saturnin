@@ -30,6 +30,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
+# pylint: disable=R0903
 
 """Saturnin service budle controller
 
@@ -38,12 +39,12 @@
 
 from __future__ import annotations
 from typing import List
-import os
 import uuid
 import weakref
 import warnings
-import zmq
+from pathlib import Path
 from configparser import ConfigParser, ExtendedInterpolation, DEFAULTSECT
+import zmq
 from firebird.base.types import ZMQDomain
 from firebird.base.collections import Registry
 from firebird.base.config import ConfigListOption
@@ -103,7 +104,7 @@ class BundleThreadController(LoggingIdMixin, TracedMixin):
         self.config[SECTION_SERVICE_UID] = {}
         self.config[SECTION_PEER_UID] = {}
         # Defaults
-        self.config[DEFAULTSECT]['here'] = os.getcwd()
+        self.config[DEFAULTSECT]['here'] = str(Path.cwd())
         # Assign Agent IDs for available services
         self.config[SECTION_SERVICE_UID].update((sd.agent.name, sd.agent.uid.hex) for sd
                                                 in self.available_services)
@@ -118,7 +119,7 @@ class BundleThreadController(LoggingIdMixin, TracedMixin):
         bundle_cfg.load_config(self.config)
         bundle_cfg.validate()
         # Assign Peer IDs to service sections (instances)
-        peer_uids = {section.name: uuid.uuid1() for section in bundle_cfg.agents.value}
+        peer_uids = {a_section.name: uuid.uuid1() for a_section in bundle_cfg.agents.value}
         self.config[SECTION_PEER_UID].update((k, v.hex) for k, v in peer_uids.items())
         #
         #

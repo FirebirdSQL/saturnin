@@ -62,8 +62,8 @@ def start_daemon(args: list) -> int:
         kwargs.update(shell=True, creationflags=subprocess.CREATE_NEW_CONSOLE)
     else:  # Unix
         kwargs.update(start_new_session=True)
-    p = subprocess.Popen(args, **kwargs)
-    return p.pid if p.poll() is None else None
+    proc = subprocess.Popen(args, **kwargs) # pylint: disable=R1732
+    return proc.pid if proc.poll() is None else None
 
 def stop_daemon(pid: Union[int, str, Path]) -> None:
     """Stops the daemon process by invoking `saturnin-daemon` script.

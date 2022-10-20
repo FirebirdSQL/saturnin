@@ -46,10 +46,13 @@ from firebird.base.config import DirectoryScheme, get_directory_scheme, Config, 
 from firebird.base.logging import LoggingIdMixin
 from .types import Error
 
+#: filename for Saturnin configuration file
 SATURNIN_CFG = 'saturnin.conf'
+#: filename for Firebird configuration file
 FIREBIRD_CFG = 'firebird.conf'
+#: filename for logging configuration file
 LOGGING_CFG = 'logging.conf'
-
+#: Saturnin configuration file header
 CONFIG_HDR = """;
 ; A configuration file consists of sections, each led by a [section] header, followed by
 ; key/value entries separated by = or : string. Section names are case sensitive but keys
@@ -135,9 +138,9 @@ class SiteManager(LoggingIdMixin):
         """Loads the configuration from configuration files.
         """
         parser: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
-        for f in parser.read([self.scheme.site_conf,
+        for _file in parser.read([self.scheme.site_conf,
                               self.scheme.user_conf]):
-            self.used_config_files.append(Path(f))
+            self.used_config_files.append(Path(_file))
         if parser.has_section('saturnin'):
             self.config.load_config(parser)
     def initialize(self) -> None:
@@ -153,9 +156,9 @@ class SiteManager(LoggingIdMixin):
         """Configure the firebird-driver.
         """
         try:
-            from firebird.driver import driver_config
-        except ImportError:
-            raise Error("Firebird driver not installed.")
+            from firebird.driver import driver_config # pylint: disable=C0415
+        except ImportError as exc:
+            raise Error("Firebird driver not installed.") from exc
         driver_config.read(self.scheme.firebird_conf, encoding='utf8')
     @property
     def venv(self) -> Optional[Path]:

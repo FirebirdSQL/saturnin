@@ -41,10 +41,10 @@ import os
 import platform
 from struct import pack
 from uuid import UUID
-from saturnin.base import Error, ZMQAddress, Channel, TIMEOUT, INVALID, AgentDescriptor, \
-     PeerDescriptor
-from saturnin.protocol.fbsp import FBSPClient, FBSPSession, FBSPMessage, \
-     WelcomeMessage, ErrorMessage, MsgType
+from saturnin.base import (Error, ZMQAddress, Channel, TIMEOUT, INVALID, AgentDescriptor,
+     PeerDescriptor)
+from saturnin.protocol.fbsp import (FBSPClient, FBSPSession, FBSPMessage,
+     WelcomeMessage, ErrorMessage, MsgType)
 
 class Token():
     """FBSP message token generator.
@@ -91,11 +91,11 @@ class ServiceClient:
         msg = self.channel.receive(self.timeout)
         if isinstance(msg, ErrorMessage):
             raise self.protocol.exception_for(msg)
-        elif msg is TIMEOUT:
+        if msg is TIMEOUT:
             raise TimeoutError()
-        elif msg is INVALID:
+        if msg is INVALID:
             raise Error("Invalid response from service")
-        elif not isinstance(msg, WelcomeMessage):
+        if not isinstance(msg, WelcomeMessage):
             raise Error(f"Unexpected {msg.msg_type.name} message from service")
     def send(self, msg: FBSPMessage) -> None:
         """Send message to the service.
@@ -115,11 +115,11 @@ class ServiceClient:
         msg = self.channel.receive(self.timeout)
         if isinstance(msg, ErrorMessage):
             raise self.protocol.exception_for(msg)
-        elif msg is TIMEOUT:
+        if msg is TIMEOUT:
             raise TimeoutError()
-        elif msg is INVALID:
+        if msg is INVALID:
             raise Error("Invalid response from service")
-        elif msg.msg_type is MsgType.CLOSE:
+        if msg.msg_type is MsgType.CLOSE:
             raise Error("Connection closed by service")
         return msg
     def close(self) -> None:
@@ -134,6 +134,3 @@ class ServiceClient:
         """True if client is connected to service.
         """
         return (self.session is not None) and (self.session.greeting is not None)
-
-
-

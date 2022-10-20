@@ -39,21 +39,25 @@
 from __future__ import annotations
 from typing import Dict, List, Optional
 import sys
-import toml
 import zipfile
 import subprocess
 from pathlib import Path
-from packaging import version
 from argparse import ArgumentParser, Namespace, REMAINDER
 from configparser import ConfigParser, ExtendedInterpolation
+import toml
+from packaging import version
 from saturnin.base import Error, site
 from saturnin.component.registry import get_service_desciptors
 from saturnin.lib.command import Command, CommandManager
 from saturnin.lib.pyproject import PyProjectTOML
 
+#: Package TOML file
 PKG_TOML = 'pyproject.toml'
+#: Classic setup configuration file
 SETUP_CFG = 'setup.cfg'
+#: Section for options
 SEC_OPTIONS = 'options'
+#: Section for entry points
 SEC_ENTRYPOINTS = 'options.entry_points'
 
 # Component registry TOML structure
@@ -68,12 +72,19 @@ SEC_ENTRYPOINTS = 'options.entry_points'
 # descriptor = locator string for component descriptor (incl. top level package)
 # top-level = top level package with component
 
+#: Component UID item
 CMP_UID = 'uid'
+#: Component PACKAGE item
 CMP_PACKAGE = 'package'
+#: Component NAME item
 CMP_NAME = 'name'
+#: Component VERSION item
 CMP_VERSION = 'version'
+#: Component DESCRIPTION item
 CMP_DESCRIPTION = 'description'
+#: Component DESCIPTOR item
 CMP_DESCRIPTOR = 'descriptor'
+#: Component TOP-LEVEL item
 CMP_TOPLEVEL = 'top-level'
 
 class BasePkgCommand(Command):
@@ -120,8 +131,10 @@ class InstallCommand(BasePkgCommand):
     """
     def __init__(self):
         super().__init__('install', "Install Saturnin ZIP package.")
-    def copy_tree(self, package: Path, path: zipfile.Path, skip_list: List[str]=[]):
+    def copy_tree(self, package: Path, path: zipfile.Path, skip_list: Optional[List[str]]=None):
         ""
+        if skip_list is None:
+            skip_list = []
         package.mkdir(exist_ok=True)
         for item in path.iterdir():
             if item.is_dir():
@@ -177,7 +190,7 @@ class InstallCommand(BasePkgCommand):
         # pyproject.toml
         pkg_file: zipfile.Path = path / PKG_TOML
         if not pkg_file.exists():
-            raise Error(f"Invalid package: File {_file} not found")
+            raise Error(f"Invalid package: File {PKG_TOML} not found")
         toml_data = pkg_file.read_text()
         pkg_toml: PyProjectTOML = PyProjectTOML(toml.loads(toml_data))
         self.out(f"Found: {pkg_toml.original_name}-{pkg_toml.version}\n")
@@ -202,7 +215,7 @@ class InstallCommand(BasePkgCommand):
             if vn < vo:
                 self.out(f"Newer version {cmp[CMP_VERSION]} already installed\n")
                 return
-            elif vn == vo:
+            if vn == vo:
                 self.out(f"Version {cmp[CMP_VERSION]} already installed\n")
                 return
             cmp[CMP_NAME] = pkg_toml.original_name

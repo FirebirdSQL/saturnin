@@ -36,6 +36,7 @@
 """
 
 from __future__ import annotations
+from typing import Optional
 from abc import ABC, abstractmethod
 from firebird.base.types import ZMQAddress
 from firebird.base.config import Config, StrOption
@@ -44,6 +45,7 @@ class ComponentConfig(Config):
     """Base Component configuration."""
     def __init__(self, name: str):
         super().__init__(name)
+        #: Logging ID for this component instance
         self.logging_id: StrOption = \
             StrOption('logging_id', "Logging ID for this component instance")
 

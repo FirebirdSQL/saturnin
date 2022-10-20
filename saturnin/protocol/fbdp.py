@@ -31,6 +31,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
+# pylint: disable=R0902, R0903, R0912, R0913, C0301, W0702, W0703
 
 """Saturnin reference implementation of Firebird Butler Data Pipe Protocol
 
@@ -38,17 +39,19 @@ See https://firebird-butler.readthedocs.io/en/latest/rfc/9/FBDP.html
 """
 
 from __future__ import annotations
-from typing import Type, Dict, Any, Union
+from typing import Type, Dict, Any, Union, Iterable
 import uuid
 import warnings
 from struct import pack, unpack
 from enum import IntEnum, IntFlag
 from firebird.base.signal import eventsocket
 from firebird.base.protobuf import ProtoMessage, create_message, dict2struct, struct2dict
-from saturnin.base import InvalidMessageError, StopError, RoutingID, TZMQMessage, \
-     PipeSocket, Channel, Protocol, Message, Session, ANY
+from saturnin.base import (InvalidMessageError, StopError, RoutingID, TZMQMessage,
+     PipeSocket, Channel, Protocol, Message, Session, ANY)
 
+#: Protobuf message for FBDP OPEN message
 PROTO_OPEN = 'firebird.butler.FBDPOpenDataframe'
+#: Protobuf message for FBDP ERROR message
 PROTO_ERROR = 'firebird.butler.ErrorDescription'
 
 #: FBDP protocol control frame :mod:`struct` format
@@ -265,7 +268,7 @@ class _FBDP(Protocol):
                               MsgType.DATA: self.handle_data_msg,
                               MsgType.CLOSE: self.handle_close_msg,
                               })
-    def __message_factory(self, zmsg: TZMQMessage=None) -> Message:
+    def __message_factory(self, zmsg: TZMQMessage=None) -> Message: # pylint: disable=W0613
         "Internal message factory"
         self._msg.clear()
         return self._msg
@@ -345,8 +348,8 @@ class _FBDP(Protocol):
             raise InvalidMessageError("Invalid flags")
         try:
             message_type = MsgType(control_byte >> 3)
-        except ValueError:
-            raise InvalidMessageError(f"Illegal message type {control_byte >> 3}")
+        except ValueError as exc:
+            raise InvalidMessageError(f"Illegal message type {control_byte >> 3}") from exc
         if message_type is MsgType.OPEN:
             if len(zmsg) != 2:
                 raise InvalidMessageError("OPEN message must have a dataframe")
@@ -826,7 +829,7 @@ class FBDPClient(_FBDP):
         self.handlers.update({MsgType.OPEN: self.handle_open_msg,
                               MsgType.READY: self.handle_ready_msg,
                               })
-    def handle_server_ready(self, channel: Channel, session: FBDPSession, batch_size: int) -> int:
+    def handle_server_ready(self, channel: Channel, session: FBDPSession, batch_size: int) -> int: # pylint: disable=W0613
         """Default event handler that returns -1, unless `on_get_data` event handler is
         assigned and it returns False - then it returns 0.
         """
@@ -837,8 +840,7 @@ class FBDPClient(_FBDP):
         """Initializes the transmission of a new batch of DATA messages.
         """
         session.transmit = None
-    def accept_new_session(self, channel: Channel, routing_id: RoutingID,
-                           msg: FBDPMessage) -> bool:
+    def accept_new_session(self, channel: Channel, routing_id: RoutingID, msg: FBDPMessage) -> bool: # pylint: disable=W0613
         """Validates incoming message that initiated new session/transmission.
 
         Arguments:
@@ -850,7 +852,7 @@ class FBDPClient(_FBDP):
             Always False (transmission must be initiated by Client).
         """
         return False
-    def connect_with_session(self, channel: Channel) -> bool:
+    def connect_with_session(self, channel: Channel) -> bool: # pylint: disable=W0613
         """Called by :meth:`Channel.connect` to determine whether new session should be
         associated with connected peer.
 

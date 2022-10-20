@@ -30,6 +30,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
+# pylint: disable=R0902, R0903, R0912, R0915, C0301, C0103
 
 """saturnin - Class to handle pyproject.toml files.
 
@@ -37,15 +38,16 @@
 """
 
 from __future__ import annotations
-from typing import List
+from typing import List, Dict, Union
 import re
 
-def normalize(name):
+def normalize(name: str) -> str:
+    "Normalize name"
     return re.sub(r"[-_.]+", "-", name).lower()
 
 
 class PyProjectTOML:
-    """
+    """Class to handle pyproject.toml files.
     """
     def __init__(self, pyproject_data: Dict):
         project = pyproject_data['project']
@@ -73,7 +75,7 @@ class PyProjectTOML:
         self.uid: str = meta['uid']
         self.descriptor: str = meta['descriptor']
     def make_setup_cfg(self, cfg: 'ConfigParser') -> None:
-        """
+        """Store project metadata into `~configparser.ConfigParser` instance in `setup.cfg` format.
         """
         def set_content_type(readme_file: str):
             if readme_file.lower().endswith('.md'):
@@ -83,9 +85,9 @@ class PyProjectTOML:
             else:
                 cfg['metadata']['long_description_content_type'] = 'text/plain; charset=UTF-8'
         def multiline(lines: List) -> str:
-            l = ['']
-            l.extend(lines)
-            return '\n'.join(l)
+            w_lines = ['']
+            w_lines.extend(lines)
+            return '\n'.join(w_lines)
 
         if not cfg.has_section('metadata'):
             cfg.add_section('metadata')
@@ -167,4 +169,3 @@ class PyProjectTOML:
             for ext_name, extra in self.optional_dependencies.items():
                 cfg['options.extras_require'][ext_name] = \
                     multiline([f'{k} = {v}' for k, v in extra.items()])
-

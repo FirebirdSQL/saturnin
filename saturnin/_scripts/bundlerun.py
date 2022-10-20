@@ -57,6 +57,7 @@ class UpperAction(Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values.upper())
 
+#: Program name
 PROG_NAME = 'saturnin-bundle'
 
 def main():
@@ -135,5 +136,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-

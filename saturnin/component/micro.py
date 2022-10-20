@@ -30,26 +30,28 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
+# pylint: disable=R0902, R1702
 
 """Saturnin base module for implementation of Firebird Butler Microservices
 """
 
 from __future__ import annotations
-from typing import Union, Dict, List, cast
+from typing import Union, Dict, List, Optional, Callable, cast
 import sys
 import os
 import platform
 import threading
 import uuid
-import zmq
+from contextlib import suppress
 from weakref import proxy
 from time import monotonic_ns
 from heapq import heappush, heappop
+import zmq
 from firebird.base.types import Conjunctive
 from firebird.base.trace import TracedMixin
-from saturnin.base import ZMQAddress, Component, PeerDescriptor, ServiceDescriptor, \
-     ServiceError, Direction, State, Outcome, ChannelManager, Channel, PairChannel, \
-     ComponentConfig, ConfigProto, PrioritizedItem
+from saturnin.base import (ZMQAddress, Component, PeerDescriptor, ServiceDescriptor,
+     ServiceError, Direction, State, Outcome, ChannelManager, Channel, PairChannel,
+     ComponentConfig, ConfigProto, PrioritizedItem)
 from saturnin.protocol.iccp import ICCPComponent
 
 #: Service control channel name
@@ -128,7 +130,7 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive):
             after:  Delay in milliseconds.
         """
         heappush(self._heap, PrioritizedItem(monotonic_ns() + (after * 1000000), action))
-    def get_timeout(self) -> int:
+    def get_timeout(self) -> Optional[int]:
         """Returns timeout to next scheduled action.
         """
         if not self._heap:
@@ -140,8 +142,8 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive):
             back.append(item)
         if len(back) != i:
             heappush(self._heap, item)
-        for b in back:
-            heappush(self._heap, b)
+        for value in back:
+            heappush(self._heap, value)
         return max(int((item.priority - now) / 1000000), 0)
     def run_scheduled(self) -> None:
         """Run scheduled actions.
@@ -164,8 +166,9 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive):
         """
         for name, addr_list in self.endpoints.items():
             chn: Channel = self.mngr.channels.get(name)
-            for i in range(len(addr_list)):
-                self.endpoints[name][i] = chn.bind(addr_list[i])
+            for i, addr in enumerate(addr_list):
+                #self.endpoints[name][i] = chn.bind(addr)
+                addr_list[i] = chn.bind(addr)
     def aquire_resources(self) -> None:
         """Aquire resources required by component (open files, connect to other services etc.).
 
@@ -252,18 +255,13 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive):
             self.state = State.FINISHED
         except Exception as exc:
             self.state = State.ABORTED
-            try:
+            with suppress(Exception):
                 # try send report to controller
                 ctrl_chn.send(cast(ICCPComponent, ctrl_chn.protocol).error_msg(exc),
                               ctrl_chn.session)
-            except:
-                pass
-            try:
+            with suppress(Exception):
                 self.mngr.shutdown(forced=True)
-            except:
-                pass
     @property
     def logging_id(self) -> str:
         "Returns _logging_id_ or <agent_name>[<peer.uid.hex>]"
         return getattr(self, '_logging_id_', f'{self.descriptor.agent.name}[{self.peer.uid.hex}]')
-

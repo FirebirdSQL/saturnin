@@ -37,11 +37,11 @@
 
 from __future__ import annotations
 import sys
-from os import getcwd
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, Action
 from configparser import ConfigParser, ExtendedInterpolation, DEFAULTSECT
 import logging
 from logging.config import fileConfig
+from pathlib import Path
 import zmq
 from firebird.base.logging import get_logger, Logger
 from firebird.base.trace import trace_manager
@@ -58,6 +58,7 @@ class UpperAction(Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values.upper())
 
+#: Program name
 PROG_NAME = 'saturnin-service'
 
 def main():
@@ -83,7 +84,7 @@ def main():
 
     main_config: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
     # Defaults
-    main_config[DEFAULTSECT]['here'] = getcwd()
+    main_config[DEFAULTSECT]['here'] = str(Path.cwd())
 
     #: Could be used to stop the service in debugger session
     debug_stop: bool = False
@@ -158,4 +159,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

@@ -30,6 +30,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
+# pylint: disable=R0903
 
 """Saturnin base module for implementation of Firebird Butler Services
 """
@@ -37,8 +38,10 @@
 from __future__ import annotations
 from typing import cast
 from abc import abstractmethod
+import uuid
+import zmq
 from firebird.base.config import ListOption
-from saturnin.base import ZMQAddress, RouterChannel, ComponentConfig
+from saturnin.base import ZMQAddress, RouterChannel, ComponentConfig, ServiceDescriptor
 from saturnin.component.micro import MicroService
 from saturnin.protocol.fbsp import FBSPService
 
@@ -53,8 +56,19 @@ class ServiceConfig(ComponentConfig):
             ListOption('endpoints', ZMQAddress, "List of service endpoints", required=True)
 
 class Service(MicroService):
+    """Base Firebird Butler Service.
     """
-    """
+    def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
+                 peer_uid: uuid.UUID=None):
+        """
+        Arguments:
+            zmq_context: ZeroMQ Context.
+            descriptor: Service descriptor.
+            peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
+        """
+        super().__init__(zmq_context, descriptor, peer_uid=peer_uid)
+        #: Channel for communication with service clients.
+        self.svc_channel: RouterChannel = None
     def initialize(self, config: ServiceConfig) -> None:
         """Verify configuration and assemble service structural parts.
         """
@@ -64,7 +78,6 @@ class Service(MicroService):
         #: Service protocol
         service = FBSPService(service=self.descriptor, peer=self.peer)
         service.log_context = self.logging_id
-        #: Channel for communication with service clients.
         self.svc_channel = self.mngr.create_channel(RouterChannel, SVC_CHN, service,
                                                     routing_id=self.peer.uid.hex.encode('ascii'),
                                                     sock_opts={'maxmsgsize': 52428800,

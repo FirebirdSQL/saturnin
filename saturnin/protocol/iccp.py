@@ -409,7 +409,7 @@ class ICCPController(_ICCP):
         """Process OK/ERROR/FINISHED messages received from component. It simply returns
         the message.
         """
-        if msg.msg_type in [MsgType.OK, MsgType.FINISHED] and not hasattr(session, 'ready'):
+        if msg.msg_type in (MsgType.OK, MsgType.FINISHED) and not hasattr(session, 'ready'):
             raise StopError(f"Unexpected {msg.msg_type.name} message from component")
         return msg
     def stop_msg(self) -> ICCPMessage:

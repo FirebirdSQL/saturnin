@@ -30,6 +30,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
+# pylint: disable=C0302, C0301, R0904, R0902, R0913
 
 "Saturnin ZeroMQ messaging - base classes and other definitions"
 
@@ -37,6 +38,7 @@ from __future__ import annotations
 from typing import  Union, Dict, List, Iterable, Callable, Optional, Type, Any
 from abc import ABC, abstractmethod
 from weakref import proxy
+from contextlib import suppress
 import uuid
 import warnings
 import zmq
@@ -45,8 +47,8 @@ from firebird.base.types import ZMQAddress, DEFAULT, UNDEFINED, ANY
 from firebird.base.signal import eventsocket
 from firebird.base.logging import LoggingIdMixin
 from firebird.base.trace import TracedMixin
-from .types import RoutingID, SocketMode, SocketType, Direction, \
-     InvalidMessageError, ChannelError, INVALID, TIMEOUT
+from .types import (RoutingID, SocketMode, SocketType, Direction, InvalidMessageError,
+    ChannelError, INVALID, TIMEOUT)
 
 #: Internal routing ID
 INTERNAL_ROUTE: RoutingID = b'INTERNAL'
@@ -140,17 +142,13 @@ class ChannelManager(LoggingIdMixin, TracedMixin):
         for chn in self.channels.values():
             if (self._poller is not None) and (chn.wait_for != Direction.NONE):
                 self._poller.unregister(chn.socket)
-            try:
+            with suppress(Exception):
                 chn.on_shutdown(chn, forced)
-            except:
-                pass
-            try:
+            with suppress(Exception):
                 if chn.mode is SocketMode.BIND:
                     chn.unbind()
                 elif chn.mode is SocketMode.CONNECT:
                     chn.disconnect()
-            except:
-                pass
             chn.sessions.clear()
             if forced:
                 chn.drop_socket()
@@ -226,10 +224,10 @@ class SimpleMessage(Message):
         """Clears message data.
         """
         self.data.clear()
-    def copy(self) -> Message:
+    def copy(self) -> SimpleMessage:
         """Returns copy of the message.
         """
-        msg = Message()
+        msg = SimpleMessage()
         msg.data = self.data.copy()
         return msg
     def get_keys(self) -> Iterable:
@@ -254,7 +252,7 @@ class Session:
     __repr__ = __str__
     @property
     def logging_id(self) -> str:
-        "Returns _logging_id_ or <class_name>[<routing_id>:<endpoint>]"
+        """Returns `_logging_id_` or `<class_name>[<routing_id>::<endpoint>]`"""
         return getattr(self, '_logging_id_',
                        f'{self.__class__.__name__}[{self.routing_id}:{self.endpoint}]')
 
@@ -283,7 +281,7 @@ class Protocol(TracedMixin):
         self.message_factory = self.__message_factory
         #: Message handlers
         self.handlers: Dict[Any, TMessageHandler] = {}
-    def __message_factory(self, zmsg: TZMQMessage=None) -> Message:
+    def __message_factory(self, zmsg: TZMQMessage=None) -> Message: # pylint: disable=W0613
         "Internal message factory"
         return SimpleMessage()
     def __str__(self):
@@ -326,7 +324,7 @@ class Protocol(TracedMixin):
 
         Returns:
             New protocol message instance with parsed ZMQ message. The base Protocol
-            implementation returns `.Message` instance created by message factory.
+            implementation returns `.SimpleMessage` instance created by message factory.
 
         Raises:
             InvalidMessageError: If message is not a valid protocol message.
@@ -334,7 +332,7 @@ class Protocol(TracedMixin):
         msg = self.message_factory(zmsg)
         msg.from_zmsg(zmsg)
         return msg
-    def accept_new_session(self, channel: Channel, routing_id: RoutingID, msg: Message) -> bool:
+    def accept_new_session(self, channel: Channel, routing_id: RoutingID, msg: Message) -> bool: # pylint: disable=W0613
         """Validates incoming message that initiated new session/transmission.
 
         Important:
@@ -388,7 +386,7 @@ class Protocol(TracedMixin):
         except Exception as exc:
             try:
                 self.handle_exception(channel, session, msg, exc)
-            except:
+            except Exception:
                 warnings.warn('Exception raised in exception handler', RuntimeWarning)
         return INVALID
     def handle_invalid_msg(self, channel: Channel, session: Session, exc: InvalidMessageError) -> None:
@@ -417,6 +415,15 @@ class Protocol(TracedMixin):
     def message_factory(self, zmsg: TZMQMessage=None) -> Message:
         """Message factory that must return protocol message instance.
         The default factory produces new `SimpleMessage` instance on each call.
+
+        Arguments:
+            zmsg: ZeroMQ multipart message.
+
+        Important:
+            The returned message SHOULD NOT be initialized from `zmsg`. This argument is
+            passed to fatory for cases when ZeroMQ message content must be analysed to
+            create instance of appropriate message class. See `FBSP` message factory for
+            example.
         """
     @eventsocket
     def on_invalid_msg(self, channel: Channel, session: Session, exc: InvalidMessageError) -> None:
@@ -483,7 +490,7 @@ class Channel(TracedMixin):
         #: ZMQ socket for transmission of messages
         self.socket: zmq.Socket = None
         #: Dictionary with socket options that should be set after socket creation
-        self.sock_opts: TSocketOptions = sock_opts if sock_opts else dict()
+        self.sock_opts: TSocketOptions = sock_opts or {}
         #: True if channel uses internal routing
         self.routed: bool = False
         #: List of binded/connected endpoints
@@ -533,11 +540,9 @@ class Channel(TracedMixin):
         Note:
             All ZMQ errors raised by this operation are silently ignored.
         """
-        try:
+        with suppress(ZMQError):
             if self.socket and not self.socket.closed:
                 self.socket.close(0)
-        except ZMQError:
-            pass
         self.socket = None
     def create_session(self, routing_id: RoutingID) -> Session:
         """Returns newly created session.
@@ -705,12 +710,12 @@ class Channel(TracedMixin):
         try:
             self.send_zmsg(zmsg)
         except Again as exc:
-            if self.on_send_later.is_set() and self.on_send_later(self, session, msg):
+            if self.on_send_later.is_set() and self.on_send_later(self, session, msg): # pylint: disable=E1101
                 result = 0
             else:
                 result = exc.errno
         except ZMQError as exc:
-            if self.on_send_failed.is_set() and self.on_send_failed(self, session, msg, exc.errno):
+            if self.on_send_failed.is_set() and self.on_send_failed(self, session, msg, exc.errno): # pylint: disable=E1101
                 result = 0
             else:
                 result = exc.errno
@@ -749,16 +754,14 @@ class Channel(TracedMixin):
                 return TIMEOUT
         try:
             zmsg = self.receive_zmsg()
-        except Again as exc:
-            if not (self.on_receive_later.is_set() and self.on_receive_later(self)):
+        except Again:
+            if not (self.on_receive_later.is_set() and self.on_receive_later(self)): # pylint: disable=E1101
                 raise
-            else:
-                return INVALID
+            return INVALID
         except ZMQError as exc:
-            if not (self.on_receive_failed.is_set() and self.on_receive_failed(self, exc.errno)):
+            if not (self.on_receive_failed.is_set() and self.on_receive_failed(self, exc.errno)): # pylint: disable=E1101
                 raise
-            else:
-                return INVALID
+            return INVALID
         routing_id: RoutingID = zmsg.pop(0) if self.routed else INTERNAL_ROUTE
         session = self.sessions.get(routing_id)
         #
@@ -767,7 +770,7 @@ class Channel(TracedMixin):
         except InvalidMessageError as exc:
             try:
                 self._protocol.handle_invalid_msg(self, session, exc)
-            except:
+            except Exception:
                 warnings.warn('Exception raised in invalid message handler', RuntimeWarning)
             return INVALID
         #
@@ -928,8 +931,7 @@ class Channel(TracedMixin):
 
         Arguments:
             channel: Channel to be shut down.
-            forced:  When True, the channel will be closed with zero LINGER and all ZMQ
-                     errors will be ignored.
+            forced:  When True, the channel will be closed with zero LINGER and all ZMQ errors will be ignored.
         """
     @eventsocket
     def on_send_failed(self, channel: Channel, session: Session, msg: Message, err_code: int) -> bool:

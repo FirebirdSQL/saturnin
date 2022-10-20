@@ -31,6 +31,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
+# pylint: disable=R0902, R0903, R0904, R0913, C0302, C0301
 
 """Saturnin reference implementation of Firebird Butler Service Protocol.
 
@@ -38,17 +39,18 @@ See https://firebird-butler.readthedocs.io/en/latest/rfc/4/FBSP.html
 """
 
 from __future__ import annotations
-from typing import Type, Any, List, Dict, Callable
+from typing import Type, Any, List, Dict, Callable, Iterable, Union
 import uuid
 from struct import pack, unpack
 from enum import IntEnum, IntFlag
 from traceback import format_exception
+from contextlib import suppress
 import zmq
 from firebird.base.signal import eventsocket
 from firebird.base.protobuf import ProtoMessage, create_message
-from saturnin.base import Token, RoutingID, State, ButlerInterface,  Channel, Protocol, \
-     Message, Session, ANY, INVALID,  ServiceDescriptor, AgentDescriptor, PeerDescriptor, \
-     StopError, ServiceError, InvalidMessageError, TZMQMessage
+from saturnin.base import (Token, RoutingID, State, ButlerInterface,  Channel, Protocol,
+     Message, Session, ANY, INVALID,  ServiceDescriptor, AgentDescriptor, PeerDescriptor,
+     StopError, ServiceError, InvalidMessageError, TZMQMessage)
 
 # Message header
 #: FBSP protocol control frame :mod:`struct` format
@@ -64,10 +66,15 @@ ERROR_TYPE_MASK = 31
 
 # Protobuf messages
 
+#: Protobuf message for FBSP HELLO message
 PROTO_HELLO = 'firebird.butler.FBSPHelloDataframe'
+#: Protobuf message for FBSP WELCOME message
 PROTO_WELCOME = 'firebird.butler.FBSPWelcomeDataframe'
+#: Protobuf message for FBSP CANCEL REQUEST message
 PROTO_CANCEL_REQ = 'firebird.butler.FBSPCancelRequests'
+#: Protobuf message for FBSP STATE INFO message
 PROTO_STATE_INFO = 'firebird.butler.FBSPStateInformation'
+#: Protobuf message for FBSP ERROR message
 PROTO_ERROR = 'firebird.butler.ErrorDescription'
 
 # Enums
@@ -288,8 +295,6 @@ class APIMessage(FBSPMessage):
         """Clears message attributes.
         """
         super().clear()
-        self.__interface_id = 0
-        self.__api_code = 0
         self.data.clear()
     @property
     def interface_id(self) -> int:
@@ -473,7 +478,7 @@ class _FBSP(Protocol):
         """
         assert zmsg is not None and len(zmsg) >= 1, "ZMQ message header is required to create correct message instance"
         msg = self.MESSAGE_MAP[MsgType(int.from_bytes(zmsg[0][4:5], 'big') >> 3)]()
-        msg._set_hdr(zmsg[0])
+        msg._set_hdr(zmsg[0]) # pylint: disable=W0212
         return msg
     def validate(self, zmsg: TZMQMessage) -> None:
         """Verifies that sequence of ZMQ data frames is a valid protocol message.
@@ -640,10 +645,10 @@ class FBSPService(_FBSP):
         self.welcome_df.service.vendor.uid = service.agent.vendor_uid.bytes
         self.welcome_df.service.platform.uid = service.agent.platform_uid.bytes
         self.welcome_df.service.platform.version = service.agent.platform_version
-        for i in range(len(self._apis)):
+        for i, _api in enumerate(self._apis):
             intf = self.welcome_df.api.add()
             intf.number = i
-            intf.uid = self._apis[i].get_uid().bytes
+            intf.uid = _api.get_uid().bytes
     def accept_new_session(self, channel: Channel, routing_id: RoutingID, msg: FBSPMessage) -> bool:
         """Validates incoming message that initiated new session/transmission.
 
@@ -915,23 +920,19 @@ class FBSPService(_FBSP):
             All exceptions raised by event handler are silently ignored.
         """
         channel.send(self.create_message_for(MsgType.CLOSE, session.greeting.token), session)
-        try:
-            self.on_session_closed(channel, session, session.greeting)
-        except:
-            # We don't want to handle this via `handle_exception` and we're closing
+        with suppress(Exception):
+            # We don't want to handle exception via `handle_exception` and we're closing
             # the session anyway
-            pass
+            self.on_session_closed(channel, session, session.greeting)
     def close(self, channel: Channel):
         """Close all connections to attached clients.
         """
         while channel.sessions:
             _, session = channel.sessions.popitem()
-            try:
-                self.send_close(channel, session)
-            except:
+            with suppress(Exception):
                 # channel could be already closed from other side, as we are closing it too
                 # we can ignore any send errors
-                pass
+                self.send_close(channel, session)
     @eventsocket
     def on_accept_client(self, channel: Channel, msg: HelloMessage) -> None:
         """Called when HELLO message is received from client.

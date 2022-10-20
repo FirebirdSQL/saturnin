@@ -1,9 +1,9 @@
 #coding:utf-8
 #
 # PROGRAM/MODULE: saturnin
-# FILE:           saturnin/_scripts/pkg.py
-# DESCRIPTION:    Script for Saturnin package manager
-# CREATED:        19.1.2021
+# FILE:           saturnin/base/recipe.py
+# DESCRIPTION:    Saturnin recipes
+# CREATED:        11.3.2021
 #
 # The contents of this file are subject to the MIT License
 #
@@ -31,27 +31,28 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin package manager script
+"""saturnin - Saturnin recipes
 
 
 """
 
 from __future__ import annotations
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-from saturnin.lib.command import CommandManager
+#from typing import List
+from enum import Enum, auto
+from firebird.base.config import Config, EnumOption
 
-#: Program name
-PROG_NAME = 'saturnin-pkg'
-
-def main():
-    """Saturnin package manager.
+class RecipeType(Enum):
+    """Recipe type.
     """
-    parser: ArgumentParser = ArgumentParser(PROG_NAME, description=main.__doc__,
-                                            formatter_class=ArgumentDefaultsHelpFormatter,
-                                            usage="\n  saturnin-pkg <command> [options]")
-    cmds = CommandManager(parser)
-    cmds.load_commands('saturnin.commands.pkg')
-    cmds.run()
+    SERVICE = auto()
+    BUNDLE = auto()
+    APPLICATION = auto()
 
-if __name__ == '__main__':
-    main()
+class SaturninRecipe(Config):
+    """Saturnin recipe.
+    """
+    def __init__(self):
+        super().__init__('saturnin.recipe')
+        #: Recipe type
+        self.recipe_type: EnumOption = EnumOption('recipe_type', "Type of recipe",
+                                                  required=True)

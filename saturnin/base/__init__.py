@@ -36,16 +36,16 @@
 import uuid
 from firebird.base.types import Error, ZMQAddress, DEFAULT, UNDEFINED, ANY, load
 from firebird.base.config import Config, ConfigProto
-from .types import PLATFORM_OID, PLATFORM_UID, PLATFORM_VERSION, VENDOR_OID, VENDOR_UID, \
-     RoutingID, Token, TSupplement, INVALID, TIMEOUT, \
-     InvalidMessageError, ChannelError, ServiceError, ClientError, StopError, \
-     Origin, SocketMode, Direction, SocketType, State,  PipeSocket, FileOpenMode, Outcome, \
-     ButlerInterface, AgentDescriptor, PeerDescriptor, ServiceDescriptor, PrioritizedItem, \
-     MIME, MIME_TYPE_PROTO, MIME_TYPE_TEXT, PROTO_PEER
-from .transport import ChannelManager, Channel, Message, SimpleMessage, Protocol, Session, \
-     DealerChannel, RouterChannel, PushChannel, PullChannel, PubChannel, SubChannel, \
-     XPubChannel, XSubChannel, PairChannel, \
-     TZMQMessage, TMessageHandler, TSocketOptions, INTERNAL_ROUTE
+from .types import (PLATFORM_OID, PLATFORM_UID, PLATFORM_VERSION, VENDOR_OID, VENDOR_UID,
+     RoutingID, Token, TSupplement, INVALID, TIMEOUT,
+     InvalidMessageError, ChannelError, ServiceError, ClientError, StopError,
+     Origin, SocketMode, Direction, SocketType, State,  PipeSocket, FileOpenMode, Outcome,
+     ButlerInterface, AgentDescriptor, PeerDescriptor, ServiceDescriptor, PrioritizedItem,
+     MIME, MIME_TYPE_PROTO, MIME_TYPE_TEXT, PROTO_PEER)
+from .transport import (ChannelManager, Channel, Message, SimpleMessage, Protocol, Session,
+     DealerChannel, RouterChannel, PushChannel, PullChannel, PubChannel, SubChannel,
+     XPubChannel, XSubChannel, PairChannel,
+     TZMQMessage, TMessageHandler, TSocketOptions, INTERNAL_ROUTE)
 from .component import Component, ComponentConfig
 from .site import site
 
