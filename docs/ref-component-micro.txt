@@ -1,0 +1,18 @@
+
+.. module:: saturnin.component.micro
+    :synopsis: Base for implementation of Firebird Butler Microservices
+
+========================
+saturnin.component.micro
+========================
+
+Constants and variables
+=======================
+
+.. autodata:: SVC_CTRL
+
+Classes
+=======
+
+.. autoclass:: MicroService
+

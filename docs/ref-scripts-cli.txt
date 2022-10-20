@@ -1,0 +1,17 @@
+.. module:: saturnin._scripts.cli
+    :synopsis: Script for Saturnin CLI manager
+
+=====================
+saturnin._scripts.cli
+=====================
+
+Globals
+=======
+
+.. autodata:: PROG_NAME
+
+Functions
+=========
+
+.. autofunction:: main
+

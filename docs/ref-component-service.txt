@@ -1,0 +1,19 @@
+
+.. module:: saturnin.component.service
+    :synopsis: Base for implementation of Firebird Butler Services
+
+==========================
+saturnin.component.service
+==========================
+
+Constants and variables
+=======================
+
+.. autodata:: SVC_CHN
+
+Classes
+=======
+
+.. autoclass:: ServiceConfig
+.. autoclass:: Service
+

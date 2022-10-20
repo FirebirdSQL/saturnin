@@ -1,0 +1,25 @@
+
+.. module:: saturnin.component.controller
+    :synopsis: Service controllers
+
+=============================
+saturnin.component.controller
+=============================
+
+Constants and variables
+=======================
+
+.. autodata:: SVC_CTRL
+
+Functions
+=========
+
+.. autofunction:: service_thread
+
+Classes
+=======
+
+.. autoclass:: ServiceExecConfig
+.. autoclass:: ServiceController
+.. autoclass:: DirectController
+.. autoclass:: ThreadController

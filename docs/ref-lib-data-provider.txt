@@ -1,0 +1,12 @@
+.. module:: saturnin.lib.data.provider
+    :synopsis: Base class for Saturnin data provider microservices
+
+==========================
+saturnin.lib.data.provider
+==========================
+
+Classes
+=======
+
+.. autoclass:: DataProviderConfig
+.. autoclass:: DataProviderMicro

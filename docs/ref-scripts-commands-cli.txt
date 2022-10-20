@@ -1,0 +1,13 @@
+.. module:: saturnin._scripts.commands.cli
+    :synopsis: Saturnin console commands
+
+==============================
+saturnin._scripts.commands.cli
+==============================
+
+Classes
+=======
+
+.. autoclass:: StartCommand
+.. autoclass:: StopCommand
+.. autoclass:: ListCommand

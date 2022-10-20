@@ -1,0 +1,17 @@
+.. module:: saturnin._scripts.svcrun
+    :synopsis: Script to run one service in main or separate thread
+
+========================
+saturnin._scripts.svcrun
+========================
+
+Globals
+=======
+
+.. autodata:: PROG_NAME
+
+Functions
+=========
+
+.. autofunction:: main
+

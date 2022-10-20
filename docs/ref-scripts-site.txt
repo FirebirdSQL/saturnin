@@ -1,0 +1,17 @@
+.. module:: saturnin._scripts.site
+    :synopsis: Script for Saturnin site manager
+
+======================
+saturnin._scripts.site
+======================
+
+Globals
+=======
+
+.. autodata:: PROG_NAME
+
+Functions
+=========
+
+.. autofunction:: main
+

@@ -1,0 +1,20 @@
+.. module:: saturnin.lib.pyproject
+    :synopsis: Code for work with `pyproject.toml` files
+
+======================
+saturnin.lib.pyproject
+======================
+
+
+Functions
+=========
+
+.. autofunction:: normalize
+
+
+Classes
+=======
+
+.. autoclass:: PyProjectTOML
+    :members:
+

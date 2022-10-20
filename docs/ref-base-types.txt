@@ -1,0 +1,63 @@
+
+.. module:: saturnin.base.types
+    :synopsis: Saturnin base types
+
+===================
+saturnin.base.types
+===================
+
+Types for type hints
+====================
+
+.. autodata:: saturnin.base.types.TSupplement
+
+.. autodata:: Token
+
+.. autodata:: saturnin.base.types.RoutingID
+
+
+Exceptions
+==========
+
+.. autoexception:: InvalidMessageError
+.. autoexception:: ChannelError
+.. autoexception:: ServiceError
+.. autoexception:: ClientError
+.. autoexception:: StopError
+
+Constants
+=========
+
+.. autodata:: PLATFORM_OID
+.. autodata:: PLATFORM_UID
+.. autodata:: PLATFORM_VERSION
+.. autodata:: VENDOR_OID
+.. autodata:: VENDOR_UID
+.. autodata:: MIME_TYPE_PROTO
+.. autodata:: MIME_TYPE_TEXT
+.. autodata:: MIME_TYPE_BINARY
+.. autodata:: PROTO_PEER
+.. autodata:: INVALID
+.. autodata:: TIMEOUT
+
+Enums
+=====
+
+.. autoclass:: Origin
+.. autoclass:: SocketMode
+.. autoclass:: Direction
+.. autoclass:: SocketType
+.. autoclass:: State
+.. autoclass:: PipeSocket
+.. autoclass:: FileOpenMode
+.. autoclass:: Outcome
+.. autoclass:: ButlerInterface
+
+Dataclasses
+===========
+
+.. autoclass:: AgentDescriptor
+.. autoclass:: PeerDescriptor
+.. autoclass:: ServiceDescriptor
+.. autoclass:: PrioritizedItem
+

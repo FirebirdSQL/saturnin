@@ -1,0 +1,12 @@
+.. module:: saturnin.component.registry
+    :synopsis: Saturnin component registry
+
+===========================
+saturnin.component.registry
+===========================
+
+Functions
+=========
+
+.. autofunction:: get_service_desciptors
+

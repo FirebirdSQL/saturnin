@@ -1,0 +1,14 @@
+
+.. module:: saturnin.component.client
+    :synopsis: Base for implementation of Firebird Butler Service clients
+
+=========================
+saturnin.component.client
+=========================
+
+Classes
+=======
+
+.. autoclass:: Token
+.. autoclass:: ServiceClient
+

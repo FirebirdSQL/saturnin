@@ -1,0 +1,12 @@
+.. module:: saturnin.lib.daemon
+    :synopsis: Daemon process management
+
+===================
+saturnin.lib.daemon
+===================
+
+Functions
+=========
+
+.. autofunction:: start_daemon
+.. autofunction:: stop_daemon

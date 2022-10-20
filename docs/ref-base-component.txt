@@ -1,0 +1,13 @@
+
+.. module:: saturnin.base.component
+    :synopsis: Saturnin abstract base classes for Components
+
+=======================
+saturnin.base.component
+=======================
+
+Classes
+=======
+
+.. autoclass:: ComponentConfig
+.. autoclass:: Component

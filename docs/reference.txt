@@ -1,0 +1,36 @@
+
+##################
+Saturnin Reference
+##################
+
+.. toctree::
+   :maxdepth: 1
+
+   ref-base
+   ref-base-types
+   ref-base-site
+   ref-base-transport
+   ref-base-component
+   ref-base-recipe
+   ref-component-registry
+   ref-component-micro
+   ref-component-service
+   ref-component-controller
+   ref-component-client
+   ref-lib-command
+   ref-lib-daemon
+   ref-lib-pyproject
+   ref-lib-data-onepipe
+   ref-lib-data-filter
+   ref-protocol-fbsp
+   ref-protocol-fbdp
+   ref-protocol-iccp
+   ref-scripts-site
+   ref-scripts-svcrun
+   ref-scripts-pkg
+   ref-scripts-daemon
+   ref-scripts-cli
+   ref-scripts-bundlerun
+   ref-scripts-commands-cli
+   ref-scripts-commands-pkg
+   ref-scripts-commands-site

@@ -1,0 +1,13 @@
+.. module:: saturnin.lib.command
+    :synopsis: Base classes for Saturnin CLI commands
+
+====================
+saturnin.lib.command
+====================
+
+Classes
+=======
+
+.. autoclass:: Command
+.. autoclass:: HelpCommand
+.. autoclass:: CommandManager

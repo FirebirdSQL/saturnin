@@ -1,0 +1,17 @@
+.. module:: saturnin._scripts.pkg
+    :synopsis: Script for Saturnin package manager
+
+=====================
+saturnin._scripts.pkg
+=====================
+
+Globals
+=======
+
+.. autodata:: PROG_NAME
+
+Functions
+=========
+
+.. autofunction:: main
+

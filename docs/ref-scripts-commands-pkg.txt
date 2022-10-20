@@ -1,0 +1,30 @@
+.. module:: saturnin._scripts.commands.pkg
+    :synopsis: Saturnin package manager commands
+
+==============================
+saturnin._scripts.commands.pkg
+==============================
+
+Constants
+=========
+
+.. autodata:: PKG_TOML
+.. autodata:: SETUP_CFG
+.. autodata:: SEC_OPTIONS
+.. autodata:: SEC_ENTRYPOINTS
+.. autodata:: CMP_UID
+.. autodata:: CMP_PACKAGE
+.. autodata:: CMP_NAME
+.. autodata:: CMP_VERSION
+.. autodata:: CMP_DESCRIPTION
+.. autodata:: CMP_DESCRIPTOR
+.. autodata:: CMP_TOPLEVEL
+
+Classes
+=======
+
+.. autoclass:: BasePkgCommand
+.. autoclass:: InstallCommand
+.. autoclass:: UninstallCommand
+.. autoclass:: ListCommand
+.. autoclass:: PipCommand

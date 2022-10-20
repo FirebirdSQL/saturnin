@@ -1,0 +1,17 @@
+.. module:: saturnin._scripts.bundlerun
+    :synopsis: Script to run bundle of services
+
+===========================
+saturnin._scripts.bundlerun
+===========================
+
+Globals
+=======
+
+.. autodata:: PROG_NAME
+
+Functions
+=========
+
+.. autofunction:: main
+

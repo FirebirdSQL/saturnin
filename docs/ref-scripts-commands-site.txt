@@ -1,0 +1,14 @@
+.. module:: saturnin._scripts.commands.site
+    :synopsis: Saturnin site manager commands
+
+===============================
+saturnin._scripts.commands.site
+===============================
+
+Classes
+=======
+
+.. autoclass:: InitCommand
+.. autoclass:: CreateCommand
+.. autoclass:: EditCommand
+.. autoclass:: ListCommand
