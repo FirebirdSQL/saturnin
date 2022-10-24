@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools >= 53.0.0", "wheel"]
+requires = ["setuptools >= 65.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "saturnin"
-version = "0.7.0"
+version = "0.7.1"
 description = "Firebird Butler platform for Python"
 readme = "README.rst"
 requires-python = ">=3.8"
@@ -33,11 +33,12 @@ classifiers = [
 dependencies = [
     "build",
     "toml",
-    "pyzmq>=22.0.0",
-    "protobuf>=3.14.0, <4",
-    "psutil>=5.8.0",
-    "firebird-butler-protobuf>=0.3.0",
-    "firebird-base>=1.1.0, <2"
+    "packaging >= 21.0",
+    "pyzmq>=24.0.0",
+    "protobuf>=4.21.0, <5",
+    "psutil>=5.9.0",
+    "firebird-butler-protobuf>=0.3.1",
+    "firebird-base>=1.4.0, <2"
     ]
 
 [project.urls]
@@ -56,21 +57,21 @@ saturnin-service = "saturnin._scripts.svcrun:main"
 saturnin-bundle = "saturnin._scripts.bundlerun:main"
 
 [project.entry-points."saturnin.commands.cli"]
-saturnin.start = "saturnin._scripts.commands.cli:StartCommand"
-saturnin.stop = "saturnin._scripts.commands.cli:StopCommand"
-saturnin.list = "saturnin._scripts.commands.cli:ListCommand"
-saturnin.help = "saturnin.lib.command:HelpCommand"
+"saturnin.start" = "saturnin._scripts.commands.cli:StartCommand"
+"saturnin.stop" = "saturnin._scripts.commands.cli:StopCommand"
+"saturnin.list" = "saturnin._scripts.commands.cli:ListCommand"
+"saturnin.help" = "saturnin.lib.command:HelpCommand"
 
 [project.entry-points."saturnin.commands.pkg"]
-saturnin.install = "saturnin._scripts.commands.pkg:InstallCommand"
-saturnin.uninstall = "saturnin._scripts.commands.pkg:UninstallCommand"
-saturnin.list = "saturnin._scripts.commands.pkg:ListCommand"
-saturnin.pip = "saturnin._scripts.commands.pkg:PipCommand"
-saturnin.help = "saturnin.lib.command:HelpCommand"
+"saturnin.install" = "saturnin._scripts.commands.pkg:InstallCommand"
+"saturnin.uninstall" = "saturnin._scripts.commands.pkg:UninstallCommand"
+"saturnin.list" = "saturnin._scripts.commands.pkg:ListCommand"
+"saturnin.pip" = "saturnin._scripts.commands.pkg:PipCommand"
+"saturnin.help" = "saturnin.lib.command:HelpCommand"
 
 [project.entry-points."saturnin.commands.site"]
-saturnin.init = "saturnin._scripts.commands.site:InitCommand"
-saturnin.create = "saturnin._scripts.commands.site:CreateCommand"
-saturnin.edit = "saturnin._scripts.commands.site:EditCommand"
-saturnin.list = "saturnin._scripts.commands.site:ListCommand"
-saturnin.help = "saturnin.lib.command:HelpCommand"
+"saturnin.init" = "saturnin._scripts.commands.site:InitCommand"
+"saturnin.create" = "saturnin._scripts.commands.site:CreateCommand"
+"saturnin.edit" = "saturnin._scripts.commands.site:EditCommand"
+"saturnin.list" = "saturnin._scripts.commands.site:ListCommand"
+"saturnin.help" = "saturnin.lib.command:HelpCommand"
