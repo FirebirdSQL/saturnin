@@ -32,13 +32,13 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin platform installation script
+"""Saturnin platform installation script.
 
 
 """
 
 from __future__ import annotations
-#from typing import List
+from typing import Dict
 import venv
 import sys
 import os
@@ -46,9 +46,11 @@ import subprocess
 import platform
 import ctypes
 import enum
+import argparse
 from pathlib import Path
 
 class SW(enum.IntEnum):
+    "Windows ShellExecute options."
     HIDE = 0
     MAXIMIZE = 3
     MINIMIZE = 6
@@ -63,6 +65,7 @@ class SW(enum.IntEnum):
     SHOWNORMAL = 1
 
 class ERROR(enum.IntEnum):
+    "Windows ShellExecute return codes."
     ZERO = 0
     FILE_NOT_FOUND = 2
     PATH_NOT_FOUND = 3
@@ -78,25 +81,26 @@ class ERROR(enum.IntEnum):
     SHARE = 26
 
 def elevate(*args, **kwargs):
+    """Runs main() with elevated privileges if necessary.
+    """
     if platform.system() == 'Windows':
         if ctypes.windll.shell32.IsUserAnAdmin():
             main(*args, **kwargs)
             return True
-        else:
-            hinstance = ctypes.windll.shell32.ShellExecuteW(
-                None,
-                'runas',
-                sys.executable,
-                subprocess.list2cmdline(sys.argv),
-                None,
-                SW.SHOWNORMAL
-            )
-            if hinstance <= 32:
-                raise RuntimeError(ERROR(hinstance))
-            return False
-    else:
-        main(*args, **kwargs)
-        return True
+        hinstance = ctypes.windll.shell32.ShellExecuteW(
+            None,
+            'runas',
+            sys.executable,
+            subprocess.list2cmdline(sys.argv),
+            None,
+            SW.SHOWNORMAL
+        )
+        if hinstance <= 32:
+            raise RuntimeError(ERROR(hinstance))
+        return False
+    # Not Windows
+    main(*args, **kwargs)
+    return True
 
 # copied from firebird.base.config
 class DirectoryScheme:
@@ -257,24 +261,24 @@ class WindowsDirectoryScheme(DirectoryScheme):
         app_dir = Path(self.name)
         if self.version is not None:
             app_dir /= self.version
-        pd = Path(os.path.expandvars('%PROGRAMDATA%'))
-        lad = Path(os.path.expandvars('%LOCALAPPDATA%'))
-        ad = Path(os.path.expandvars('%APPDATA%'))
+        p_data = Path(os.path.expandvars('%PROGRAMDATA%'))
+        la_data = Path(os.path.expandvars('%LOCALAPPDATA%'))
+        a_data = Path(os.path.expandvars('%APPDATA%'))
         # Set general directories only when HOME is not forced by environment variable.
         if not self.has_home_env():
-            self.dir_map.update({'config': pd / app_dir / 'config',
-                                 'run_data': pd / app_dir / 'run',
-                                 'logs': pd / app_dir / 'log',
-                                 'data': pd / app_dir / 'data',
-                                 'cache': pd / app_dir / 'cache',
-                                 'srv': pd / app_dir / 'srv',
+            self.dir_map.update({'config': p_data / app_dir / 'config',
+                                 'run_data': p_data / app_dir / 'run',
+                                 'logs': p_data / app_dir / 'log',
+                                 'data': p_data / app_dir / 'data',
+                                 'cache': p_data / app_dir / 'cache',
+                                 'srv': p_data / app_dir / 'srv',
                                  })
         # Always set user-specific directories and TMP
-        self.dir_map.update({'tmp': lad / app_dir / 'tmp',
-                             'user_config': lad / app_dir / 'config',
-                             'user_data': lad / app_dir / 'data',
-                             'user_sync': ad / app_dir,
-                             'user_cache': lad / app_dir / 'cache',
+        self.dir_map.update({'tmp': la_data / app_dir / 'tmp',
+                             'user_config': la_data / app_dir / 'config',
+                             'user_data': la_data / app_dir / 'data',
+                             'user_sync': a_data / app_dir,
+                             'user_cache': la_data / app_dir / 'cache',
                              })
 
 class LinuxDirectoryScheme(DirectoryScheme):
@@ -328,23 +332,24 @@ class MacOSDirectoryScheme(DirectoryScheme):
         app_dir = Path(self.name)
         if self.version is not None:
             app_dir /= self.version
-        pd = Path('/Library/Application Support')
-        lad = Path('~/Library/Application Support').expanduser()
+        p_data = Path('/Library/Application Support')
+        l_data = Path('~/Library/Application Support').expanduser()
         # Set general directories only when HOME is not forced by environment variable.
         if not self.has_home_env():
-            self.dir_map.update({'config': pd / app_dir / 'config',
-                                 'run_data': pd / app_dir / 'run',
-                                 'logs': pd / app_dir / 'log',
-                                 'data': pd / app_dir / 'data',
-                                 'cache': pd / app_dir / 'cache',
-                                 'srv': pd / app_dir / 'srv',
+            self.dir_map.update({'config': p_data / app_dir / 'config',
+                                 'run_data': p_data / app_dir / 'run',
+                                 'logs': p_data / app_dir / 'log',
+                                 'data': p_data / app_dir / 'data',
+                                 'cache': p_data / app_dir / 'cache',
+                                 'srv': p_data / app_dir / 'srv',
                                  })
         # Always set user-specific directories and TMP
         self.dir_map.update({'tmp': Path(os.getenv('TMPDIR')) / app_dir,
-                             'user_config': lad / app_dir / 'config',
-                             'user_data': lad / app_dir / 'data',
-                             'user_sync': lad / app_dir,
-                             'user_cache': Path('~/Library/Caches').expanduser() / app_dir / 'cache',
+                             'user_config': l_data / app_dir / 'config',
+                             'user_data': l_data / app_dir / 'data',
+                             'user_sync': l_data / app_dir,
+                             'user_cache': Path('~/Library/Caches').expanduser()
+                             / app_dir / 'cache',
                              })
 
 def get_directory_scheme(app_name: str, version: str=None) -> DirectoryScheme:
@@ -352,7 +357,8 @@ def get_directory_scheme(app_name: str, version: str=None) -> DirectoryScheme:
     """
     return {'Windows': WindowsDirectoryScheme,
             'Linux':LinuxDirectoryScheme,
-            'Darwin': MacOSDirectoryScheme}.get(platform.system(), DirectoryScheme)(app_name, version)
+            'Darwin': MacOSDirectoryScheme}.get(platform.system(),
+                                                DirectoryScheme)(app_name, version)
 
 # copied from saturnin.site
 SATURNIN_CFG = 'saturnin.conf'
@@ -387,6 +393,7 @@ class SaturninScheme(DirectoryScheme):
 #
 
 class ExtendedEnvBuilder(venv.EnvBuilder):
+    """Extended virtual env. builder."""
     def post_setup(self, context):
         print("Updating package management...")
         bin_path = Path(context.bin_path)
@@ -396,6 +403,8 @@ class ExtendedEnvBuilder(venv.EnvBuilder):
 
 
 def init(args=None):
+    """
+    """
     compatible = True
     if sys.version_info < (3, 8):
         compatible = False
@@ -403,139 +412,137 @@ def init(args=None):
         compatible = False
     if not compatible:
         raise ValueError('This script is only for use with Python >= 3.8')
+    #
+    parser = argparse.ArgumentParser(prog='saturnin-setup',
+                                     description='Installs Saturnin in separate '
+                                                 'virtual Python environment')
+    parser.add_argument('--home', metavar='PATH',
+                        help='Saturnin HOME directory.')
+    parser.add_argument('--prompt', default='saturnin',
+                        help='Provides an alternative prompt prefix for '
+                             'Saturnin environment.')
+    if platform.system() == 'Windows':
+        parser.add_argument('--no-shortcut', default=False, action='store_true',
+                            help='Do not create desktop shortcut.')
+    parser.add_argument('--system-site-packages', default=False,
+                        action='store_true', dest='system_site',
+                        help='Give the virtual environment access to the '
+                             'system site-packages dir.')
+    if platform.system() == 'Windows':
+        use_symlinks = False
     else:
-        import argparse
-
-        parser = argparse.ArgumentParser(prog='saturnin-setup',
-                                         description='Installs Saturnin in separate '
-                                                     'virtual Python environment')
-        parser.add_argument('--home', metavar='PATH',
-                            help='Saturnin HOME directory.')
-        parser.add_argument('--prompt', default='saturnin',
-                            help='Provides an alternative prompt prefix for '
-                                 'Saturnin environment.')
-        if platform.system() == 'Windows':
-            parser.add_argument('--no-shortcut', default=False, action='store_true',
-                                help='Do not create desktop shortcut.')
-        parser.add_argument('--system-site-packages', default=False,
-                            action='store_true', dest='system_site',
-                            help='Give the virtual environment access to the '
-                                 'system site-packages dir.')
-        if platform.system() == 'Windows':
-            use_symlinks = False
-        else:
-            use_symlinks = True
-        group = parser.add_mutually_exclusive_group()
-        group.add_argument('--symlinks', default=use_symlinks,
-                           action='store_true', dest='symlinks',
-                           help='Try to use symlinks rather than copies, '
-                                'when symlinks are not the default for '
-                                'the platform.')
-        group.add_argument('--copies', default=not use_symlinks,
-                           action='store_false', dest='symlinks',
-                           help='Try to use copies rather than symlinks, '
-                                'even when symlinks are the default for '
-                                'the platform.')
-        parser.add_argument('--clear', default=False, action='store_true',
-                            dest='clear', help='Delete the contents of the '
-                                               'environment directory if it '
-                                               'already exists, before '
-                                               'environment creation.')
-        parser.add_argument('--upgrade', default=False, action='store_true',
-                            dest='upgrade', help='Upgrade the environment '
-                                                 'directory to use this version '
-                                                 'of Python, assuming Python '
-                                                 'has been upgraded in-place.')
-        parser.add_argument('-f','--find-links', metavar='<url>',
-                            help="If a URL or path to an html file, "
-                            "then parse for links to archives such as sdist (.tar.gz) "
-                            "or wheel (.whl) files. If a local path or file:// URL "
-                            "that's a directory,  then look for archives in the directory "
-                            "listing. Links to VCS project URLs are not supported.")
-        return parser.parse_args(args)
+        use_symlinks = True
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--symlinks', default=use_symlinks,
+                       action='store_true', dest='symlinks',
+                       help='Try to use symlinks rather than copies, '
+                            'when symlinks are not the default for '
+                            'the platform.')
+    group.add_argument('--copies', default=not use_symlinks,
+                       action='store_false', dest='symlinks',
+                       help='Try to use copies rather than symlinks, '
+                            'even when symlinks are the default for '
+                            'the platform.')
+    parser.add_argument('--clear', default=False, action='store_true',
+                        dest='clear', help='Delete the contents of the '
+                                           'environment directory if it '
+                                           'already exists, before '
+                                           'environment creation.')
+    parser.add_argument('--upgrade', default=False, action='store_true',
+                        dest='upgrade', help='Upgrade the environment '
+                                             'directory to use this version '
+                                             'of Python, assuming Python '
+                                             'has been upgraded in-place.')
+    parser.add_argument('-f','--find-links', metavar='<url>',
+                        help="If a URL or path to an html file, "
+                        "then parse for links to archives such as sdist (.tar.gz) "
+                        "or wheel (.whl) files. If a local path or file:// URL "
+                        "that's a directory,  then look for archives in the directory "
+                        "listing. Links to VCS project URLs are not supported.")
+    return parser.parse_args(args)
 
 def main(options):
-        use_home = options.home is not None
-        if options.upgrade and options.clear:
-            raise ValueError('you cannot supply --upgrade and --clear together.')
-        if use_home and os.getenv('SATURNIN_HOME') is not None:
-            raise ValueError('you cannot supply --home when SATURNIN_HOME is defined.')
-        if platform.system() == 'Windows' and not options.no_shortcut:
-            try:
-                import winreg
-                from win32com.client import Dispatch
-            except Exception as exc:
-                raise ValueError("PyWin32 package not installed. "
-                                 "Execute 'pip install pywin32' or "
-                                 "use --no-shortcut option.") from exc
+    use_home = options.home is not None
+    if options.upgrade and options.clear:
+        raise ValueError('you cannot supply --upgrade and --clear together.')
+    if use_home and os.getenv('SATURNIN_HOME') is not None:
+        raise ValueError('you cannot supply --home when SATURNIN_HOME is defined.')
+    if platform.system() == 'Windows' and not options.no_shortcut:
+        try:
+            import winreg
+            from win32com.client import Dispatch
+        except Exception as exc:
+            raise ValueError("PyWin32 package not installed. "
+                             "Execute 'pip install pywin32' or "
+                             "use --no-shortcut option.") from exc
+    #
+    if use_home:
+        os.environ['SATURNIN_HOME'] = options.home
+    scheme = get_directory_scheme('saturnin')
+    venv_home = scheme.data / 'venv'
+    # If venv already exists, either --upgrade or --clear is required
+    if venv_home.is_dir() and not (options.upgrade or options.clear):
+        raise ValueError("Target virtual environment already exists, "
+                         "either --upgrade or --clear is required")
+    #
+    builder = ExtendedEnvBuilder(system_site_packages=options.system_site,
+                                 clear=options.clear,
+                                 symlinks=options.symlinks,
+                                 upgrade=options.upgrade,
+                                 with_pip=True,
+                                 prompt=options.prompt)
+    builder.bin_path: Path = None
+    print("Creating Saturnin virtual environment...")
+    builder.create(venv_home)
+    home_file: Path = venv_home / '.saturnin-bin'
+    home_file.write_text(str(builder.bin_path))
+    if use_home:
+        home_file: Path = venv_home / '.saturnin-home'
+        home_file.write_text(options.home)
+    print("Ensuring latest setuptools, pip and build...")
+    cmd = [str(builder.bin_path / 'pip'), 'install', '-U', 'setuptools',
+           'pip', 'build']
+    if options.find_links is not None:
+        cmd.extend(['-f', options.find_links])
+    subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
+    print("Installing Saturnin...")
+    cmd = [str(builder.bin_path / 'pip'), 'install']
+    if options.find_links is not None:
+        cmd.extend(['-f', options.find_links])
+    cmd.append('saturnin>=0.7.0')
+    subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
+    print("Saturnin site initialization...")
+    cmd = [str(builder.bin_path / 'saturnin-site'), 'init']
+    subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
+    if platform.system() == 'Windows' and not options.no_shortcut:
+        print("Creating desktop shortcut...")
+        pth = r'Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders'
+        registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, pth, 0,
+                                      winreg.KEY_READ)
+        reg_value, _ = winreg.QueryValueEx(registry_key, 'Common Desktop')
+        winreg.CloseKey(registry_key)
+        desktop_dir = os.path.normpath(reg_value)
+        shortcut_path = os.path.expandvars(os.path.join(desktop_dir,
+                                                        'saturnin-shell.lnk'))
         #
-        if use_home:
-            os.environ['SATURNIN_HOME'] = options.home
-        scheme = get_directory_scheme('saturnin')
-        venv_home = scheme.data / 'venv'
-        # If venv already exists, either --upgrade or --clear is required
-        if venv_home.is_dir() and not (options.upgrade or options.clear):
-            raise ValueError("Target virtual environment already exists, "
-                             "either --upgrade or --clear is required")
-        #
-        builder = ExtendedEnvBuilder(system_site_packages=options.system_site,
-                                     clear=options.clear,
-                                     symlinks=options.symlinks,
-                                     upgrade=options.upgrade,
-                                     with_pip=True,
-                                     prompt=options.prompt)
-        builder.bin_path: Path = None
-        print("Creating Saturnin virtual environment...")
-        builder.create(venv_home)
-        home_file: Path = venv_home / '.saturnin-bin'
-        home_file.write_text(str(builder.bin_path))
-        if use_home:
-            home_file: Path = venv_home / '.saturnin-home'
-            home_file.write_text(options.home)
-        print("Ensuring latest setuptools, pip and build...")
-        cmd = [str(builder.bin_path / 'pip'), 'install', '-U', 'setuptools',
-               'pip', 'build']
-        if options.find_links is not None:
-            cmd.extend(['-f', options.find_links])
-        subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
-        print("Installing Saturnin...")
-        cmd = [str(builder.bin_path / 'pip'), 'install']
-        if options.find_links is not None:
-            cmd.extend(['-f', options.find_links])
-        cmd.append('saturnin>=0.7.0')
-        subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
-        print("Saturnin site initialization...")
-        cmd = [str(builder.bin_path / 'saturnin-site'), 'init']
-        subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
-        if platform.system() == 'Windows' and not options.no_shortcut:
-            print("Creating desktop shortcut...")
-            pth = r'Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders'
-            registry_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, pth, 0,
-                                          winreg.KEY_READ)
-            reg_value, _ = winreg.QueryValueEx(registry_key, 'Common Desktop')
-            winreg.CloseKey(registry_key)
-            desktop_dir = os.path.normpath(reg_value)
-            shortcut_path = os.path.expandvars(os.path.join(desktop_dir,
-                                                            'saturnin-shell.lnk'))
-            #
-            shell = Dispatch('WScript.Shell')
-            shortcut = shell.CreateShortCut(shortcut_path)
-            shortcut.Description = 'Saturnin shell'
-            shortcut.TargetPath = 'cmd.exe'
-            shortcut.Arguments = f"/K {str(venv_home / 'Scripts' / 'activate.bat')}"
-            shortcut.save()
+        shell = Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(shortcut_path)
+        shortcut.Description = 'Saturnin shell'
+        shortcut.TargetPath = 'cmd.exe'
+        shortcut.Arguments = f"/K {str(venv_home / 'Scripts' / 'activate.bat')}"
+        shortcut.save()
 
 if __name__ == '__main__':
-    rc = 1
+    return_code = 1
     elevated = False
     try:
         options = init()
         elevated = elevate(options)
-        rc = 0
+        return_code = 0
     except Exception as e:
         print(f'Error: {e}', file=sys.stderr)
     else:
         if elevated:
             print("\nSaturnin installation complete!")
             print(input('Press any key...'))
-    sys.exit(rc)
+    sys.exit(return_code)
