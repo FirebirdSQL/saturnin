@@ -37,7 +37,7 @@
 """
 
 from __future__ import annotations
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 import sys
 import zipfile
 import subprocess
@@ -92,7 +92,7 @@ class BasePkgCommand(Command):
     """
     def __init__(self, name: str, description: str):
         super().__init__(name, description)
-        self.components: List[Dict]= []
+        self.components: List[Dict[str, Any]]= []
     def load_components(self) -> None:
         if site.scheme.site_components_toml.is_file():
             self.components.extend(toml.load(site.scheme.site_components_toml)['components'])
@@ -116,8 +116,8 @@ class BasePkgCommand(Command):
             value = package
         else:
             raise ValueError("Missing lookup key specification")
-        for i in range(len(self.components)):
-            if value == self.components[i][key]:
+        for i, cmp in enumerate(self.components):
+            if value == cmp[key]:
                 return i
         return -1
     def find_component(self, *, uid: str=None, name: str=None, package: str=None) -> Optional[Dict]:
@@ -196,7 +196,7 @@ class InstallCommand(BasePkgCommand):
         self.out(f"Found: {pkg_toml.original_name}-{pkg_toml.version}\n")
         #
         add_component = False
-        cmp: Dict = self.find_component(uid=pkg_toml.uid)
+        cmp: Dict[str, Any] = self.find_component(uid=pkg_toml.uid)
         if cmp is None:
             cmp = {}
             top_level = self.get_new_toplevel()

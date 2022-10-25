@@ -32,7 +32,17 @@
 #                 ______________________________________.
 # pylint: disable=C0302, C0301, R0904, R0902, R0913
 
-"Saturnin ZeroMQ messaging - base classes and other definitions"
+"""Saturnin ZeroMQ messaging - base classes and other definitions.
+
+The messaging framework consists from:
+
+1. Channels, that manage ZeroMQ sockets for transmission of messages.
+2. Messages, that encapsulate ZeroMQ messages passed through Channels.
+3. Protocol, that is responsible for handling received ZeroMQ messages in accordance to
+   transport protocol definition.
+4. Session, that contains data related to client/server connections.
+5. ChannelManager, that manages communication Channels and is responsible for i/o loop.
+"""
 
 from __future__ import annotations
 from typing import  Union, Dict, List, Iterable, Callable, Optional, Type, Any

@@ -32,7 +32,7 @@
 #                 ______________________________________.
 # pylint: disable=R0902, R1702
 
-"""Saturnin base module for implementation of Firebird Butler Microservices
+"""Saturnin base module for implementation of Firebird Butler Microservices.
 """
 
 from __future__ import annotations
@@ -186,7 +186,7 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive):
         """Stop component activities.
         """
     def warm_up(self, ctrl_addr: Optional[ZMQAddress]) -> None:
-        """Initializes the ChannelManager and connects component to control channel.
+        """Initializes the `.ChannelManager` and connects component to control channel.
         """
         if ctrl_addr is not None:
             # Service control channel

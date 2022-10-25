@@ -31,8 +31,10 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin abstract base class for Components
+"""Saturnin abstract base class for Components.
 
+Saturnin components are microservices, services or other software components that could be
+executed on Saturnin platform, typically under supervision of Controller(s).
 """
 
 from __future__ import annotations
@@ -58,7 +60,7 @@ class Component(ABC):
         """
     @abstractmethod
     def warm_up(self, ctrl_addr: Optional[ZMQAddress]) -> None:
-        """Must initialize the ChannelManager and connect component to control channel
+        """Must initialize the `.ChannelManager` and connect component to control channel
         at provided address.
         """
     @abstractmethod

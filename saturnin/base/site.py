@@ -31,8 +31,7 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin site
-
+"""Saturnin site contains code for configuration and management of Saturnin installation.
 
 """
 
@@ -111,6 +110,7 @@ class SaturninConfig(Config):
     """
     def __init__(self):
         super().__init__('saturnin')
+        #: External editor
         self.editor: StrOption = StrOption('editor', "External editor",
                                            default=os.getenv('EDITOR'))
 

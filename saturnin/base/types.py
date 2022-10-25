@@ -2,7 +2,7 @@
 #
 # PROGRAM/MODULE: saturnin-core
 # FILE:           saturnin/core/types.py
-# DESCRIPTION:    Type definitions
+# DESCRIPTION:    Saturnin type definitions and constants
 # CREATED:        22.4.2019
 #
 # The contents of this file are subject to the MIT License
@@ -32,11 +32,22 @@
 #                 ______________________________________.
 # pylint: disable=R0902
 
-"""Saturnin - Type definitions
+"""
+Saturnin common type definitions and constants
+==============================================
+
+This module contains:
+
+1. Type aliases and new types for type annotations.
+2. Commonly used constants like platform, vendor and mime type identifiers.
+3. Exceptions.
+4. Sentinels.
+5. Enums.
+6. Dataclasses.
 """
 
 from __future__ import annotations
-from typing import List, Dict, Optional, Callable, Any, ByteString
+from typing import List, Dict, Optional, Callable, Any, NewType, ByteString, Final
 from enum import IntEnum, IntFlag, Enum, auto
 import uuid
 from dataclasses import dataclass, field, replace as _dcls_replace
@@ -49,30 +60,30 @@ from firebird.base.protobuf import PROTO_STRUCT, load_registered, create_message
 # Type annotation types
 TSupplement = Optional[Dict[str, Any]]
 """name/value dictionary"""
-Token = ByteString
+Token = NewType('Token', ByteString)
 """Message token"""
-RoutingID = ByteString
+RoutingID = NewType('RoutingID', ByteString)
 """Routing ID"""
 
 # Constants
-PLATFORM_OID: str = '1.3.6.1.4.1.53446.1.2.0'
+PLATFORM_OID: Final[str] = '1.3.6.1.4.1.53446.1.2.0'
 "Platform OID (`firebird.butler.platform.saturnin`)"
-PLATFORM_UID: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_OID, PLATFORM_OID)
+PLATFORM_UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, PLATFORM_OID)
 "Platform UID (:func:`~uuid.uuid5` - NAMESPACE_OID)"
-PLATFORM_VERSION: str = '0.7.0'
+PLATFORM_VERSION: Final[str] = '0.7.0'
 "Platform version (semver)"
 
-VENDOR_OID: str = '1.3.6.1.4.1.53446.1.3.0'
+VENDOR_OID: Final[str] = '1.3.6.1.4.1.53446.1.3.0'
 "Platform vendor OID (`firebird.butler.vendor.firebird`)"
-VENDOR_UID: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_OID, VENDOR_OID)
+VENDOR_UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, VENDOR_OID)
 "Platform vendor UID (:func:`~uuid.uuid5` - NAMESPACE_OID)"
 
-MIME_TYPE_PROTO = MIME('application/x.fb.proto')
-MIME_TYPE_TEXT = MIME('text/plain')
-MIME_TYPE_BINARY = MIME('application/octet-stream')
+MIME_TYPE_PROTO: Final[str] = MIME('application/x.fb.proto')
+MIME_TYPE_TEXT: Final[str] = MIME('text/plain')
+MIME_TYPE_BINARY: Final[str] = MIME('application/octet-stream')
 
 #: protobuf ID for peer information message
-PROTO_PEER = 'firebird.butler.PeerIdentification'
+PROTO_PEER: Final[str] = 'firebird.butler.PeerIdentification'
 
 #  Exceptions
 class InvalidMessageError(Error):

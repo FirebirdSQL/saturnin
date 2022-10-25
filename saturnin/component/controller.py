@@ -32,7 +32,7 @@
 #                 ______________________________________.
 # pylint: disable=R0912, R0902, R0903
 
-"""Saturnin service controllers
+"""Saturnin service controllers.
 """
 
 from __future__ import annotations

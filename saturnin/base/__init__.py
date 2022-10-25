@@ -31,7 +31,7 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
 
-"Saturnin (Firebird Butler Development Platform) core package"
+"Saturnin (Firebird Butler Development Platform) base package"
 
 import uuid
 from firebird.base.types import Error, ZMQAddress, DEFAULT, UNDEFINED, ANY, load
@@ -48,6 +48,9 @@ from .transport import (ChannelManager, Channel, Message, SimpleMessage, Protoco
      TZMQMessage, TMessageHandler, TSocketOptions, INTERNAL_ROUTE)
 from .component import Component, ComponentConfig
 from .site import site
+
+#: Saturnin version
+VERSION: str = '0.7.2'
 
 def pkg_name(file: str) -> str:
     """Returns name of the package to which the `file` belongs.
