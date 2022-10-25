@@ -1,20 +1,18 @@
 
-.. module:: saturnin.base.transport
-    :synopsis: Saturnin ZeroMQ messaging - base classes and other definitions
-
 =======================
 saturnin.base.transport
 =======================
+
+.. automodule:: saturnin.base.transport
+   :no-members:
+   :synopsis: Saturnin ZeroMQ messaging - base classes and other definitions
 
 Types for type hints
 ====================
 
 .. autodata:: TZMQMessage
-
 .. autodata:: TMessageFactory
-
 .. autodata:: TSocketOptions
-
 .. autodata:: TMessageHandler
 
 Constants

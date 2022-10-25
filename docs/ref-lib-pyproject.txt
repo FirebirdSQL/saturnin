@@ -5,6 +5,9 @@
 saturnin.lib.pyproject
 ======================
 
+.. automodule:: saturnin.lib.pyproject
+   :no-members:
+   :synopsis: Code for work with `pyproject.toml` files
 
 Functions
 =========

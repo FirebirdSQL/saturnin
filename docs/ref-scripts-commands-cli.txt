@@ -1,9 +1,11 @@
-.. module:: saturnin._scripts.commands.cli
-    :synopsis: Saturnin console commands
 
 ==============================
 saturnin._scripts.commands.cli
 ==============================
+
+.. automodule:: saturnin._scripts.commands.cli
+   :no-members:
+   :synopsis: Saturnin console commands
 
 Classes
 =======

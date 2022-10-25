@@ -1,10 +1,11 @@
 
-.. module:: saturnin.base.recipe
-    :synopsis: Saturnin recipes
-
 ====================
 saturnin.base.recipe
 ====================
+
+.. automodule:: saturnin.base.recipe
+   :no-members:
+   :synopsis: Saturnin recipes
 
 Classes
 =======

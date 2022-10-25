@@ -1,9 +1,11 @@
-.. module:: saturnin.protocol.iccp
-    :synopsis: Internal Component Control Protocol (ICCP)
 
 ======================
 saturnin.protocol.iccp
 ======================
+
+.. automodule:: saturnin.protocol.iccp
+   :no-members:
+   :synopsis: Internal Component Control Protocol (ICCP)
 
 Enums
 =====

@@ -1,9 +1,11 @@
-.. module:: saturnin.protocol.fbsp
-    :synopsis: Firebird Butler Service Protocol (FBSP)
 
 ======================
 saturnin.protocol.fbsp
 ======================
+
+.. automodule:: saturnin.protocol.fbsp
+   :no-members:
+   :synopsis: Firebird Butler Service Protocol (FBSP)
 
 Constants
 =========

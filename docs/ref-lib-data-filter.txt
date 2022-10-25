@@ -1,9 +1,11 @@
-.. module:: saturnin.lib.data.filter
-    :synopsis: Base class for Saturnin data filter microservices
 
 ========================
 saturnin.lib.data.filter
 ========================
+
+.. automodule:: saturnin.lib.data.filter
+   :no-members:
+   :synopsis: Base class for Saturnin data filter microservices
 
 Classes
 =======

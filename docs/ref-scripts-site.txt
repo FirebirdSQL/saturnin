@@ -1,9 +1,11 @@
-.. module:: saturnin._scripts.site
-    :synopsis: Script for Saturnin site manager
 
 ======================
 saturnin._scripts.site
 ======================
+
+.. automodule:: saturnin._scripts.site
+   :no-members:
+   :synopsis: Script for Saturnin site manager
 
 Globals
 =======

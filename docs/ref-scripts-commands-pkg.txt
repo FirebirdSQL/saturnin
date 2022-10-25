@@ -1,9 +1,11 @@
-.. module:: saturnin._scripts.commands.pkg
-    :synopsis: Saturnin package manager commands
 
 ==============================
 saturnin._scripts.commands.pkg
 ==============================
+
+.. automodule:: saturnin._scripts.commands.pkg
+   :no-members:
+   :synopsis: Saturnin package manager commands
 
 Constants
 =========

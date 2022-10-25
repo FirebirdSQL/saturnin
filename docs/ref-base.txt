@@ -1,26 +1,27 @@
 
-.. module:: saturnin.base
-    :synopsis: Saturnin base types, clasess and modules
-
 =============
 saturnin.base
 =============
 
-The `saturnin.base` module provides next objects imported from other modules:
+.. automodule:: saturnin.base
+   :no-members:
+   :synopsis: Saturnin base types, clasess and modules
+
+The `saturnin.base` module provides next objects imported from other sub-modules:
 
 Constants
 =========
 
-`.PLATFORM_OID`, `.PLATFORM_UID`, `.PLATFORM_VERSION`, `.VENDOR_OID`, `.VENDOR_UID`,
-`.INVALID`, `.TIMEOUT`, `.MIME`, `.MIME_TYPE_PROTO`, `.MIME_TYPE_TEXT`, `.PROTO_PEER`,
-`.INTERNAL_ROUTE`, `~firebird.base.types.DEFAULT`, `~firebird.base.types.UNDEFINED`,
+`.VERSION`, `.PLATFORM_OID`, `.PLATFORM_UID`, `.PLATFORM_VERSION`, `.VENDOR_OID`, `.VENDOR_UID`,
+`.INVALID`, `~saturnin.base.types.TIMEOUT`, `.MIME`, `.MIME_TYPE_PROTO`, `.MIME_TYPE_TEXT`,
+`.PROTO_PEER`, `.INTERNAL_ROUTE`, `~firebird.base.types.DEFAULT`, `~firebird.base.types.UNDEFINED`,
 `~firebird.base.types.ANY`.
 
 Types
 =====
 
-:external+base:py:class:`~firebird.base.types.ZMQAddress`, `.RoutingID`, `~firebird.base.Token`,
-`.TSupplement`, `.Origin`, `.SocketMode`,
+:external+base:py:class:`~firebird.base.types.ZMQAddress`, `.RoutingID`,
+`~saturnin.base.types.Token`, `.TSupplement`, `.Origin`, `.SocketMode`,
 `.Direction`, `.SocketType`, `.State`, `.PipeSocket`, `.FileOpenMode`, `.Outcome`,
 `.ButlerInterface`, `.TZMQMessage`, `.TMessageHandler`, `.TSocketOptions`.
 

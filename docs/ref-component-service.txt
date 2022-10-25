@@ -1,10 +1,11 @@
 
-.. module:: saturnin.component.service
-    :synopsis: Base for implementation of Firebird Butler Services
-
 ==========================
 saturnin.component.service
 ==========================
+
+.. automodule:: saturnin.component.service
+   :no-members:
+   :synopsis: Base for implementation of Firebird Butler Services
 
 Constants and variables
 =======================

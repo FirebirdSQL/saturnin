@@ -1,9 +1,11 @@
-.. module:: saturnin.component.registry
-    :synopsis: Saturnin component registry
 
 ===========================
 saturnin.component.registry
 ===========================
+
+.. automodule:: saturnin.component.registry
+   :no-members:
+   :synopsis: Saturnin component registry
 
 Functions
 =========

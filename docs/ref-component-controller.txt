@@ -1,10 +1,11 @@
 
-.. module:: saturnin.component.controller
-    :synopsis: Service controllers
-
 =============================
 saturnin.component.controller
 =============================
+
+.. automodule:: saturnin.component.controller
+   :no-members:
+   :synopsis: Service controllers
 
 Constants and variables
 =======================

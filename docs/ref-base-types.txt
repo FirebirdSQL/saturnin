@@ -1,29 +1,18 @@
 
-.. module:: saturnin.base.types
-    :synopsis: Saturnin base types
-
 ===================
 saturnin.base.types
 ===================
 
-Types for type hints
-====================
+.. automodule:: saturnin.base.types
+   :no-members:
+   :synopsis: Saturnin base types
+
+Types for annotations
+=====================
 
 .. autodata:: saturnin.base.types.TSupplement
-
 .. autodata:: Token
-
 .. autodata:: saturnin.base.types.RoutingID
-
-
-Exceptions
-==========
-
-.. autoexception:: InvalidMessageError
-.. autoexception:: ChannelError
-.. autoexception:: ServiceError
-.. autoexception:: ClientError
-.. autoexception:: StopError
 
 Constants
 =========
@@ -37,6 +26,19 @@ Constants
 .. autodata:: MIME_TYPE_TEXT
 .. autodata:: MIME_TYPE_BINARY
 .. autodata:: PROTO_PEER
+
+Exceptions
+==========
+
+.. autoexception:: InvalidMessageError
+.. autoexception:: ChannelError
+.. autoexception:: ServiceError
+.. autoexception:: ClientError
+.. autoexception:: StopError
+
+Sentinels
+=========
+
 .. autodata:: INVALID
 .. autodata:: TIMEOUT
 

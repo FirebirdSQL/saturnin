@@ -1,9 +1,11 @@
-.. module:: saturnin.lib.command
-    :synopsis: Base classes for Saturnin CLI commands
 
 ====================
 saturnin.lib.command
 ====================
+
+.. automodule:: saturnin.lib.command
+   :no-members:
+   :synopsis: Base classes for Saturnin CLI commands
 
 Classes
 =======

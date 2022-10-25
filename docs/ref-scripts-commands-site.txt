@@ -1,9 +1,11 @@
-.. module:: saturnin._scripts.commands.site
-    :synopsis: Saturnin site manager commands
 
 ===============================
 saturnin._scripts.commands.site
 ===============================
+
+.. automodule:: saturnin._scripts.commands.site
+   :no-members:
+   :synopsis: Saturnin site manager commands
 
 Classes
 =======

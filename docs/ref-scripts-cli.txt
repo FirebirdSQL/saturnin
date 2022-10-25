@@ -1,9 +1,11 @@
-.. module:: saturnin._scripts.cli
-    :synopsis: Script for Saturnin CLI manager
 
 =====================
 saturnin._scripts.cli
 =====================
+
+.. automodule:: saturnin._scripts.cli
+   :no-members:
+   :synopsis: Script for Saturnin CLI manager
 
 Globals
 =======

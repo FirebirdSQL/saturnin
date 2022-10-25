@@ -1,9 +1,11 @@
-.. module:: saturnin.protocol.fbdp
-    :synopsis: Firebird Butler Data Pipe Protocol (FBDP)
 
 ======================
 saturnin.protocol.fbdp
 ======================
+
+.. automodule:: saturnin.protocol.fbdp
+   :no-members:
+   :synopsis: Firebird Butler Data Pipe Protocol (FBDP)
 
 Constants
 =========

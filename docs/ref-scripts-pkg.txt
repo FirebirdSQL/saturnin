@@ -1,9 +1,11 @@
-.. module:: saturnin._scripts.pkg
-    :synopsis: Script for Saturnin package manager
 
 =====================
 saturnin._scripts.pkg
 =====================
+
+.. automodule:: saturnin._scripts.pkg
+   :no-members:
+   :synopsis: Script for Saturnin package manager
 
 Globals
 =======

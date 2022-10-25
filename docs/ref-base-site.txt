@@ -1,10 +1,11 @@
 
-.. module:: saturnin.base.site
-    :synopsis: Saturnin site
-
 ==================
 saturnin.base.site
 ==================
+
+.. automodule:: saturnin.base.site
+   :no-members:
+   :synopsis: Saturnin site
 
 Constants
 =========

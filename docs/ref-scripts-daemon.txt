@@ -1,9 +1,11 @@
-.. module:: saturnin._scripts.daemon
-    :synopsis: Script to start/stop the daemon process
 
 ========================
 saturnin._scripts.daemon
 ========================
+
+.. automodule:: saturnin._scripts.daemon
+   :no-members:
+   :synopsis: Script to start/stop the daemon process
 
 Globals
 =======
