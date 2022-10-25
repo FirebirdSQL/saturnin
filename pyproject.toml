@@ -4,7 +4,6 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "saturnin"
-version = "0.7.1"
 description = "Firebird Butler platform for Python"
 readme = "README.rst"
 requires-python = ">=3.8"
@@ -19,6 +18,7 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Operating System :: POSIX :: Linux",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: MacOS",
@@ -28,18 +28,30 @@ classifiers = [
     "Topic :: Software Development",
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Application Frameworks",
-    "Topic :: Software Development :: Object Brokering"
+    "Topic :: Software Development :: Object Brokering",
+    "Topic :: Database"
     ]
 dependencies = [
     "build",
     "toml",
-    "packaging >= 21.0",
+    "packaging>=21.0",
     "pyzmq>=24.0.0",
     "protobuf>=4.21.0, <5",
     "psutil>=5.9.0",
-    "firebird-butler-protobuf>=0.3.1",
+    "firebird-butler-protobuf>=0.4.0",
     "firebird-base>=1.4.0, <2"
     ]
+dynamic = ["version"]
+
+[tool.setuptools]
+zip-safe = true
+packages = ["saturnin"]
+
+[tool.setuptools.dynamic]
+version = {attr = "saturnin.base.VERSION"}
+
+[project.optional-dependencies]
+firebird = ["firebird-driver>=1.6", "firebird-lib>=1.2"]
 
 [project.urls]
 Home = "http://firebirdsql.org/en/saturnin/"
