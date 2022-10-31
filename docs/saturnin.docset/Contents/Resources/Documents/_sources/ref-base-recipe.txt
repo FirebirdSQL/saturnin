@@ -1,0 +1,14 @@
+
+====================
+saturnin.base.recipe
+====================
+
+.. automodule:: saturnin.base.recipe
+   :no-members:
+   :synopsis: Saturnin recipes
+
+Classes
+=======
+
+.. autoclass:: RecipeType
+.. autoclass:: SaturninRecipe

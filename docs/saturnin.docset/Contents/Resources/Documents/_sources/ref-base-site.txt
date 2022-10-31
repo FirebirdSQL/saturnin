@@ -1,0 +1,31 @@
+
+==================
+saturnin.base.site
+==================
+
+.. automodule:: saturnin.base.site
+   :no-members:
+   :synopsis: Saturnin site
+
+Constants
+=========
+
+.. autodata:: SATURNIN_CFG
+.. autodata:: FIREBIRD_CFG
+.. autodata:: LOGGING_CFG
+.. autodata:: CONFIG_HDR
+   :no-value:
+
+Globals
+=======
+
+.. autodata:: site
+   :no-value:
+
+Classes
+=======
+
+.. autoclass:: SaturninScheme
+.. autoclass:: SaturninConfig
+.. autoclass:: SiteManager
+

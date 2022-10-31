@@ -41,6 +41,8 @@ import sys
 import os
 from pathlib import Path
 from configparser import ConfigParser, ExtendedInterpolation
+from rich.console import Console
+from rich.theme import Theme
 from firebird.base.config import DirectoryScheme, get_directory_scheme, Config, StrOption
 from firebird.base.logging import LoggingIdMixin
 from .types import Error
@@ -67,6 +69,15 @@ CONFIG_HDR = """;
 ; the default values from the special DEFAULT section). Interpolation can span multiple levels.
 
 """
+
+_theme = Theme({"option": "bold cyan",
+                "switch": "bold green",
+                "metavar": "bold yellow",
+                "help_require": "dim",
+                "args_and_cmds": "yellow"
+                })
+
+FORCE_TERMINAL = True if os.getenv("FORCE_COLOR") or os.getenv("PY_COLORS") else None
 
 class SaturninScheme(DirectoryScheme):
     """Saturnin platform directory scheme.
@@ -134,6 +145,36 @@ class SiteManager(LoggingIdMixin):
         self.config: SaturninConfig = SaturninConfig()
         #: Used configuration files
         self.used_config_files: List[Path] = []
+        self.quiet: bool = False
+        self.verbose: bool = False
+        self.console = Console(theme=_theme, emoji=False, tab_size=4,
+                               force_terminal=FORCE_TERMINAL)
+        if not sys.stdout.isatty():
+            self.console.width = 5000
+        self.err_console = Console(stderr=True, style='bold red', emoji=False, tab_size=4,
+                                   force_terminal=FORCE_TERMINAL)
+
+    def print_info(self, message = '') -> None:
+        "Prints information message to console."
+        if message:
+            #self.logger.info(message)
+            if self.verbose:
+                self.console.print(message, style='yellow')
+        else:
+            if self.verbose:
+                self.console.print()
+    def print_error(self, message) -> None:
+        "Prints error message to error console."
+        #self.logger.error(message)
+        self.err_console.print(message)
+    def print_exception(self) -> None:
+        "Prints exception to error console."
+        #self.logger.exception(message)
+        self.err_console.print_exception()
+    def print(self, message = '', end='\n') -> None:
+        "Prints message to console."
+        if not self.quiet:
+            self.console.print(message, end=end)
     def load_configuration(self) -> None:
         """Loads the configuration from configuration files.
         """

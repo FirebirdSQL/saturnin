@@ -1,0 +1,14 @@
+
+===========================
+saturnin.component.registry
+===========================
+
+.. automodule:: saturnin.component.registry
+   :no-members:
+   :synopsis: Saturnin component registry
+
+Functions
+=========
+
+.. autofunction:: get_service_desciptors
+

@@ -36,21 +36,67 @@
 
 """
 
-from __future__ import annotations
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-from saturnin.lib.command import CommandManager
+# Commands
+# LIST - print list of items (services, nodes, packages etc.)
+# SHOW - print details about particular item
+# EDIT - Edit items (configuration etc.)
+# CREATE - create item
+# RUN - run components
+# START - ??
+# STOP - ??
 
-#: Program name
-PROG_NAME = 'saturnin'
+
+from __future__ import annotations
+from typing import Callable, List
+from typer import Typer
+from saturnin.base.site import site
+from saturnin.component.registry import iter_entry_points
+
+app = Typer(rich_markup_mode="rich", help="Saturnin manager.")
+app.add_typer(Typer(), name='list', help="Print list of items (services, nodes, packages etc.)")
+app.add_typer(Typer(), name='show', help="Print details about particular item (service, node, package etc.)")
+app.add_typer(Typer(), name='edit', help="Edit item (configuration, recipe etc.)")
+app.add_typer(Typer(), name='create', help="Create item (configuration, recipe etc.)")
+app.add_typer(Typer(), name='run', help="Run Saturnin components (services, applications, utilities etc.)")
+
+
+def find_group(app: Typer, name: str) -> Typer:
+    "Returns sub-command group in command group."
+    for grp in app.registered_groups:
+        if grp.name == name:
+            return grp.typer_instance
+    return None
+
+def add_command(name: str, cmd: Callable) -> None:
+    """Add command into main Typer application.
+
+    Arguments:
+       name: Command name. Can use dot notation to create a sub-command.
+       cmd:  Callable to be registered as Typer command.
+    """
+    names: List[str] = name.split('.')
+    group: Typer = app
+    for group_name in names[:-1]:
+        sub_group = find_group(group, group_name)
+        if sub_group is None:
+            sub_group = Typer(name=group_name)
+            group.add_typer(sub_group)
+            group = sub_group
+        else:
+            group = sub_group
+    group.command(name=names[-1])(cmd)
+
+def load_commands() -> None:
+    """Load registered saturnin CLI commands.
+    """
+    for entry in iter_entry_points('saturnin.commands'):
+        add_command(entry.name, entry.load())
 
 def main():
     """Saturnin CLI manager.
     """
-    parser: ArgumentParser = ArgumentParser(PROG_NAME, description=main.__doc__,
-                                            formatter_class=ArgumentDefaultsHelpFormatter)
-    cmds = CommandManager(parser)
-    cmds.load_commands('saturnin.commands.cli')
-    cmds.run()
+    load_commands()
+    app()
 
 if __name__ == '__main__':
     main()

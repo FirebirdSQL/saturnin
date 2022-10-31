@@ -1,0 +1,21 @@
+
+===============================
+saturnin._scripts.commands.site
+===============================
+
+.. automodule:: saturnin._scripts.commands.site
+   :no-members:
+   :synopsis: Saturnin site manager commands
+
+Globals
+=======
+.. autodata: app
+   :no-value:
+
+Functions
+=========
+
+.. autofunction:: ensure_dir
+.. autofunction:: ensure_config
+.. autofunction:: init
+.. autofunction:: show

@@ -1,0 +1,58 @@
+
+=============
+saturnin.base
+=============
+
+.. automodule:: saturnin.base
+   :no-members:
+   :synopsis: Saturnin base types, clasess and modules
+
+The `saturnin.base` module provides next objects imported from other sub-modules:
+
+Constants
+=========
+
+`.VERSION`, `.PLATFORM_OID`, `.PLATFORM_UID`, `.PLATFORM_VERSION`, `.VENDOR_OID`, `.VENDOR_UID`,
+`.INVALID`, `~saturnin.base.types.TIMEOUT`, `.MIME`, `.MIME_TYPE_PROTO`, `.MIME_TYPE_TEXT`,
+`.PROTO_PEER`, `.INTERNAL_ROUTE`, `~firebird.base.types.DEFAULT`, `~firebird.base.types.UNDEFINED`,
+`~firebird.base.types.ANY`.
+
+Types
+=====
+
+:external+base:py:class:`~firebird.base.types.ZMQAddress`, `.RoutingID`,
+`~saturnin.base.types.Token`, `.TSupplement`, `.Origin`, `.SocketMode`,
+`.Direction`, `.SocketType`, `.State`, `.PipeSocket`, `.FileOpenMode`, `.Outcome`,
+`.ButlerInterface`, `.TZMQMessage`, `.TMessageHandler`, `.TSocketOptions`.
+
+Exceptions
+==========
+
+`~firebird.base.types.Error`, `.InvalidMessageError`, `.ChannelError`, `.ServiceError`,
+`.ClientError`, `.StopError`.
+
+Dataclasses
+===========
+
+`.AgentDescriptor`, `.PeerDescriptor`, `.ServiceDescriptor`, `.PrioritizedItem`.
+
+Classes
+=======
+
+`.ChannelManager`, `.Channel`, `.Message`, `.SimpleMessage`, `.Protocol`, `.Session`,
+`.DealerChannel`,  `.RouterChannel`, `.PushChannel`, `.PullChannel`, `.PubChannel`, `.SubChannel`,
+`.XPubChannel`, `.XSubChannel`, `.PairChannel`, `.Component`, `.ComponentConfig`,
+`~firebird.base.config.Config` and `~firebird.base.config.ConfigProto`.
+
+Globals
+=======
+
+`.site`.
+
+Functions
+=========
+
+`~firebird.base.types.load`.
+
+.. autofunction:: pkg_name
+

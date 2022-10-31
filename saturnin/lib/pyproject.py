@@ -94,7 +94,6 @@ class PyProjectTOML:
         cfg['metadata']['name'] = self.name
         cfg['metadata']['version'] = self.version
         cfg['metadata']['description'] = self.description
-        cfg['metadata']['name'] = self.name
         if self.readme is not None:
             if isinstance(self.readme, dict):
                 if 'file' in self.readme:

@@ -7,10 +7,14 @@ saturnin._scripts.commands.site
    :no-members:
    :synopsis: Saturnin site manager commands
 
-Classes
+Globals
 =======
+.. autodata: app
 
-.. autoclass:: InitCommand
-.. autoclass:: CreateCommand
-.. autoclass:: EditCommand
-.. autoclass:: ListCommand
+Functions
+=========
+
+.. autofunction:: ensure_dir
+.. autofunction:: ensure_config
+.. autofunction:: init
+.. autofunction:: show

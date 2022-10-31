@@ -512,8 +512,8 @@ def main(options):
     cmd.append('saturnin>=0.7.0')
     subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
     print("Saturnin site initialization...")
-    cmd = [str(builder.bin_path / 'saturnin-site'), 'init']
-    subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr)
+    cmd = [str(builder.bin_path / 'saturnin'), 'site', 'init']
+    subprocess.run(cmd, stdout=sys.stdout,stderr=sys.stderr, check=True)
     if platform.system() == 'Windows' and not options.no_shortcut:
         print("Creating desktop shortcut...")
         pth = r'Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders'

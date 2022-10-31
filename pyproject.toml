@@ -62,28 +62,14 @@ Source = "https://github.com/FirebirdSQL/saturnin"
 
 [project.scripts]
 saturnin = "saturnin._scripts.cli:main"
-saturnin-site = "saturnin._scripts.site:main"
-saturnin-pkg = "saturnin._scripts.pkg:main"
 saturnin-daemon = "saturnin._scripts.daemon:main"
 saturnin-service = "saturnin._scripts.svcrun:main"
 saturnin-bundle = "saturnin._scripts.bundlerun:main"
 
-[project.entry-points."saturnin.commands.cli"]
-"saturnin.start" = "saturnin._scripts.commands.cli:StartCommand"
-"saturnin.stop" = "saturnin._scripts.commands.cli:StopCommand"
-"saturnin.list" = "saturnin._scripts.commands.cli:ListCommand"
-"saturnin.help" = "saturnin.lib.command:HelpCommand"
-
-[project.entry-points."saturnin.commands.pkg"]
-"saturnin.install" = "saturnin._scripts.commands.pkg:InstallCommand"
-"saturnin.uninstall" = "saturnin._scripts.commands.pkg:UninstallCommand"
-"saturnin.list" = "saturnin._scripts.commands.pkg:ListCommand"
-"saturnin.pip" = "saturnin._scripts.commands.pkg:PipCommand"
-"saturnin.help" = "saturnin.lib.command:HelpCommand"
-
-[project.entry-points."saturnin.commands.site"]
-"saturnin.init" = "saturnin._scripts.commands.site:InitCommand"
-"saturnin.create" = "saturnin._scripts.commands.site:CreateCommand"
-"saturnin.edit" = "saturnin._scripts.commands.site:EditCommand"
-"saturnin.list" = "saturnin._scripts.commands.site:ListCommand"
-"saturnin.help" = "saturnin.lib.command:HelpCommand"
+[project.entry-points."saturnin.commands"]
+"install" = "saturnin._scripts.commands.pkg:install"
+"uninstall" = "saturnin._scripts.commands.pkg:uninstall"
+"list.packages" = "saturnin._scripts.commands.pkg:_list"
+"run.pip" = "saturnin._scripts.commands.pkg:pip"
+"show.site" = "saturnin._scripts.commands.site:show"
+"site.init" = "saturnin._scripts.commands.site:init"

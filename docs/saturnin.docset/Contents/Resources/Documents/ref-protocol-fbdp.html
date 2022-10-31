@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
+<title>saturnin.protocol.fbdp — saturnin 0.7.1 documentation</title>
+<link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="_static/bootstrap-sphinx.css" rel="stylesheet" type="text/css"/>
+<script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+<script src="_static/jquery.js"></script>
+<script src="_static/underscore.js"></script>
+<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="_static/doctools.js"></script>
+<script src="_static/sphinx_highlight.js"></script>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="ref-protocol-iccp.html" rel="next" title="saturnin.protocol.iccp"/>
+<link href="ref-protocol-fbsp.html" rel="prev" title="saturnin.protocol.fbsp"/>
+<meta charset="utf-8"/>
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1" name="viewport"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<script src="_static/js/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="_static/js/jquery-fix.js" type="text/javascript"></script>
+<script src="_static/bootstrap-2.3.2/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="_static/bootstrap-sphinx.js" type="text/javascript"></script>
+</head><body>
+<div class="navbar navbar-inverse navbar-fixed-top" id="navbar">
+<div class="navbar-inner">
+<div class="container">
+<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+<button class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="brand" href="index.html">
+          saturnin</a>
+<span class="navbar-text pull-left"><b>0.7.1</b></span>
+<div class="nav-collapse">
+<ul class="nav">
+<li class="divider-vertical"></li>
+<li><a href="usage-guide.html">Usage Guide</a></li>
+<li><a href="py-modindex.html">Modules</a></li>
+<li><a href="genindex.html">Index</a></li>
+<li class="dropdown globaltoc-container">
+<a data-target="#" data-toggle="dropdown" href="index.html" id="dLabelGlobalToc" role="button">Content <b class="caret"></b></a>
+<ul aria-labelledby="dLabelGlobalToc" class="dropdown-menu globaltoc" role="menu"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="reference.html">Saturnin Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ref-base.html">saturnin.base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base.html#types">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base.html#dataclasses">Dataclasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-types.html">saturnin.base.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#saturnin-common-type-definitions-and-constants">Saturnin common type definitions and constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#types-for-annotations">Types for annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#sentinels">Sentinels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#dataclasses">Dataclasses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-site.html">saturnin.base.site</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-transport.html">saturnin.base.transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-transport.html#types-for-type-hints">Types for type hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-transport.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-transport.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-transport.html#channels-for-individual-0mq-socket-types">Channels for individual 0MQ socket types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-component.html">saturnin.base.component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-recipe.html">saturnin.base.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#service-registration">Service registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-micro.html">saturnin.component.micro</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-micro.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-micro.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-service.html">saturnin.component.service</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-service.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-service.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-client.html">saturnin.component.client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-pyproject.html">saturnin.lib.pyproject</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-protocol-fbsp.html">saturnin.protocol.fbsp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-protocol-fbsp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-protocol-fbsp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-protocol-fbsp.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-protocol-fbsp.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">saturnin.protocol.fbdp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-protocol-iccp.html">saturnin.protocol.iccp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-protocol-iccp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-protocol-iccp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-cli.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-cli.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-7-0">Version 0.7.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#version-0-1-0">Version 0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+</ul>
+</li>
+<li class="dropdown">
+<a data-target="#" data-toggle="dropdown" href="#" id="dLabelLocalToc" role="button">Page <b class="caret"></b></a>
+<ul aria-labelledby="dLabelLocalToc" class="dropdown-menu localtoc" role="menu"><ul>
+<li><a class="reference internal" href="#">saturnin.protocol.fbdp</a><ul>
+<li><a class="reference internal" href="#constants">Constants</a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.PROTO_OPEN"><code class="docutils literal notranslate"><span class="pre">PROTO_OPEN</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.PROTO_ERROR"><code class="docutils literal notranslate"><span class="pre">PROTO_ERROR</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.HEADER_FMT_FULL"><code class="docutils literal notranslate"><span class="pre">HEADER_FMT_FULL</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.HEADER_FMT"><code class="docutils literal notranslate"><span class="pre">HEADER_FMT</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FOURCC"><code class="docutils literal notranslate"><span class="pre">FOURCC</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.VERSION_MASK"><code class="docutils literal notranslate"><span class="pre">VERSION_MASK</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.DATA_BATCH_SIZE"><code class="docutils literal notranslate"><span class="pre">DATA_BATCH_SIZE</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#enums">Enums</a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgType"><code class="docutils literal notranslate"><span class="pre">MsgType</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgType.CLOSE"><code class="docutils literal notranslate"><span class="pre">MsgType.CLOSE</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgType.DATA"><code class="docutils literal notranslate"><span class="pre">MsgType.DATA</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgType.NOOP"><code class="docutils literal notranslate"><span class="pre">MsgType.NOOP</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgType.OPEN"><code class="docutils literal notranslate"><span class="pre">MsgType.OPEN</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgType.READY"><code class="docutils literal notranslate"><span class="pre">MsgType.READY</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgType.UNKNOWN"><code class="docutils literal notranslate"><span class="pre">MsgType.UNKNOWN</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag"><code class="docutils literal notranslate"><span class="pre">MsgFlag</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag.ACK_REPLY"><code class="docutils literal notranslate"><span class="pre">MsgFlag.ACK_REPLY</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag.ACK_REQ"><code class="docutils literal notranslate"><span class="pre">MsgFlag.ACK_REQ</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag.NONE"><code class="docutils literal notranslate"><span class="pre">MsgFlag.NONE</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode"><code class="docutils literal notranslate"><span class="pre">ErrorCode</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.DATA_FORMAT_NOT_SUPPORTED"><code class="docutils literal notranslate"><span class="pre">ErrorCode.DATA_FORMAT_NOT_SUPPORTED</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.ERROR"><code class="docutils literal notranslate"><span class="pre">ErrorCode.ERROR</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.FBDP_VERSION_NOT_SUPPORTED"><code class="docutils literal notranslate"><span class="pre">ErrorCode.FBDP_VERSION_NOT_SUPPORTED</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.INTERNAL_ERROR"><code class="docutils literal notranslate"><span class="pre">ErrorCode.INTERNAL_ERROR</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.INVALID_DATA"><code class="docutils literal notranslate"><span class="pre">ErrorCode.INVALID_DATA</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.INVALID_MESSAGE"><code class="docutils literal notranslate"><span class="pre">ErrorCode.INVALID_MESSAGE</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.NOT_IMPLEMENTED"><code class="docutils literal notranslate"><span class="pre">ErrorCode.NOT_IMPLEMENTED</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.OK"><code class="docutils literal notranslate"><span class="pre">ErrorCode.OK</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.PIPE_ENDPOINT_UNAVAILABLE"><code class="docutils literal notranslate"><span class="pre">ErrorCode.PIPE_ENDPOINT_UNAVAILABLE</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.PROTOCOL_VIOLATION"><code class="docutils literal notranslate"><span class="pre">ErrorCode.PROTOCOL_VIOLATION</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode.TIMEOUT"><code class="docutils literal notranslate"><span class="pre">ErrorCode.TIMEOUT</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage"><code class="docutils literal notranslate"><span class="pre">FBDPMessage</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.as_zmsg"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.as_zmsg()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.clear"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.clear()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.clear_flag"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.clear_flag()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.copy"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.copy()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.from_zmsg"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.from_zmsg()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.get_header"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.get_header()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.get_keys"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.get_keys()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.has_ack_reply"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.has_ack_reply()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.has_ack_req"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.has_ack_req()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.note_exception"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.note_exception()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.set_flag"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.set_flag()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.data_frame"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.data_frame</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.flags"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.flags</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.msg_type"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.msg_type</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage.type_data"><code class="docutils literal notranslate"><span class="pre">FBDPMessage.type_data</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession"><code class="docutils literal notranslate"><span class="pre">FBDPSession</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession.await_ready"><code class="docutils literal notranslate"><span class="pre">FBDPSession.await_ready</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession.data_format"><code class="docutils literal notranslate"><span class="pre">FBDPSession.data_format</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession.endpoint"><code class="docutils literal notranslate"><span class="pre">FBDPSession.endpoint</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession.params"><code class="docutils literal notranslate"><span class="pre">FBDPSession.params</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession.pipe"><code class="docutils literal notranslate"><span class="pre">FBDPSession.pipe</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession.routing_id"><code class="docutils literal notranslate"><span class="pre">FBDPSession.routing_id</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession.send_pending"><code class="docutils literal notranslate"><span class="pre">FBDPSession.send_pending</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession.socket"><code class="docutils literal notranslate"><span class="pre">FBDPSession.socket</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession.transmit"><code class="docutils literal notranslate"><span class="pre">FBDPSession.transmit</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP"><code class="docutils literal notranslate"><span class="pre">_FBDP</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP._FBDP__message_factory"><code class="docutils literal notranslate"><span class="pre">_FBDP._FBDP__message_factory()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.__init__"><code class="docutils literal notranslate"><span class="pre">_FBDP.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP._init_new_batch"><code class="docutils literal notranslate"><span class="pre">_FBDP._init_new_batch()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP._on_output_ready"><code class="docutils literal notranslate"><span class="pre">_FBDP._on_output_ready()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP._send_data"><code class="docutils literal notranslate"><span class="pre">_FBDP._send_data()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.create_ack_reply"><code class="docutils literal notranslate"><span class="pre">_FBDP.create_ack_reply()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.create_message_for"><code class="docutils literal notranslate"><span class="pre">_FBDP.create_message_for()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.handle_accept_data"><code class="docutils literal notranslate"><span class="pre">_FBDP.handle_accept_data()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.handle_close_msg"><code class="docutils literal notranslate"><span class="pre">_FBDP.handle_close_msg()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.handle_data_msg"><code class="docutils literal notranslate"><span class="pre">_FBDP.handle_data_msg()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.handle_exception"><code class="docutils literal notranslate"><span class="pre">_FBDP.handle_exception()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.handle_noop_msg"><code class="docutils literal notranslate"><span class="pre">_FBDP.handle_noop_msg()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.handle_produce_data"><code class="docutils literal notranslate"><span class="pre">_FBDP.handle_produce_data()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.send_close"><code class="docutils literal notranslate"><span class="pre">_FBDP.send_close()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.send_ready"><code class="docutils literal notranslate"><span class="pre">_FBDP.send_ready()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.validate"><code class="docutils literal notranslate"><span class="pre">_FBDP.validate()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.OID"><code class="docutils literal notranslate"><span class="pre">_FBDP.OID</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.UID"><code class="docutils literal notranslate"><span class="pre">_FBDP.UID</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.batch_size"><code class="docutils literal notranslate"><span class="pre">_FBDP.batch_size</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.confirm_processing"><code class="docutils literal notranslate"><span class="pre">_FBDP.confirm_processing</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.logging_id"><code class="docutils literal notranslate"><span class="pre">_FBDP.logging_id</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_accept_data"><code class="docutils literal notranslate"><span class="pre">_FBDP.on_accept_data</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_data_confirmed"><code class="docutils literal notranslate"><span class="pre">_FBDP.on_data_confirmed</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_get_data"><code class="docutils literal notranslate"><span class="pre">_FBDP.on_get_data</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_noop"><code class="docutils literal notranslate"><span class="pre">_FBDP.on_noop</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_pipe_closed"><code class="docutils literal notranslate"><span class="pre">_FBDP.on_pipe_closed</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_produce_data"><code class="docutils literal notranslate"><span class="pre">_FBDP.on_produce_data</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.send_after_confirmed"><code class="docutils literal notranslate"><span class="pre">_FBDP.send_after_confirmed</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer"><code class="docutils literal notranslate"><span class="pre">FBDPServer</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.__init__"><code class="docutils literal notranslate"><span class="pre">FBDPServer.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer._init_new_batch"><code class="docutils literal notranslate"><span class="pre">FBDPServer._init_new_batch()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.handle_accept_client"><code class="docutils literal notranslate"><span class="pre">FBDPServer.handle_accept_client()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.handle_get_ready"><code class="docutils literal notranslate"><span class="pre">FBDPServer.handle_get_ready()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.handle_open_msg"><code class="docutils literal notranslate"><span class="pre">FBDPServer.handle_open_msg()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.handle_ready_msg"><code class="docutils literal notranslate"><span class="pre">FBDPServer.handle_ready_msg()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.handle_schedule_ready"><code class="docutils literal notranslate"><span class="pre">FBDPServer.handle_schedule_ready()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.resend_ready"><code class="docutils literal notranslate"><span class="pre">FBDPServer.resend_ready()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.confirm_processing"><code class="docutils literal notranslate"><span class="pre">FBDPServer.confirm_processing</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.handlers"><code class="docutils literal notranslate"><span class="pre">FBDPServer.handlers</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.on_accept_client"><code class="docutils literal notranslate"><span class="pre">FBDPServer.on_accept_client</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.on_get_ready"><code class="docutils literal notranslate"><span class="pre">FBDPServer.on_get_ready</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.on_schedule_ready"><code class="docutils literal notranslate"><span class="pre">FBDPServer.on_schedule_ready</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.send_after_confirmed"><code class="docutils literal notranslate"><span class="pre">FBDPServer.send_after_confirmed</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient"><code class="docutils literal notranslate"><span class="pre">FBDPClient</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.__init__"><code class="docutils literal notranslate"><span class="pre">FBDPClient.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient._init_new_batch"><code class="docutils literal notranslate"><span class="pre">FBDPClient._init_new_batch()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.accept_new_session"><code class="docutils literal notranslate"><span class="pre">FBDPClient.accept_new_session()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.connect_with_session"><code class="docutils literal notranslate"><span class="pre">FBDPClient.connect_with_session()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.handle_open_msg"><code class="docutils literal notranslate"><span class="pre">FBDPClient.handle_open_msg()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.handle_ready_msg"><code class="docutils literal notranslate"><span class="pre">FBDPClient.handle_ready_msg()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.handle_server_ready"><code class="docutils literal notranslate"><span class="pre">FBDPClient.handle_server_ready()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.send_open"><code class="docutils literal notranslate"><span class="pre">FBDPClient.send_open()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.confirm_processing"><code class="docutils literal notranslate"><span class="pre">FBDPClient.confirm_processing</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.handlers"><code class="docutils literal notranslate"><span class="pre">FBDPClient.handlers</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.on_init_session"><code class="docutils literal notranslate"><span class="pre">FBDPClient.on_init_session</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.on_server_ready"><code class="docutils literal notranslate"><span class="pre">FBDPClient.on_server_ready</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.send_after_confirmed"><code class="docutils literal notranslate"><span class="pre">FBDPClient.send_after_confirmed</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+</ul>
+<form action="search.html" class="navbar-form navbar-right" method="get">
+<div class="form-group">
+<input class="form-control" name="q" placeholder="Search" type="text"/>
+</div>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+<div class="body span12 content" role="main">
+<a class="dashAnchor" name="//apple_ref/cpp/Section/saturnin.protocol.fbdp"></a><section id="module-saturnin.protocol.fbdp">
+<span id="saturnin-protocol-fbdp"></span><a class="dashAnchor" name="//apple_ref/cpp/Module/saturnin.protocol.fbdp"></a><h1>saturnin.protocol.fbdp<a class="headerlink" href="#module-saturnin.protocol.fbdp" title="Permalink to this heading">¶</a></h1>
+<p>Saturnin reference implementation of Firebird Butler Data Pipe Protocol</p>
+<p>See <a class="reference external" href="https://firebird-butler.readthedocs.io/en/latest/rfc/9/FBDP.html">https://firebird-butler.readthedocs.io/en/latest/rfc/9/FBDP.html</a></p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Constants"></a><section id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this heading">¶</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.PROTO_OPEN">
+<span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">PROTO_OPEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'firebird.butler.FBDPOpenDataframe'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.protocol.fbdp.PROTO_OPEN"></a><a class="headerlink" href="#saturnin.protocol.fbdp.PROTO_OPEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Protobuf message for FBDP OPEN message</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.PROTO_ERROR">
+<span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">PROTO_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'firebird.butler.ErrorDescription'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.protocol.fbdp.PROTO_ERROR"></a><a class="headerlink" href="#saturnin.protocol.fbdp.PROTO_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Protobuf message for FBDP ERROR message</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.HEADER_FMT_FULL">
+<span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">HEADER_FMT_FULL</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'!4sBBH'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.protocol.fbdp.HEADER_FMT_FULL"></a><a class="headerlink" href="#saturnin.protocol.fbdp.HEADER_FMT_FULL" title="Permalink to this definition">¶</a></dt>
+<dd><p>FBDP protocol control frame <a class="reference external" href="https://docs.python.org/3/library/struct.html#module-struct" title="(in Python v3.11)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">struct</span></code></a> format</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.HEADER_FMT">
+<span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">HEADER_FMT</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'!4xBBH'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.protocol.fbdp.HEADER_FMT"></a><a class="headerlink" href="#saturnin.protocol.fbdp.HEADER_FMT" title="Permalink to this definition">¶</a></dt>
+<dd><p>FBDP protocol control frame <a class="reference external" href="https://docs.python.org/3/library/struct.html#module-struct" title="(in Python v3.11)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">struct</span></code></a> format without FOURCC</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FOURCC">
+<span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">FOURCC</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><span class="pre">bytes</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">b'FBDP'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.protocol.fbdp.FOURCC"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FOURCC" title="Permalink to this definition">¶</a></dt>
+<dd><p>FBDP protocol identification (FOURCC)</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.VERSION_MASK">
+<span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">VERSION_MASK</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.protocol.fbdp.VERSION_MASK"></a><a class="headerlink" href="#saturnin.protocol.fbdp.VERSION_MASK" title="Permalink to this definition">¶</a></dt>
+<dd><p>FBDP protocol version mask</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.DATA_BATCH_SIZE">
+<span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">DATA_BATCH_SIZE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.protocol.fbdp.DATA_BATCH_SIZE"></a><a class="headerlink" href="#saturnin.protocol.fbdp.DATA_BATCH_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default data batch size</p>
+</dd></dl>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Enums"></a><section id="enums">
+<h2>Enums<a class="headerlink" href="#enums" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">MsgType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.protocol.fbdp.MsgType"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a></p>
+<p>FBDP Message Type</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgType.CLOSE">
+<span class="sig-name descname"><span class="pre">CLOSE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.MsgType.CLOSE"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgType.CLOSE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgType.DATA">
+<span class="sig-name descname"><span class="pre">DATA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.MsgType.DATA"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgType.DATA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgType.NOOP">
+<span class="sig-name descname"><span class="pre">NOOP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.MsgType.NOOP"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgType.NOOP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgType.OPEN">
+<span class="sig-name descname"><span class="pre">OPEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.MsgType.OPEN"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgType.OPEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgType.READY">
+<span class="sig-name descname"><span class="pre">READY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.MsgType.READY"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgType.READY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgType.UNKNOWN">
+<span class="sig-name descname"><span class="pre">UNKNOWN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.MsgType.UNKNOWN"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgType.UNKNOWN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgFlag">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">MsgFlag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.protocol.fbdp.MsgFlag"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgFlag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntFlag" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntFlag</span></code></a></p>
+<p>FBDP message flag</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgFlag.ACK_REPLY">
+<span class="sig-name descname"><span class="pre">ACK_REPLY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.MsgFlag.ACK_REPLY"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgFlag.ACK_REPLY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgFlag.ACK_REQ">
+<span class="sig-name descname"><span class="pre">ACK_REQ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.MsgFlag.ACK_REQ"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgFlag.ACK_REQ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.MsgFlag.NONE">
+<span class="sig-name descname"><span class="pre">NONE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.MsgFlag.NONE"></a><a class="headerlink" href="#saturnin.protocol.fbdp.MsgFlag.NONE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">ErrorCode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.protocol.fbdp.ErrorCode"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a></p>
+<p>FBDP Error Code</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.DATA_FORMAT_NOT_SUPPORTED">
+<span class="sig-name descname"><span class="pre">DATA_FORMAT_NOT_SUPPORTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">103</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.DATA_FORMAT_NOT_SUPPORTED"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.DATA_FORMAT_NOT_SUPPORTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.ERROR">
+<span class="sig-name descname"><span class="pre">ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.ERROR"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.ERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.FBDP_VERSION_NOT_SUPPORTED">
+<span class="sig-name descname"><span class="pre">FBDP_VERSION_NOT_SUPPORTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">101</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.FBDP_VERSION_NOT_SUPPORTED"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.FBDP_VERSION_NOT_SUPPORTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.INTERNAL_ERROR">
+<span class="sig-name descname"><span class="pre">INTERNAL_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.INTERNAL_ERROR"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.INTERNAL_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.INVALID_DATA">
+<span class="sig-name descname"><span class="pre">INVALID_DATA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.INVALID_DATA"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.INVALID_DATA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.INVALID_MESSAGE">
+<span class="sig-name descname"><span class="pre">INVALID_MESSAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.INVALID_MESSAGE"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.INVALID_MESSAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.NOT_IMPLEMENTED">
+<span class="sig-name descname"><span class="pre">NOT_IMPLEMENTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">102</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.NOT_IMPLEMENTED"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.NOT_IMPLEMENTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.OK">
+<span class="sig-name descname"><span class="pre">OK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.OK"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.OK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.PIPE_ENDPOINT_UNAVAILABLE">
+<span class="sig-name descname"><span class="pre">PIPE_ENDPOINT_UNAVAILABLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">100</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.PIPE_ENDPOINT_UNAVAILABLE"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.PIPE_ENDPOINT_UNAVAILABLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.PROTOCOL_VIOLATION">
+<span class="sig-name descname"><span class="pre">PROTOCOL_VIOLATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.PROTOCOL_VIOLATION"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.PROTOCOL_VIOLATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.ErrorCode.TIMEOUT">
+<span class="sig-name descname"><span class="pre">TIMEOUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.ErrorCode.TIMEOUT"></a><a class="headerlink" href="#saturnin.protocol.fbdp.ErrorCode.TIMEOUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Classes"></a><section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">FBDPMessage</span></span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.protocol.fbdp.FBDPMessage"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><code class="xref py py-class docutils literal notranslate"><span class="pre">Message</span></code></a></p>
+<p>Firebird Butler Datapipe Protocol (FBDP) Message.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.as_zmsg">
+<span class="sig-name descname"><span class="pre">as_zmsg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">TZMQMessage</span></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.as_zmsg"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.as_zmsg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns message as sequence of ZMQ data frames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>TZMQMessage</em></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.clear"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears message data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.clear_flag">
+<span class="sig-name descname"><span class="pre">clear_flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag" title="saturnin.protocol.fbdp.MsgFlag"><span class="pre">MsgFlag</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.clear_flag"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.clear_flag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear flag specified by <code class="xref py py-obj docutils literal notranslate"><span class="pre">flag</span></code> mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>flag</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag" title="saturnin.protocol.fbdp.MsgFlag"><em>MsgFlag</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><span class="pre">Message</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.copy"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns copy of the message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><em>Message</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.from_zmsg">
+<span class="sig-name descname"><span class="pre">from_zmsg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zmsg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TZMQMessage</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.from_zmsg"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.from_zmsg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populate message data from sequence of ZMQ data frames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>zmsg</strong> (<em>TZMQMessage</em>) – Sequence of frames that should be deserialized.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="ref-base-types.html#saturnin.base.types.InvalidMessageError" title="saturnin.base.types.InvalidMessageError"><strong>InvalidMessageError</strong></a> – If message is not a valid protocol message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.get_header">
+<span class="sig-name descname"><span class="pre">get_header</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><span class="pre">bytes</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.get_header"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.get_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return message header (FBDP control frame).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)">bytes</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.get_keys">
+<span class="sig-name descname"><span class="pre">get_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.11)"><span class="pre">Iterable</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.get_keys"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.get_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns iterable of dictionary keys to be used with <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol.handlers</span></code>.
+Keys must be provided in order of precedence (from more specific to general).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.11)"><em>Iterable</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.has_ack_reply">
+<span class="sig-name descname"><span class="pre">has_ack_reply</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.has_ack_reply"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.has_ack_reply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if message has ASK_REPLY flag set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.has_ack_req">
+<span class="sig-name descname"><span class="pre">has_ack_req</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.has_ack_req"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.has_ack_req" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if message has ACK_REQ flag set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.note_exception">
+<span class="sig-name descname"><span class="pre">note_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.note_exception"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.note_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store information from exception into CLOSE Message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>exc</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><em>Exception</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.set_flag">
+<span class="sig-name descname"><span class="pre">set_flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag" title="saturnin.protocol.fbdp.MsgFlag"><span class="pre">MsgFlag</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPMessage.set_flag"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.set_flag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set flag specified by <code class="xref py py-obj docutils literal notranslate"><span class="pre">flag</span></code> mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>flag</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag" title="saturnin.protocol.fbdp.MsgFlag"><em>MsgFlag</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.data_frame">
+<span class="sig-name descname"><span class="pre">data_frame</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Message</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPMessage.data_frame"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.data_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data frame associated with message type (or None)</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.flags">
+<span class="sig-name descname"><span class="pre">flags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag" title="saturnin.protocol.fbdp.MsgFlag"><span class="pre">MsgFlag</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPMessage.flags"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message flags</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.msg_type">
+<span class="sig-name descname"><span class="pre">msg_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#saturnin.protocol.fbdp.MsgType" title="saturnin.protocol.fbdp.MsgType"><span class="pre">MsgType</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPMessage.msg_type"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.msg_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of message</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPMessage.type_data">
+<span class="sig-name descname"><span class="pre">type_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPMessage.type_data"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPMessage.type_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data associated with message</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPSession">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">FBDPSession</span></span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.protocol.fbdp.FBDPSession"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Session" title="saturnin.base.transport.Session"><code class="xref py py-class docutils literal notranslate"><span class="pre">Session</span></code></a></p>
+<p>FBDP session. Contains information about Data Pipe.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPSession.await_ready">
+<span class="sig-name descname"><span class="pre">await_ready</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPSession.await_ready"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPSession.await_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicator that server sent READY and waits from READY response from client</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPSession.data_format">
+<span class="sig-name descname"><span class="pre">data_format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPSession.data_format"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPSession.data_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specification of format for user data transmitted in DATA messages.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPSession.endpoint">
+<span class="sig-name descname"><span class="pre">endpoint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ZMQAddress</span><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPSession.endpoint"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPSession.endpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connected endpoint address, if any</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPSession.params">
+<span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPSession.params"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPSession.params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data Pipe parameters.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPSession.pipe">
+<span class="sig-name descname"><span class="pre">pipe</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPSession.pipe"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPSession.pipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data Pipe Identification.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPSession.routing_id">
+<span class="sig-name descname"><span class="pre">routing_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">RoutingID</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPSession.routing_id"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPSession.routing_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel routing ID for connected peer</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPSession.send_pending">
+<span class="sig-name descname"><span class="pre">send_pending</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPSession.send_pending"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPSession.send_pending" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag indicating that session is waiting for send</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPSession.socket">
+<span class="sig-name descname"><span class="pre">socket</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ref-base-types.html#saturnin.base.types.PipeSocket" title="saturnin.base.types.PipeSocket"><span class="pre">PipeSocket</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPSession.socket"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPSession.socket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data Pipe socket Identification.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPSession.transmit">
+<span class="sig-name descname"><span class="pre">transmit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPSession.transmit"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPSession.transmit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of DATA messages that remain to be transmitted since last READY message.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">_FBDP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.protocol.fbdp._FBDP"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Protocol" title="saturnin.base.transport.Protocol"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a></p>
+<p>9/FBDP - Firebird Butler Data Pipe Protocol</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP._FBDP__message_factory">
+<span class="sig-name descname"><span class="pre">_FBDP__message_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zmsg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">TZMQMessage</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><span class="pre">Message</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP._FBDP__message_factory"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP._FBDP__message_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal message factory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>zmsg</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><em>TZMQMessage</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><em>Message</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_type:</span> <span class="pre">~typing.Type[~saturnin.protocol.fbdp.FBDPSession]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'saturnin.protocol.fbdp.FBDPSession'&gt;</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.__init__"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.11)"><em>Type</em></a><em>[</em><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a><em>]</em>) – Class for session objects.</p></li>
+<li><p><strong>batch_size</strong> – Default batch size.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP._init_new_batch">
+<span class="sig-name descname"><span class="pre">_init_new_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP._init_new_batch"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP._init_new_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the transmission of a new batch of DATA messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP._on_output_ready">
+<span class="sig-name descname"><span class="pre">_on_output_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP._on_output_ready"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP._on_output_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event handler called when channel is ready to accept at least one outgoing message
+without blocking (or dropping it).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP._send_data">
+<span class="sig-name descname"><span class="pre">_send_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP._send_data"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP._send_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends next DATA message to the client attached to PIPE_OUTPUT.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – </p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.create_ack_reply">
+<span class="sig-name descname"><span class="pre">create_ack_reply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.create_ack_reply"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.create_ack_reply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns new message that is an ACK-REPLY response message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Message to be answered.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.create_message_for">
+<span class="sig-name descname"><span class="pre">create_message_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.MsgType" title="saturnin.protocol.fbdp.MsgType"><span class="pre">MsgType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag" title="saturnin.protocol.fbdp.MsgFlag"><span class="pre">MsgFlag</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.create_message_for"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.create_message_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns message of particular FBDP message type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg_type</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.MsgType" title="saturnin.protocol.fbdp.MsgType"><em>MsgType</em></a>) – Type of message to be created.</p></li>
+<li><p><strong>type_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Message control data.</p></li>
+<li><p><strong>flags</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference internal" href="#saturnin.protocol.fbdp.MsgFlag" title="saturnin.protocol.fbdp.MsgFlag"><em>MsgFlag</em></a><em>]</em>) – Message flags.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.handle_accept_data">
+<span class="sig-name descname"><span class="pre">handle_accept_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.handle_accept_data"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.handle_accept_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default event hander executed when DATA message is received from pipe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with peer.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – Data received from peer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p>The event handler may cancel the transmission by raising the <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception
+with <a class="reference external" href="https://docs.python.org/3/library/code.html#module-code" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">code</span></code></a> attribute containing the <a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ErrorCode</span></code></a> to be returned in CLOSE message.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The ACK-REQUEST in received DATA message is handled automatically by protocol.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The base implementation simply raises StopError with ErrorCode.OK code,
+which closes the pipe normally.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.handle_close_msg">
+<span class="sig-name descname"><span class="pre">handle_close_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.handle_close_msg"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.handle_close_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process CLOSE message received from client.</p>
+<p>Calls <a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_pipe_closed" title="saturnin.protocol.fbdp._FBDP.on_pipe_closed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_pipe_closed</span></code></a> and then discards the session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel that received the message.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session instance.</p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Received message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.handle_data_msg">
+<span class="sig-name descname"><span class="pre">handle_data_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.handle_data_msg"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.handle_data_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process DATA message received from client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel that received the message.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session instance.</p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Received message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All exceptions are handled by <a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.handle_exception" title="saturnin.protocol.fbdp._FBDP.handle_exception"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_exception</span></code></a>.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.handle_exception">
+<span class="sig-name descname"><span class="pre">handle_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Session" title="saturnin.base.transport.Session"><span class="pre">Session</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><span class="pre">Message</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.handle_exception"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.handle_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Protocol.handle_msg" title="saturnin.base.transport.Protocol.handle_msg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_msg()</span></code></a> on exception in message handler.</p>
+<p>Sends CLOSE message and calls <code class="xref py py-obj docutils literal notranslate"><span class="pre">on_exception</span></code> handler.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Session" title="saturnin.base.transport.Session"><em>Session</em></a>) – </p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><em>Message</em></a>) – </p></li>
+<li><p><strong>exc</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><em>Exception</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.handle_noop_msg">
+<span class="sig-name descname"><span class="pre">handle_noop_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.handle_noop_msg"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.handle_noop_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process NOOP message received from peer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel that received the message.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session instance.</p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Received message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.handle_produce_data">
+<span class="sig-name descname"><span class="pre">handle_produce_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.handle_produce_data"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.handle_produce_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default event handler executed when DATA message should be sent to pipe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with peer.</p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – DATA message that will be sent to peer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The base implementation simply raises StopError with ErrorCode.OK code,
+which closes the pipe normally.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.send_close">
+<span class="sig-name descname"><span class="pre">send_close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><span class="pre">ErrorCode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.send_close"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.send_close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends <code class="xref py py-obj docutils literal notranslate"><span class="pre">CLOSE</span></code> message, calls <a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_pipe_closed" title="saturnin.protocol.fbdp._FBDP.on_pipe_closed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_pipe_closed</span></code></a> and then discards the session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associate with data pipe.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with transmission.</p></li>
+<li><p><strong>error_code</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><em>ErrorCode</em></a>) – Error code.</p></li>
+<li><p><strong>exc</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><em>Exception</em></a><em>]</em>) – Exception that caused the error.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.send_ready">
+<span class="sig-name descname"><span class="pre">send_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.send_ready"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.send_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends <code class="xref py py-obj docutils literal notranslate"><span class="pre">READY</span></code> message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associate with data pipe.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with transmission.</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Requested data transmission batch size.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="ref-base-types.html#saturnin.base.types.StopError" title="saturnin.base.types.StopError"><strong>StopError</strong></a> – When sending message fails.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zmsg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TZMQMessage</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp._FBDP.validate"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies that sequence of ZMQ data frames is a valid protocol message.</p>
+<p>If this validation passes without exception, then <code class="xref py py-obj docutils literal notranslate"><span class="pre">parse()</span></code> of the same message
+must be successful as well.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>zmsg</strong> (<em>TZMQMessage</em>) – ZeroMQ multipart message.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="ref-base-types.html#saturnin.base.types.InvalidMessageError" title="saturnin.base.types.InvalidMessageError"><strong>InvalidMessageError</strong></a> – If ZMQ message is not a valid protocol message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.OID">
+<span class="sig-name descname"><span class="pre">OID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'1.3.6.1.4.1.53446.1.5.2'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.OID"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.OID" title="Permalink to this definition">¶</a></dt>
+<dd><p>string with protocol OID (dot notation).</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.UID">
+<span class="sig-name descname"><span class="pre">UID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">UUID('3c75bf1e-15a0-53fb-99d7-c1e9dd748730')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.UID"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.UID" title="Permalink to this definition">¶</a></dt>
+<dd><p>UUID instance that identifies the protocol.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.batch_size">
+<span class="sig-name descname"><span class="pre">batch_size</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.batch_size"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.batch_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial batch size</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.confirm_processing">
+<span class="sig-name descname"><span class="pre">confirm_processing</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.confirm_processing"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.confirm_processing" title="Permalink to this definition">¶</a></dt>
+<dd><p>CONSUMER option. Whether ACK_REPLY message for DATA/ACK_REQ should be sent
+before (False) or after (True) call to <a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_accept_data" title="saturnin.protocol.fbdp._FBDP.on_accept_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_accept_data()</span></code></a> callback.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.logging_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logging_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Property/saturnin.protocol.fbdp._FBDP.logging_id"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.logging_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns _logging_id_ or &lt;class_name&gt;</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.on_accept_data">
+<span class="sig-name descname"><span class="pre">on_accept_data</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.on_accept_data"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.on_accept_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event executed for CONSUMER to process data received in DATA message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> – Session associated with client.</p></li>
+<li><p><strong>data</strong> – Data received from client.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The event handler may cancel the transmission by raising the <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception
+with <a class="reference external" href="https://docs.python.org/3/library/code.html#module-code" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">code</span></code></a> attribute containing the <a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ErrorCode</span></code></a> to be returned in CLOSE message.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The ACK-REQUEST in received DATA message is handled automatically by protocol.</p>
+</div>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.on_data_confirmed">
+<span class="sig-name descname"><span class="pre">on_data_confirmed</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.on_data_confirmed"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.on_data_confirmed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event executed for PRODUCER when ACK_REPLY on sent DATA is received.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> – Session associated with peer.</p></li>
+<li><p><strong>type_data</strong> – Content of <code class="xref py py-obj docutils literal notranslate"><span class="pre">type_data</span></code> field from received DATA message confirmation.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The event handler may cancel the transmission by raising the <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception
+with <a class="reference external" href="https://docs.python.org/3/library/code.html#module-code" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">code</span></code></a> attribute containing the <a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ErrorCode</span></code></a> to be returned in CLOSE message.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.on_get_data">
+<span class="sig-name descname"><span class="pre">on_get_data</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.on_get_data"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.on_get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event executed for PRODUCER to query the data source for data availability,
+and for CONSUMER to query whether data could be accepted.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If this event does not have handler assigned, the data source is considered as
+“stable” source that can always produce/consume data (for example data files
+are stable sources).</p>
+<p>For PRODUCERS, handler MUST return True if there are data available for sending.
+If handler returns False, the transmission will be suspended until its resumed
+via <code class="xref py py-obj docutils literal notranslate"><span class="pre">Channel.set_wait_out(True)</span></code>.</p>
+</div>
+<p>The event handler may cancel the transmission by raising the <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception
+with <a class="reference external" href="https://docs.python.org/3/library/code.html#module-code" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">code</span></code></a> attribute containing the <a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ErrorCode</span></code></a> to be returned in CLOSE message.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.on_noop">
+<span class="sig-name descname"><span class="pre">on_noop</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.on_noop"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.on_noop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when NOOP message is received, and after ACK-REPLY (if requested) is send.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> – Session associated with peer.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.on_pipe_closed">
+<span class="sig-name descname"><span class="pre">on_pipe_closed</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.on_pipe_closed"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.on_pipe_closed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when CLOSE message is received or sent, to release any resources
+associated with current transmission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> – Session associated with peer.</p></li>
+<li><p><strong>msg</strong> – Received/sent CLOSE message.</p></li>
+<li><p><strong>exc</strong> – Exception that caused the error.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.on_produce_data">
+<span class="sig-name descname"><span class="pre">on_produce_data</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.on_produce_data"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.on_produce_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event executed for PRODUCER to store data into outgoing DATA message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> – Session associated with client.</p></li>
+<li><p><strong>msg</strong> – DATA message that will be sent to client.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The event handler must store the data in <code class="xref py py-obj docutils literal notranslate"><span class="pre">msg.data_frame</span></code> attribute. It may also
+set ACK-REQUEST flag and <code class="xref py py-obj docutils literal notranslate"><span class="pre">type_data</span></code> attribute.</p>
+<p>The event handler may cancel the transmission by raising the <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception
+with <a class="reference external" href="https://docs.python.org/3/library/code.html#module-code" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">code</span></code></a> attribute containing the <a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ErrorCode</span></code></a> to be returned in CLOSE message.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To indicate end of data, raise StopError with ErrorCode.OK code.</p>
+</div>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp._FBDP.send_after_confirmed">
+<span class="sig-name descname"><span class="pre">send_after_confirmed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp._FBDP.send_after_confirmed"></a><a class="headerlink" href="#saturnin.protocol.fbdp._FBDP.send_after_confirmed" title="Permalink to this definition">¶</a></dt>
+<dd><p>PRODUCER option. If sent DATA message has ACK_REQ flag set, send next DATA
+message after ACK_REPLY is received (True), or continue sending DATA without
+delay (False).</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">FBDPServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.protocol.fbdp.FBDPServer"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#saturnin.protocol.fbdp._FBDP" title="saturnin.protocol.fbdp._FBDP"><code class="xref py py-class docutils literal notranslate"><span class="pre">_FBDP</span></code></a></p>
+<p>9/FBDP - Firebird Butler Data Pipe Protocol - Server side.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_type:</span> <span class="pre">~typing.Type[~saturnin.protocol.fbdp.FBDPSession]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'saturnin.protocol.fbdp.FBDPSession'&gt;</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPServer.__init__"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>session_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.11)"><em>Type</em></a><em>[</em><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a><em>]</em>) – Class for session objects.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer._init_new_batch">
+<span class="sig-name descname"><span class="pre">_init_new_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPServer._init_new_batch"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer._init_new_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the transmission of a new batch of DATA messages.</p>
+<p>As we’re server, we also have to send READY to the client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.handle_accept_client">
+<span class="sig-name descname"><span class="pre">handle_accept_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPServer.handle_accept_client"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.handle_accept_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default event handler that raises <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception with ErrorCode.INTERNAL_ERROR.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.handle_get_ready">
+<span class="sig-name descname"><span class="pre">handle_get_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPServer.handle_get_ready"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.handle_get_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default event handler that returns -1, unless <code class="xref py py-obj docutils literal notranslate"><span class="pre">on_get_data</span></code> event handler is
+assigned and it returns False - then it returns 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.handle_open_msg">
+<span class="sig-name descname"><span class="pre">handle_open_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPServer.handle_open_msg"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.handle_open_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process OPEN message received from client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel that received the message.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session instance.</p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Received message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All exceptions are handled by <code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_exception</span></code>.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.handle_ready_msg">
+<span class="sig-name descname"><span class="pre">handle_ready_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPServer.handle_ready_msg"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.handle_ready_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process READY message received from client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel that received the message.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session instance.</p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Received message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All exceptions are handled by <code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_exception</span></code>.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.handle_schedule_ready">
+<span class="sig-name descname"><span class="pre">handle_schedule_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPServer.handle_schedule_ready"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.handle_schedule_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default event handler that raises <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception with ErrorCode.INTERNAL_ERROR.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This handler must be reasigned or overriden only when <a class="reference internal" href="#saturnin.protocol.fbdp.FBDPServer.on_get_ready" title="saturnin.protocol.fbdp.FBDPServer.on_get_ready"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_get_ready</span></code></a> event
+handler may return zero.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.resend_ready">
+<span class="sig-name descname"><span class="pre">resend_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPServer.resend_ready"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.resend_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send another ready to the client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with client.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.confirm_processing">
+<span class="sig-name descname"><span class="pre">confirm_processing</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPServer.confirm_processing"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.confirm_processing" title="Permalink to this definition">¶</a></dt>
+<dd><p>CONSUMER option. Whether ACK_REPLY message for DATA/ACK_REQ should be sent
+before (False) or after (True) call to <a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_accept_data" title="saturnin.protocol.fbdp._FBDP.on_accept_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_accept_data()</span></code></a> callback.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.handlers">
+<span class="sig-name descname"><span class="pre">handlers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">TMessageHandler</span><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPServer.handlers"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.handlers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message handlers</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.on_accept_client">
+<span class="sig-name descname"><span class="pre">on_accept_client</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPServer.on_accept_client"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.on_accept_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event executed when client connects to the data pipe via OPEN message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> – Session associated with client.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The session attributes <code class="xref py py-obj docutils literal notranslate"><span class="pre">data_pipe</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">pipe_socket</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">data_format</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">params</span></code>
+contain information sent by client, and the event handler must validate the request.</p>
+<p>If request should be rejected, it must raise the <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception with <a class="reference external" href="https://docs.python.org/3/library/code.html#module-code" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">code</span></code></a>
+attribute containing the <a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ErrorCode</span></code></a> to be returned in CLOSE message.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.on_get_ready">
+<span class="sig-name descname"><span class="pre">on_get_ready</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPServer.on_get_ready"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.on_get_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event executed to obtain the transmission batch size for the client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> – Session associated with client.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>0 = Not ready to transmit yet</p></li>
+<li><p>n = Ready to transmit 1..&lt;n&gt; messages.</p></li>
+<li><p>-1 = Ready to transmit 1..&lt;protocol batch size&gt; messages.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Number of messages that could be transmitted (batch size)</p>
+</dd>
+</dl>
+<p>The event handler may cancel the transmission by raising the <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception
+with <a class="reference external" href="https://docs.python.org/3/library/code.html#module-code" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">code</span></code></a> attribute containing the <a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ErrorCode</span></code></a> to be returned in CLOSE message.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.on_schedule_ready">
+<span class="sig-name descname"><span class="pre">on_schedule_ready</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPServer.on_schedule_ready"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.on_schedule_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>The event is executed in order to send the READY message to the client later.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> – Session associated with client.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The event handler may cancel the transmission by raising the <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception
+with <a class="reference external" href="https://docs.python.org/3/library/code.html#module-code" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">code</span></code></a> attribute containing the <a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ErrorCode</span></code></a> to be returned in CLOSE message.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPServer.send_after_confirmed">
+<span class="sig-name descname"><span class="pre">send_after_confirmed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPServer.send_after_confirmed"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPServer.send_after_confirmed" title="Permalink to this definition">¶</a></dt>
+<dd><p>PRODUCER option. If sent DATA message has ACK_REQ flag set, send next DATA
+message after ACK_REPLY is received (True), or continue sending DATA without
+delay (False).</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.protocol.fbdp.</span></span><span class="sig-name descname"><span class="pre">FBDPClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.protocol.fbdp.FBDPClient"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#saturnin.protocol.fbdp._FBDP" title="saturnin.protocol.fbdp._FBDP"><code class="xref py py-class docutils literal notranslate"><span class="pre">_FBDP</span></code></a></p>
+<p>9/FBDP - Firebird Butler Data Pipe Protocol - Client side.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_type:</span> <span class="pre">~typing.Type[~saturnin.protocol.fbdp.FBDPSession]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'saturnin.protocol.fbdp.FBDPSession'&gt;</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPClient.__init__"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.11)"><em>Type</em></a><em>[</em><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a><em>]</em>) – Class for session objects.</p></li>
+<li><p><strong>batch_size</strong> – Default batch size.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient._init_new_batch">
+<span class="sig-name descname"><span class="pre">_init_new_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPClient._init_new_batch"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient._init_new_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the transmission of a new batch of DATA messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.accept_new_session">
+<span class="sig-name descname"><span class="pre">accept_new_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">routing_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RoutingID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPClient.accept_new_session"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.accept_new_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates incoming message that initiated new session/transmission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel that received the message.</p></li>
+<li><p><strong>routing_id</strong> (<em>RoutingID</em>) – Routing ID of the sender.</p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Received message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Always False (transmission must be initiated by Client).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.connect_with_session">
+<span class="sig-name descname"><span class="pre">connect_with_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPClient.connect_with_session"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.connect_with_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by <code class="xref py py-meth docutils literal notranslate"><span class="pre">Channel.connect()</span></code> to determine whether new session should be
+associated with connected peer.</p>
+<p>As FBDP require that connecting peers must send OPEN message to initiate
+transmission, it always returns True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.handle_open_msg">
+<span class="sig-name descname"><span class="pre">handle_open_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPClient.handle_open_msg"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.handle_open_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>OPEN message received from server is violation of the protocol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel that received the message.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session instance.</p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Received message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All exceptions are handled by <code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_exception</span></code>.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.handle_ready_msg">
+<span class="sig-name descname"><span class="pre">handle_ready_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPClient.handle_ready_msg"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.handle_ready_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process READY message received from server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel that received the message.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session instance.</p></li>
+<li><p><strong>msg</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Received message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All exceptions are handled by <code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_exception</span></code>.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.handle_server_ready">
+<span class="sig-name descname"><span class="pre">handle_server_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPClient.handle_server_ready"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.handle_server_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default event handler that returns -1, unless <code class="xref py py-obj docutils literal notranslate"><span class="pre">on_get_data</span></code> event handler is
+assigned and it returns False - then it returns 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – </p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – </p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.send_open">
+<span class="sig-name descname"><span class="pre">send_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_pipe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe_socket</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-types.html#saturnin.base.types.PipeSocket" title="saturnin.base.types.PipeSocket"><span class="pre">PipeSocket</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.protocol.fbdp.FBDPClient.send_open"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.send_open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends <code class="xref py py-obj docutils literal notranslate"><span class="pre">OPEN</span></code> message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> (<a class="reference internal" href="#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with transmission.</p></li>
+<li><p><strong>data_pipe</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Data pipe identification.</p></li>
+<li><p><strong>pipe_socket</strong> (<a class="reference internal" href="ref-base-types.html#saturnin.base.types.PipeSocket" title="saturnin.base.types.PipeSocket"><em>PipeSocket</em></a>) – Connected pipe socket.</p></li>
+<li><p><strong>data_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Required data format.</p></li>
+<li><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><em>Dict</em></a><em>]</em>) – Data pipe parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="ref-base-types.html#saturnin.base.types.StopError" title="saturnin.base.types.StopError"><strong>StopError</strong></a> – When sending message fails.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.confirm_processing">
+<span class="sig-name descname"><span class="pre">confirm_processing</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPClient.confirm_processing"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.confirm_processing" title="Permalink to this definition">¶</a></dt>
+<dd><p>CONSUMER option. Whether ACK_REPLY message for DATA/ACK_REQ should be sent
+before (False) or after (True) call to <a class="reference internal" href="#saturnin.protocol.fbdp._FBDP.on_accept_data" title="saturnin.protocol.fbdp._FBDP.on_accept_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_accept_data()</span></code></a> callback.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.handlers">
+<span class="sig-name descname"><span class="pre">handlers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">TMessageHandler</span><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPClient.handlers"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.handlers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message handlers</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.on_init_session">
+<span class="sig-name descname"><span class="pre">on_init_session</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPClient.on_init_session"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.on_init_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event executed from <a class="reference internal" href="#saturnin.protocol.fbdp.FBDPClient.send_open" title="saturnin.protocol.fbdp.FBDPClient.send_open"><code class="xref py py-obj docutils literal notranslate"><span class="pre">send_open()</span></code></a> to set additional information to newly
+created session instance.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.on_server_ready">
+<span class="sig-name descname"><span class="pre">on_server_ready</span></span><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPClient.on_server_ready"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.on_server_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event executed to negotiate the transmission batch size with server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – Channel associated with data pipe.</p></li>
+<li><p><strong>session</strong> – Session associated with server.</p></li>
+<li><p><strong>batch_size</strong> – Max. batch size accepted by server.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>0 = Not ready to transmit yet</p></li>
+<li><p>n = Ready to transmit 1..&lt;n&gt; messages.</p></li>
+<li><p>-1 = Ready to transmit 1..&lt;protocol batch size&gt; messages.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Number of messages that could be transmitted (batch size)</p>
+</dd>
+</dl>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The returned value will be used ONLY when it’s smaller than <code class="xref py py-obj docutils literal notranslate"><span class="pre">batch_size</span></code>.</p>
+</div>
+<p>The event handler may cancel the transmission by raising the <code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code> exception
+with <a class="reference external" href="https://docs.python.org/3/library/code.html#module-code" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">code</span></code></a> attribute containing the <a class="reference internal" href="#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ErrorCode</span></code></a> to be returned in CLOSE message.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.protocol.fbdp.FBDPClient.send_after_confirmed">
+<span class="sig-name descname"><span class="pre">send_after_confirmed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.protocol.fbdp.FBDPClient.send_after_confirmed"></a><a class="headerlink" href="#saturnin.protocol.fbdp.FBDPClient.send_after_confirmed" title="Permalink to this definition">¶</a></dt>
+<dd><p>PRODUCER option. If sent DATA message has ACK_REQ flag set, send next DATA
+message after ACK_REPLY is received (True), or continue sending DATA without
+delay (False).</p>
+</dd></dl>
+</dd></dl>
+</section>
+</section>
+</div>
+</div>
+</div>
+<footer class="footer">
+<div class="container">
+<p class="pull-right">
+<a href="#">Back to top</a>
+</p>
+<p>
+        © Copyright 2019-2022, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+</p>
+</div>
+</footer>
+</body>
+</html>

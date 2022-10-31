@@ -1,0 +1,19 @@
+
+========================
+saturnin._scripts.daemon
+========================
+
+.. automodule:: saturnin._scripts.daemon
+   :no-members:
+   :synopsis: Script to start/stop the daemon process
+
+Globals
+=======
+
+.. autodata:: PROG_NAME
+
+Functions
+=========
+
+.. autofunction:: main
+

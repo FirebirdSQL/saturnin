@@ -1,0 +1,18 @@
+#########
+Changelog
+#########
+
+Version 0.7.0
+=============
+
+* Milestone 2
+
+Version 0.1.0
+=============
+
+Initial release.
+
+.. _saturnin: https://pypi.org/project/firebird-lib/
+.. _releases: https://github.com/FirebirdSQL/python3-driver/releases
+.. _Dash: https://kapeli.com/dash
+.. _Zeal: https://zealdocs.org/
