@@ -50,7 +50,7 @@ from .component import Component, ComponentConfig
 from .site import site
 
 #: Saturnin version
-VERSION: str = '0.7.2'
+VERSION: str = '0.7.3'
 
 def pkg_name(file: str) -> str:
     """Returns name of the package to which the `file` belongs.
