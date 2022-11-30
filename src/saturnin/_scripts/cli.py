@@ -47,16 +47,30 @@
 
 from __future__ import annotations
 from typing import Callable, List
-from typer import Typer
-from saturnin.base.site import site
+from typer import Typer, Context
+from saturnin.base import site
 from saturnin.component.registry import iter_entry_points
+from .repl import repl, IOManager
 
-app = Typer(rich_markup_mode="rich", help="Saturnin manager.")
+app = Typer(rich_markup_mode="rich", help="Saturnin management utility.")
 app.add_typer(Typer(), name='list', help="Print list of items (services, nodes, packages etc.)")
 app.add_typer(Typer(), name='show', help="Print details about particular item (service, node, package etc.)")
 app.add_typer(Typer(), name='edit', help="Edit item (configuration, recipe etc.)")
 app.add_typer(Typer(), name='create', help="Create item (configuration, recipe etc.)")
 app.add_typer(Typer(), name='run', help="Run Saturnin components (services, applications, utilities etc.)")
+app.add_typer(Typer(), name='update', help="Update items (components, OIDs etc.)")
+
+app._in_repl = False
+
+@app.callback(invoke_without_command=True)
+def _check(ctx: Context):
+    """This method start REPL when CLI is started without subsommand.
+    """
+    if not app._in_repl and ctx.invoked_subcommand is None:
+        app._in_repl = True
+        site.print(f"{ctx.command.help}\n\nType '?' or '?<command>' for help.\nType 'quit' to leave the console.")
+        with IOManager(ctx) as ioman:
+            repl(ctx, ioman)
 
 
 def find_group(app: Typer, name: str) -> Typer:

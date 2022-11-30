@@ -48,11 +48,3 @@ Globals
 =======
 
 `.site`.
-
-Functions
-=========
-
-`~firebird.base.types.load`.
-
-.. autofunction:: pkg_name
-

@@ -39,8 +39,10 @@ dependencies = [
     "protobuf>=4.21.0, <5",
     "firebird-butler-protobuf>=0.5.0",
     "firebird-base>=1.5.0, <2",
-    "typer>=0.6.1",
-    "rich>=12.6"
+    "firebird-uuid>=0.1.0",
+    "typer>=0.7",
+    "rich>=12.6",
+    "prompt-toolkit>=3.0.33"
     ]
 dynamic = ["version"]
 
@@ -67,9 +69,14 @@ saturnin-service = "saturnin._scripts.svcrun:main"
 saturnin-bundle = "saturnin._scripts.bundlerun:main"
 
 [project.entry-points."saturnin.commands"]
-"install" = "saturnin._scripts.commands.pkg:install"
-"uninstall" = "saturnin._scripts.commands.pkg:uninstall"
-"list.packages" = "saturnin._scripts.commands.pkg:_list"
-"run.pip" = "saturnin._scripts.commands.pkg:pip"
-"show.site" = "saturnin._scripts.commands.site:show"
-"site.init" = "saturnin._scripts.commands.site:init"
+"list.services" = "saturnin._scripts.commands.pkg:list_services"
+"list.distributions" = "saturnin._scripts.commands.pkg:list_distributions"
+"list.directories" = "saturnin._scripts.commands.site:list_directories"
+"list.configs" = "saturnin._scripts.commands.site:list_configs"
+"list.data" = "saturnin._scripts.commands.site:list_data"
+"initialize" = "saturnin._scripts.commands.site:initialize"
+"list.oids" = "saturnin._scripts.commands.oids:list_oids"
+"update.oids" = "saturnin._scripts.commands.oids:update_oids"
+"update.registry" = "saturnin._scripts.commands.pkg:update_registry"
+"pip" = "saturnin._scripts.commands.pkg:pip"
+"run.recipe" = "saturnin._scripts.commands.run:recipe"

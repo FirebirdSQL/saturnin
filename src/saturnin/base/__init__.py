@@ -47,12 +47,7 @@ from .transport import (ChannelManager, Channel, Message, SimpleMessage, Protoco
      XPubChannel, XSubChannel, PairChannel,
      TZMQMessage, TMessageHandler, TSocketOptions, INTERNAL_ROUTE)
 from .component import Component, ComponentConfig
-from .site import site
+from ._site import site
 
 #: Saturnin version
-VERSION: str = '0.7.3'
-
-def pkg_name(file: str) -> str:
-    """Returns name of the package to which the `file` belongs.
-    """
-    return __import__(file).__package__
+VERSION: str = '0.8.0'

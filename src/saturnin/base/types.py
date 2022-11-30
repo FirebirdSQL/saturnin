@@ -296,8 +296,6 @@ class ServiceDescriptor(Distinct):
     description: str
     #: List of Saturnin facilities that this service uses
     facilities: List[str]
-    #: Python package that contains this service
-    package: str
     #: Locator string for service factory
     factory: str
     #: Service configuration factory

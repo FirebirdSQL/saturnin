@@ -41,11 +41,14 @@ import sys
 import os
 from pathlib import Path
 from configparser import ConfigParser, ExtendedInterpolation
+import toml
 from rich.console import Console
 from rich.theme import Theme
 from firebird.base.config import DirectoryScheme, get_directory_scheme, Config, StrOption
 from firebird.base.logging import LoggingIdMixin
+from firebird.uuid import registry
 from .types import Error
+from ..component.registry import service_registry
 
 #: filename for Saturnin configuration file
 SATURNIN_CFG = 'saturnin.conf'
@@ -70,14 +73,51 @@ CONFIG_HDR = """;
 
 """
 
-_theme = Theme({"option": "bold cyan",
-                "switch": "bold green",
-                "metavar": "bold yellow",
-                "help_require": "dim",
-                "args_and_cmds": "yellow"
+_theme = Theme({'option': 'bold cyan',
+                'switch': 'bold green',
+                'metavar': 'bold yellow',
+                'help_require': 'dim',
+                'args_and_cmds': 'yellow',
+                'path': 'bold cyan',
+                'title': 'bold yellow',
+                'important': 'bold yellow',
+                'warning': 'bold red',
                 })
 
 FORCE_TERMINAL = True if os.getenv("FORCE_COLOR") or os.getenv("PY_COLORS") else None
+
+# Component registry TOML structure
+#
+# [[components]]
+# uid = component GUID
+# component-type = 'service' or 'app'
+# package = normalized component name
+# name = component name
+# version = component version
+# description = component description
+# descriptor = locator string for component descriptor (incl. top level package)
+# top-level = top level package with component
+
+#: Component UID item
+CMP_UID = 'uid'
+#: Component PACKAGE item
+CMP_PACKAGE = 'package'
+#: Component NAME item
+CMP_NAME = 'name'
+#: Component VERSION item
+CMP_VERSION = 'version'
+#: Component VENDOR item
+CMP_VENDOR = 'vendor'
+#: Component DESCRIPTION item
+CMP_DESCRIPTION = 'description'
+#: Component CLASSIFICATION item
+CMP_CLASSIFICATION = 'classification'
+#: Component DESCIPTOR item
+CMP_DESCRIPTOR = 'descriptor'
+#: Component API item
+CMP_API = 'api'
+#: Component FACILITIES item
+CMP_FACILITIES = 'facilities'
 
 class SaturninScheme(DirectoryScheme):
     """Saturnin platform directory scheme.
@@ -85,6 +125,11 @@ class SaturninScheme(DirectoryScheme):
     def __init__(self):
         super().__init__('saturnin')
         self.dir_map.update(get_directory_scheme('saturnin').dir_map)
+    @property
+    def recipes(self) -> Path:
+        """Path to directory with recipe files.
+        """
+        return self.data / 'recipes'
     @property
     def pids(self) -> Path:
         """Path to directory with PID files for running daemons.
@@ -95,6 +140,11 @@ class SaturninScheme(DirectoryScheme):
         """Saturnin package registry file.
         """
         return self.data / 'components.toml'
+    @property
+    def site_oids_toml(self) -> Path:
+        """Saturnin OID registry file.
+        """
+        return self.data / 'oids.toml'
     @property
     def site_conf(self) -> Path:
         """Saturnin site configuration file.
@@ -136,9 +186,13 @@ class SiteManager(LoggingIdMixin):
             path: Path = self.venv / '.saturnin-home'
             if path.is_file():
                 os.environ['SATURNIN_HOME'] = path.read_text()
-            path = self.venv / '.saturnin-bin'
+            #path = self.venv / '.saturnin-bin'
+            #if path.is_file():
+                #self.pip_path = Path(path.read_text()) / 'pip'
+            #
+            path = self.venv / 'bin' / 'pip'
             if path.is_file():
-                self.pip_path = Path(path.read_text()) / 'pip'
+                self.pip_path = path
         #: Saturnin directory scheme
         self.scheme: SaturninScheme = SaturninScheme()
         #: Saturnin configuration
@@ -147,13 +201,31 @@ class SiteManager(LoggingIdMixin):
         self.used_config_files: List[Path] = []
         self.quiet: bool = False
         self.verbose: bool = False
+        #: Component registry
+        self.components: List[Dict[str, Any]]= []
+        #: Main console
         self.console = Console(theme=_theme, emoji=False, tab_size=4,
                                force_terminal=FORCE_TERMINAL)
         if not sys.stdout.isatty():
             self.console.width = 5000
+        #: Error console
         self.err_console = Console(stderr=True, style='bold red', emoji=False, tab_size=4,
                                    force_terminal=FORCE_TERMINAL)
-
+    def load_components(self) -> None:
+        "Read information about installed components."
+        if self.scheme.site_components_toml.is_file():
+            service_registry.load_from_toml(self.scheme.site_components_toml.read_text())
+    def save_components(self) -> None:
+        "Save information about installed components."
+        self.scheme.site_components_toml.write_text(service_registry.as_toml())
+    def load_oids(self) -> None:
+        "Read information about registered OIDs"
+        if self.scheme.site_oids_toml.is_file():
+            registry.clear()
+            registry.update_from_toml(self.scheme.site_oids_toml.read_text())
+    def save_oids(self) -> None:
+        "Save information about registered OIDs"
+        self.scheme.site_oids_toml.write_text(registry.as_toml())
     def print_info(self, message = '') -> None:
         "Prints information message to console."
         if message:
@@ -188,6 +260,8 @@ class SiteManager(LoggingIdMixin):
         """Saturnin site initialization.
         """
         self.load_configuration()
+        self.load_components()
+        self.load_oids()
     def is_virtual(self) -> bool:
         """Returns True if site runs in a virtual environtment.
         """

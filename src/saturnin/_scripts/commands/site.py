@@ -31,7 +31,7 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""saturnin - Saturnin site manager commands
+"""Saturnin site manager commands
 
 
 """
@@ -39,7 +39,10 @@
 from __future__ import annotations
 from pathlib import Path
 import typer
-from saturnin.base.site import site, CONFIG_HDR
+from rich.panel import Panel
+from rich import box
+from rich.prompt import Confirm
+from saturnin.base._site import site, CONFIG_HDR
 
 app = typer.Typer(rich_markup_mode="rich", help="Saturnin site management.")
 
@@ -50,10 +53,10 @@ def ensure_dir(description: str, path: Path):
       description: Directory description.
       path: Directory path.
     """
-    site.print(f"{description}: {path} ... ", end='')
+    site.print(f"{description}: [path]{path}[/path] ... ", end='')
     if not path.exists():
         path.mkdir(parents=True)
-    site.print("OK\n")
+    site.print("OK")
 
 def ensure_config(path: Path, content: str, new_config: bool):
     """Create configuration file if it does not exists.
@@ -66,50 +69,74 @@ def ensure_config(path: Path, content: str, new_config: bool):
     """
     if path.is_file():
         if not new_config:
-            site.print(f"  {path} already exists.")
+            site.print(f"  [path]{path}[/path] already exists.")
             return
         path.replace(path.with_suffix(path.suffix + '.bak'))
-    site.print(f"  Writing : {path} ... ", end='')
+    site.print(f"  Writing : [path]{path}[/path] ... ", end='')
     path.write_text(content)
     site.print("OK")
 
-def init(new_config: bool=typer.Option(False, help="Creates configuration files even if they exists")) -> None:
-    """Initialize Saturnin site (installation).
-    """
-    site.print('Creating Saturnin directories...')
-    if site.scheme.has_home_env():
-        site.print(f"  SATURNIN_HOME is set to     : {site.scheme.home}")
-    else:
-        site.print("  SATURNIN_HOME env. variable not defined")
-    ensure_dir("  Saturnin configuration      ", site.scheme.config)
-    ensure_dir("  Saturnin data               ", site.scheme.data)
-    ensure_dir("  Run-time data               ", site.scheme.run_data)
-    ensure_dir("  Log files                   ", site.scheme.logs)
-    ensure_dir("  Temporary files             ", site.scheme.tmp)
-    ensure_dir("  Cache                       ", site.scheme.cache)
-    ensure_dir("  User-specific configuration ", site.scheme.user_config)
-    ensure_dir("  User-specific data          ", site.scheme.user_data)
-    ensure_dir("  PID files                   ", site.scheme.pids)
-    #
-    site.print("Creating configuration files...")
-    cfg = CONFIG_HDR + site.config.get_config()
-    ensure_config(site.scheme.site_conf, cfg, new_config)
-    ensure_config(site.scheme.user_conf, cfg, new_config)
+@app.command()
+def initialize(new_config: bool=typer.Option(False, help="Create configuration files even if they already exist"),
+               yes: bool = typer.Option(False, '--yes', help="Don’t ask for confirmation of site initialization")) -> None:
+    """Initialize Saturnin environment (installation).
 
-def show() -> None:
-    """Show information about Saturnin site (installation).
+    It creates required directories and configuration files.
     """
-    site.print('Saturnin directories...')
+    if not yes:
+        yes = Confirm.ask("Are you sure you want to initialize the Saturnin environment?")
+    saturnin_cfg = CONFIG_HDR + site.config.get_config()
+    steps = [(site.print, ['Ensuring existence of Saturnin directories...']),
+             (ensure_dir, ["  Saturnin configuration      ", site.scheme.config]),
+             (ensure_dir, ["  Saturnin data               ", site.scheme.data]) ,
+             (ensure_dir, ["  Run-time data               ", site.scheme.run_data]) ,
+             (ensure_dir, ["  Log files                   ", site.scheme.logs]) ,
+             (ensure_dir, ["  Temporary files             ", site.scheme.tmp]) ,
+             (ensure_dir, ["  Cache                       ", site.scheme.cache]) ,
+             (ensure_dir, ["  User-specific configuration ", site.scheme.user_config]) ,
+             (ensure_dir, ["  User-specific data          ", site.scheme.user_data]) ,
+             (ensure_dir, ["  PID files                   ", site.scheme.pids]) ,
+             (site.print, ['Creating configuration files...']),
+             (ensure_config, [site.scheme.site_conf, saturnin_cfg, new_config]) ,
+             (ensure_config, [site.scheme.user_conf, saturnin_cfg, new_config]) ,
+             ]
+    for func, params in steps:
+        func(*params)
+
+@app.command('directories')
+def list_directories() -> None:
+    """List Saturnin directories.
+    """
     if site.scheme.has_home_env():
-        site.print(f"  SATURNIN_HOME is set to     : {site.scheme.home}")
+        text = f"  [bold]SATURNIN_HOME[/bold] is set to     : [path]{site.scheme.home}[/path]"
     else:
-        site.print("  SATURNIN_HOME env. variable not defined")
-    site.print(f"  Saturnin configuration      : {site.scheme.config}")
-    site.print(f"  Saturnin data               : {site.scheme.data}")
-    site.print(f"  Run-time data               : {site.scheme.run_data}")
-    site.print(f"  Log files                   : {site.scheme.logs}")
-    site.print(f"  Temporary files             : {site.scheme.tmp}")
-    site.print(f"  Cache                       : {site.scheme.cache}")
-    site.print(f"  User-specific configuration : {site.scheme.user_config}")
-    site.print(f"  User-specific data          : {site.scheme.user_data}")
-    site.print(f"  PID files                   : {site.scheme.pids}")
+        text = "  [important]SATURNIN_HOME env. variable not defined"
+    text += f"""
+  Saturnin configuration      : [path]{site.scheme.config}[/path]
+  Saturnin data               : [path]{site.scheme.data}[/path]
+  Run-time data               : [path]{site.scheme.run_data}[/path]
+  Log files                   : [path]{site.scheme.logs}[/path]
+  Temporary files             : [path]{site.scheme.tmp}[/path]
+  Cache                       : [path]{site.scheme.cache}[/path]
+  User-specific configuration : [path]{site.scheme.user_config}[/path]
+  User-specific data          : [path]{site.scheme.user_data}[/path]
+  PID files                   : [path]{site.scheme.pids}[/path]"""
+    site.print(Panel(text, title='[title]Saturnin directories', title_align='left', box=box.ROUNDED))
+
+@app.command('configs')
+def list_configs() -> None:
+    """List Saturnin configuration files.
+    """
+    text = f"""  Main configuration     : [path]{site.scheme.site_conf}[/path]
+  User configuration     : [path]{site.scheme.user_conf}[/path]
+  Firebird configuration : [path]{site.scheme.firebird_conf}[/path]
+  Logging configuration  : [path]{site.scheme.logging_conf}[/path]"""
+    site.print(Panel(text, title='[title]Configuration files', title_align='left', box=box.ROUNDED))
+
+@app.command('data')
+def list_data() -> None:
+    """List Saturnin data files.
+    """
+    text = f"""  Installed components   : [path]{site.scheme.site_components_toml}[/path]
+  Registered OIDs        : [path]{site.scheme.site_oids_toml}[/path]"""
+    site.print(Panel(text, title='[title]Saturnin data files', title_align='left', box=box.ROUNDED))
