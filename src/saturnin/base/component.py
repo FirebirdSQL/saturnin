@@ -39,14 +39,32 @@ executed on Saturnin platform, typically under supervision of Controller(s).
 
 from __future__ import annotations
 from typing import Optional
+from uuid import UUID
 from abc import ABC, abstractmethod
 from firebird.base.types import ZMQAddress
-from firebird.base.config import Config, StrOption
+from firebird.base.config import Config, StrOption, UUIDOption
+
+def create_config(_cls: Type[ComponentConfig], agent: UUID, name: str) -> ComponentConfig: # pragma: no cover
+    """Returns newly created `ComponentConfig` instance.
+
+    Intended to be used with `functools.partial` in `.ServiceDescriptor.config` definitions.
+
+    Arguments:
+      _cls:  Class for component configuration.
+      agent: Component identification.
+      name:  Name to be used by configuration class.
+    """
+    result: ComponentConfig = _cls(name)
+    result.agent.value = agent
+    return result
 
 class ComponentConfig(Config):
     """Base Component configuration."""
     def __init__(self, name: str):
         super().__init__(name)
+        #: Agent identification
+        self.agent: UUIDOption = \
+            UUIDOption('agent', "Agent identification. Do NOT change!")
         #: Logging ID for this component instance
         self.logging_id: StrOption = \
             StrOption('logging_id', "Logging ID for this component instance")

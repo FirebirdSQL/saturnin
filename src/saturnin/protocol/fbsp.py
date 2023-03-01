@@ -31,7 +31,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
-# pylint: disable=R0902, R0903, R0904, R0913, C0302, C0301
+# pylint: disable=R0902, R0903, R0904, R0913, R0915, C0302, C0301, W0707,W0613
 
 """Saturnin reference implementation of Firebird Butler Service Protocol.
 
@@ -448,7 +448,7 @@ class _FBSP(Protocol):
     """4/FBSP - Firebird Butler Service Protocol
     """
     #: string with protocol OID (dot notation).
-    OID: str =  '1.3.6.1.4.1.53446.1.5.1'
+    OID: str =  '1.3.6.1.4.1.53446.1.3.1'
     # iso.org.dod.internet.private.enterprise.firebird.butler.protocol.fbsp
     #: UUID instance that identifies the protocol.
     UID: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_OID, OID)
@@ -501,7 +501,7 @@ class _FBSP(Protocol):
         if len(fbsp_header) != 16:
             raise InvalidMessageError("Message header must be 16 bytes long")
         try:
-            fourcc, control_byte, flags, type_data, token = unpack(HEADER_FMT_FULL, fbsp_header)
+            fourcc, control_byte, flags, type_data, _ = unpack(HEADER_FMT_FULL, fbsp_header)
         except Exception as exp:
             raise InvalidMessageError("Can't parse the control frame") from exp
         if fourcc != FOURCC:
@@ -629,7 +629,7 @@ class FBSPService(_FBSP):
                               MsgType.CLOSE: self.handle_close_msg,
                               MsgType.REPLY: self.handle_ack_reply,
                               MsgType.STATE: self.handle_ack_reply,
-                              MsgType.WELCOME: self.handle_invalid_msg,
+                              MsgType.WELCOME: self.handle_unexpected_msg,
                               })
         self.api_handlers: Dict[Any, Callable] = {}
         self._apis: List[ButlerInterface] = []
@@ -668,7 +668,7 @@ class FBSPService(_FBSP):
             self.on_accept_client(channel, msg)
         except StopError as exc:
             err_code = getattr(exc, 'code', ErrorCode.ERROR)
-        except Exception as exc:
+        except Exception as exc: # pylint: disable=W0703
             err_code = getattr(exc, 'code', ErrorCode.INTERNAL_ERROR)
             err = exc
         if err_code is not None:
@@ -732,8 +732,8 @@ class FBSPService(_FBSP):
             else ErrorCode.INTERNAL_ERROR
         self.send_error(channel, session, msg, error_code, exc)
         super().handle_exception(channel, session, msg, exc)
-    def handle_invalid_msg(self, channel: Channel, session: FBSPSession, msg: HelloMessage) -> None:
-        """Process invalid message received from client.
+    def handle_unexpected_msg(self, channel: Channel, session: FBSPSession, msg: HelloMessage) -> None:
+        """Process unexpected valid message received from client.
 
         Sends ERROR message to the client with error code `2 - Protocol violation`.
 
@@ -865,7 +865,7 @@ class FBSPService(_FBSP):
         """
         try:
             self.on_session_closed(channel, session, msg)
-        except:
+        except Exception: # pylint: disable=W0703
             # We don't want to handle this via `handle_exception` and we're closing
             # the session anyway
             pass
@@ -1038,8 +1038,8 @@ class FBSPClient(_FBSP):
                               MsgType.DATA: self.handle_fbsp_msg,
                               MsgType.CLOSE: self.handle_close_msg,
                               MsgType.REQUEST: self.handle_fbsp_msg,
-                              MsgType.HELLO: self.handle_invalid_msg,
-                              MsgType.CANCEL: self.handle_invalid_msg,
+                              MsgType.HELLO: self.handle_unexpected_msg,
+                              MsgType.CANCEL: self.handle_unexpected_msg,
                               })
         self._apis: Dict[ButlerInterface, int] = {}
     def handle_welcome_msg(self, channel: Channel, session: FBSPSession, msg: WelcomeMessage) -> WelcomeMessage:
@@ -1072,7 +1072,7 @@ class FBSPClient(_FBSP):
         if (msg.msg_type is MsgType.STATE) and msg.has_ack_req():
             channel.send(self.create_ack_reply(msg), session)
         return msg
-    def handle_invalid_msg(self, channel: Channel, session: FBSPSession, msg: FBSPMessage) -> FBSPMessage:
+    def handle_unexpected_msg(self, channel: Channel, session: FBSPSession, msg: FBSPMessage) -> FBSPMessage:
         """FBSP message handler that returns INVALID sentinel.
 
         Arguments:
@@ -1188,8 +1188,8 @@ class FBSPEventClient(FBSPClient):
                               MsgType.DATA: self.handle_data_msg,
                               MsgType.CLOSE: self.handle_close_msg,
                               MsgType.REQUEST: self.handle_ack_reply,
-                              MsgType.HELLO: self.handle_invalid_msg,
-                              MsgType.CANCEL: self.handle_invalid_msg,
+                              MsgType.HELLO: self.handle_unexpected_msg,
+                              MsgType.CANCEL: self.handle_unexpected_msg,
                               })
     def register_api_handler(self, api_code: ButlerInterface, handler: Callable) -> None:
         """Register handler for REQUEST message for particular service API code.
@@ -1197,8 +1197,8 @@ class FBSPEventClient(FBSPClient):
         _hndcheck.client_handler = handler
         _hndcheck.client_handler = None
         self.api_handlers[bb2h(self._apis[api_code.__class__.get_uid()], api_code.value)] = handler
-    def handle_invalid_msg(self, channel: Channel, session: FBSPSession, msg: HelloMessage) -> None:
-        """Process invalid message received from service.
+    def handle_unexpected_msg(self, channel: Channel, session: FBSPSession, msg: HelloMessage) -> None:
+        """Process unexpected valid message received from service.
 
         Raises `StopError` with error code `2 - Protocol violation`.
 
@@ -1330,7 +1330,7 @@ class FBSPEventClient(FBSPClient):
         """
         try:
             self.on_session_closed(channel, session, msg)
-        except:
+        except Exception: # pylint: disable=W0703
             # We don't want to handle this via `handle_exception` and we're closing
             # the session anyway
             pass
@@ -1440,14 +1440,14 @@ class FBSPEventClient(FBSPClient):
             All exceptions are handled by `handle_exception`.
         """
 
-class __APIHandlerChecker:
+class _APIHandlerChecker:
     @eventsocket
     def service_handler(self, channel: Channel, session: FBSPSession, msg: FBSPMessage,
                         protocol: FBSPService) -> None:
-        ""
+        "Service handler"
     @eventsocket
     def client_handler(self, channel: Channel, session: FBSPSession, msg: FBSPMessage,
                        protocol: FBSPEventClient) -> None:
-        ""
+        "Client handler"
 
-_hndcheck: __APIHandlerChecker = __APIHandlerChecker()
+_hndcheck: _APIHandlerChecker = _APIHandlerChecker()

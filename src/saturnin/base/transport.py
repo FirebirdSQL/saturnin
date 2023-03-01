@@ -393,10 +393,10 @@ class Protocol(TracedMixin):
         try:
             assert handler, "Message without handler"
             return handler(channel, session, msg)
-        except Exception as exc:
+        except Exception as exc: # pylint: disable=W0703
             try:
                 self.handle_exception(channel, session, msg, exc)
-            except Exception:
+            except Exception: # pylint: disable=W0703
                 warnings.warn('Exception raised in exception handler', RuntimeWarning)
         return INVALID
     def handle_invalid_msg(self, channel: Channel, session: Session, exc: InvalidMessageError) -> None:
@@ -780,7 +780,7 @@ class Channel(TracedMixin):
         except InvalidMessageError as exc:
             try:
                 self._protocol.handle_invalid_msg(self, session, exc)
-            except Exception:
+            except Exception: # pylint: disable=W0703
                 warnings.warn('Exception raised in invalid message handler', RuntimeWarning)
             return INVALID
         #

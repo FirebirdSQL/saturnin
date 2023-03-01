@@ -26,25 +26,28 @@
 # SOFTWARE.
 #
 # Based on code from https://github.com/click-contrib/click-repl
+ # pylint: disable=W0212
 
 """REPL for Typer application
 """
 
 from __future__ import annotations
 from typing import Dict, Any, List, TextIO, Callable, Optional
-from prompt_toolkit.completion import Completer, Completion
-from prompt_toolkit.history import InMemoryHistory
-from prompt_toolkit.shortcuts import prompt
-from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from pathlib import Path
-import click
+from operator import attrgetter
 import shlex
 import sys
 from io import StringIO
-from click.exceptions import Exit as ClickExit
+from prompt_toolkit.completion import Completer, Completion
+from prompt_toolkit.history import FileHistory
+from prompt_toolkit.shortcuts import prompt
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+import click
+from click.exceptions import Exit as ClickExit, Abort as ClickAbort
 from rich.console import Console
-from saturnin.base._site import site, FORCE_TERMINAL
+from saturnin.base import RestartError, RESTART, directory_scheme
+from saturnin.lib.console import console as cm, FORCE_TERMINAL
 
 EchoCallback = Callable[[str], None]
 
@@ -59,28 +62,26 @@ def _(event):
     else:
         buff.start_completion(select_first=False)
 
-class ClickCompleter(Completer):
+class CustomClickCompleter(Completer):
+    """Custom completer.
+    """
     def __init__(self, cli):
         self.cli = cli
 
     def get_completions(self, document, complete_event=None):
         # Code analogous to click._bashcomplete.do_complete
-
         try:
             txt = document.text_before_cursor
-            i = txt.rfind('|')
-            if i >= 0:
-                txt = txt[i+1:].lstrip()
-            if txt.startswith('?'):
+            in_help: bool = txt.startswith('?')
+            if in_help:
                 txt = txt[1:]
             args = shlex.split(txt)
         except ValueError:
             # Invalid command, perhaps caused by missing closing quotation.
             return
 
-        cursor_within_command = (
-            document.text_before_cursor.rstrip() == document.text_before_cursor
-        )
+        cursor_within_command = (document.text_before_cursor.rstrip()
+                                 == document.text_before_cursor)
 
         if args and cursor_within_command:
             # We've entered some text and no space, give completions for the
@@ -91,52 +92,94 @@ class ClickCompleter(Completer):
             # command, so give all relevant completions for this context.
             incomplete = ""
         ctx = click.shell_completion._resolve_context(self.cli, {}, "", args)
-        last_arg = args[-1] if args else ''
-
         if ctx is None:
             return
 
+        last_arg = args[-1] if args else ''
+
         choices = []
-        for param in ctx.command.params:
-            if isinstance(param, click.Option):
-                if isinstance(param.type, click.Choice) and (last_arg in param.opts or last_arg in param.secondary_opts):
-                    for choice in param.type.choices:
-                        choices.append(Completion(str(choice), -len(incomplete)))
-        if not choices:
+        stop: bool = in_help
+        if isinstance(ctx.command, click.MultiCommand):
+            # Completion is list of commands at given context level
+            if not args:
+                choices.append(Completion('quit', -len(incomplete),
+                                          display_meta="Quit Saturnin console"))
+            for name in ctx.command.list_commands(ctx):
+                command = ctx.command.get_command(ctx, name)
+                if not command.hidden:
+                    choices.append(Completion(str(name),-len(incomplete),
+                                              display_meta=command.get_short_help_str()))
+            stop = stop or choices
+        if not stop:
+            # First check whether we're entering value for option.
             for param in ctx.command.params:
-                if isinstance(param, click.Option):
-                    for options in (param.opts, param.secondary_opts):
-                        for o in options:
-                            choices.append(Completion(str(o), -len(incomplete), display_meta=param.help))
-                elif isinstance(param, click.Argument):
+                if (isinstance(param, click.Option)
+                    and not param.is_flag
+                    and (last_arg in param.opts or last_arg in param.secondary_opts)):
+                    # Completion are possible values for last option, if applicable
                     if isinstance(param.type, click.Choice):
                         for choice in param.type.choices:
                             choices.append(Completion(str(choice), -len(incomplete)))
+                    else:
+                        choices.extend(Completion(str(item.value), -len(incomplete),
+                                                  display_meta=item.help)
+                                       for item in param.shell_complete(args, incomplete))
+                    stop = True # Do not continue even if we don't have choices!
+            stop = stop or choices
+        if not stop:
+            # We're looking for possible argument values or option
+            # First we build list of already processed options and arguments...
+            not_processed_params = []
+            for param in ctx.command.params:
+                if isinstance(param, click.Option):
+                    if ctx.params[param.name] == param.default:
+                        not_processed_params.append(param)
+            if not incomplete.startswith('-'):
+                for param in ctx.command.params:
+                    if isinstance(param, click.Argument):
+                        if (param.nargs == 1) and (ctx.params[param.name] == param.default):
+                            not_processed_params.append(param)
+                            break
+                        elif param.nargs == -1:
+                            not_processed_params.append(param)
+                            break
+            #
+            for param in not_processed_params:
+                if isinstance(param, click.Option):
+                    # Completion is list of options
+                    for options in (param.opts, param.secondary_opts):
+                        for opt in options:
+                            choices.append(Completion(str(opt), -len(incomplete),
+                                                      display_meta=param.help))
+                elif isinstance(param, click.Argument):
+                    # Completion are values for argument, if applicable
+                    if isinstance(param.type, click.Choice):
+                        for choice in param.type.choices:
+                            choices.append(Completion(str(choice), -len(incomplete),
+                                                      display_meta=param.help))
+                    else:
+                        choices.extend(Completion(str(item.value), -len(incomplete),
+                                                  display_meta=item.help if item.help
+                                                  else param.help)
+                                       for item in param.shell_complete(args, incomplete))
+        stop = stop or choices
 
-            if isinstance(ctx.command, click.MultiCommand):
-                for name in ctx.command.list_commands(ctx):
-                    command = ctx.command.get_command(ctx, name)
-                    if not command.hidden:
-                        choices.append(Completion(str(name),-len(incomplete),
-                                                  display_meta=getattr(command, "short_help")))
-
+        choices.sort(key=attrgetter('text'))
         for item in choices:
             if item.text.startswith(incomplete):
                 yield item
 
-class IOManager:
+class IOManager: # pylint: disable=R0902
+    """REPL I/O manager.
+
+    Handles command prompt, stdin/stdout redirection etc.
     """
-    """
-    def __init__(self, old_ctx, *, echo: Optional[EchoCallback]=None, database: str='',
-                 add_report: bool=False, report_cmds: List[str]=None, console: Console=None):
-        self.console: Console = site.console if console is None else console
+    def __init__(self, old_ctx, *, echo: Optional[EchoCallback]=None, console: Console=None):
+        self.console: Console = cm.std_console if console is None else console
         self.html_output: bool = False
         self.output_file: TextIO = None
         self.output_filename: Path = None
         self.echo: Optional[EchoCallback] = echo
-        self.database: str = database
-        self.add_report: bool = add_report
-        self.report_cmds: List[str] = [] if report_cmds is None else [x.lower() for x in report_cmds]
         self.run_commands: List[str] = []
         self.isatty: bool = sys.stdin.isatty()
         self.saved_stdin = sys.stdin
@@ -146,14 +189,13 @@ class IOManager:
         self.prompt_kwargs: Dict[str, Any] = {}
         group_ctx = old_ctx.parent or old_ctx
         defaults = {
-            'history': InMemoryHistory(),
-            'completer': ClickCompleter(group_ctx.command),
+            'history': FileHistory(str(directory_scheme.history_file)),
+            'completer': CustomClickCompleter(group_ctx.command),
             'message': '> ',
             'key_bindings': kb,
             'auto_suggest': AutoSuggestFromHistory()
         }
-        for key in defaults:
-            default_value = defaults[key]
+        for key, default_value in defaults.items():
             if key not in self.prompt_kwargs:
                 self.prompt_kwargs[key] = default_value
         #
@@ -168,11 +210,9 @@ class IOManager:
         cmd = cmd.rstrip().split(' ')[0]
         if cmd.lower() in ['help', 'quit']:
             return True
-        elif cmd.startswith('?'):
+        if cmd.startswith('?'):
             return True
         return False
-    def _is_report_cmd(self, cmd: str) -> bool:
-        return cmd.rstrip().lower().split(' ')[0] in self.report_cmds
     def _get_next_cmd(self) -> str:
         command = self.cmd_queue.pop(0)
         self.pipe_in = self.pipe_out
@@ -185,6 +225,7 @@ class IOManager:
             sys.stdout = self.saved_stdout
         return command
     def _get_command(self) -> str:
+        "Returns next command fetched from queue, stdin or console prompt."
         sys.stdin = self.saved_stdin
         sys.stdout = self.saved_stdout
         self.pipe_out = StringIO()
@@ -196,28 +237,29 @@ class IOManager:
             command = prompt(**self.prompt_kwargs)
         return command
     def get_command(self) -> str:
+        "Returns next command."
         if self.cmd_queue:
             return self._get_next_cmd()
         command = self._get_command()
         if self.echo and command.strip():
             self.echo(command)
-        if self.add_report and self._is_report_cmd(command) and not '--help' in command:
-            command += f'| report {self.database}'
-        if '|' in command:
-            self.cmd_queue = [cmd.strip() for cmd in command.split('|')]
-            return self._get_next_cmd()
         sys.stdin = self.saved_stdin
         sys.stdout = self.saved_stdout
         return command
     def reset_queue(self) -> None:
+        "Clear command queue"
         i = len(self.cmd_queue)
         self.cmd_queue.clear()
         sys.stdin = self.saved_stdin
         sys.stdout = self.saved_stdout
-        cnt = 1 if self.add_report else 0
-        if i > cnt:
+        if i > 0:
             self.console.print(f'Remaining {i} command(s) not executed')
     def redirect_console(self, filename: Path) -> None:
+        """Redirects console output to file.
+
+        Arguments:
+          filename: File for console output.
+        """
         if self.output_file is not None:
             self.output_file.close()
         self.output_file = filename.open(mode='w', encoding='utf8')
@@ -226,14 +268,15 @@ class IOManager:
         self.console = Console(file=self.output_file, width=5000, force_terminal=FORCE_TERMINAL,
                                emoji=False, record=self.html_output)
     def restore_console(self) -> None:
+        "Closes the output file and restores output to console."
         if self.output_file is not None:
             self.output_file.close()
             self.output_file = None
             if self.html_output:
                 self.console.save_html(self.output_filename)
-        self.console = site.console
+        self.console = cm.std_console
 
-def repl(old_ctx, ioman: IOManager):
+def repl(old_ctx, ioman: IOManager) -> bool: # pylint: disable=R0912
     """
     Start an interactive shell. All subcommands are available in it.
 
@@ -241,15 +284,16 @@ def repl(old_ctx, ioman: IOManager):
     old_ctx:     Current Click context.
     ioman:  IOManager instance.
 
+    Returns:
+       True if REPL should be restarted, otherwise returns False.
+
     If stdin is not a TTY, no prompt will be printed, but commands are read
     from stdin.
     """
-
     group_ctx = old_ctx.parent or old_ctx
     group_ctx.info_name = ''
     group = group_ctx.command
     group.params.clear()
-
     while True:
         try:
             command = ioman.get_command()
@@ -257,15 +301,10 @@ def repl(old_ctx, ioman: IOManager):
             continue
         except EOFError:
             break
-
         if not command:
             if ioman.isatty:
                 continue
-            else:
-                break
-        # Special commands
-        if command.startswith('pip '):
-            command = command[:4] + ' -- ' + command[4:]
+            break
         # Internal commands
         if ioman._is_internal_cmd(command):
             cmd = command.rstrip()
@@ -275,20 +314,36 @@ def repl(old_ctx, ioman: IOManager):
                 command = cmd[1:] + ' --help'
             elif cmd.lower() == 'quit':
                 break
+        # Special commands
+        for cmd in ('pip ', 'install package ', 'uninstall package '):
+            if command.startswith(cmd):
+                command = command[:len(cmd)] + ' -- ' + command[len(cmd):]
+                break
         try:
             args = shlex.split(command)
             ctx = click.shell_completion._resolve_context(group, {}, "", args)
-        except ValueError as e:
-            ioman.console.print("{}: {}".format(type(e).__name__, e))
+        except ValueError as exc:
+            ioman.console.print(f"{type(exc).__name__}: {exc}")
             continue
         try:
             with group.make_context(None, args, parent=group_ctx) as ctx:
-                group.invoke(ctx)
-                ctx.exit()
-        except click.ClickException as e:
-            e.show()
+                result = group.invoke(ctx)
+                #ctx.exit()
+                if result is RESTART:
+                    raise RestartError
+        except click.ClickException as exc:
+            exc.show()
             ioman.reset_queue()
-        except ClickExit:
+        except ClickExit as exc:
             pass
+            #sys.exit(exc.exit_code)
+        except ClickAbort as exc:
+            cm.print_error("Aborted!")
+            sys.exit(1)
         except SystemExit:
             pass
+        except RestartError:
+            return True
+        except Exception as exc: # pylint: disable=W0703
+            cm.print_error(f"{exc.__class__.__name__}:{exc!s}")
+    return False

@@ -66,21 +66,38 @@ RoutingID = NewType('RoutingID', ByteString)
 """Routing ID"""
 
 # Constants
-PLATFORM_OID: Final[str] = '1.3.6.1.4.1.53446.1.2.0'
-"Platform OID (`firebird.butler.platform.saturnin`)"
+#: Platform OID (`firebird.butler.platform.saturnin`)
+PLATFORM_OID: Final[str] = '1.3.6.1.4.1.53446.1.1.0'
+#: Platform UID (:func:`~uuid.uuid5` - NAMESPACE_OID)
 PLATFORM_UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, PLATFORM_OID)
-"Platform UID (:func:`~uuid.uuid5` - NAMESPACE_OID)"
-PLATFORM_VERSION: Final[str] = '0.7.0'
-"Platform version (semver)"
-
-VENDOR_OID: Final[str] = '1.3.6.1.4.1.53446.1.3.0'
-"Platform vendor OID (`firebird.butler.vendor.firebird`)"
+#: Platform version (semver)
+PLATFORM_VERSION: Final[str] = '0.8.0'
+#: Platform vendor OID (`firebird.butler.vendor.firebird`)
+VENDOR_OID: Final[str] = '1.3.6.1.4.1.53446.1.2.0'
+#: Platform vendor UID (:func:`~uuid.uuid5` - NAMESPACE_OID)
 VENDOR_UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, VENDOR_OID)
-"Platform vendor UID (:func:`~uuid.uuid5` - NAMESPACE_OID)"
 
+#: MIME type for protobuf messages
 MIME_TYPE_PROTO: Final[str] = MIME('application/x.fb.proto')
+#: MIME type for plain text
 MIME_TYPE_TEXT: Final[str] = MIME('text/plain')
+#: MIME type for binary data
 MIME_TYPE_BINARY: Final[str] = MIME('application/octet-stream')
+
+#: Configuration section name for local service addresses
+SECTION_LOCAL_ADDRESS = 'local_address'
+#: Configuration section name for node service addresses
+SECTION_NODE_ADDRESS = 'node_address'
+#: Configuration section name for network service addresses
+SECTION_NET_ADDRESS = 'net_address'
+#: Configuration section name for service UIDs
+SECTION_SERVICE_UID = 'service_uid'
+#: Configuration section name for service peer UIDs
+SECTION_PEER_UID = 'peer_uid'
+#: Default configuration section name for service bundle
+SECTION_BUNDLE = 'bundle'
+#: Default configuration section name for single service
+SECTION_SERVICE = 'service'
 
 #: protobuf ID for peer information message
 PROTO_PEER: Final[str] = 'firebird.butler.PeerIdentification'
@@ -88,20 +105,29 @@ PROTO_PEER: Final[str] = 'firebird.butler.PeerIdentification'
 #  Exceptions
 class InvalidMessageError(Error):
     "A formal error was detected in a message"
+
 class ChannelError(Error):
     "Transmission channel error"
+
 class ServiceError(Error):
     "Error raised by service"
+
 class ClientError(Error):
     "Error raised by Client"
+
 class StopError(Error):
-    "Error that should stop furter processing."
+    "Exception that should stop furter processing."
+
+class RestartError(Error):
+    "Exception signaling that restart is needed for furter processing."
 
 #Sentinels
 #: Sentinel for return values that indicates failed message processing
 INVALID: Sentinel = Sentinel('INVALID')
 #: Sentinel for return values that indicates timeout expiration
 TIMEOUT: Sentinel = Sentinel('TIMEOUT')
+#: Sentinel for return values that indicates restart request
+RESTART: Sentinel = Sentinel('RESTART')
 
 # Enums
 class Origin(IntEnum):
@@ -303,6 +329,31 @@ class ServiceDescriptor(Distinct):
     def get_key(self) -> Any:
         """Returns `agent.uid` (instance key). Used for instance hash computation."""
         return self.agent.uid
+
+@dataclass(eq=True, order=False, frozen=True)
+class ApplicationDescriptor(Distinct):
+    """Application descriptor.
+    """
+    #: Application ID
+    uid: uuid.UUID
+    #: Application name
+    name: str
+    #: Application version string
+    version: str
+    #: Vendor ID
+    vendor_uid: uuid.UUID
+    #: Application classification string
+    classification: str
+    #: Text describing the application
+    description: str
+    #: Locator string for application typer command
+    factory: str
+    #: Locator string for application configuration factory
+    config: str
+    def get_key(self) -> Any:
+        """Returns `uid` (instance key). Used for instance hash computation."""
+        return self.uid
+
 
 @dataclass(order=True)
 class PrioritizedItem:

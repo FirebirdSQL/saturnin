@@ -8,7 +8,7 @@ description = "Firebird Butler platform for Python"
 readme = "README.rst"
 requires-python = ">=3.8"
 license = { file = "LICENSE" }
-authors = [{ name = "Pavel Císař", email = "pcisar@users.sourceforge.net"}]
+authors = [{ name = "Pavel Cisar", email = "pcisar@users.sourceforge.net"}]
 keywords = ["Saturnin", "Firebird", "Butler", "Platform", "ZeroMQ"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -34,15 +34,15 @@ classifiers = [
     ]
 dependencies = [
     "toml>=0.10.2",
-    "packaging>=21.0",
-    "pyzmq>=24.0.0",
-    "protobuf>=4.21.0, <5",
+    "pyzmq>=25.0.0",
+    "protobuf>=4.21.0, <4.22",
     "firebird-butler-protobuf>=0.5.0",
     "firebird-base>=1.5.0, <2",
     "firebird-uuid>=0.1.0",
-    "typer>=0.7",
-    "rich>=12.6",
-    "prompt-toolkit>=3.0.33"
+    "typer>=0.7.0",
+    "rich>=13.3.1",
+    "prompt-toolkit>=3.0.36",
+    "psutil>=5.9.4"
     ]
 dynamic = ["version"]
 
@@ -68,15 +68,35 @@ saturnin-daemon = "saturnin._scripts.daemon:main"
 saturnin-service = "saturnin._scripts.svcrun:main"
 saturnin-bundle = "saturnin._scripts.bundlerun:main"
 
+[project.entry-points."saturnin.no_repl_commands"]
+"initialize" = "saturnin._scripts.commands.site:initialize"
+"create.home" = "saturnin._scripts.commands.site:create_home"
+
 [project.entry-points."saturnin.commands"]
 "list.services" = "saturnin._scripts.commands.pkg:list_services"
-"list.distributions" = "saturnin._scripts.commands.pkg:list_distributions"
+"list.applications" = "saturnin._scripts.commands.pkg:list_applications"
+"list.packages" = "saturnin._scripts.commands.pkg:list_packages"
 "list.directories" = "saturnin._scripts.commands.site:list_directories"
 "list.configs" = "saturnin._scripts.commands.site:list_configs"
-"list.data" = "saturnin._scripts.commands.site:list_data"
-"initialize" = "saturnin._scripts.commands.site:initialize"
+"list.datafiles" = "saturnin._scripts.commands.site:list_datafiles"
+"list.recipes" = "saturnin._scripts.commands.recipes:list_recipes"
+"list.daemons" = "saturnin._scripts.commands.daemons:list_daemons"
 "list.oids" = "saturnin._scripts.commands.oids:list_oids"
 "update.oids" = "saturnin._scripts.commands.oids:update_oids"
 "update.registry" = "saturnin._scripts.commands.pkg:update_registry"
 "pip" = "saturnin._scripts.commands.pkg:pip"
-"run.recipe" = "saturnin._scripts.commands.run:recipe"
+"show.config" = "saturnin._scripts.commands.site:show_config"
+"show.recipe" = "saturnin._scripts.commands.recipes:show_recipe"
+"show.oid" = "saturnin._scripts.commands.oids:show_oid"
+"show.service" = "saturnin._scripts.commands.pkg:show_service"
+"show.application" = "saturnin._scripts.commands.pkg:show_application"
+"show.daemon" = "saturnin._scripts.commands.daemons:show_daemon"
+"edit.config" = "saturnin._scripts.commands.site:edit_config"
+"edit.recipe" = "saturnin._scripts.commands.recipes:edit_recipe"
+"create.config" = "saturnin._scripts.commands.site:create_config"
+"stop.daemon" = "saturnin._scripts.commands.daemons:stop_daemon"
+"install.package" = "saturnin._scripts.commands.pkg:install_package"
+"install.recipe" = "saturnin._scripts.commands.recipes:install_recipe"
+"uninstall.package" = "saturnin._scripts.commands.pkg:uninstall_package"
+"uninstall.recipe" = "saturnin._scripts.commands.recipes:uninstall_recipe"
+"create.recipe" = "saturnin._scripts.commands.recipes:create_recipe"

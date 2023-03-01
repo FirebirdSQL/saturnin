@@ -50,10 +50,11 @@ from configparser import ConfigParser
 import zmq
 from firebird.base.config import UUIDOption
 from firebird.base.trace import TracedMixin
-from saturnin.base import (ZMQAddress, load, Error, ServiceError, PeerDescriptor, Outcome,
+from saturnin.base import (ZMQAddress, Error, ServiceError, PeerDescriptor, Outcome,
      ServiceDescriptor, Direction, ChannelManager, PairChannel, INVALID, Component, Config,
-     site)
+     directory_scheme)
 from saturnin.protocol.iccp import ICCPComponent, ICCPController, ICCPMessage, MsgType
+from .registry import ServiceInfo
 
 #: Service control channel name
 SVC_CTRL = sys.intern('iccp')
@@ -68,7 +69,7 @@ class ServiceExecConfig(Config):
 class ServiceController(TracedMixin):
     """Base service controller.
     """
-    def __init__(self, service: ServiceDescriptor, *, name: str=None,
+    def __init__(self, service: ServiceInfo, *, name: str=None,
                  peer_uid: uuid.UUID=None, manager: ChannelManager=None):
         """
         Arguments:
@@ -80,12 +81,12 @@ class ServiceController(TracedMixin):
         self.outcome: Outcome = Outcome.UNKNOWN
         self.details: List[str] = []
         self.log_context = None
-        self.name: str = service.agent.name if name is None else name
+        self.name: str = service.name if name is None else name
         self.peer_uid: uuid.UUID = peer_uid
-        self.service: ServiceDescriptor = service
+        self.service: ServiceInfo = service
         self.peer: PeerDescriptor = None
         self.endpoints: Dict[str, List[ZMQAddress]] = {}
-        self.config: Config = service.config()
+        self.config: Config = service.descriptor_obj.config()
         self.ctrl_addr: ZMQAddress = ZMQAddress(f'inproc://{uuid.uuid1().hex}')
         self.mngr: ChannelManager = manager
         self._ext_mngr: bool = manager is not None
@@ -105,11 +106,15 @@ class ServiceController(TracedMixin):
         # prepare facilities used by service
         for facility in self.service.facilities:
             if facility.lower() == 'firebird':
-                site.configure_firebird_driver()
+                try:
+                    from firebird.driver import driver_config # pylint: disable=C0415
+                except ImportError as exc:
+                    raise Error("Firebird driver not installed.") from exc
+                driver_config.read(directory_scheme.firebird_conf, encoding='utf8')
     @property
     def logging_id(self) -> str:
         "Returns qualified class name and agent name."
-        return f'{self.__class__.__qualname__}[{self.service.agent.name}]'
+        return f'{self.__class__.__qualname__}[{self.service.name}]'
 
 class DirectController(ServiceController):
     """Service controller that starts the service in current thread.
@@ -154,8 +159,8 @@ class DirectController(ServiceController):
                                                     sock_opts={'rcvhwm': 5, 'sndhwm': 5,})
         chn.protocol.log_context = self.log_context
         #
-        factory = load(self.service.factory)
-        svc: Component = factory(zmq.Context.instance(), self.service)
+        svc: Component = self.service.factory_obj(zmq.Context.instance(),
+                                                  self.service.descriptor_obj)
         svc.initialize(self.config)
         # 1st phase successful
         self.mngr.warm_up()
@@ -197,7 +202,7 @@ class DirectController(ServiceController):
             if not self._ext_mngr:
                 self.mngr.shutdown(forced=True)
 
-def service_thread(service: ServiceDescriptor, config: Config, ctrl_addr: ZMQAddress,
+def service_thread(service: ServiceInfo, config: Config, ctrl_addr: ZMQAddress,
                    peer_uid: uuid.UUID=None):
     """Thread target code to run the service.
 
@@ -215,8 +220,9 @@ def service_thread(service: ServiceDescriptor, config: Config, ctrl_addr: ZMQAdd
         pipe.LINGER = 5000 # 5sec
         pipe.SNDTIMEO = 5000 # 5sec
         try:
-            factory = load(service.factory)
-            svc: Component = factory(zmq.Context.instance(), service, peer_uid=peer_uid)
+            svc: Component = service.factory_obj(zmq.Context.instance(),
+                                                 service.descriptor_obj,
+                                                 peer_uid=peer_uid)
             svc.initialize(config)
         except Exception as exc:
             pipe.connect(ctrl_addr)

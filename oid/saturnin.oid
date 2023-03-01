@@ -45,3 +45,10 @@ children:
     email: pcisar@users.sourceforge.net
     site: https://firebirdsql.org/en/saturnin/
     node-spec: https://raw.githubusercontent.com/FirebirdSQL/saturnin-core/master/oid/micros.oid
+  - number: 4
+    name: application
+    description: Root node for registered Saturnin applications
+    contact: Pavel Císař
+    email: pcisar@users.sourceforge.net
+    site: https://firebirdsql.org/en/saturnin/
+    node-spec: https://raw.githubusercontent.com/FirebirdSQL/saturnin-core/master/oid/applications.oid

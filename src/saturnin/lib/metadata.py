@@ -1,9 +1,9 @@
 #coding:utf-8
 #
 # PROGRAM/MODULE: saturnin
-# FILE:           saturnin/_scripts/commands/run.py
-# DESCRIPTION:    Saturnin run commands
-# CREATED:        29.11.2022
+# FILE:           saturnin/lib/metadata.py
+# DESCRIPTION:    Module for work with importlib metadata
+# CREATED:        23.2.2023
 #
 # The contents of this file are subject to the MIT License
 #
@@ -25,32 +25,38 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-# Copyright (c) 2021 Firebird Project (www.firebirdsql.org)
+# Copyright (c) 2020 Firebird Project (www.firebirdsql.org)
 # All Rights Reserved.
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin run commands
+"""Saturnin daemon process management.
 
 
 """
 
 from __future__ import annotations
-from typing import List
-import subprocess
-import typer
-from saturnin.base import site
-from saturnin.component.registry import get_service_distributions, service_registry
+from typing import Generator, Optional
+from importlib.metadata import (entry_points, EntryPoint, Distribution, distributions,
+                                distribution)
 
-app = typer.Typer(rich_markup_mode="rich", help="Saturnin executor.")
+def iter_entry_points(group: str, name: str=None) -> Generator[EntryPoint, None, None]:
+    "Replacement for pkg_resources.iter_entry_points"
+    for item in entry_points().get(group, []):
+        if name is None or item.name == name:
+            yield item
 
-@app.command('recipe')
-def recipe(name: str = typer.Argument(..., help="Recipe name")) -> None:
-    """Runs Saturnin recipe.
+def get_entry_point_distribution(entry_point: EntryPoint) -> Optional[Distribution]:
+    """Returns distribution that registered specified entry point, or None if distribution
+    is not found. This function searches through all distributions, not only those that
+    registered Saturnin components.
+
+    Arguments:
+      entry_point: Entry point for which the distribution is to be found.
     """
-    cmd = ['saturnin-bundle', str(site.scheme.recipes / f'{name}.cfg')]
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    site.print(result.stdout)
-    if result.returncode != 0:
-        site.err_console.print(result.stderr)
+    for dis in (d for d in distributions() if d.entry_points):
+        for entry in dis.entry_points:
+            if entry.name == entry_point.name:
+                return dis
+    return None

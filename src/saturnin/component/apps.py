@@ -1,9 +1,9 @@
 #coding:utf-8
 #
 # PROGRAM/MODULE: saturnin
-# FILE:           saturnin/component/registry.py
-# DESCRIPTION:    Component registration and discovery
-# CREATED:        4.12.2020
+# FILE:           saturnin/component/apps.py
+# DESCRIPTION:    Application registration and discovery
+# CREATED:        23.2.2023
 #
 # The contents of this file are subject to the MIT License
 #
@@ -31,66 +31,51 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin component registration and discovery.
+"""Saturnin application registration and discovery.
 
-Services are registered as entry points for their `ServiceDescriptor` - i.e. the instance
-of `ServiceDescriptor` for installed service is returned by `EntryPoint.load()`.
+Applications are registered as entry points for their `.ApplicationDescriptor` - i.e.
+the instance of `.ApplicationDescriptor` for installed service is returned by `.EntryPoint.load()`.
 
-The default group for service registration is `saturnin.service`, but it's possible to
-install additional service discovery iterators.
-
-Custom service iterator must be a generator that accepts optional `uid` in string format,
-and yileds `EntryPoint` instances. If `uid` is specified, it must return only `EntryPoint`
-only for service with given `uid`, otherwise it should return all services.
-
-Note:
-
-  Custom iterator can return objects that are not `.EntryPoint` instances, but they MUST
-  implement `load()` method that will return `.ServiceDescriptor` instance.
-
-Custom iterators must be registered as entry points in `saturnin.service.iterator` group.
+The entry point group for service registration is `saturnin.application`.
 """
 
 from __future__ import annotations
-from typing import List, Dict, Hashable, Optional, Any
-from functools import partial
-from itertools import chain
+from typing import Dict, Hashable, Optional, Any
 from uuid import UUID
 from toml import dumps, loads
 from firebird.base.types import Distinct, load
 from firebird.base.collections import Registry
-from saturnin.base import directory_scheme, ServiceDescriptor, Error
-from saturnin.lib.metadata import iter_entry_points, get_entry_point_distribution
+from saturnin.base import directory_scheme, ApplicationDescriptor, Error
+from saturnin.lib.metadata import get_entry_point_distribution, iter_entry_points
 
-class ServiceInfo(Distinct): # pylint: disable=R0902
-    """Information about service stored in  `.ServiceRegistry`.
+class ApplicationInfo(Distinct): # pylint: disable=R0902
+    """Information about application stored in  `.ApplicationRegistry`.
     """
     def __init__(self, *, uid: UUID, name: str, version: str, vendor: UUID,
-                 classification: str, description: str, facilities: List[str],
-                 api: List[UUID], factory: str, descriptor: str, distribution: str):
+                 classification: str, description: str, factory: str, config: str,
+                 descriptor: str, distribution: str):
         self.__desc_obj: Any = None
         self.__fact_obj: Any = None
-        #: Service UID
+        self.__conf_obj: Any = None
+        #: Application UID
         self.uid: UUID = uid
-        #: Service name
+        #: Application name
         self.name: str = name
-        #: Service version
+        #: Application version
         self.version: str = version
-        #: Service vendor UID
+        #: Application vendor UID
         self.vendor: UUID = vendor
-        #: Service classification
+        #: Application classification
         self.classification: str = classification
-        #: Service description
+        #: Application description
         self.description: str = description
-        #: List of service facilities
-        self.facilities: List[str] = facilities
-        #: List of interfaces provided by service
-        self.api: List[UUID] = api
-        #: Service factory specification (entry point)
+        #: Application command factory specification (entry point)
         self.factory: str = factory
-        #: Service descriptor specification (entry point)
+        #: Application configuration factory (entry point)
+        self.config: str = config
+        #: Application descriptor specification (entry point)
         self.descriptor: str = descriptor
-        #: Installed distribution package that contains this service
+        #: Installed distribution package that contains this application
         self.distribution: str = distribution
     def get_key(self) -> Hashable:
         "Returns service UID"
@@ -105,27 +90,31 @@ class ServiceInfo(Distinct): # pylint: disable=R0902
                 'vendor': str(self.vendor),
                 'classification': self.classification,
                 'description': self.description,
-                'facilities': self.facilities,
-                'api': [str(x) for x in self.api],
                 'factory': self.factory,
+                'config': self.config,
                 'descriptor': self.descriptor,
                 'distribution': self.distribution,
                 }
+    def get_recipe_name(self) -> str:
+        """Returns default recipe name for this application. If application name contains
+        dots, only part after last dot is returned. Otherwise it returns the application name.
+        """
+        return self.name.split('.')[-1]
     @property
-    def descriptor_obj(self) -> ServiceDescriptor:
-        """Service descriptor object. If it's not assigned directly, then it's loaded
+    def descriptor_obj(self) -> ApplicationDescriptor:
+        """Application descriptor object. If it's not assigned directly, then it's loaded
         using `.desciptor` on first access.
         """
         if self.__desc_obj is None:
             self.__desc_obj = load(self.descriptor)
         return self.__desc_obj
     @descriptor_obj.setter
-    def set_descriptor_obj(self, value: Optional[ServiceDescriptor]) -> None:
+    def set_descriptor_obj(self, value: Optional[ApplicationDescriptor]) -> None:
         "Property setter"
         self.__desc_obj = value
     @property
     def factory_obj(self) -> Any:
-        """Service factory object. If it's not assigned directly, then it's loaded
+        """Application command factory object. If it's not assigned directly, then it's loaded
         using `.factory` on first access.
         """
         if self.__fact_obj is None:
@@ -135,11 +124,23 @@ class ServiceInfo(Distinct): # pylint: disable=R0902
     def set_factory_obj(self, value: Optional[Any]) -> None:
         "Property setter"
         self.__fact_obj = value
+    @property
+    def config_obj(self) -> Any:
+        """Application configuration factory object. If it's not assigned directly, then it's loaded
+        using `.config` on first access.
+        """
+        if self.__conf_obj is None:
+            self.__conf_obj = load(self.config)
+        return self.__conf_obj
+    @factory_obj.setter
+    def set_config_obj(self, value: Optional[Any]) -> None:
+        "Property setter"
+        self.__conf_obj = value
 
-class ServiceRegistry(Registry):
+class ApplicationRegistry(Registry):
     """Saturnin service registry.
 
-    Holds `.ServiceInfo` instances.
+    Holds `.ApplicationInfo` instances.
 
     It is used in two modes:
     1. In full saturnin deployment, the information about services is loaded from TOML file.
@@ -148,61 +149,59 @@ class ServiceRegistry(Registry):
        and factories is stored directly by executor script, so there is no dynamic discovery
        and the whole could be compiled with Nutika.
     """
-    def add(self, descriptor: ServiceDescriptor, factory: Any, distribution: str) -> None:
+    def add(self, descriptor: ApplicationDescriptor, factory: Any, distribution: str) -> None:
         """Direct service registration. Used by systems that does not allow dynamic discovery,
         for example programs compiled by Nuitka.
         """
         kwargs = {}
         kwargs['distribution'] = distribution
         kwargs['descriptor'] = ''
-        kwargs['uid'] = descriptor.agent.uid
-        kwargs['name'] = descriptor.agent.name
-        kwargs['version'] = descriptor.agent.version
-        kwargs['vendor'] = descriptor.agent.vendor_uid
-        kwargs['classification'] = descriptor.agent.classification
+        kwargs['uid'] = descriptor.uid
+        kwargs['name'] = descriptor.name
+        kwargs['version'] = descriptor.version
+        kwargs['vendor'] = descriptor.vendor_uid
+        kwargs['classification'] = descriptor.classification
         kwargs['description'] = descriptor.description
-        kwargs['facilities'] = descriptor.facilities
-        kwargs['api'] = [x.get_uid() for x in descriptor.api]
         kwargs['factory'] = descriptor.factory
-        svc_info = ServiceInfo(**kwargs) # pylint: disable=E1125
-        svc_info.descriptor_obj = descriptor
-        svc_info.factory_obj = factory
-        self.store(svc_info)
+        kwargs['config'] = descriptor.config
+        app_info = ApplicationInfo(**kwargs) # pylint: disable=E1125
+        app_info.descriptor_obj = descriptor
+        app_info.factory_obj = factory
+        self.store(app_info)
     def load_from_installed(self, *, ignore_errors: bool=False) -> None:
         """Populate registry from descriptors of installed services.
 
         Arguments:
           ignore_errors: When True, errors are ignored, otherwise `.Error` is raised.
         """
-        for entry in chain.from_iterable([i() for i in _iterators]):
+        for entry in iter_entry_points('saturnin.application'):
             kwargs = {}
             dist = get_entry_point_distribution(entry)
             kwargs['distribution'] = dist if dist is None else dist.metadata['name']
             kwargs['descriptor'] = entry.value
             try:
-                desc: ServiceDescriptor = entry.load()
+                desc: ApplicationDescriptor = entry.load()
             except Exception as exc:
                 if ignore_errors:
                     continue
-                raise Error(f"Failed to load service '{entry.name}' "
+                raise Error(f"Failed to load application '{entry.name}' "
                             f"from '{kwargs['distribution']}'") from exc
-            kwargs['uid'] = desc.agent.uid
-            kwargs['name'] = desc.agent.name
-            kwargs['version'] = desc.agent.version
-            kwargs['vendor'] = desc.agent.vendor_uid
-            kwargs['classification'] = desc.agent.classification
+            kwargs['uid'] = desc.uid
+            kwargs['name'] = desc.name
+            kwargs['version'] = desc.version
+            kwargs['vendor'] = desc.vendor_uid
+            kwargs['classification'] = desc.classification
             kwargs['description'] = desc.description
-            kwargs['facilities'] = desc.facilities
-            kwargs['api'] = [x.get_uid() for x in desc.api]
             kwargs['factory'] = desc.factory
+            kwargs['config'] = desc.config
             try:
-                svc_info = ServiceInfo(**kwargs) # pylint: disable=E1125
+                app_info = ApplicationInfo(**kwargs) # pylint: disable=E1125
             except Exception as exc:
                 if ignore_errors:
                     continue
-                raise Error(f"Malformed service descriptor for '{entry.name}' "
+                raise Error(f"Malformed application descriptor for '{entry.name}' "
                             f"from '{kwargs['distribution']}'") from exc
-            self.store(svc_info)
+            self.store(app_info)
     def load_from_toml(self, toml: str, *, ignore_errors: bool=False) -> None:
         """Populate registry from TOML document.
 
@@ -216,37 +215,29 @@ class ServiceRegistry(Registry):
             try:
                 kwargs['uid'] = UUID(kwargs['uid'])
                 kwargs['vendor'] = UUID(kwargs['vendor'])
-                kwargs['api'] = [UUID(x) for x in kwargs['api']]
-                svc_info = ServiceInfo(**kwargs)
+                app_info = ApplicationInfo(**kwargs)
             except Exception as exc:
                 if ignore_errors:
                     continue
-                raise Error(f"Malformed service data for '{uid}' "
+                raise Error(f"Malformed application data for '{uid}' "
                             f"from '{kwargs['distribution']}'") from exc
-            self.store(svc_info)
+            self.store(app_info)
     def as_toml(self) -> str:
         """Returns registry content as TOML document.
         """
         nodes = {str(node.uid): node.as_toml_dict() for node in self._reg.values()}
         return dumps(nodes)
     def load(self) -> None:
-        "Read information about installed services from previously saved TOML file."
-        if directory_scheme.site_services_toml.is_file():
-            service_registry.load_from_toml(directory_scheme.site_services_toml.read_text())
+        "Read information about installed applications from previously saved TOML file."
+        if directory_scheme.site_apps_toml.is_file():
+            application_registry.load_from_toml(directory_scheme.site_apps_toml.read_text())
     def save(self) -> None:
-        "Save information about installed services."
-        directory_scheme.site_services_toml.write_text(service_registry.as_toml())
+        "Save information about installed applications."
+        directory_scheme.site_apps_toml.write_text(application_registry.as_toml())
     def get_by_name(self, name: str, default: Any=None) -> Distinct:
         """Get service by its name.
         """
         return self.find(lambda x: x.name == name, default=default)
 
-# Default service registration
-_iterators = [partial(iter_entry_points, 'saturnin.service')]
-
-# Load custom service iterators
-for i in iter_entry_points('saturnin.service.iterator'):
-    _iterators.append(i.load())
-
-service_registry: ServiceRegistry = ServiceRegistry()
-service_registry.load()
+application_registry: ApplicationRegistry = ApplicationRegistry()
+application_registry.load()

@@ -57,7 +57,7 @@ from saturnin.protocol.iccp import ICCPComponent
 #: Service control channel name
 SVC_CTRL = sys.intern('iccp')
 
-class MicroService(Component, TracedMixin, metaclass=Conjunctive):
+class MicroService(Component, TracedMixin, metaclass=Conjunctive): # pylint: disable=E1139
     """Saturnin Component for Firebird Burler Microservices.
     """
     def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
@@ -160,7 +160,7 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive):
         """
         config.validate() # Fail early!
         if config.logging_id.value is not None:
-            self._logging_id_ = config.logging_id.value
+            self._logging_id_ = config.logging_id.value # pylint: disable=W0201
     def bind_endpoints(self) -> None:
         """Bind endpoints used by component.
         """
@@ -253,7 +253,7 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive):
                           ctrl_chn.session)
             self.mngr.shutdown()
             self.state = State.FINISHED
-        except Exception as exc:
+        except Exception as exc: # pylint: disable=W0703
             self.state = State.ABORTED
             with suppress(Exception):
                 # try send report to controller

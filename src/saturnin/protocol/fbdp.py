@@ -238,7 +238,7 @@ class _FBDP(Protocol):
     """9/FBDP - Firebird Butler Data Pipe Protocol
     """
     #: string with protocol OID (dot notation).
-    OID: str =  '1.3.6.1.4.1.53446.1.5.2'
+    OID: str =  '1.3.6.1.4.1.53446.1.3.2'
     # iso.org.dod.internet.private.enterprise.firebird.butler.protocol.fbdp
     #: UUID instance that identifies the protocol.
     UID: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_OID, OID)

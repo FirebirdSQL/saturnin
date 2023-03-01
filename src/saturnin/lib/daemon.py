@@ -31,18 +31,19 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin daemon process management
+"""Saturnin daemon process management.
 
 
 """
 
 from __future__ import annotations
-from typing import Union
+from typing import Union, List, Optional
 import platform
 import subprocess
 from pathlib import Path
+from saturnin.base import Error
 
-def start_daemon(args: list) -> int:
+def start_daemon(args: List[str]) -> Optional[int]:
     """Starts daemon process.
 
     Arguments:
@@ -85,6 +86,7 @@ def stop_daemon(pid: Union[int, str, Path]) -> None:
         a console, otherwise the CTRL_C_EVENT couldn't be delivered. This condition is met
         if daemon was started by :func:`start_daemon` or `saturnin-daemon` script.
     """
-    if isinstance(pid, int):
-        pid = str(pid)
-    subprocess.run(['saturnin-daemon', 'stop', pid], check=True, timeout=5)
+    try:
+        subprocess.run(['saturnin-daemon', 'stop', str(pid)], check=True, timeout=5)
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+        raise Error("Daemon stop operation failed") from exc

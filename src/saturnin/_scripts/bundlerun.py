@@ -31,7 +31,7 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin script to run bundle of services
+"""Saturnin script to run bundle of services.
 
 
 """
@@ -41,15 +41,13 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, Action
 from configparser import ConfigParser, ExtendedInterpolation
 import logging
 from logging.config import fileConfig
-from datetime import datetime
-import zmq
-from firebird.base.logging import get_logger, Logger
+from firebird.base.logging import get_logger, Logger, ANY, bind_logger
 from firebird.base.trace import trace_manager
-from saturnin.base import ChannelManager, site
-from saturnin.component.bundle import BundleThreadController
+from saturnin.base import directory_scheme, SECTION_BUNDLE
 from saturnin.component.controller import Outcome
+from saturnin.component.bundle import BundleExecutor
 
-LOG_FORMAT = '%(levelname)s [%(processName)s/%(threadName)s] [%(agent)s:%(context)s] %(message)s'
+LOG_FORMAT = '%(levelname)s [%(processName)s/%(threadName)s] %(message)s'
 
 class UpperAction(Action):
     """Converts argument to uppercase.
@@ -57,19 +55,23 @@ class UpperAction(Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values.upper())
 
-#: Program name
-PROG_NAME = 'saturnin-bundle'
-
-def main():
-    """Runs bundle of services.
+def main(description: str=None, bundle_config: str=None):
+    """Saturnin script to run bundle of services.
     """
-    parser: ArgumentParser = ArgumentParser(PROG_NAME, description=main.__doc__,
+    description=main.__doc__ if description is None else description
+    parser: ArgumentParser = ArgumentParser(description=description,
                                             formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument('service', metavar='SERVICE-CONFIG',
-                        help="Path to service configuration file")
+    parser.add_argument('service', metavar='BUNDLE-CONFIG',
+                        help="Path to service bundle configuration file.",
+                        nargs=1 if bundle_config is None else '?',
+                        default=bundle_config)
     parser.add_argument('-c','--config', metavar='CONFIG', action='append',
-                        help="Path to additional configuration file. Could be specified multiple times.")
-    parser.add_argument('-s', '--section', help="Configuration section name", default='bundle')
+                        help="Path to additional configuration file. "
+                             "Could be specified multiple times.")
+    parser.add_argument('-s', '--section', help="Configuration section name",
+                        default=SECTION_BUNDLE)
+    parser.add_argument('-q', '--quiet', action='store_true', help="Suppress console output.",
+                        default=False)
     parser.add_argument('-o','--outcome', action='store_true',
                         help="Always print service execution outcome", default=False)
     parser.add_argument('-l', '--log-level', action=UpperAction,
@@ -80,59 +82,43 @@ def main():
     args = parser.parse_args()
 
     main_config: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
-
-    mngr: ChannelManager = None
-    log: Logger = None
-    try:
-        cfg_files = []
-        cfg_files.append(str(site.scheme.logging_conf))
-        if args.config:
-            cfg_files.extend(args.config)
+    cfg_files = [str(directory_scheme.logging_conf)]
+    if args.config:
+        cfg_files.extend(args.config)
+    if isinstance(args.service, list):
+        cfg_files.extend(args.service)
+    else:
         cfg_files.append(args.service)
-        cfg_files = main_config.read(cfg_files)
-        # Logging configuration
-        if main_config.has_section('loggers'):
-            fileConfig(main_config)
-        else:
-            logging.basicConfig(format=LOG_FORMAT)
-        log = get_logger(PROG_NAME)
-        if args.log_level is not None:
-            log.setLevel(args.log_level)
-        # trace configuration
-        if main_config.has_section('trace'):
-            trace_manager.load_config(main_config)
-        #
-        mngr: ChannelManager = ChannelManager(zmq.Context.instance())
-        mngr.log_context = PROG_NAME
-        executor: BundleThreadController = BundleThreadController(manager=mngr)
-        executor.log_context = PROG_NAME
-        executor.config.read(cfg_files)
-        executor.configure(section=args.section)
-        # run services
-        start = datetime.now()
-        executor.start()
-        try:
-            executor.join()
-            raise KeyboardInterrupt() # This, or direct call to executor.stop()
-        except KeyboardInterrupt: # SIGINT
-            executor.stop()
-        finally:
-            for svc in executor.services:
-                if svc.outcome is not Outcome.OK or args.outcome:
-                    print(f'{svc.name} outcome:', svc.outcome.value)
-                    if svc.details:
-                        for line in svc.details:
-                            print(' ', line)
-            print('Execution time:', datetime.now() - start)
-    except Exception as exc:
-        if log:
-            log.exception("Service execution failed")
+    cfg_files = main_config.read(cfg_files)
+    # Logging configuration
+    if main_config.has_section('loggers'):
+        fileConfig(main_config)
+    else:
+        logging.basicConfig(format=LOG_FORMAT)
+    bind_logger(ANY, ANY, 'saturnin')
+    log: Logger = get_logger('saturnin')
+    if args.log_level is not None:
+        log.setLevel(args.log_level)
+    # trace configuration
+    if main_config.has_section('trace'):
+        trace_manager.load_config(main_config)
+
+    try:
+        with BundleExecutor('saturnin-bundle') as executor:
+            executor.configure(cfg_files, section=args.section)
+            result = executor.run()
+            if not args.quiet:
+                for name, outcome, details in result:
+                    if outcome is not Outcome.OK or args.outcome:
+                        print(f'{name}: {outcome.value}')
+                        if details:
+                            for line in details:
+                                print(f' {line}')
+    except Exception as exc: # pylint: disable=W0703
+        log.exception("Service execution failed")
         parser.exit(1, f'{exc!s}\n')
     finally:
-        if mngr is not None:
-            mngr.shutdown(forced=True)
         logging.shutdown()
-        zmq.Context.instance().term()
 
 if __name__ == '__main__':
     main()

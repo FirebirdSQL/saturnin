@@ -30,6 +30,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
+ # pylint: disable=C0415,W1514
 
 """Saturnin script to start/stop the daemon process.
 
@@ -51,7 +52,7 @@ def main():
     parser = argparse.ArgumentParser(PROG_NAME, description=main.__doc__)
     subs = parser.add_subparsers(title="Commands", dest='action', required=True)
     start_args = subs.add_parser('start', help="Starts daemon process")
-    start_args.add_argument('pid_file', help="Path to PID file")
+    start_args.add_argument('-p', '--pid-file', help="Path to PID file")
     start_args.add_argument('daemon', help="Path to daemon")
     start_args.add_argument('arguments', nargs=argparse.REMAINDER, help="Daemon arguments")
 
@@ -59,29 +60,39 @@ def main():
     stop_args.add_argument('pid', help="Daemon PID or path to PID file")
 
     args = parser.parse_args()
-
-    if args.action == 'start':
-        pid_file = Path(args.pid_file)
-        pid_file.write_text('') # ensure it's writtable
-        args.arguments.insert(0, args.daemon)
-        pid = start_daemon(args.arguments)
-        pid_file.write_text(str(pid))
-    else: # stop
-        try:
-            pid = int(args.pid)
-        except ValueError:
-            pid = int(Path(args.pid).read_text())
-        if platform.system() == 'Windows':
-            import ctypes
-            kernel = ctypes.windll.kernel32
-            kernel.FreeConsole()
-            kernel.AttachConsole(pid)
-            kernel.SetConsoleCtrlHandler(None, 1)
-            kernel.GenerateConsoleCtrlEvent(0, 0)
-        else:  # Unix
-            import os
-            import signal
-            os.kill(pid, signal.SIGINT)
+    try:
+        if args.action == 'start':
+            if args.pid_file:
+                pid_file = Path(args.pid_file)
+                pid_file.write_text('') # ensure it's writtable
+            else:
+                pid_file = None
+            args.arguments.insert(0, args.daemon)
+            pid = start_daemon(args.arguments)
+            if not pid:
+                parser.exit(1, "Daemon start operation failed")
+            if pid_file:
+                pid_file.write_text(str(pid))
+            else:
+                print('Daemon PID:', pid)
+        else: # stop
+            try:
+                pid = int(args.pid)
+            except ValueError:
+                pid = int(Path(args.pid).read_text())
+            if platform.system() == 'Windows':
+                import ctypes
+                kernel = ctypes.windll.kernel32
+                kernel.FreeConsole()
+                kernel.AttachConsole(pid)
+                kernel.SetConsoleCtrlHandler(None, 1)
+                kernel.GenerateConsoleCtrlEvent(0, 0)
+            else:  # Unix
+                import os
+                import signal
+                os.kill(pid, signal.SIGINT)
+    except Exception: # pylint: disable=W0703
+        parser.exit(1)
 
 if __name__ == '__main__':
     main()

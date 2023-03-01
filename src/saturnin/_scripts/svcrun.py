@@ -36,19 +36,15 @@
 """
 
 from __future__ import annotations
-import sys
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, Action
-from configparser import ConfigParser, ExtendedInterpolation, DEFAULTSECT
+from configparser import ConfigParser, ExtendedInterpolation
 import logging
 from logging.config import fileConfig
-from pathlib import Path
-import zmq
-from firebird.base.logging import get_logger, Logger
+from firebird.base.logging import get_logger, Logger, bind_logger, ANY
 from firebird.base.trace import trace_manager
-from saturnin.base import site, StopError, ServiceDescriptor
-from saturnin.component.registry import get_service_desciptors
-from saturnin.component.controller import Outcome, DirectController, ThreadController, \
-     ServiceExecConfig
+from saturnin.base import directory_scheme, SECTION_SERVICE
+from saturnin.component.controller import Outcome
+from saturnin.component.single import SingleExecutor
 
 LOG_FORMAT = '%(levelname)s [%(processName)s/%(threadName)s] [%(agent)s:%(context)s] %(message)s'
 
@@ -58,19 +54,24 @@ class UpperAction(Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values.upper())
 
-#: Program name
-PROG_NAME = 'saturnin-service'
-
-def main():
-    """Runs one service, either unmanaged in main thread, or managed in separate thread.
+def main(description: str=None, service_config: str=None):
+    """Saturnin script to run one service, either unmanaged in main thread, or managed in
+    separate thread.
     """
-    parser: ArgumentParser = ArgumentParser(PROG_NAME, description=main.__doc__,
+    description=main.__doc__ if description is None else description
+    parser: ArgumentParser = ArgumentParser(description=main.__doc__,
                                             formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument('service', metavar='SERVICE-CONFIG',
-                        help="Path to service configuration file")
+                        help="Path to service configuration file",
+                        nargs=1 if service_config is None else '?',
+                        default=service_config)
     parser.add_argument('-c','--config', metavar='CONFIG', action='append',
-                        help="Path to additional configuration file. Could be specified multiple times.")
-    parser.add_argument('-s', '--section', help="Configuration section name", default='service')
+                        help="Path to additional configuration file. "
+                             "Could be specified multiple times.")
+    parser.add_argument('-s', '--section', help="Configuration section name",
+                        default=SECTION_SERVICE)
+    parser.add_argument('-q', '--quiet', action='store_true',
+                        help="Suppress console output", default=False)
     parser.add_argument('-o','--outcome', action='store_true',
                         help="Always print service execution outcome", default=False)
     parser.add_argument('--main-thread', action='store_true',
@@ -83,79 +84,44 @@ def main():
     args = parser.parse_args()
 
     main_config: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
-    # Defaults
-    main_config[DEFAULTSECT]['here'] = str(Path.cwd())
-
-    #: Could be used to stop the service in debugger session
-    debug_stop: bool = False
-    log: Logger = None
-    try:
-        # Read config
-        cfg_files = []
-        cfg_files.append(str(site.scheme.logging_conf))
-        if args.config:
-            cfg_files.extend(args.config)
+    cfg_files = [str(directory_scheme.logging_conf)]
+    if args.config:
+        cfg_files.extend(args.config)
+    if isinstance(args.service, list):
+        cfg_files.extend(args.service)
+    else:
         cfg_files.append(args.service)
-        cfg_files = main_config.read(cfg_files)
-        # Logging configuration
-        if main_config.has_section('loggers'):
-            fileConfig(main_config)
-        else:
-            logging.basicConfig(format=LOG_FORMAT)
-        log = get_logger(PROG_NAME)
-        if args.log_level is not None:
-            log.setLevel(args.log_level.upper())
-        # trace configuration
-        if main_config.has_section('trace'):
-            trace_manager.load_config(main_config)
-        #
-        if not main_config.has_section(args.section):
-            raise StopError(f"Missing configuration section '{args.section}'")
-        svc_executor_config: ServiceExecConfig = ServiceExecConfig(args.section)
-        svc_executor_config.load_config(main_config)
-        entries = get_service_desciptors(str(svc_executor_config.agent.value))
-        if not entries:
-            raise StopError(f"Unregistered agent '{svc_executor_config.agent.value}'")
-        service_desc: ServiceDescriptor = entries[0]
-        #
-        if args.main_thread:
-            executor: DirectController = DirectController(service_desc)
-        else:
-            executor: ThreadController = ThreadController(service_desc)
-        executor.log_context = PROG_NAME
-        executor.configure(main_config, args.section)
-        # run the service
-        executor.start(timeout=10000 if sys.gettrace() is None else None)
-        if not args.main_thread:
-            try:
-                while True:
-                    executor.join(1)
-                    # This, or direct call to executor.stop()
-                    if debug_stop or not executor.is_running():
-                        raise KeyboardInterrupt()
-            except KeyboardInterrupt: # SIGINT
-                print()
-                try:
-                    executor.stop()
-                except TimeoutError:
-                    executor.terminate()
-                except Exception as exc:
-                    if log:
-                        log.error("Error while stopping the service")
-            finally:
-                if executor.outcome is not Outcome.OK or args.outcome:
-                    print('Outcome:', executor.outcome.value)
-                    if executor.details:
-                        print('Details:')
-                        for line in executor.details:
-                            print(line)
-    except Exception as exc:
-        if log:
-            log.error("Service execution failed")
+    cfg_files = main_config.read(cfg_files)
+    # Logging configuration
+    if main_config.has_section('loggers'):
+        fileConfig(main_config)
+    else:
+        logging.basicConfig(format=LOG_FORMAT)
+    bind_logger(ANY, ANY, 'saturnin')
+    log: Logger = get_logger('saturnin')
+    if args.log_level is not None:
+        log.setLevel(args.log_level)
+    # trace configuration
+    if main_config.has_section('trace'):
+        trace_manager.load_config(main_config)
+
+    try:
+        with SingleExecutor('saturnin-service', direct=not args.main_thread) as executor:
+            executor.configure(cfg_files, section=args.section)
+            result = executor.run()
+            if not args.quiet and result is not None:
+                outcome, details = result
+                if outcome is not Outcome.OK or args.outcome:
+                    print(f'{args.section}: {outcome.value}')
+                    if details:
+                        for line in details:
+                            print(f' {line}')
+    except Exception as exc: # pylint: disable=W0703
+        log.exception("Service execution failed")
         parser.exit(1, f'{exc!s}\n')
+        parser.exit(1)
     finally:
         logging.shutdown()
-        zmq.Context.instance().term()
 
 if __name__ == '__main__':
     main()
