@@ -117,7 +117,7 @@ def list_daemons() -> None:
                               get_first_line(recipe.description))
         console.print(table)
     else:
-        console.print("There are no running Saturnin daemons.")
+        console.print("There are no Saturnin demons running.")
 
 
 @app.command()

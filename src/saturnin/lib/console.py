@@ -57,7 +57,8 @@ DEFAULT_THEME: Theme = Theme(
      'title': 'bold yellow',
      'ok': 'green',
      'important': 'bold yellow',
-     'warning': 'bold red',
+     'warning': 'bold yellow',
+     'error': 'bold red',
      'item': 'green',
      'attrib_equal': 'bold',
      'attrib_name': 'not italic yellow',
@@ -100,7 +101,10 @@ DEFAULT_THEME: Theme = Theme(
 FORCE_TERMINAL = True if os.getenv("FORCE_COLOR") or os.getenv("PY_COLORS") else None
 
 RICH_YES = Text('✔', style='ok')
-RICH_NO = Text('✖', style='warning')
+RICH_NO = Text('✖', style='error')
+RICH_OK = Text('OK', style='ok')
+RICH_WARNING = Text('WARNING', style='warning')
+RICH_ERROR = Text('ERROR', style='error')
 
 def _combine_regex(*regexes: str) -> str:
     """Combine a number of regexes in to a single regex.

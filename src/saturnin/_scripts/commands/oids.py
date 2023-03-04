@@ -45,7 +45,7 @@ from rich import box
 from firebird.uuid import (oid_registry, ROOT_SPEC, get_specifications, parse_specifications,
                            Node)
 from saturnin.base import directory_scheme
-from saturnin.lib.console import console, _h
+from saturnin.lib.console import console, _h, RICH_OK, RICH_ERROR
 from saturnin._scripts.completers import oid_completer
 
 app = typer.Typer(rich_markup_mode="rich", help="Saturnin OID management.")
@@ -53,7 +53,8 @@ app = typer.Typer(rich_markup_mode="rich", help="Saturnin OID management.")
 
 @app.command()
 def list_oids(with_name: str=typer.Option('', help="List only OIDs with this string in name"),
-              show_oids: bool = typer.Option(False, '--show-oids', help="Should OIDs instead UUIDs")) -> None:
+              show_oids: bool = typer.Option(False, '--show-oids',
+                                             help="Should OIDs instead UUIDs")) -> None:
     """List registered OIDs.
     """
     table = Table(title='Registered OIDs' if not with_name
@@ -61,13 +62,16 @@ def list_oids(with_name: str=typer.Option('', help="List only OIDs with this str
                   box=box.ROUNDED)
     table.add_column('OID Name', style='green')
     table.add_column('OID' if show_oids else 'UUID')
-    for node in oid_registry.values():
-        if with_name in node.full_name:
-            if show_oids:
-                table.add_row(*[node.full_name, Text(node.oid, style='number')])
-            else:
-                table.add_row(*[node.full_name, Text(str(node.uid), style='uuid')])
-    console.print(table)
+    if oid_registry:
+        for node in oid_registry.values():
+            if with_name in node.full_name:
+                if show_oids:
+                    table.add_row(*[node.full_name, Text(node.oid, style='number')])
+                else:
+                    table.add_row(*[node.full_name, Text(str(node.uid), style='uuid')])
+        console.print(table)
+    else:
+        console.print("No OIDs are registered.")
 
 @app.command()
 def update_oids(url: str=typer.Argument(ROOT_SPEC, help="URL to OID node specification",
@@ -77,31 +81,31 @@ def update_oids(url: str=typer.Argument(ROOT_SPEC, help="URL to OID node specifi
     console.print("Downloading OID specifications ... ", end='')
     specifications, errors = get_specifications(url)
     if errors:
-        console.print('[bold red]ERROR')
+        console.print(RICH_ERROR)
         console.print_error("Errors occured during download:")
         for err_url, error in errors:
             console.print_error(f"URL: {err_url}")
             console.print_error(f"error: {error}")
         return
-    console.print('[bold yellow]OK')
+    console.print(RICH_OK)
     console.print("Parsing OID specifications ... ", end='')
     specifications, errors = parse_specifications(specifications)
     if errors:
-        console.print('[bold red]ERROR')
+        console.print(RICH_ERROR)
         console.print_error("Errors detected while parsing OID specifications:")
         for err_url, error in errors:
             console.print_error(f"URL: {err_url}")
             console.print_error(f"error: {error}")
         return
-    console.print('[bold yellow]OK')
+    console.print(RICH_OK)
     #
     console.print("Updating OID registry ... ", end='')
     try:
         oid_registry.update_from_specifications(specifications)
     except Exception as exc: # pylint: disable=W0703
-        console.print('[bold red]ERROR')
+        console.print(RICH_ERROR)
         console.print_error(exc)
-    console.print('[bold yellow]OK')
+    console.print(RICH_OK)
     directory_scheme.site_oids_toml.write_text(oid_registry.as_toml())
 
 @app.command()

@@ -38,7 +38,7 @@
 """
 
 from __future__ import annotations
-from typing import List
+from typing import List, Tuple
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from configparser import ConfigParser, ExtendedInterpolation
@@ -51,6 +51,7 @@ from rich.text import Text
 from rich.markdown import Markdown
 from rich.syntax import Syntax
 from rich import box
+from firebird.uuid import oid_registry, Node
 from firebird.base.config import Config
 from saturnin.base import (saturnin_config, SECTION_BUNDLE, SECTION_SERVICE,
                            directory_scheme, RESTART)
@@ -129,18 +130,21 @@ def run_recipe(ctx: typer.Context,
 def list_recipes() -> None:
     """List installed Saturnin recipes.
     """
-    table = Table(title='Installed recipes', box=box.ROUNDED)
-    table.add_column('Name', style='green')
-    table.add_column('Type', style='enum')
-    table.add_column('Execution mode', style='enum')
-    table.add_column('App', width=3, justify='center')
-    table.add_column('Description')
-    recipe: RecipeInfo = None
-    for recipe in recipe_registry.values():
-        table.add_row(recipe.name, recipe.recipe_type.name, recipe.execution_mode.name,
-                      RICH_NO if recipe.application is None else RICH_YES,
-                      get_first_line(recipe.description))
-    console.print(table)
+    if recipe_registry:
+        table = Table(title='Installed recipes', box=box.ROUNDED)
+        table.add_column('Name', style='green')
+        table.add_column('Type', style='enum')
+        table.add_column('Execution mode', style='enum')
+        table.add_column('App', width=3, justify='center')
+        table.add_column('Description')
+        recipe: RecipeInfo = None
+        for recipe in recipe_registry.values():
+            table.add_row(recipe.name, recipe.recipe_type.name, recipe.execution_mode.name,
+                          RICH_NO if recipe.application is None else RICH_YES,
+                          get_first_line(recipe.description))
+        console.print(table)
+    else:
+        console.print("There are no Saturnin recipes installed.")
 
 @typer_app.command()
 def show_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
@@ -164,7 +168,7 @@ def show_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
         recipe_config.validate()
         #
         title = "default section" if section is None else f'section "[section]{section}[/]"'
-        services: List[ServiceInfo] = []
+        services: List[Tuple[str, ServiceInfo]] = []
         if section is None:
             section = SECTION_BUNDLE if recipe_config.recipe_type.value is RecipeType.BUNDLE \
                 else SECTION_SERVICE
@@ -189,8 +193,6 @@ def show_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
                                             else str(recipe.executor))))
         table.add_row(' Application:', _h(Text(str(recipe.application) if recipe.application
                                                else '')))
-
-
         table.add_row(' Description: ', Markdown(recipe.description))
         console.print(table)
         console.print()
@@ -243,8 +245,9 @@ def edit_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
 @typer_app.command()
 def install_recipe(recipe_name: str= \
                      typer.Option(None, help="Recipe name (default is recipe file name)"),
-                   recipe_file: Path=typer.Option(None, help="Recipe file. Mutually exclusive with ", dir_okay=False,
-                                                  autocompletion=path_completer),
+                   recipe_file: Path= \
+                     typer.Option(None, help="Recipe file. Mutually exclusive with ",
+                                  dir_okay=False, autocompletion=path_completer),
                    app_id: str=typer.Option(None, help="Application UID or name",
                                             autocompletion=application_completer)):
     """Install new recipe from external recipe file, or from installed application.
@@ -288,6 +291,37 @@ def install_recipe(recipe_name: str= \
     recipe_config = SaturninRecipe()
     recipe_config.load_config(config)
     recipe_config.validate()
+    # Check whether all required components are installed
+    application = recipe_config.application.value
+    if (application and application not in application_registry):
+        node: Node = oid_registry.get(application)
+        console.print_error(f"Required application '{node.name if node else application}' not installed")
+        return None
+    section = SECTION_BUNDLE if recipe_config.recipe_type.value is RecipeType.BUNDLE \
+        else SECTION_SERVICE
+    services: List[UUID] = []
+    if config.has_section(section):
+        if recipe_config.recipe_type.value is RecipeType.BUNDLE:
+            bundle_cfg: ServiceBundleConfig = ServiceBundleConfig(section)
+            bundle_cfg.load_config(config)
+            for agent_config in bundle_cfg.agents.value:
+                services.append(agent_config.agent.value)
+        else:
+            svc_cfg: ServiceExecConfig = ServiceExecConfig(section)
+            svc_cfg.load_config(config)
+            services.append(svc_cfg.agent.value)
+        stop = False
+        for svc_uid in services:
+            if svc_uid not in service_registry:
+                node: Node = oid_registry.get(svc_uid)
+                console.print_error(f"Required service '{node.name if node else svc_uid}' not installed")
+                stop = True
+        if stop:
+            return None
+    else:
+        console.print_error(f"The recipe does not have the required section '{section}'")
+        return None
+    #
     target.write_text(recipe_content)
     console.print("Recipe installed.")
     recipe_registry.clear()

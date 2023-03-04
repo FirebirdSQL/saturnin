@@ -42,6 +42,7 @@ The entry point group for service registration is `saturnin.application`.
 from __future__ import annotations
 from typing import Dict, Hashable, Optional, Any
 from uuid import UUID
+from contextlib import suppress
 from toml import dumps, loads
 from firebird.base.types import Distinct, load
 from firebird.base.collections import Registry
@@ -201,7 +202,8 @@ class ApplicationRegistry(Registry):
                     continue
                 raise Error(f"Malformed application descriptor for '{entry.name}' "
                             f"from '{kwargs['distribution']}'") from exc
-            self.store(app_info)
+            with suppress(ValueError):
+                self.store(app_info)
     def load_from_toml(self, toml: str, *, ignore_errors: bool=False) -> None:
         """Populate registry from TOML document.
 

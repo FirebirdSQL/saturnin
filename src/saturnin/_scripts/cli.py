@@ -30,7 +30,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=W0212, C0301
+# pylint: disable=W0212, C0301, W0703, W0622
 
 """Saturnin CLI manager.
 

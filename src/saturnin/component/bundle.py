@@ -173,7 +173,7 @@ class BundleThreadController(LoggingIdMixin, TracedMixin):
             try:
                 controller.stop(timeout=timeout)
             except Exception as exc: # pylint: disable=W0703
-                get_logger(self).error(f"Error while stopping the service: {args[0]}", exc) # pylint: disable=E0602
+                get_logger(self).error("Error while stopping the service: {args[0]}", exc) # pylint: disable=E0602
                 if controller.is_running():
                     warnings.warn(f"Stopping service {controller.name} failed, "
                                   f"service thread terminated", RuntimeWarning)

@@ -30,6 +30,7 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
+ # pylint: disable=W1510
 
 """Saturnin package manager commands
 
@@ -44,10 +45,11 @@ from re import sub
 from operator import attrgetter
 from rich.table import Table
 from rich.text import Text
+from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich import box
 import typer
 from firebird.uuid import oid_registry
-from saturnin.base import directory_scheme
+from saturnin.base import directory_scheme, RESTART
 from saturnin.component.recipe import recipe_registry
 from saturnin.component.registry import service_registry, ServiceInfo
 from saturnin.component.apps import application_registry, ApplicationInfo
@@ -62,17 +64,20 @@ app = typer.Typer(rich_markup_mode="rich", help="Package management.")
 def list_services(with_name: str= \
                     typer.Option('',help="List only services with this string in name")):
     "List installed Saturnin services."
-    table = Table(title='Registered services' if not with_name
-                  else f"Registered services with name containing '{with_name}'",
-                  box=box.ROUNDED)
-    table.add_column('Service', style='green')
-    table.add_column('Version', style='number')
-    table.add_column('Description')
     services = list(service_registry.filter(lambda x: with_name in x.name))
     services.sort(key=attrgetter('name'))
-    for svc in services:
-        table.add_row(svc.name, svc.version, get_first_line(svc.description))
-    console.print(table)
+    if services:
+        table = Table(title='Registered services' if not with_name
+                      else f"Registered services with name containing '{with_name}'",
+                      box=box.ROUNDED)
+        table.add_column('Service', style='green')
+        table.add_column('Version', style='number')
+        table.add_column('Description')
+        for svc in services:
+            table.add_row(svc.name, svc.version, get_first_line(svc.description))
+        console.print(table)
+    else:
+        console.print("There are no Saturnin services registered.")
 
 @app.command()
 def show_service(service_id: str=typer.Argument('', help="Service UID or name",
@@ -113,21 +118,24 @@ def show_service(service_id: str=typer.Argument('', help="Service UID or name",
 def list_applications(with_name: str= \
                       typer.Option('',help="List only applications with this string in name")):
     "List installed Saturnin applications."
-    table = Table(title='Registered applications' if not with_name
-                  else f"Registered applications with name containing '{with_name}'",
-                  box=box.ROUNDED)
-    table.add_column('Application', style='green')
-    table.add_column('Version', style='number')
-    table.add_column('Installed', width=9, justify='center')
-    table.add_column('Description')
     apps = list(application_registry.filter(lambda x: with_name in x.name))
     apps.sort(key=attrgetter('name'))
-    for app in apps:
-        table.add_row(app.name, app.version, RICH_YES if
-                      recipe_registry.any(lambda x: x.application is not None
-                                          and x.application == app.uid)
-                      else RICH_NO, get_first_line(app.description))
-    console.print(table)
+    if apps:
+        table = Table(title='Registered applications' if not with_name
+                      else f"Registered applications with name containing '{with_name}'",
+                      box=box.ROUNDED)
+        table.add_column('Application', style='green')
+        table.add_column('Version', style='number')
+        table.add_column('Installed', width=9, justify='center')
+        table.add_column('Description')
+        for app in apps:
+            table.add_row(app.name, app.version, RICH_YES if
+                          recipe_registry.any(lambda x: x.application is not None
+                                              and x.application == app.uid)
+                          else RICH_NO, get_first_line(app.description))
+        console.print(table)
+    else:
+        console.print("There are no Saturnin applications registered.")
 
 @app.command()
 def show_application(app_id: str=typer.Argument('', help="Application UID or name",
@@ -165,14 +173,17 @@ def list_packages():
     only those that contain registered Saturnin components. To list all installed packages,
     use: **pip list**.
     """
-    table = Table(title='Installed Saturnin packages', box=box.ROUNDED)
-    table.add_column('Package', style='green')
-    table.add_column('Version', style='number')
     packages = set(service_registry.report('item.distribution'))
     packages.update(application_registry.report('item.distribution'))
-    for dist in (distribution(pkg) for pkg in packages):
-        table.add_row(dist.metadata['name'], dist.version)
-    console.print(table)
+    if packages:
+        table = Table(title='Installed Saturnin packages', box=box.ROUNDED)
+        table.add_column('Package', style='green')
+        table.add_column('Version', style='number')
+        for dist in (distribution(pkg) for pkg in packages):
+            table.add_row(dist.metadata['name'], dist.version)
+        console.print(table)
+    else:
+        console.print("No Saturnin packages are installed.")
 
 @app.command()
 def update_registry():
@@ -205,7 +216,7 @@ def update_registry():
 def pip(args: List[str]=typer.Argument(None, help="Arguments for pip.")):
     """Run 'pip' package manager in Saturnin virtual environment.
     """
-    pip_cmd = [str(directory_scheme.pip)]
+    pip_cmd = directory_scheme.get_pip_cmd()
     pip_cmd.extend(args)
     if '--help' in args:
         result = subprocess.run(pip_cmd, capture_output=True, text=True) # pylint: disable=W1510
@@ -224,7 +235,7 @@ def install_package(args: List[str]=typer.Argument(..., help="Arguments for pip 
 Note:
    This command is used also to upgrade installed packages using '-U' or '--upgrade' option.
     """
-    pip_cmd = [str(directory_scheme.pip), 'install']
+    pip_cmd = directory_scheme.get_pip_cmd('install')
     pip_cmd.extend(args)
     if '--help' in args:
         result = subprocess.run(pip_cmd, capture_output=True, text=True) # pylint: disable=W1510
@@ -233,29 +244,38 @@ Note:
         text = sub(r'(?s)\b(?:Description:).+(?:Install Options:)', "Install Options:",
                    text)
         console.print(_h(Text(text)))
-    else:
-        result = subprocess.run(pip_cmd) # pylint: disable=W1510
+        return None
+    #
+    with Progress(SpinnerColumn(), TextColumn("{task.description}")) as progress:
+        progress.add_task("Installing...", total=1)
+        result = subprocess.run(pip_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                text=True)
     if result.returncode != 0:
-        console.err_console.print(result.stderr)
-    elif '--help' not in args:
-        update_registry()
+        console.err_console.print(result.stdout)
+    update_registry()
+    return RESTART
 
 @app.command()
 def uninstall_package(args: List[str]=typer.Argument(..., help="Arguments for pip uninstall.")):
     """Uninstall Python package from Saturnin virtual environment via `pip`.
     """
-    pip_cmd = [str(directory_scheme.pip), 'uninstall']
+    pip_cmd = directory_scheme.get_pip_cmd('uninstall')
+    pip_cmd.append('--yes')
     pip_cmd.extend(args)
     if '--help' in args:
-        result = subprocess.run(pip_cmd, capture_output=True, text=True) # pylint: disable=W1510
+        result = subprocess.run(pip_cmd, capture_output=True, text=True)
         text = uninstall_package.__doc__ + sub(r'(\bpip uninstall\b)', 'uninstall package',
                                                result.stdout)
         text = sub(r'(?s)\b(?:Description:).+(?:Uninstall Options:)', "Uninstall Options:",
                    text)
         console.print(_h(Text(text)))
-    else:
-        result = subprocess.run(pip_cmd) # pylint: disable=W1510
+        return None
+    #
+    with Progress(SpinnerColumn(), TextColumn("{task.description}")) as progress:
+        progress.add_task("Uninstalling...", total=1)
+        result = subprocess.run(pip_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                text=True)
     if result.returncode != 0:
-        console.err_console.print(result.stderr)
-    elif '--help' not in args:
-        update_registry()
+        console.err_console.print(result.stdout)
+    update_registry()
+    return RESTART

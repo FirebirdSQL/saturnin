@@ -713,15 +713,15 @@ class FBDPServer(_FBDP):
                     self.handle_exception(channel, session, FBDPMessage(), exc)
                 except:
                     warnings.warn('Exception raised in exception handler', RuntimeWarning)
-        else:
-            if session.routing_id not in channel.sessions:
-                warnings.warn('resend_ready: senssion cancelled', RuntimeWarning)
-            elif session.transmit is not None:
-                warnings.warn('resend_ready: transmission already started', RuntimeWarning)
-            elif session.await_ready:
-                warnings.warn('resend_ready: READY was already sent', RuntimeWarning)
-            else:
-                warnings.warn('resend_ready: programming error', RuntimeWarning)
+        #else:
+            #if session.routing_id not in channel.sessions:
+                #warnings.warn('resend_ready: senssion cancelled', RuntimeWarning)
+            #elif session.transmit is not None:
+                #warnings.warn('resend_ready: transmission already started', RuntimeWarning)
+            #elif session.await_ready:
+                #warnings.warn('resend_ready: READY was already sent', RuntimeWarning)
+            #else:
+                #warnings.warn('resend_ready: programming error', RuntimeWarning)
     def handle_open_msg(self, channel: Channel, session: FBDPSession, msg: FBDPMessage) -> None:
         """Process OPEN message received from client.
 

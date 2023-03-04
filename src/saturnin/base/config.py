@@ -36,9 +36,10 @@
 """
 
 from __future__ import annotations
-from typing import Optional
+from typing import Optional, List, Tuple
 import sys
 import os
+import sysconfig
 from pathlib import Path
 from configparser import ConfigParser, ExtendedInterpolation
 from firebird.base.config import DirectoryScheme, get_directory_scheme, Config, StrOption
@@ -66,6 +67,17 @@ CONFIG_HDR = """;
 
 """
 
+def is_windows() -> bool:
+    return sys.platform == "win32"
+
+
+def is_mingw() -> bool:
+    return sysconfig.get_platform().startswith("mingw")
+
+
+WINDOWS: bool = is_windows()
+MINGW: bool = is_mingw()
+
 class SaturninScheme(DirectoryScheme):
     """Saturnin platform directory scheme.
 
@@ -82,10 +94,27 @@ class SaturninScheme(DirectoryScheme):
                 os.environ['SATURNIN_HOME'] = str(home_dir)
         self.dir_map.update(get_directory_scheme('saturnin').dir_map)
         self.__pip_path: Path = 'pip'
+        self.__pip_cmd: List[str] = ['pip']
         if is_virtual():
-            pip_path = venv() / 'bin' / 'pip'
+            bin_path, python_path = get_venv_paths(venv())
+            pip_path = bin_path / 'pip'
             if pip_path.is_file():
                 self.__pip_path = pip_path
+                self.__pip_cmd = [str(pip_path)]
+            else:
+                # No pip shortcut in venv, we must relly on python -m to run it, typical for pipx
+                self.__pip_path = None
+                self.__pip_cmd = [str(python_path), '-m', 'pip']
+            #home_dir: Path = venv() / 'home'
+            #if home_dir.is_dir():
+                #os.environ['SATURNIN_HOME'] = str(home_dir)
+        #self.dir_map.update(get_directory_scheme('saturnin').dir_map)
+    def get_pip_cmd(self, *args) -> List[str]:
+        """List with command to run pip.
+        """
+        result = self.__pip_cmd.copy()
+        result.extend(args)
+        return result
     @property
     def recipes(self) -> Path:
         """Path to directory with recipe files.
@@ -147,7 +176,7 @@ class SaturninScheme(DirectoryScheme):
         """
         return self.config / 'theme.conf'
     @property
-    def pip(self) -> Path:
+    def pip_path(self) -> Path:
         """Path to `pip`.
         """
         return self.__pip_path
@@ -173,11 +202,25 @@ def venv() -> Optional[Path]:
     return Path(sys.prefix) if is_virtual() else None
 
 
+if WINDOWS:
+
+    def get_venv_paths(root: Path) -> Tuple[Path, Path]:
+        bin_path = root / "Scripts" if not MINGW else root / "bin"
+        python_path = bin_path / "python.exe"
+        return bin_path, python_path
+
+else:
+
+    def get_venv_paths(root: Path) -> Tuple[Path, Path]:
+        bin_path = root / "bin"
+        python_path = bin_path / "python"
+        return bin_path, python_path
+
 # Set SATURNIN_HOME if defined in virtual environment
 if is_virtual():
-    path: Path = venv() / '.saturnin-home'
-    if path.is_file():
-        os.environ['SATURNIN_HOME'] = path.read_text()
+    path: Path = venv() / 'home'
+    if path.is_dir():
+        os.environ['SATURNIN_HOME'] = str(path)
 
 directory_scheme: SaturninScheme = SaturninScheme()
 saturnin_config: SaturninConfig = SaturninConfig()

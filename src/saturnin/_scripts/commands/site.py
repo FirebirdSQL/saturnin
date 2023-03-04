@@ -46,7 +46,7 @@ from rich import box
 from rich.prompt import Confirm
 from rich.syntax import Syntax
 from saturnin.base import CONFIG_HDR, directory_scheme, saturnin_config, venv
-from saturnin.lib.console import console, DEFAULT_THEME, RICH_YES, RICH_NO
+from saturnin.lib.console import console, DEFAULT_THEME, RICH_YES, RICH_NO, RICH_OK
 from saturnin._scripts.completers import path_completer
 
 app = typer.Typer(rich_markup_mode="rich", help="Saturnin site management.")
@@ -62,7 +62,7 @@ def ensure_dir(description: str, path: Path):
     console.print(f"{description}: [path]{path}[/path] ... ", end='')
     if not path.exists():
         path.mkdir(parents=True)
-    console.print("OK")
+    console.print(RICH_OK)
 
 def ensure_config(path: Path, content: str, new_config: bool):
     """Create configuration file if it does not exists.
@@ -75,12 +75,12 @@ def ensure_config(path: Path, content: str, new_config: bool):
     """
     if path.is_file():
         if not new_config:
-            console.print(f"  [path]{path}[/path] already exists.")
+            console.print(f"  Info : [path]{path}[/path] already exists.")
             return
         path.replace(path.with_suffix(path.suffix + '.bak'))
     console.print(f"  Writing : [path]{path}[/path] ... ", end='')
     path.write_text(content)
-    console.print("OK")
+    console.print(RICH_OK)
 
 def add_path(table: Table, description: str, path: Path) -> None:
     """Adds new row to table with information about path.
@@ -98,7 +98,7 @@ def create_home() -> None:
 
     To have desired effect, this command must be executed BEFORE **initialize**.
     """
-    ensure_dir('Saturnin HOME', venv / 'home')
+    ensure_dir('Saturnin HOME', venv() / 'home')
 
 @app.command()
 def initialize(new_config: bool= \
@@ -127,24 +127,26 @@ def initialize(new_config: bool= \
     """
     if not yes:
         yes = Confirm.ask("Are you sure you want to initialize the Saturnin environment?")
-    saturnin_cfg = CONFIG_HDR + saturnin_config.get_config()
-    steps = [(console.print, ['Ensuring existence of Saturnin directories...']),
-             (ensure_dir, ["  Saturnin configuration      ", directory_scheme.config]),
-             (ensure_dir, ["  Saturnin data               ", directory_scheme.data]) ,
-             (ensure_dir, ["  Run-time data               ", directory_scheme.run_data]) ,
-             (ensure_dir, ["  Log files                   ", directory_scheme.logs]) ,
-             (ensure_dir, ["  Temporary files             ", directory_scheme.tmp]) ,
-             (ensure_dir, ["  Cache                       ", directory_scheme.cache]) ,
-             (ensure_dir, ["  User-specific configuration ", directory_scheme.user_config]) ,
-             (ensure_dir, ["  User-specific data          ", directory_scheme.user_data]) ,
-             (ensure_dir, ["  PID files                   ", directory_scheme.pids]) ,
-             (console.print, ['Creating configuration files...']),
-             (ensure_config, [directory_scheme.site_conf, saturnin_cfg, new_config]) ,
-             (ensure_config, [directory_scheme.user_conf, saturnin_cfg, new_config]) ,
-             (ensure_config, [directory_scheme.theme_file, DEFAULT_THEME.config, new_config]) ,
-             ]
-    for func, params in steps:
-        func(*params)
+    if yes:
+        saturnin_cfg = CONFIG_HDR + saturnin_config.get_config()
+        steps = [(console.print, ['Ensuring existence of Saturnin directories...']),
+                 (ensure_dir, ["  Saturnin configuration      ", directory_scheme.config]),
+                 (ensure_dir, ["  Saturnin data               ", directory_scheme.data]) ,
+                 (ensure_dir, ["  Run-time data               ", directory_scheme.run_data]) ,
+                 (ensure_dir, ["  Log files                   ", directory_scheme.logs]) ,
+                 (ensure_dir, ["  Temporary files             ", directory_scheme.tmp]) ,
+                 (ensure_dir, ["  Cache                       ", directory_scheme.cache]) ,
+                 (ensure_dir, ["  User-specific configuration ", directory_scheme.user_config]) ,
+                 (ensure_dir, ["  User-specific data          ", directory_scheme.user_data]) ,
+                 (ensure_dir, ["  PID files                   ", directory_scheme.pids]) ,
+                 (ensure_dir, ["  Recipes                     ", directory_scheme.recipes]) ,
+                 (console.print, ['Creating configuration files...']),
+                 (ensure_config, [directory_scheme.site_conf, saturnin_cfg, new_config]) ,
+                 (ensure_config, [directory_scheme.user_conf, saturnin_cfg, new_config]) ,
+                 (ensure_config, [directory_scheme.theme_file, DEFAULT_THEME.config, new_config]) ,
+                 ]
+        for func, params in steps:
+            func(*params)
 
 @app.command()
 def list_directories() -> None:
@@ -270,6 +272,7 @@ password = masterkey
             config = driver_config.get_config()
         except Exception: # pylint: disable=W0703
             console.print_error("Firebird driver not installed.")
+            return None
     elif config_file is _Configs.LOGGING:
         config = f"""
 ; =====================
@@ -326,3 +329,4 @@ format = %(asctime)s %(levelname)s [%(process)s/%(thread)s] %(message)s
 format = %(asctime)s %(levelname)s [%(processName)s/%(threadName)s] [%(agent)s:%(context)s] %(message)s
 """
     ensure_config(config_file.path, config, new_config)
+    return None

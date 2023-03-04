@@ -55,6 +55,7 @@ from __future__ import annotations
 from typing import List, Dict, Hashable, Optional, Any
 from functools import partial
 from itertools import chain
+from contextlib import suppress
 from uuid import UUID
 from toml import dumps, loads
 from firebird.base.types import Distinct, load
@@ -202,7 +203,8 @@ class ServiceRegistry(Registry):
                     continue
                 raise Error(f"Malformed service descriptor for '{entry.name}' "
                             f"from '{kwargs['distribution']}'") from exc
-            self.store(svc_info)
+            with suppress(ValueError):
+                self.store(svc_info)
     def load_from_toml(self, toml: str, *, ignore_errors: bool=False) -> None:
         """Populate registry from TOML document.
 
