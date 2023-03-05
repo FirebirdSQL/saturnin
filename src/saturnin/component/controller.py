@@ -43,6 +43,7 @@ import signal
 import warnings
 import ctypes
 import weakref
+import platform
 from contextlib import suppress
 from time import monotonic
 from threading import Thread
@@ -397,4 +398,8 @@ class ThreadController(ServiceController):
                      seconds (or fractions thereof).
         """
         if self.runtime:
-            self.runtime.join(timeout)
+            if platform.system() == 'Windows' and timeout is None:
+                while self.runtime.is_alive():
+                    self.runtime.join(1)
+            else:
+                self.runtime.join(timeout)

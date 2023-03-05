@@ -40,7 +40,7 @@ else:
 # the full path of the Wing application bundle, for example 
 # /Applications/WingPro.app.  When set to None, the environment variable 
 # WINGHOME is used instead.  
-WINGHOME="/usr/lib/wingpro9"
+WINGHOME = r"C:\Program Files\Wing Pro 9"
 
 #------------------------------------------------------------------------
 # Optional configuration values:  The named environment variables, if set, 

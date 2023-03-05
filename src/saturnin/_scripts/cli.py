@@ -70,7 +70,7 @@ from saturnin.component.recipe import recipe_registry
 from saturnin.component.apps import application_registry
 from saturnin.component.registry import iter_entry_points
 from saturnin.lib.console import console
-#from saturnin.lib import wingdbstub
+# from saturnin.lib import wingdbstub
 from .repl import repl, IOManager
 from .commands.recipes import run_recipe
 from .completers import get_first_line

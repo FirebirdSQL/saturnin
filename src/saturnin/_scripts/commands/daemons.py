@@ -128,15 +128,15 @@ def show_daemon(pid: int=typer.Argument(..., metavar='PID', autocompletion=pid_c
         console.print_error("Process not found")
         return
     proc = psutil.Process(pid)
-    data = proc.as_dict(ad_value='[bold yellow]N/A[/]')
+    data = proc.as_dict(ad_value='[important]N/A[/]')
     created = datetime.datetime.fromtimestamp(data['create_time'])
     run_time = datetime.datetime.now() - created
-    table = Table(title=f"  Process [bold yellow]{pid}", box=box.ROUNDED, show_header=False,
+    table = Table(title=f"  Process [important]{pid}", box=box.ROUNDED, show_header=False,
                   title_justify='left')
     table.add_column('', style='green')
     table.add_column('')
     #
-    table.add_row('Status:', Text(data['status'], style='yellow'))
+    table.add_row('Status:', Text(data['status'], style='important'))
     table.add_row('Created:', Text(created.strftime("%Y-%m-%d %H:%M:%S")))
     table.add_row('Run time:', Text(str(run_time)), end_section=True)
 
@@ -147,7 +147,11 @@ def show_daemon(pid: int=typer.Argument(..., metavar='PID', autocompletion=pid_c
         table.add_row('# files:', Text(str(data['num_fds'])))
     children = proc.children()
     if children:
-        table.add_row('Children PIDs:', Text(str(', '.join(children))))
+        parts = []
+        line_sep = Text('\n')
+        for child in children:
+            parts.append(Text.assemble((str(child.pid), 'number'), ':', child.name(), ' - ', (child.status(), 'important')))
+        table.add_row('Children:', line_sep.join(parts))
     table.add_row('# INET con.:', Text(str(len(data['connections']))), end_section=True)
 
     table.add_row('Name:', Text(data['name'], style='cyan'))

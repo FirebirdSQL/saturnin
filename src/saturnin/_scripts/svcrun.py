@@ -106,7 +106,7 @@ def main(description: str=None, service_config: str=None):
         trace_manager.load_config(main_config)
 
     try:
-        with SingleExecutor('saturnin-service', direct=not args.main_thread) as executor:
+        with SingleExecutor('saturnin-service', direct=args.main_thread) as executor:
             executor.configure(cfg_files, section=args.section)
             result = executor.run()
             if not args.quiet and result is not None:

@@ -130,11 +130,11 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive): # pylint: dis
             after:  Delay in milliseconds.
         """
         heappush(self._heap, PrioritizedItem(monotonic_ns() + (after * 1000000), action))
-    def get_timeout(self) -> Optional[int]:
+    def get_timeout(self) -> int:
         """Returns timeout to next scheduled action.
         """
         if not self._heap:
-            return None
+            return 1000
         back = []
         i = len(self._heap)
         now = monotonic_ns()

@@ -112,30 +112,28 @@ class ServiceInfo(Distinct): # pylint: disable=R0902
                 'descriptor': self.descriptor,
                 'distribution': self.distribution,
                 }
-    @property
-    def descriptor_obj(self) -> ServiceDescriptor:
+    def __get_descriptor_obj(self) -> ServiceDescriptor:
         """Service descriptor object. If it's not assigned directly, then it's loaded
         using `.desciptor` on first access.
         """
         if self.__desc_obj is None:
             self.__desc_obj = load(self.descriptor)
         return self.__desc_obj
-    @descriptor_obj.setter
-    def set_descriptor_obj(self, value: Optional[ServiceDescriptor]) -> None:
+    def __set_descriptor_obj(self, value: Optional[ServiceDescriptor]) -> None:
         "Property setter"
         self.__desc_obj = value
-    @property
-    def factory_obj(self) -> Any:
+    descriptor_obj = property(__get_descriptor_obj, __set_descriptor_obj, None, __get_descriptor_obj.__doc__)
+    def __get_factory_obj(self) -> Any:
         """Service factory object. If it's not assigned directly, then it's loaded
         using `.factory` on first access.
         """
         if self.__fact_obj is None:
             self.__fact_obj = load(self.factory)
         return self.__fact_obj
-    @factory_obj.setter
-    def set_factory_obj(self, value: Optional[Any]) -> None:
+    def __set_factory_obj(self, value: Optional[Any]) -> None:
         "Property setter"
         self.__fact_obj = value
+    factory_obj = property(__get_factory_obj, __set_factory_obj, None, __get_factory_obj.__doc__)
 
 class ServiceRegistry(Registry):
     """Saturnin service registry.

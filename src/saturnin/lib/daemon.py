@@ -87,6 +87,6 @@ def stop_daemon(pid: Union[int, str, Path]) -> None:
         if daemon was started by :func:`start_daemon` or `saturnin-daemon` script.
     """
     try:
-        subprocess.run(['saturnin-daemon', 'stop', str(pid)], check=True, timeout=5)
+        subprocess.run(['saturnin-daemon', 'stop', str(pid)], check=True, timeout=10)
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise Error("Daemon stop operation failed") from exc
