@@ -39,7 +39,7 @@ See https://firebird-butler.readthedocs.io/en/latest/rfc/9/FBDP.html
 """
 
 from __future__ import annotations
-from typing import Type, Dict, Any, Union, Iterable
+from typing import Type, Dict, Any, Union, Iterable, Final
 import uuid
 import warnings
 from struct import pack, unpack
@@ -50,21 +50,21 @@ from saturnin.base import (InvalidMessageError, StopError, RoutingID, TZMQMessag
      PipeSocket, Channel, Protocol, Message, Session, ANY)
 
 #: Protobuf message for FBDP OPEN message
-PROTO_OPEN = 'firebird.butler.FBDPOpenDataframe'
+PROTO_OPEN: Final[str] = 'firebird.butler.FBDPOpenDataframe'
 #: Protobuf message for FBDP ERROR message
-PROTO_ERROR = 'firebird.butler.ErrorDescription'
+PROTO_ERROR: Final[str] = 'firebird.butler.ErrorDescription'
 
 #: FBDP protocol control frame :mod:`struct` format
-HEADER_FMT_FULL : str = '!4sBBH'
+HEADER_FMT_FULL: Final[str] = '!4sBBH'
 #: FBDP protocol control frame :mod:`struct` format without FOURCC
-HEADER_FMT: str = '!4xBBH'
+HEADER_FMT: Final[str] = '!4xBBH'
 #: FBDP protocol identification (FOURCC)
-FOURCC: bytes = b'FBDP'
+FOURCC: Final[bytes] = b'FBDP'
 #: FBDP protocol version mask
-VERSION_MASK: int = 7
+VERSION_MASK: Final[int] = 7
 
 #: Default data batch size
-DATA_BATCH_SIZE: int = 50
+DATA_BATCH_SIZE: Final[int] = 50
 
 class MsgType(IntEnum):
     """FBDP Message Type"""
@@ -181,7 +181,7 @@ class FBDPMessage(Message):
             msg.data_frame = self.data_frame
         return msg
     def get_keys(self) -> Iterable:
-        """Returns iterable of dictionary keys to be used with `Protocol.handlers`.
+        """Returns iterable of dictionary keys to be used with `.Protocol.handlers`.
         Keys must be provided in order of precedence (from more specific to general).
         """
         return [self.msg_type, ANY]
@@ -200,6 +200,9 @@ class FBDPMessage(Message):
         return MsgFlag.ACK_REPLY in self.flags
     def set_flag(self, flag: MsgFlag) -> None:
         """Set flag specified by `flag` mask.
+
+        Arguments:
+          flag: Flag to be set.
         """
         self.flags |= flag
     def clear_flag(self, flag: MsgFlag) -> None:
@@ -208,6 +211,9 @@ class FBDPMessage(Message):
         self.flags &= ~flag
     def note_exception(self, exc: Exception):
         """Store information from exception into CLOSE Message.
+
+        Arguments:
+          exc: Exception to be stored
         """
         assert self.msg_type is MsgType.CLOSE
         errdesc = create_message(PROTO_ERROR)
@@ -238,15 +244,14 @@ class _FBDP(Protocol):
     """9/FBDP - Firebird Butler Data Pipe Protocol
     """
     #: string with protocol OID (dot notation).
-    OID: str =  '1.3.6.1.4.1.53446.1.3.2'
+    OID: Final[str] =  '1.3.6.1.4.1.53446.1.3.2'
     # iso.org.dod.internet.private.enterprise.firebird.butler.protocol.fbdp
     #: UUID instance that identifies the protocol.
-    UID: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_OID, OID)
+    UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, OID)
     def __init__(self, *, session_type: Type[FBDPSession] = FBDPSession):
         """
         Arguments:
             session_type: Class for session objects.
-            batch_size: Default batch size.
         """
         super().__init__(session_type=session_type)
         #: Initial batch size
@@ -274,10 +279,19 @@ class _FBDP(Protocol):
         return self._msg
     def _init_new_batch(self, channel: Channel, session: FBDPSession) -> None:
         """Initializes the transmission of a new batch of DATA messages.
+
+        Arguments:
+          channel: Channel associated with data pipe.
+          session: Session associated with peer.
         """
         raise NotImplementedError()
     def _send_data(self, channel: Channel, session: FBDPSession, msg: FBDPMessage) -> None:
-        """Sends next DATA message to the client attached to PIPE_OUTPUT.
+        """Sends next `DATA` message to the client attached to PIPE_OUTPUT.
+
+        Arguments:
+          channel: Channel associated with data pipe.
+          session: Session associated with peer.
+          msg:     Message to send.
         """
         error_code = None
         exc = None
@@ -306,6 +320,9 @@ class _FBDP(Protocol):
     def _on_output_ready(self, channel: Channel) -> None:
         """Event handler called when channel is ready to accept at least one outgoing message
         without blocking (or dropping it).
+
+        Arguments:
+          channel: Channel associated with data pipe.
         """
         for session in list(channel.sessions.values()):
             if session.send_pending:
@@ -378,7 +395,13 @@ class _FBDP(Protocol):
     def handle_exception(self, channel: Channel, session: Session, msg: Message, exc: Exception) -> None:
         """Called by `.handle_msg()` on exception in message handler.
 
-        Sends CLOSE message and calls `on_exception` handler.
+        Sends CLOSE message and calls `.on_exception` handler.
+
+        Arguments:
+            channel: Channel associated with data pipe.
+            session: Session associated with peer.
+            msg: Message associated with exception.
+            exc: Exception raised
         """
         error_code = getattr(exc, 'code', ErrorCode.ERROR) if isinstance(exc, StopError) \
             else ErrorCode.INTERNAL_ERROR
@@ -398,15 +421,15 @@ class _FBDP(Protocol):
         """
         raise StopError('OK', code=ErrorCode.OK)
     def handle_accept_data(self, channel: Channel, session: FBDPSession, data: bytes) -> None:
-        """Default event hander executed when DATA message is received from pipe.
+        """Default event hander executed when `DATA` message is received from pipe.
 
         Arguments:
             channel: Channel associated with data pipe.
             session: Session associated with peer.
             data: Data received from peer.
 
-        The event handler may cancel the transmission by raising the `StopError` exception
-        with `code` attribute containing the `ErrorCode` to be returned in CLOSE message.
+        The event handler may cancel the transmission by raising the `.StopError` exception
+        with `code attribute` containing the `.ErrorCode` to be returned in `CLOSE` message.
 
         Note:
             The ACK-REQUEST in received DATA message is handled automatically by protocol.
@@ -417,7 +440,7 @@ class _FBDP(Protocol):
         """
         raise StopError('OK', code=ErrorCode.OK)
     def handle_noop_msg(self, channel: Channel, session: FBDPSession, msg: FBDPMessage) -> None:
-        """Process NOOP message received from peer.
+        """Process `NOOP` message received from peer.
 
         Arguments:
             channel: Channel that received the message.
@@ -428,7 +451,7 @@ class _FBDP(Protocol):
             channel.send(self.create_ack_reply(msg), session)
         self.on_noop(channel, session)
     def handle_data_msg(self, channel: Channel, session: FBDPSession, msg: FBDPMessage) -> None:
-        """Process DATA message received from client.
+        """Process `DATA` message received from client.
 
         Arguments:
             channel: Channel that received the message.
@@ -477,7 +500,7 @@ class _FBDP(Protocol):
                 raise StopError(f"DATA message sent to {socket.name} socket",
                                 code=ErrorCode.PROTOCOL_VIOLATION)
     def handle_close_msg(self, channel: Channel, session: FBDPSession, msg: FBDPMessage) -> None:
-        """Process CLOSE message received from client.
+        """Process `CLOSE` message received from client.
 
         Calls `on_pipe_closed` and then discards the session.
 
@@ -557,8 +580,8 @@ class _FBDP(Protocol):
     @eventsocket
     def on_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage,
                        exc: Exception=None) -> None:
-        """Called when CLOSE message is received or sent, to release any resources
-        associated with current transmission.
+        """`~firebird.base.signal.eventsocket` called when `CLOSE` message is received or sent,
+        to release any resources associated with current transmission.
 
         Arguments:
             channel: Channel associated with data pipe.
@@ -568,7 +591,8 @@ class _FBDP(Protocol):
         """
     @eventsocket
     def on_noop(self, channel: Channel, session: FBDPSession) -> None:
-        """Called when NOOP message is received, and after ACK-REPLY (if requested) is send.
+        """`~firebird.base.signal.eventsocket` called when `NOOP` message is received, and
+        after ACK-REPLY (if requested) is send.
 
         Arguments:
             channel: Channel associated with data pipe.
@@ -576,7 +600,8 @@ class _FBDP(Protocol):
         """
     @eventsocket
     def on_accept_data(self, channel: Channel, session: FBDPSession, data: bytes) -> None:
-        """Event executed for CONSUMER to process data received in DATA message.
+        """`~firebird.base.signal.eventsocket` executed for CONSUMER to process data
+        received in `DATA` message.
 
         Arguments:
             channel: Channel associated with data pipe.
@@ -591,7 +616,8 @@ class _FBDP(Protocol):
         """
     @eventsocket
     def on_produce_data(self, channel: Channel, session: FBDPSession, msg: FBDPMessage) -> None:
-        """Event executed for PRODUCER to store data into outgoing DATA message.
+        """`~firebird.base.signal.eventsocket`  executed for PRODUCER to store data into
+        outgoing `DATA` message.
 
         Arguments:
             channel: Channel associated with data pipe.
@@ -609,7 +635,8 @@ class _FBDP(Protocol):
         """
     @eventsocket
     def on_data_confirmed(self, channel: Channel, session: FBDPSession, type_data: int) -> None:
-        """Event executed for PRODUCER when ACK_REPLY on sent DATA is received.
+        """`~firebird.base.signal.eventsocket` executed for PRODUCER when ACK_REPLY on
+        sent `DATA` is received.
 
         Arguments:
             channel: Channel associated with data pipe.
@@ -621,8 +648,8 @@ class _FBDP(Protocol):
         """
     @eventsocket
     def on_get_data(self, channel: Channel, session: FBDPSession) -> bool:
-        """Event executed for PRODUCER to query the data source for data availability,
-        and for CONSUMER to query whether data could be accepted.
+        """`~firebird.base.signal.eventsocket`  executed for PRODUCER to query the data
+        source for data availability, and for CONSUMER to query whether data could be accepted.
 
         Important:
             If this event does not have handler assigned, the data source is considered as
@@ -661,9 +688,13 @@ class FBDPServer(_FBDP):
                               MsgType.READY: self.handle_ready_msg,
                               })
     def _init_new_batch(self, channel: Channel, session: FBDPSession) -> None:
-        """Initializes the transmission of a new batch of DATA messages.
+        """Initializes the transmission of a new batch of `DATA` messages.
 
-        As we're server, we also have to send READY to the client.
+        As we're server, we also have to send `READY` to the client.
+
+        Arguments:
+          channel: Channel associated with data pipe.
+          session: Session associated with client.
         """
         session.transmit = None
         if (batch_size := self.on_get_ready(channel, session)) == 0:
@@ -673,26 +704,38 @@ class FBDPServer(_FBDP):
             self.send_ready(channel, session, ready)
             session.await_ready = True
     def handle_accept_client(self, channel: Channel, session: FBDPSession) -> None:
-        """Default event handler that raises `StopError` exception with ErrorCode.INTERNAL_ERROR.
+        """Default event handler that raises `.StopError` exception with ErrorCode.INTERNAL_ERROR.
+
+        Arguments:
+          channel: Channel associated with data pipe.
+          session: Session associated with client.
         """
         raise StopError("Accept handler not defined", code=ErrorCode.INTERNAL_ERROR)
     def handle_get_ready(self, channel: Channel, session: FBDPSession) -> int:
         """Default event handler that returns -1, unless `on_get_data` event handler is
         assigned and it returns False - then it returns 0.
+
+        Arguments:
+          channel: Channel associated with data pipe.
+          session: Session associated with client.
         """
         if self.on_get_data.is_set() and not self.on_get_data(channel, session):
             return 0
         return -1
     def handle_schedule_ready(self, channel: Channel, session: FBDPSession) -> None:
-        """Default event handler that raises `StopError` exception with ErrorCode.INTERNAL_ERROR.
+        """Default event handler that raises `.StopError` exception with ErrorCode.INTERNAL_ERROR.
 
         Note:
-            This handler must be reasigned or overriden only when `on_get_ready` event
+            This handler must be reasigned or overriden only when `.on_get_ready` event
             handler may return zero.
+
+        Arguments:
+          channel: Channel associated with data pipe.
+          session: Session associated with client.
         """
         raise StopError("READY scheduler not defined", code=ErrorCode.INTERNAL_ERROR)
     def resend_ready(self, channel: Channel, session: FBDPSession) -> None:
-        """Send another ready to the client.
+        """Send another `READY` message to the client.
 
         Arguments:
             channel: Channel associated with data pipe.
@@ -727,11 +770,11 @@ class FBDPServer(_FBDP):
 
         Arguments:
             channel: Channel that received the message.
-            session: Session instance.
+            session: Session associated with client.
             msg:     Received message.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions are handled by `~_FBDP.handle_exception`.
         """
         if session.pipe is not None:
             # Client already attached to data pipe, OPEN out of band
@@ -749,11 +792,11 @@ class FBDPServer(_FBDP):
 
         Arguments:
             channel: Channel that received the message.
-            session: Session instance.
+            session: Session associated with client.
             msg:     Received message.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions are handled by `~_FBDP.handle_exception`.
         """
         if not session.await_ready:
             # Transmission in progress, READY is out of band
@@ -771,21 +814,24 @@ class FBDPServer(_FBDP):
                 channel.set_wait_out(True, session)
     @eventsocket
     def on_accept_client(self, channel: Channel, session: FBDPSession) -> None:
-        """Event executed when client connects to the data pipe via OPEN message.
+        """`~firebird.base.signal.eventsocket` executed when client connects to the data
+        pipe via OPEN message.
 
         Arguments:
             channel: Channel associated with data pipe.
             session: Session associated with client.
 
-        The session attributes `data_pipe`, `pipe_socket`, `data_format` and `params`
-        contain information sent by client, and the event handler must validate the request.
+        The session attributes `~FBDPSession.pipe`, `~FBDPSession.socket`, `.data_format`
+        and `.params` contain information sent by client, and the event handler must
+        validate the request.
 
-        If request should be rejected, it must raise the `StopError` exception with `code`
-        attribute containing the `ErrorCode` to be returned in CLOSE message.
+        If request should be rejected, it must raise the `.StopError` exception with `code
+        attribute` containing the `ErrorCode` to be returned in `CLOSE` message.
         """
     @eventsocket
     def on_get_ready(self, channel: Channel, session: FBDPSession) -> int:
-        """Event executed to obtain the transmission batch size for the client.
+        """`~firebird.base.signal.eventsocket` executed to obtain the transmission batch
+        size for the client.
 
         Arguments:
             channel: Channel associated with data pipe.
@@ -797,19 +843,20 @@ class FBDPServer(_FBDP):
            * n = Ready to transmit 1..<n> messages.
            * -1 = Ready to transmit 1..<protocol batch size> messages.
 
-        The event handler may cancel the transmission by raising the `StopError` exception
-        with `code` attribute containing the `ErrorCode` to be returned in CLOSE message.
+        The event handler may cancel the transmission by raising the `.StopError` exception
+        with `code attribute` containing the `ErrorCode` to be returned in `CLOSE` message.
         """
     @eventsocket
     def on_schedule_ready(self, channel: Channel, session: FBDPSession) -> None:
-        """The event is executed in order to send the READY message to the client later.
+        """The `~firebird.base.signal.eventsocket` is executed in order to send the `READY`
+        message to the client later.
 
         Arguments:
             channel: Channel associated with data pipe.
             session: Session associated with client.
 
-        The event handler may cancel the transmission by raising the `StopError` exception
-        with `code` attribute containing the `ErrorCode` to be returned in CLOSE message.
+        The event handler may cancel the transmission by raising the `.StopError` exception
+        with `code attribute` containing the `ErrorCode` to be returned in `CLOSE` message.
         """
 
 class FBDPClient(_FBDP):
@@ -830,14 +877,23 @@ class FBDPClient(_FBDP):
                               MsgType.READY: self.handle_ready_msg,
                               })
     def handle_server_ready(self, channel: Channel, session: FBDPSession, batch_size: int) -> int: # pylint: disable=W0613
-        """Default event handler that returns -1, unless `on_get_data` event handler is
+        """Default event handler that returns -1, unless `.on_get_data` event handler is
         assigned and it returns False - then it returns 0.
+
+        Arguments:
+          channel:    Channel associated with data pipe.
+          session:    Session associated with client.
+          batch_size: Batch size limit set by server.
         """
         if self.on_get_data.is_set() and not self.on_get_data(channel, session):
             return 0
         return -1
     def _init_new_batch(self, channel: Channel, session: FBDPSession) -> None:
         """Initializes the transmission of a new batch of DATA messages.
+
+        Arguments:
+          channel: Channel associated with data pipe.
+          session: Session associated with server.
         """
         session.transmit = None
     def accept_new_session(self, channel: Channel, routing_id: RoutingID, msg: FBDPMessage) -> bool: # pylint: disable=W0613
@@ -853,15 +909,19 @@ class FBDPClient(_FBDP):
         """
         return False
     def connect_with_session(self, channel: Channel) -> bool: # pylint: disable=W0613
-        """Called by :meth:`Channel.connect` to determine whether new session should be
+        """Called by `.Channel.connect` to determine whether new session should be
         associated with connected peer.
 
         As FBDP require that connecting peers must send OPEN message to initiate
         transmission, it always returns True.
+
+        Arguments:
+          channel: Channel associated with data pipe.
         """
         return True
     def handle_open_msg(self, channel: Channel, session: FBDPSession, msg: FBDPMessage) -> None:
-        """OPEN message received from server is violation of the protocol.
+        """`OPEN` message received from server is violation of the protocol, so it raises
+        `.StopError` with this error code.
 
         Arguments:
             channel: Channel that received the message.
@@ -869,11 +929,11 @@ class FBDPClient(_FBDP):
             msg:     Received message.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions are handled by `~_FBDP.handle_exception`.
         """
         raise StopError("OPEN message received from server", ErrorCode.PROTOCOL_VIOLATION)
     def handle_ready_msg(self, channel: Channel, session: FBDPSession, msg: FBDPMessage) -> None:
-        """Process READY message received from server.
+        """Process `READY` message received from server.
 
         Arguments:
             channel: Channel that received the message.
@@ -881,7 +941,7 @@ class FBDPClient(_FBDP):
             msg:     Received message.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions are handled by `~_FBDP.handle_exception`.
         """
         if session.transmit is not None:
             # Transmission in progress, READY is out of band
@@ -933,7 +993,8 @@ class FBDPClient(_FBDP):
         self.on_init_session(channel, session)
     @eventsocket
     def on_server_ready(self, channel: Channel, session: FBDPSession, batch_size: int) -> int:
-        """Event executed to negotiate the transmission batch size with server.
+        """`~firebird.base.signal.eventsocket` executed to negotiate the transmission
+        batch size with server.
 
         Arguments:
             channel: Channel associated with data pipe.
@@ -942,18 +1003,18 @@ class FBDPClient(_FBDP):
 
         Returns:
            Number of messages that could be transmitted (batch size):
-           * 0 = Not ready to transmit yet
+           * 0 = Not ready to transmit yet.
            * n = Ready to transmit 1..<n> messages.
            * -1 = Ready to transmit 1..<protocol batch size> messages.
 
         Important:
             The returned value will be used ONLY when it's smaller than `batch_size`.
 
-        The event handler may cancel the transmission by raising the `StopError` exception
-        with `code` attribute containing the `ErrorCode` to be returned in CLOSE message.
+        The event handler may cancel the transmission by raising the `.StopError` exception
+        with `code attribute` containing the `ErrorCode` to be returned in `CLOSE` message.
         """
     @eventsocket
     def on_init_session(self, channel: Channel, session: FBDPSession) -> None:
-        """Event executed from `send_open()` to set additional information to newly
-        created session instance.
+        """`~firebird.base.signal.eventsocket` executed from `send_open()` to set
+        additional information to newly created session instance.
         """

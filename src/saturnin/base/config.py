@@ -36,7 +36,7 @@
 """
 
 from __future__ import annotations
-from typing import Optional, List, Tuple
+from typing import Optional, List, Final
 import sys
 import os
 import sysconfig
@@ -45,13 +45,13 @@ from configparser import ConfigParser, ExtendedInterpolation
 from firebird.base.config import DirectoryScheme, get_directory_scheme, Config, StrOption
 
 #: filename for Saturnin configuration file
-SATURNIN_CFG = 'saturnin.conf'
+SATURNIN_CFG: Final[str] = 'saturnin.conf'
 #: filename for Firebird configuration file
-FIREBIRD_CFG = 'firebird.conf'
+FIREBIRD_CFG: Final[str] = 'firebird.conf'
 #: filename for logging configuration file
-LOGGING_CFG = 'logging.conf'
+LOGGING_CFG: Final[str] = 'logging.conf'
 #: Saturnin configuration file header
-CONFIG_HDR = """;
+CONFIG_HDR: Final[str] = """;
 ; A configuration file consists of sections, each led by a [section] header, followed by
 ; key/value entries separated by = or : string. Section names are case sensitive but keys
 ; are not. Leading and trailing whitespace is removed from keys and values. Values can be
@@ -67,16 +67,10 @@ CONFIG_HDR = """;
 
 """
 
-def is_windows() -> bool:
-    return sys.platform == "win32"
-
-
-def is_mingw() -> bool:
-    return sysconfig.get_platform().startswith("mingw")
-
-
-WINDOWS: bool = is_windows()
-MINGW: bool = is_mingw()
+#: True if current platform is Windows
+WINDOWS: Final[bool] = sys.platform == "win32"
+#: True if current platform is based on MINGW
+MINGW: Final[bool] = sysconfig.get_platform().startswith("mingw")
 
 class SaturninScheme(DirectoryScheme):
     """Saturnin platform directory scheme.
@@ -84,7 +78,7 @@ class SaturninScheme(DirectoryScheme):
     When SATURNIN_HOME environment variable is not set, and Saturnin resides in virtual
     environment that contains `home` subdirectory, it's set as Saturnin HOME directory.
 
-    This `home` subdirectory is created by `saturnin initialize` command on request.
+    This `home` subdirectory is created by `saturnin create home` command on request.
     """
     def __init__(self):
         super().__init__('saturnin')
@@ -96,7 +90,13 @@ class SaturninScheme(DirectoryScheme):
         self.__pip_path: Path = 'pip'
         self.__pip_cmd: List[str] = ['pip']
         if is_virtual():
-            bin_path, python_path = get_venv_paths(venv())
+            root = venv()
+            if WINDOWS:
+                bin_path = root / "Scripts" if not MINGW else root / "bin"
+                python_path = bin_path / "python.exe"
+            else:
+                bin_path = root / "bin"
+                python_path = bin_path / "python"
             pip_path = bin_path / 'pip'
             if pip_path.is_file():
                 self.__pip_path = pip_path
@@ -110,7 +110,10 @@ class SaturninScheme(DirectoryScheme):
                 #os.environ['SATURNIN_HOME'] = str(home_dir)
         #self.dir_map.update(get_directory_scheme('saturnin').dir_map)
     def get_pip_cmd(self, *args) -> List[str]:
-        """List with command to run pip.
+        """Returns list with command to run pip.
+
+        Arguments:
+           args: Arguments for pip
         """
         result = self.__pip_cmd.copy()
         result.extend(args)
@@ -201,31 +204,20 @@ def venv() -> Optional[Path]:
     """
     return Path(sys.prefix) if is_virtual() else None
 
-
-if WINDOWS:
-
-    def get_venv_paths(root: Path) -> Tuple[Path, Path]:
-        bin_path = root / "Scripts" if not MINGW else root / "bin"
-        python_path = bin_path / "python.exe"
-        return bin_path, python_path
-
-else:
-
-    def get_venv_paths(root: Path) -> Tuple[Path, Path]:
-        bin_path = root / "bin"
-        python_path = bin_path / "python"
-        return bin_path, python_path
-
 # Set SATURNIN_HOME if defined in virtual environment
 if is_virtual():
     path: Path = venv() / 'home'
     if path.is_dir():
         os.environ['SATURNIN_HOME'] = str(path)
 
+#: Active Saturnin directory scheme
 directory_scheme: SaturninScheme = SaturninScheme()
+
+#: Saturnin configuration object
 saturnin_config: SaturninConfig = SaturninConfig()
 
 parser: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
 parser.read([directory_scheme.site_conf, directory_scheme.user_conf])
 if parser.has_section('saturnin'):
     saturnin_config.load_config(parser)
+del parser

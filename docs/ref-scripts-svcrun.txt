@@ -7,11 +7,6 @@ saturnin._scripts.svcrun
    :no-members:
    :synopsis: Script to run one service in main or separate thread
 
-Globals
-=======
-
-.. autodata:: PROG_NAME
-
 Functions
 =========
 

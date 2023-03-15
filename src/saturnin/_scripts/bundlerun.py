@@ -57,8 +57,33 @@ class UpperAction(Action):
 
 def main(description: str=None, bundle_config: str=None):
     """Saturnin script to run bundle of services.
+
+    Arguments:
+      description: Description shown when `--help` is used.
+      bundle_config: Default value for `BUNDLE-CONFIG` argument.
+
+    usage::
+
+      saturnin-bundle [-h] [-c CONFIG] [-s SECTION] [-q] [-o]
+                      [-l {critical,fatal,error,warn,warning,info,debug,notset}]
+                      BUNDLE-CONFIG
+
+    positional arguments:
+      BUNDLE-CONFIG         Path to service bundle configuration file.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -c CONFIG, --config CONFIG
+                            Path to additional configuration file. Could be specified multiple times. (default: None)
+      -s SECTION, --section SECTION
+                            Configuration section name (default: bundle)
+      -q, --quiet           Suppress console output. (default: False)
+      -o, --outcome         Always print service execution outcome (default: False)
+      -l {critical,fatal,error,warn,warning,info,debug,notset}, --log-level {critical,fatal,error,warn,warning,info,debug,notset}
+                            Logging level (default: None)
     """
-    description=main.__doc__ if description is None else description
+    if description is None:
+        description = "Saturnin script to run bundle of services."
     parser: ArgumentParser = ArgumentParser(description=description,
                                             formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument('service', metavar='BUNDLE-CONFIG',

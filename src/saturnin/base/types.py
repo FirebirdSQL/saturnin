@@ -85,19 +85,19 @@ MIME_TYPE_TEXT: Final[str] = MIME('text/plain')
 MIME_TYPE_BINARY: Final[str] = MIME('application/octet-stream')
 
 #: Configuration section name for local service addresses
-SECTION_LOCAL_ADDRESS = 'local_address'
+SECTION_LOCAL_ADDRESS: Final[str] = 'local_address'
 #: Configuration section name for node service addresses
-SECTION_NODE_ADDRESS = 'node_address'
+SECTION_NODE_ADDRESS: Final[str] = 'node_address'
 #: Configuration section name for network service addresses
-SECTION_NET_ADDRESS = 'net_address'
+SECTION_NET_ADDRESS: Final[str] = 'net_address'
 #: Configuration section name for service UIDs
-SECTION_SERVICE_UID = 'service_uid'
+SECTION_SERVICE_UID: Final[str] = 'service_uid'
 #: Configuration section name for service peer UIDs
-SECTION_PEER_UID = 'peer_uid'
+SECTION_PEER_UID: Final[str] = 'peer_uid'
 #: Default configuration section name for service bundle
-SECTION_BUNDLE = 'bundle'
+SECTION_BUNDLE: Final[str] = 'bundle'
 #: Default configuration section name for single service
-SECTION_SERVICE = 'service'
+SECTION_SERVICE: Final[str] = 'service'
 
 #: protobuf ID for peer information message
 PROTO_PEER: Final[str] = 'firebird.butler.PeerIdentification'
@@ -119,15 +119,15 @@ class StopError(Error):
     "Exception that should stop furter processing."
 
 class RestartError(Error):
-    "Exception signaling that restart is needed for furter processing."
+    "Exception signaling that restart is needed for further processing."
 
 #Sentinels
 #: Sentinel for return values that indicates failed message processing
-INVALID: Sentinel = Sentinel('INVALID')
+INVALID: Final[Sentinel] = Sentinel('INVALID')
 #: Sentinel for return values that indicates timeout expiration
-TIMEOUT: Sentinel = Sentinel('TIMEOUT')
+TIMEOUT: Final[Sentinel] = Sentinel('TIMEOUT')
 #: Sentinel for return values that indicates restart request
-RESTART: Sentinel = Sentinel('RESTART')
+RESTART: Final[Sentinel] = Sentinel('RESTART')
 
 # Enums
 class Origin(IntEnum):
@@ -229,22 +229,24 @@ class AgentDescriptor(Distinct):
     Note:
         Because this is a `dataclass`, the class variables are those attributes that have
         default value. Other attributes are created in constructor.
+
+    Arguments:
+        uid: Agent ID
+        name: Agent name
+        version: Agent version string
+        vendor_uid: Vendor ID
+        classification: Agent classification string
+        platform_uid: Butler platform ID
+        platform_version: Butler platform version string
+        supplement: Optional list of supplemental information
     """
-    #: Agent ID
     uid: uuid.UUID
-    #: Agent name
     name: str
-    #: Agent version string
     version: str
-    #: Vendor ID
     vendor_uid: uuid.UUID
-    #: Agent classification string
     classification: str
-    #: Butler platform ID
     platform_uid: uuid.UUID = PLATFORM_UID
-    #: Butler platform version string
     platform_version: str = PLATFORM_VERSION
-    #: Optional list of supplemental information
     supplement: TSupplement = None
     def get_key(self) -> Any:
         """Returns `uid` (instance key). Used for instance hash computation."""
@@ -261,14 +263,16 @@ class AgentDescriptor(Distinct):
 @dataclass(eq=True, order=False, frozen=True)
 class PeerDescriptor(Distinct):
     """Peer descriptor.
+
+    Arguments:
+       uid: Peer ID
+       pid: Peer process ID
+       host: Host name
+       supplement: Optional list of supplemental information
     """
-    #: Peer ID
     uid: uuid.UUID
-    #: Peer process ID
     pid: int
-    #: Host name
     host: str
-    #: Optional list of supplemental information
     supplement: TSupplement = None
     def get_key(self) -> Any:
         """Returns `uid` (instance key). Used for instance hash computation."""
@@ -313,18 +317,20 @@ class PeerDescriptor(Distinct):
 @dataclass(eq=True, order=False, frozen=True)
 class ServiceDescriptor(Distinct):
     """Service descriptor.
+
+    Arguments:
+       agent: Service agent descriptor
+       api: Service FBSP API description or `None` for microservice
+       description: Text describing the service
+       facilities: List of Saturnin facilities that this service uses
+       factory: Locator string for service factory
+       config: Service configuration factory
     """
-    #: Service agent descriptor
     agent: AgentDescriptor
-    #: Service FBSP API description or `None` for microservice
     api: List[ButlerInterface]
-    #: Text describing the service
     description: str
-    #: List of Saturnin facilities that this service uses
     facilities: List[str]
-    #: Locator string for service factory
     factory: str
-    #: Service configuration factory
     config: Callable[[], Config]
     def get_key(self) -> Any:
         """Returns `agent.uid` (instance key). Used for instance hash computation."""
@@ -333,22 +339,24 @@ class ServiceDescriptor(Distinct):
 @dataclass(eq=True, order=False, frozen=True)
 class ApplicationDescriptor(Distinct):
     """Application descriptor.
+
+    Arguments:
+       uid: Application ID
+       name: Application name
+       version: Application version string
+       vendor_uid: Vendor ID
+       classification: Application classification string
+       description: Text describing the application
+       factory: Locator string for application `typer` command
+       config: Locator string for application configuration factory
     """
-    #: Application ID
     uid: uuid.UUID
-    #: Application name
     name: str
-    #: Application version string
     version: str
-    #: Vendor ID
     vendor_uid: uuid.UUID
-    #: Application classification string
     classification: str
-    #: Text describing the application
     description: str
-    #: Locator string for application typer command
     factory: str
-    #: Locator string for application configuration factory
     config: str
     def get_key(self) -> Any:
         """Returns `uid` (instance key). Used for instance hash computation."""
@@ -358,6 +366,10 @@ class ApplicationDescriptor(Distinct):
 @dataclass(order=True)
 class PrioritizedItem:
     """Prioritized item for use with `heapq` to implement priority queue.
+
+    Arguments:
+       priority: Item priority
+       item: Prioritized item
     """
     priority: int
     item: Any=field(compare=False)

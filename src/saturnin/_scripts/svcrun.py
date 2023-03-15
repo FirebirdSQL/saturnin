@@ -57,9 +57,35 @@ class UpperAction(Action):
 def main(description: str=None, service_config: str=None):
     """Saturnin script to run one service, either unmanaged in main thread, or managed in
     separate thread.
+
+    Arguments:
+      description: Description shown when `--help` is used.
+      service_config: Default value for `SERVICE-CONFIG` argument.
+
+    usage::
+
+      saturnin-service [-h] [-c CONFIG] [-s SECTION] [-q] [-o] [--main-thread]
+                       [-l {critical,fatal,error,warn,warning,info,debug,notset}]
+                       SERVICE-CONFIG
+
+    positional arguments:
+      SERVICE-CONFIG        Path to service configuration file
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -c CONFIG, --config CONFIG
+                            Path to additional configuration file. Could be specified multiple times. (default: None)
+      -s SECTION, --section SECTION
+                            Configuration section name (default: service)
+      -q, --quiet           Suppress console output (default: False)
+      -o, --outcome         Always print service execution outcome (default: False)
+      --main-thread         Start the service in main thread (default: False)
+      -l {critical,fatal,error,warn,warning,info,debug,notset}, --log-level {critical,fatal,error,warn,warning,info,debug,notset}
+                            Logging level (default: None)
     """
-    description=main.__doc__ if description is None else description
-    parser: ArgumentParser = ArgumentParser(description=main.__doc__,
+    if description is None:
+        description = "Saturnin script to run one service, either unmanaged in main thread, or managed in separate thread."
+    parser: ArgumentParser = ArgumentParser(description=description,
                                             formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument('service', metavar='SERVICE-CONFIG',
                         help="Path to service configuration file",

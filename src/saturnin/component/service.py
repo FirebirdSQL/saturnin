@@ -36,7 +36,7 @@
 """
 
 from __future__ import annotations
-from typing import cast
+from typing import cast, Final
 from abc import abstractmethod
 import uuid
 import zmq
@@ -45,13 +45,18 @@ from saturnin.base import ZMQAddress, RouterChannel, ComponentConfig, ServiceDes
 from saturnin.component.micro import MicroService
 from saturnin.protocol.fbsp import FBSPService
 
-SVC_CHN = 'service'
+#: Channel name
+SVC_CHN: Final[str] = 'service'
 
 class ServiceConfig(ComponentConfig):
     """Base data provider/consumer microservice configuration.
+
+    Arguments:
+        name: Default configuration section name (service name)
     """
     def __init__(self, name: str):
         super().__init__(name)
+        #: Service endpoint addresses
         self.endpoints: ListOption = \
             ListOption('endpoints', ZMQAddress, "List of service endpoints", required=True)
 
@@ -71,6 +76,9 @@ class Service(MicroService):
         self.svc_channel: RouterChannel = None
     def initialize(self, config: ServiceConfig) -> None:
         """Verify configuration and assemble service structural parts.
+
+        Arguments:
+            config: Service configuration.
         """
         super().initialize(config)
         # Set endpoints this service binds
@@ -86,8 +94,11 @@ class Service(MicroService):
         self.register_api_handlers(service)
     @abstractmethod
     def register_api_handlers(self, service: FBSPService) -> None:
-        """Called by `initialize()` for registration of service API handlers and FBSP
+        """Called by `.initialize()` for registration of service API handlers and FBSP
         service event handlers.
+
+        Arguments:
+            service: Service instance
         """
     def start_activities(self) -> None:
         """Start normal service activities.
@@ -98,6 +109,8 @@ class Service(MicroService):
         self.svc_channel.set_wait_in(True)
     def stop_activities(self) -> None:
         """Stop service activities.
+
+        Calls `.FBSPService.close` and disables receiving incoming messages on the channel.
         """
         super().stop_activities()
         cast(FBSPService, self.svc_channel.protocol).close(self.svc_channel)

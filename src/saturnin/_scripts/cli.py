@@ -60,7 +60,7 @@ or *create home*) are available only in this **direct** mode.
 # UPDATE - Update items (components, OIDs etc.)
 
 from __future__ import annotations
-from typing import Callable, List, Optional
+from typing import Callable, List, Tuple, Optional
 import sys
 from typer import Typer, Context
 from rich.align import Align
@@ -75,6 +75,7 @@ from .repl import repl, IOManager
 from .commands.recipes import run_recipe
 from .completers import get_first_line
 
+#: REPL introductory markdown text
 REPL_INTRO = Markdown("""
 # Saturnin management console
 
@@ -89,25 +90,36 @@ or *create home*) are available only in this **direct** mode.
 ---
 """)
 
+#: REPL help text
 REPL_HELP = """Type '?' or '?<command>' for help.
 Type 'quit' to leave the console.
 Use 'Ctrl+Space' to activate command completion.
 """
 
-command_groups = [('list', "Print list of items (services, nodes, packages etc.)"),
-                  ('show', "Print details about particular item (service, node, package etc.)"),
-                  ('edit', "Edit item (configuration, recipe etc.)"),
-                  ('create', "Create item (configuration, recipe etc.)"),
-                  ('run', "Run Saturnin components (recipes, applications, utilities etc.)"),
-                  ('update', "Update items (components, OIDs etc.)"),
-                  ('stop', "Stop activities (daemons, notifications, trace, logging)"),
-                  ('install', "Install components (packages, recipes etc.)"),
-                  ('uninstall', "Uninstall components (packages, recipes etc.)"),
-                  ]
+#: Standard command groups
+#: List of (command name, short help) tuples
+command_groups: List[Tuple[str,str]] = [
+    ('list', "Print list of items (services, nodes, packages etc.)"),
+    ('show', "Print details about particular item (service, node, package etc.)"),
+    ('edit', "Edit item (configuration, recipe etc.)"),
+    ('create', "Create item (configuration, recipe etc.)"),
+    ('run', "Run Saturnin components (recipes, applications, utilities etc.)"),
+    ('update', "Update items (components, OIDs etc.)"),
+    ('stop', "Stop activities (daemons, notifications, trace, logging)"),
+    ('install', "Install components (packages, recipes etc.)"),
+    ('uninstall', "Uninstall components (packages, recipes etc.)"),
+]
 
 
 def find_group(in_app: Typer, name: str) -> Typer:
-    "Returns sub-command group in command group."
+    """Returns sub-command group in command group.
+
+    Arguments:
+      in_app: Typer instance to be searched.
+      name:   Command name.
+
+    Returns: Typer instance for command.
+    """
     for grp in in_app.registered_groups:
         if grp.name == name:
             return grp.typer_instance
@@ -118,8 +130,11 @@ def add_command(app: Typer, name: str, cmd: Callable, *, help: Optional[str]=Non
     """Add command into main Typer application.
 
     Arguments:
-       name: Command name. Can use dot notation to create a sub-command.
-       cmd:  Callable to be registered as Typer command.
+       app:   Typer instance under which the command should be placed.
+       name:  Command name. Can use dot notation to create a sub-command.
+       cmd:   Callable to be registered as Typer command.
+       help:  Optional help for command.
+       pabel: Rich panel where command should be listed in help.
     """
     names: List[str] = name.split('.')
     group: Typer = app
@@ -208,7 +223,7 @@ def cli_loop(*, restart: bool) -> bool:
     return app._restart
 
 def main():
-    """Saturnin CLI manager.
+    """Main entry point for Saturnin CLI manager.
     """
     restart = False
     while restart := cli_loop(restart=restart):

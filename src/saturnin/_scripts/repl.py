@@ -51,6 +51,7 @@ from saturnin.lib.console import console as cm, FORCE_TERMINAL
 
 EchoCallback = Callable[[str], None]
 
+#: Prompt-toolkit key bindings
 kb = KeyBindings()
 
 @kb.add('c-space')
@@ -63,12 +64,20 @@ def _(event):
         buff.start_completion(select_first=False)
 
 class CustomClickCompleter(Completer):
-    """Custom completer.
+    """Custom prompt-toolkit completer.
+
+    It provides command completion for Typer/Click commands and parameters, including
+    option/parameter values.
+
+    Arguments:
+      cli: Root Typer command group
     """
     def __init__(self, cli):
         self.cli = cli
 
     def get_completions(self, document, complete_event=None):
+        """Yields completion choices.
+        """
         # Code analogous to click._bashcomplete.do_complete
         try:
             txt = document.text_before_cursor
@@ -173,8 +182,14 @@ class IOManager: # pylint: disable=R0902
     """REPL I/O manager.
 
     Handles command prompt, stdin/stdout redirection etc.
+
+    Arguments:
+      context: Current Click context
+      echo:    Callback called with command line before it's executed.
+      console: Costom Rich console for output. If not provided, Saturnin standard console
+               is used.
     """
-    def __init__(self, old_ctx, *, echo: Optional[EchoCallback]=None, console: Console=None):
+    def __init__(self, context, *, echo: Optional[EchoCallback]=None, console: Console=None):
         self.console: Console = cm.std_console if console is None else console
         self.html_output: bool = False
         self.output_file: TextIO = None
@@ -187,7 +202,7 @@ class IOManager: # pylint: disable=R0902
         self.pipe_in = StringIO()
         self.pipe_out = StringIO()
         self.prompt_kwargs: Dict[str, Any] = {}
-        group_ctx = old_ctx.parent or old_ctx
+        group_ctx = context.parent or context
         defaults = {
             'history': FileHistory(str(directory_scheme.history_file)),
             'completer': CustomClickCompleter(group_ctx.command),
@@ -276,13 +291,13 @@ class IOManager: # pylint: disable=R0902
                 self.console.save_html(self.output_filename)
         self.console = cm.std_console
 
-def repl(old_ctx, ioman: IOManager) -> bool: # pylint: disable=R0912
+def repl(context, ioman: IOManager) -> bool: # pylint: disable=R0912
     """
     Start an interactive shell. All subcommands are available in it.
 
     Arguments:
-    old_ctx:     Current Click context.
-    ioman:  IOManager instance.
+      context: Current Click context.
+      ioman:   IOManager instance.
 
     Returns:
        True if REPL should be restarted, otherwise returns False.
@@ -290,7 +305,7 @@ def repl(old_ctx, ioman: IOManager) -> bool: # pylint: disable=R0912
     If stdin is not a TTY, no prompt will be printed, but commands are read
     from stdin.
     """
-    group_ctx = old_ctx.parent or old_ctx
+    group_ctx = context.parent or context
     group_ctx.info_name = ''
     group = group_ctx.command
     group.params.clear()

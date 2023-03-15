@@ -57,8 +57,8 @@ from saturnin.lib.console import console, _h, RICH_YES, RICH_NO
 from saturnin.lib.metadata import distribution
 from saturnin._scripts.completers import service_completer, application_completer, get_first_line
 
+#: Typer command group for package management commands
 app = typer.Typer(rich_markup_mode="rich", help="Package management.")
-
 
 @app.command()
 def list_services(with_name: str= \

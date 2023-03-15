@@ -30,22 +30,22 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
+# pylint: disable=C0301
 
 """Saturnin console manager for terminal configuration and output.
 
 """
 
 from __future__ import annotations
-from typing import List
 import sys
 import os
-from pathlib import Path
 from rich.console import Console
 from rich.theme import Theme
 from rich.text import Text
 from rich.highlighter import RegexHighlighter
 from saturnin.base import directory_scheme
 
+#: Default console theme
 DEFAULT_THEME: Theme = Theme(
     {'option': 'bold cyan',
      'switch': 'bold green',
@@ -69,7 +69,6 @@ DEFAULT_THEME: Theme = Theme(
      'call': 'bold magenta',
      'comma': 'bold',
      'ellipsis': 'yellow',
-     'error': 'bold red',
      'eui48': 'bold bright_green',
      'eui64': 'bold bright_green',
      'filename': 'bright_magenta',
@@ -79,7 +78,6 @@ DEFAULT_THEME: Theme = Theme(
      'py_none': 'italic magenta',
      'number': 'bold not italic cyan',
      'number_complex': 'bold not italic cyan',
-     'path': 'magenta',
      'str': 'not bold not italic green',
      'tag_contents': 'default',
      'tag_end': 'bold',
@@ -98,13 +96,19 @@ DEFAULT_THEME: Theme = Theme(
      'timezone': 'yellow',
      })
 
-FORCE_TERMINAL = True if os.getenv("FORCE_COLOR") or os.getenv("PY_COLORS") else None
+#: Use rich terminal or not
+FORCE_TERMINAL: bool = True if os.getenv("FORCE_COLOR") or os.getenv("PY_COLORS") else None
 
-RICH_YES = Text('✔', style='ok')
-RICH_NO = Text('✖', style='error')
-RICH_OK = Text('OK', style='ok')
-RICH_WARNING = Text('WARNING', style='warning')
-RICH_ERROR = Text('ERROR', style='error')
+#: Standard rich text for YES
+RICH_YES: Text = Text('✔', style='ok')
+#: Standard rich text for NO
+RICH_NO: Text = Text('✖', style='error')
+#: Standard rich text for OK
+RICH_OK: Text = Text('OK', style='ok')
+#: Standard rich text for WARNING
+RICH_WARNING: Text = Text('WARNING', style='warning')
+#: Standard rich text for ERROR
+RICH_ERROR: Text = Text('ERROR', style='error')
 
 def _combine_regex(*regexes: str) -> str:
     """Combine a number of regexes in to a single regex.
@@ -116,6 +120,7 @@ def _combine_regex(*regexes: str) -> str:
 
 class SaturninHighlighter(RegexHighlighter): # pylint: disable=R0903
     """Highlights our special options."""
+    #: Regular expressions used by `.highlight`.
     highlights = [
         r"(^|\W)(?P<switch>\-\w+)(?![a-zA-Z0-9])",
         r"(^|\W)(?P<option>\-\-[\w\-]+)(?![a-zA-Z0-9])",
@@ -192,42 +197,40 @@ class SaturninHighlighter(RegexHighlighter): # pylint: disable=R0903
         )
     ]
     def highlight(self, text: Text) -> Text:
-        """Highlight :class:`rich.text.Text` using regular expressions.
+        """Highlight `~rich.text.Text` using regular expressions.
 
-        Args:
-            text (~Text): Text to highlighted.
-
+        Arguments:
+            text: Text to highlighted.
         """
-
         highlight_regex = text.highlight_regex
         for re_highlight in self.highlights:
             highlight_regex(re_highlight, style_prefix=self.base_style)
         return text
 
-highlighter = SaturninHighlighter()
+#: Saturnin text highlighter
+highlighter: SaturninHighlighter = SaturninHighlighter()
+#: Shortcut to `highlighter.highlight`
 _h = highlighter.highlight
 
 class ConsoleManager():
     """Saturnin site manager.
     """
     def __init__(self):
-        #: Used configuration files
-        self.used_config_files: List[Path] = []
         #: Suppress output flag
         self.quiet: bool = False
         #: Verbose output flag
         self.verbose: bool = False
-        #: Main console
-        self.std_console = Console(theme=Theme.read(directory_scheme.theme_file)
-                                   if directory_scheme.theme_file.exists()
-                                   else DEFAULT_THEME, tab_size=4, #emoji=False,
-                                   highlighter=highlighter, highlight=True,
-                                   force_terminal=FORCE_TERMINAL)
+        #: Rich main console
+        self.std_console: Console = Console(theme=Theme.read(directory_scheme.theme_file)
+                                            if directory_scheme.theme_file.exists()
+                                            else DEFAULT_THEME, tab_size=4, #emoji=False,
+                                            highlighter=highlighter, highlight=True,
+                                            force_terminal=FORCE_TERMINAL)
         if not sys.stdout.isatty():
             self.std_console.width = 5000
-        #: Error console
-        self.err_console = Console(stderr=True, style='bold red', tab_size=4, #emoji=False,
-                                   force_terminal=FORCE_TERMINAL)
+        #: Rich error console
+        self.err_console: Console = Console(stderr=True, style='bold red', tab_size=4, #emoji=False,
+                                            force_terminal=FORCE_TERMINAL)
     def print_info(self, message='') -> None:
         "Prints information message to console."
         if self.verbose and not self.quiet:

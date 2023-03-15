@@ -36,8 +36,7 @@
 """
 
 from __future__ import annotations
-from typing import Union, Dict, List, Optional, Callable, cast
-import sys
+from typing import Union, Dict, List, Optional, Callable, cast, Final
 import os
 import platform
 import threading
@@ -55,7 +54,7 @@ from saturnin.base import (ZMQAddress, Component, PeerDescriptor, ServiceDescrip
 from saturnin.protocol.iccp import ICCPComponent
 
 #: Service control channel name
-SVC_CTRL = sys.intern('iccp')
+SVC_CTRL: Final[str] = 'iccp'
 
 class MicroService(Component, TracedMixin, metaclass=Conjunctive): # pylint: disable=E1139
     """Saturnin Component for Firebird Burler Microservices.
@@ -157,6 +156,9 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive): # pylint: dis
                 break
     def initialize(self, config: ComponentConfig) -> None:
         """Verify configuration and assemble component structural parts.
+
+        Arguments:
+            config: Service configuration.
         """
         config.validate() # Fail early!
         if config.logging_id.value is not None:

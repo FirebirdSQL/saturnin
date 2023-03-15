@@ -30,8 +30,9 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
+# pylint: disable=W0611
 
-"""Saturnin daemon process management.
+"""Module for work with importlib metadata
 
 
 """
@@ -42,7 +43,15 @@ from importlib.metadata import (entry_points, EntryPoint, Distribution, distribu
                                 distribution)
 
 def iter_entry_points(group: str, name: str=None) -> Generator[EntryPoint, None, None]:
-    "Replacement for pkg_resources.iter_entry_points"
+    """Replacement for pkg_resources.iter_entry_points.
+
+    Arguments:
+        group: Entrypoint group name
+        name:  Etrypoint name.
+
+    When `name` is specified, returns only EntryPoint with such name. When `name` is not
+    specified, returns all entry points in group.
+    """
     for item in entry_points().get(group, []):
         if name is None or item.name == name:
             yield item

@@ -2,7 +2,7 @@
 #
 # PROGRAM/MODULE: saturnin
 # FILE:           saturnin/_scripts/commands/oids.py
-# DESCRIPTION:    Saturnin OID registey management commands
+# DESCRIPTION:    Saturnin OID registry management commands
 # CREATED:        23.11.2022
 #
 # The contents of this file are subject to the MIT License
@@ -31,7 +31,7 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin OID registey management commands
+"""Saturnin OID registry management commands
 
 """
 
@@ -48,8 +48,8 @@ from saturnin.base import directory_scheme
 from saturnin.lib.console import console, _h, RICH_OK, RICH_ERROR
 from saturnin._scripts.completers import oid_completer
 
+#: Typer command group for OID management commands
 app = typer.Typer(rich_markup_mode="rich", help="Saturnin OID management.")
-
 
 @app.command()
 def list_oids(with_name: str=typer.Option('', help="List only OIDs with this string in name"),

@@ -38,7 +38,7 @@
 """
 
 from __future__ import annotations
-from typing import Dict, List, Union, Type, Iterable
+from typing import Dict, List, Union, Type, Iterable, Final
 import uuid
 import traceback
 from struct import pack, unpack
@@ -47,8 +47,9 @@ from firebird.base.types import ANY
 from firebird.base.signal import eventsocket
 from firebird.base import protobuf
 from firebird.base.config import ZMQAddress, Config, ConfigProto, PROTO_CONFIG
-from saturnin.base import InvalidMessageError, StopError, PROTO_PEER, PeerDescriptor, \
-     Channel, Protocol, Message, Session, RoutingID, TZMQMessage, Outcome
+from saturnin.base import (InvalidMessageError, StopError, PROTO_PEER, PeerDescriptor,
+                           Channel, Protocol, Message, Session, RoutingID, TZMQMessage,
+                           Outcome)
 
 class MsgType(IntEnum):
     """Control message type.
@@ -148,7 +149,7 @@ class ICCPMessage(Message): # pylint: disable=R0902
                 msg.config.CopyFrom(self.config)
         return msg
     def get_keys(self) -> Iterable:
-        """Returns iterable of dictionary keys to be used with `Protocol.handlers`.
+        """Returns iterable of dictionary keys to be used with `.Protocol.handlers`.
         Keys must be provided in order of precedence (from more specific to general).
         """
         return [self.msg_type, ANY]
@@ -159,10 +160,10 @@ class _ICCP(Protocol):
     Used by Saturnin internally for component/controller transmissions.
     """
     #: string with protocol OID (dot notation).
-    OID: str = '1.3.6.1.4.1.53446.1.1.0.1.1'
+    OID: Final[str] = '1.3.6.1.4.1.53446.1.1.0.1.1'
     # iso.org.dod.internet.private.enterprise.firebird.butler.platform.saturnin.protocol.iscp
     #: UUID instance that identifies the protocol.
-    UID: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_OID, OID)
+    UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, OID)
     def __init__(self, *, session_type: Type[Session] = Session):
         """
         Arguments:
@@ -261,32 +262,56 @@ class ICCPComponent(_ICCP):
 
         As ICCP require that connecting peers must send a message to initiate transmission,
         it always returns True.
+
+        Arguments:
+          channel: Channel associated with controller.
         """
         return True
     def wrong_message(self, channel: Channel, session: Session, msg: ICCPMessage) -> None:
         """Handle wrong message received from controller.
 
-        Raises `StopError`, which in turn calls `on_exception` from `handle_msg`.
+        Arguments:
+          channel: Channel associated with controller.
+          session: Session associated with controller.
+          msg:     Message sent by controller.
+
+        Raises `.StopError`, which in turn calls `.on_exception` from `.handle_msg`.
         """
         raise StopError("Wrong message received from controller")
     def handle_invalid_msg(self, channel: Channel, session: Session,
                            exc: InvalidMessageError) -> None:
-        """Event handler for `on_invalid_msg`. Calls `on_stop_component` with exception.
+        """Event handler for `.on_invalid_msg`. Calls `on_stop_component` with exception.
+
+        Arguments:
+          channel: Channel associated with controller.
+          session: Session associated with controller.
+          exc:     Exception raised.
         """
         self.on_stop_component(exc)
         super().handle_invalid_msg(channel, session, exc)
     def handle_exception(self, channel: Channel, session: Session, msg: ICCPMessage,
                          exc: Exception) -> None:
-        """Event handler for `on_exception`. Calls `on_stop_component` with exception.
+        """Event handler for `.on_exception`. Calls `on_stop_component` with exception.
+
+        Arguments:
+          channel: Channel associated with controller.
+          session: Session associated with controller.
+          msg:     Message sent by controller.
+          exc:     Exception to handle.
         """
         self.on_stop_component(exc)
         super().handle_exception(channel, session, msg, exc)
     def handle_stop(self, channel: Channel, session: Session, msg: ICCPMessage) -> None:
-        """Process STOP message received from controller. Calls `on_stop_component`.
+        """Process `STOP` message received from controller. Calls `on_stop_component`.
+
+        Arguments:
+          channel: Channel associated with controller.
+          session: Session associated with controller.
+          msg:     Received message.
         """
         self.on_stop_component()
     def handle_request(self, channel: Channel, session: Session, msg: ICCPMessage) -> None:
-        """Process REQUEST message received from controller.
+        """Process `REQUEST` message received from controller.
 
         Arguments:
             channel: Channel that received the message.
@@ -303,7 +328,11 @@ class ICCPComponent(_ICCP):
             raise StopError("Send to controller failed", err_code=err_code)
     def ready_msg(self, peer: PeerDescriptor,
                   endpoints: Dict[str, List[ZMQAddress]]) -> ICCPMessage:
-        """Returns READY control message.
+        """Returns `READY` control message.
+
+        Arguments:
+          peer:      Component descriptor.
+          endpoints: Component endpoints.
         """
         msg: ICCPMessage = self.message_factory()
         msg.msg_type = MsgType.READY
@@ -311,13 +340,16 @@ class ICCPComponent(_ICCP):
         msg.endpoints = endpoints.copy()
         return msg
     def ok_msg(self) -> ICCPMessage:
-        """Returns OK control message.
+        """Returns `OK` control message.
         """
         msg: ICCPMessage = self.message_factory()
         msg.msg_type = MsgType.OK
         return msg
     def error_msg(self, exc: Exception) -> ICCPMessage:
-        """Returns ERROR control message.
+        """Returns `ERROR` control message.
+
+        Arguments:
+          exc: Exception to send.
         """
         msg: ICCPMessage = self.message_factory()
         msg.msg_type = MsgType.ERROR
@@ -328,7 +360,11 @@ class ICCPComponent(_ICCP):
         return msg
     def finished_msg(self, outcome: Outcome,
                      details: Union[None, Exception, List[str]]) -> ICCPMessage:
-        """Returns FINISHED control message.
+        """Returns `FINISHED` control message.
+
+        Arguments:
+          outcome: Outcome of componentn run.
+          details: Additional information.
         """
         msg: ICCPMessage = self.message_factory()
         msg.msg_type = MsgType.FINISHED
@@ -346,7 +382,7 @@ class ICCPComponent(_ICCP):
         return msg
     @eventsocket
     def on_stop_component(self, exc: Exception=None) -> None:
-        """Called when commponent should stop its operation.
+        """`~firebird.base.signal.eventsocket` called when commponent should stop its operation.
 
         Arguments:
            exc: Exception that describes the reason why component should stop. If not
@@ -354,7 +390,7 @@ class ICCPComponent(_ICCP):
         """
     @eventsocket
     def on_config_request(self, config: ConfigProto) -> None:
-        """Called when controller requested reconfiguration.
+        """`~firebird.base.signal.eventsocket` called when controller requested reconfiguration.
 
         Any exception raised by event handler is returned back to controller via ERROR
         message.
@@ -384,23 +420,44 @@ class ICCPController(_ICCP):
     def wrong_message(self, channel: Channel, session: Session, msg: ICCPMessage) -> None:
         """Handle wrong message received from component.
 
-        Raises `StopError`, which in turn calls `on_exception` from `handle_msg`.
+        Arguments:
+          channel: Channel associated with component.
+          session: Session associated with component.
+          msg:     Message sent by component.
+
+        Raises `.StopError`, which in turn calls `.on_exception` from `.handle_msg`.
         """
         raise StopError("Wrong message received from component")
     def handle_invalid_msg(self, channel: Channel, session: Session,
                            exc: InvalidMessageError) -> None:
-        """Event handler for `on_invalid_msg`. Calls `on_stop_controller` with exception.
+        """Event handler for `.on_invalid_msg`. Calls `on_stop_controller` with exception.
+
+        Arguments:
+          channel: Channel associated with component.
+          session: Session associated with component.
+          exc:     Exception raised.
         """
         self.on_stop_controller(exc)
         super().handle_invalid_msg(channel, session, exc)
     def handle_exception(self, channel: Channel, session: Session, msg: ICCPMessage,
                          exc: Exception) -> None:
-        """Event handler for `on_exception`. Calls `on_stop_controller` with exception.
+        """Event handler for `.on_exception`. Calls `on_stop_controller` with exception.
+
+        Arguments:
+          channel: Channel associated with component.
+          session: Session associated with component.
+          msg:     Message sent by component.
+          exc:     Exception to handle.
         """
         self.on_stop_controller(exc)
         super().handle_exception(channel, session, msg, exc)
     def handle_ready(self, channel: Channel, session: Session, msg: ICCPMessage) -> ICCPMessage:
-        """Process READY message received from component.
+        """Process `READY` message received from component.
+
+        Arguments:
+          channel: Channel associated with component.
+          session: Session associated with component.
+          msg:     Message sent by component.
 
         Returns:
             Received READY message if it's the first one from component.
@@ -413,20 +470,28 @@ class ICCPController(_ICCP):
         session.ready = True
         return msg
     def handle_oef(self, channel: Channel, session: Session, msg: ICCPMessage) -> ICCPMessage:
-        """Process OK/ERROR/FINISHED messages received from component. It simply returns
+        """Process `OK/ERROR/FINISHED` messages received from component. It simply returns
         the message.
+
+        Arguments:
+          channel: Channel associated with component.
+          session: Session associated with component.
+          msg:     Message sent by component.
         """
         if msg.msg_type in (MsgType.OK, MsgType.FINISHED) and not hasattr(session, 'ready'):
             raise StopError(f"Unexpected {msg.msg_type.name} message from component")
         return msg
     def stop_msg(self) -> ICCPMessage:
-        """Returns OK control message.
+        """Returns `STOP` control message.
         """
         msg: ICCPMessage = self.message_factory()
         msg.msg_type = MsgType.STOP
         return msg
     def request_config_msg(self, config: Config=None) -> ICCPMessage:
-        """Returns REQUEST/CONFIG control message.
+        """Returns `REQUEST.CONFIG` control message.
+
+        Arguments:
+          config: Configuration for component.
         """
         msg: ICCPMessage = self.message_factory()
         msg.msg_type = MsgType.REQUEST
@@ -437,7 +502,8 @@ class ICCPController(_ICCP):
         return msg
     @eventsocket
     def on_stop_controller(self, exc: Exception) -> None:
-        """Called when controller should stop its operation due to error condition.
+        """`~firebird.base.signal.eventsocket` called when controller should stop its
+        operation due to error condition.
 
         Arguments:
            exc: Exception that describes the reason why component should stop.

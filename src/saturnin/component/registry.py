@@ -33,20 +33,20 @@
 
 """Saturnin component registration and discovery.
 
-Services are registered as entry points for their `ServiceDescriptor` - i.e. the instance
-of `ServiceDescriptor` for installed service is returned by `EntryPoint.load()`.
+Services are registered as entry points for their `.ServiceDescriptor` - i.e. the instance
+of `.ServiceDescriptor` for installed service is returned by `EntryPoint.load()`.
 
 The default group for service registration is `saturnin.service`, but it's possible to
 install additional service discovery iterators.
 
 Custom service iterator must be a generator that accepts optional `uid` in string format,
-and yileds `EntryPoint` instances. If `uid` is specified, it must return only `EntryPoint`
-only for service with given `uid`, otherwise it should return all services.
+and yileds `importlib.metadata.EntryPoint` instances. If `uid` is specified, it must return
+only `EntryPoint` only for service with given `uid`, otherwise it should return all services.
 
 Note:
 
-  Custom iterator can return objects that are not `.EntryPoint` instances, but they MUST
-  implement `load()` method that will return `.ServiceDescriptor` instance.
+  Custom iterator can return objects that are not `~importlib.metadata.EntryPoint` instances,
+  but they MUST implement `load()` method that will return `.ServiceDescriptor` instance.
 
 Custom iterators must be registered as entry points in `saturnin.service.iterator` group.
 """
@@ -65,6 +65,19 @@ from saturnin.lib.metadata import iter_entry_points, get_entry_point_distributio
 
 class ServiceInfo(Distinct): # pylint: disable=R0902
     """Information about service stored in  `.ServiceRegistry`.
+
+    Arguments:
+        uid: Service UID
+        name: Service name
+        version: Service version
+        vendor: Service vendor UID
+        classification: Service classification
+        description: Service description
+        facilities: List of service facilities
+        api: List of interfaces provided by service
+        factory: Service factory specification (entry point)
+        descriptor: Service descriptor specification (entry point)
+        distribution: Installed distribution package that contains this service
     """
     def __init__(self, *, uid: UUID, name: str, version: str, vendor: UUID,
                  classification: str, description: str, facilities: List[str],
@@ -114,7 +127,7 @@ class ServiceInfo(Distinct): # pylint: disable=R0902
                 }
     def __get_descriptor_obj(self) -> ServiceDescriptor:
         """Service descriptor object. If it's not assigned directly, then it's loaded
-        using `.desciptor` on first access.
+        using `.descriptor` on first access.
         """
         if self.__desc_obj is None:
             self.__desc_obj = load(self.descriptor)
@@ -122,7 +135,8 @@ class ServiceInfo(Distinct): # pylint: disable=R0902
     def __set_descriptor_obj(self, value: Optional[ServiceDescriptor]) -> None:
         "Property setter"
         self.__desc_obj = value
-    descriptor_obj = property(__get_descriptor_obj, __set_descriptor_obj, None, __get_descriptor_obj.__doc__)
+    descriptor_obj = property(__get_descriptor_obj, __set_descriptor_obj, None,
+                              __get_descriptor_obj.__doc__)
     def __get_factory_obj(self) -> Any:
         """Service factory object. If it's not assigned directly, then it's loaded
         using `.factory` on first access.
@@ -141,6 +155,7 @@ class ServiceRegistry(Registry):
     Holds `.ServiceInfo` instances.
 
     It is used in two modes:
+
     1. In full saturnin deployment, the information about services is loaded from TOML file.
        Service descriptors and factories are loaded on demand.
     2. In standalone service/bundle mode, service information including service desciptors
@@ -150,6 +165,11 @@ class ServiceRegistry(Registry):
     def add(self, descriptor: ServiceDescriptor, factory: Any, distribution: str) -> None:
         """Direct service registration. Used by systems that does not allow dynamic discovery,
         for example programs compiled by Nuitka.
+
+        Arguments:
+            descriptor: Service descriptor
+            factory: Service factory
+            distribution: Distribution package name with service
         """
         kwargs = {}
         kwargs['distribution'] = distribution
@@ -234,10 +254,14 @@ class ServiceRegistry(Registry):
         if directory_scheme.site_services_toml.is_file():
             service_registry.load_from_toml(directory_scheme.site_services_toml.read_text())
     def save(self) -> None:
-        "Save information about installed services."
+        "Save information about installed services to TOML file."
         directory_scheme.site_services_toml.write_text(service_registry.as_toml())
     def get_by_name(self, name: str, default: Any=None) -> Distinct:
         """Get service by its name.
+
+        Arguments:
+            name: Service name.
+            default: Default value returned when service is not found.
         """
         return self.find(lambda x: x.name == name, default=default)
 
@@ -248,5 +272,6 @@ _iterators = [partial(iter_entry_points, 'saturnin.service')]
 for i in iter_entry_points('saturnin.service.iterator'):
     _iterators.append(i.load())
 
+#: Saturnin service registry
 service_registry: ServiceRegistry = ServiceRegistry()
 service_registry.load()

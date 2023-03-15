@@ -32,16 +32,17 @@
 #                 ______________________________________
 # pylint: disable=R0913
 
-"""saturnin - Saturnin recipes
+"""Saturnin recipes
 
 
 """
 
 from __future__ import annotations
-from typing import Hashable, Optional
+from typing import Hashable
 from uuid import UUID
 from enum import Enum
 from pathlib import Path
+from dataclasses import dataclass
 from configparser import ConfigParser, ExtendedInterpolation
 from firebird.base.config import Config, EnumOption, StrOption, UUIDOption, PathOption
 from firebird.base.types import Distinct, Error
@@ -74,37 +75,43 @@ class SaturninRecipe(Config):
                        default=RecipeExecutionMode.NORMAL)
         #: Recipe executor
         self.executor: PathOption = PathOption('executor', "Recipe executor.")
-        #: Application
+        #: Application (if any)
         self.application: UUIDOption = \
             UUIDOption('application', "Application UID")
         #: Description
         self.description: StrOption = \
             StrOption('description', "Recipe description", default="Not provided")
 
+@dataclass(eq=True, order=False, frozen=True)
 class RecipeInfo(Distinct): # pylint: disable=R0903
-    """Recipe information record stored in recipe registry.
+    """Dataclass recipe information record stored in recipe registry.
+
+    Arguments:
+        name: Recipe name
+        recipe_type: Recipe type
+        execution_mode: Recipe execution mode
+        executor: Recipe executor
+        application: Application to be used
+        description: Recipe description
+        filename: Path to recipe file
     """
-    def __init__(self, name: str, recipe_type: RecipeType, execution_mode: RecipeExecutionMode,
-                 executor: Optional[Path], application: Optional[UUID], description: str,
-                 filename: Path):
-        #: recipe name
-        self.name: str = name
-        #: Recipe type
-        self.recipe_type: RecipeType = recipe_type
-        #: Recipe execution mode
-        self.execution_mode: RecipeExecutionMode = execution_mode
-        #: Recipe executor
-        self.executor: Path = executor
-        #: Application
-        self.application: UUID = application
-        #: Description
-        self.description: str = description
-        #: Path to recipe file
-        self.filename: Path = filename
+    #: Recipe name
+    name: str
+    #: Recipe type
+    recipe_type: RecipeType
+    #: Recipe execution mode
+    execution_mode: RecipeExecutionMode
+    #: Recipe executor
+    executor: Path
+    #: Application to be used
+    application: UUID
+    #: Recipe description
+    description: str
+    #: Path to recipe file
+    filename: Path
     def get_key(self) -> Hashable:
         "Returns service UID"
         return self.name
-
 
 class RecipeRegistry(Registry):
     """Saturnin recipe registry.
@@ -115,6 +122,7 @@ class RecipeRegistry(Registry):
         """Populate registry from descriptors of installed recipes.
 
         Arguments:
+          directory: Directory with recipe files.
           ignore_errors: When True, errors are ignored, otherwise `.Error` is raised.
         """
         recipe_cfg: SaturninRecipe = SaturninRecipe()
@@ -142,6 +150,7 @@ class RecipeRegistry(Registry):
                                   recipe_cfg.description.value,
                                   filename))
 
+#: Saturnin recipe registry
 recipe_registry: RecipeRegistry = RecipeRegistry()
 if directory_scheme.recipes.is_dir():
     recipe_registry.clear()

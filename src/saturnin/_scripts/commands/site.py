@@ -49,8 +49,8 @@ from saturnin.base import CONFIG_HDR, directory_scheme, saturnin_config, venv
 from saturnin.lib.console import console, DEFAULT_THEME, RICH_YES, RICH_NO, RICH_OK
 from saturnin._scripts.completers import path_completer
 
+#: Typer command group for site management commands
 app = typer.Typer(rich_markup_mode="rich", help="Saturnin site management.")
-
 
 def ensure_dir(description: str, path: Path):
     """Create directory (incl. parents) if it does not exists.
@@ -83,7 +83,12 @@ def ensure_config(path: Path, content: str, new_config: bool):
     console.print(RICH_OK)
 
 def add_path(table: Table, description: str, path: Path) -> None:
-    """Adds new row to table with information about path.
+    """Adds new row to table with information about path incl. indicator whether path exists.
+
+    Arguments:
+      table: Rich table
+      description: Path description
+      path: Path
     """
     table.add_row(description, RICH_YES if path.exists() else RICH_NO, str(path))
 

@@ -28,7 +28,9 @@
 # Based on code from https://github.com/click-contrib/click-repl
 # pylint: disable=W0613
 
-"""CLI command completers
+"""CLI command completers.
+
+For use with Typer/Click arguments and options (parameter `autocompletion`).
 """
 
 from __future__ import annotations
@@ -45,7 +47,7 @@ def get_first_line(text: str) -> str:
     return text.strip().split('\n')[0]
 
 def oid_completer(ctx, args, incomplete) -> List:
-    """Click completer for OIDs.
+    """Click completer for OIDs. Returns both, UUID and OID names.
     """
     result = [(str(oid.uid)) for oid in oid_registry.values()]
     result.extend(oid.full_name for oid in oid_registry.values())

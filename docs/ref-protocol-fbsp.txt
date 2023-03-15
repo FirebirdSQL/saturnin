@@ -45,7 +45,7 @@ Classes
 .. autoclass:: FBSPService
 .. autoclass:: FBSPClient
 .. autoclass:: FBSPEventClient
-.. autoclass:: __APIHandlerChecker
+.. autoclass:: _APIHandlerChecker
 
 Functions
 =========

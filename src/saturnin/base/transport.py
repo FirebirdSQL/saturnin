@@ -45,7 +45,7 @@ The messaging framework consists from:
 """
 
 from __future__ import annotations
-from typing import  Union, Dict, List, Iterable, Callable, Optional, Type, Any
+from typing import  Union, Dict, List, Iterable, Callable, Optional, Type, Any, Final
 from abc import ABC, abstractmethod
 from weakref import proxy
 from contextlib import suppress
@@ -60,8 +60,18 @@ from firebird.base.trace import TracedMixin
 from .types import (RoutingID, SocketMode, SocketType, Direction, InvalidMessageError,
     ChannelError, INVALID, TIMEOUT)
 
+# Types
+TZMQMessage = List[Union[bytes, Frame]]
+"ZMQ multipart message"
+TMessageFactory = Callable[[Optional['TZMQMessage']], 'Message']
+"Message factory callable"
+TSocketOptions = Dict[str, Any]
+"ZMQ socket options"
+TMessageHandler = Callable[['Channel', 'Session', 'Message'], None]
+"Message handler"
+
 #: Internal routing ID
-INTERNAL_ROUTE: RoutingID = b'INTERNAL'
+INTERNAL_ROUTE: Final[RoutingID] = b'INTERNAL'
 
 class ChannelManager(LoggingIdMixin, TracedMixin):
     """Manager of ZeroMQ communication channels.
@@ -243,7 +253,8 @@ class SimpleMessage(Message):
     def get_keys(self) -> Iterable:
         """Returns iterable of dictionary keys to be used with `Protocol.handlers`.
 
-        The default implementation returns list with first data frame or None, ANY sentinel.
+        The default implementation returns list with first data frame or None followed by
+        `~firebird.base.types.ANY` sentinel.
         """
         return [self.data[0] if self.data else None, ANY]
 
@@ -287,7 +298,6 @@ class Protocol(TracedMixin):
             session_type: Class for session objects.
         """
         self._session_type: Type[Session] = session_type
-        #: Callable that returns `.Message` instance
         self.message_factory = self.__message_factory
         #: Message handlers
         self.handlers: Dict[Any, TMessageHandler] = {}
@@ -369,19 +379,22 @@ class Protocol(TracedMixin):
         return Direction.OUT in channel.direction
     def initialize_session(self, session: Session) -> None:
         """Initialize new session instance. The default implementation does nothing.
+
+        Arguments:
+            session: Session to be initialized.
         """
     def handle_msg(self, channel: Channel, session: Session, msg: Message) -> Any:
         """Process message received from peer.
-
-        Arguments:
-            channel: Channel that received the message.
-            session: Session instance.
-            msg:     Received message.
 
         Uses :attr:`handlers` dictionary and `.Message.get_keys()` to select and execute
         the message handler. Exceptions raised by message handler are processed by
         `on_exception` event handler (if assigned). Exceptions raised by event handler are
         ignored, only `RuntimeWarning` is emitted.
+
+        Arguments:
+            channel: Channel that received the message.
+            session: Session for this trasmission
+            msg:     Received message.
 
         Returns:
             Whatever handler returns, or None when handler raises an exception.
@@ -408,6 +421,11 @@ class Protocol(TracedMixin):
 
             If this method is not overriden by descendant, and handler for this event is
             not defined, all `InvalidMessageError` exceptions are silently ignored.
+
+        Arguments:
+            channel: Channel that received the message.
+            session: Session for this trasmission
+            exc:     Exception raised while processing the message
         """
         self.on_invalid_msg(channel, session, exc)
     def handle_exception(self, channel: Channel, session: Session, msg: Message, exc: Exception) -> None:
@@ -419,12 +437,19 @@ class Protocol(TracedMixin):
 
             If this method is not overriden by descendant, and handler for this event is
             not defined, all exceptions raised in message handlers are silently ignored.
+
+        Arguments:
+            channel: Channel that received the message.
+            session: Session for this trasmission
+            msg:     Message associated with exception
+            exc:     Exception raised while processing the message
         """
         self.on_exception(channel, session, msg, exc)
     @eventsocket
     def message_factory(self, zmsg: TZMQMessage=None) -> Message:
-        """Message factory that must return protocol message instance.
-        The default factory produces new `SimpleMessage` instance on each call.
+        """`~firebird.base.signal.eventsocket` for message factory that must return protocol
+        message instance. The default factory produces new `SimpleMessage` instance on each
+        call.
 
         Arguments:
             zmsg: ZeroMQ multipart message.
@@ -437,7 +462,13 @@ class Protocol(TracedMixin):
         """
     @eventsocket
     def on_invalid_msg(self, channel: Channel, session: Session, exc: InvalidMessageError) -> None:
-        """Event called by `.Channel.receive()` when message conversion raises `InvalidMessageError`.
+        """`~firebird.base.signal.eventsocket` called by `.Channel.receive()` when message
+        conversion raises `InvalidMessageError`.
+
+        Arguments:
+            channel: Channel that received invalid message
+            session: Session associated with transmission
+            exc:     Exception raised
 
         Important:
             If handler for this event is not defined, all `InvalidMessageError` exceptions
@@ -445,7 +476,14 @@ class Protocol(TracedMixin):
         """
     @eventsocket
     def on_exception(self, channel: Channel, session: Session, msg: Message, exc: Exception) -> None:
-        """Event called by `.handle_msg()` on exception in message handler.
+        """`~firebird.base.signal.eventsocket` called by `.handle_msg()` on exception in
+        message handler.
+
+        Arguments:
+            channel: Channel that received the message
+            session: Session associated with transmission
+            msg:     Received message
+            exc:     Exception raised
 
         Important:
             If handler for this event is not defined, all exceptions raised in message
@@ -515,7 +553,10 @@ class Channel(TracedMixin):
         """Called by `__init__()` to configure the channel parameters.
         """
     def set_socket(self, socket: zmq.Socket) -> None:
-        """Used by `ChannelManager` to set socket to be used by `Channel`.
+        """Used by `.ChannelManager` to set socket to be used by `.Channel`.
+
+        Arguments:
+           socket: 0MQ socket to be used by channel
         """
         assert self.socket is None, "Channel socket is already set"
         self.socket = socket
@@ -585,13 +626,19 @@ class Channel(TracedMixin):
     def bind(self, endpoint: ZMQAddress) -> ZMQAddress:
         """Bind the 0MQ socket to an address.
 
+        Arguments:
+            endpoint: Address to bind
+
         Returns:
-            The endpoint address. The returned address MAY differ from original address
-            when wildcard specification is used.
+            The endpoint address.
 
         Raises:
             ChannelError: On attempt to a) bind another endpoint for PAIR socket, or
                 b) bind to already binded endpoint.
+
+        Important:
+            The returned address MAY differ from original address
+            when wildcard specification is used.
         """
         assert self.socket is not None
         assert self.mode != SocketMode.CONNECT
@@ -608,7 +655,7 @@ class Channel(TracedMixin):
         """Unbind from an address (undoes a call to `bind()`).
 
         Arguments:
-            endpoint: Endpoint address, or None to unbind from all binded endpoints.
+            endpoint: Endpoint address, or `None` to unbind from all binded endpoints.
                       Note: The address must be the same as the addresss returned by `.bind()`.
 
         Raises:
@@ -746,15 +793,15 @@ class Channel(TracedMixin):
         `Protocol.on_invalid_msg` event handler (if defined) before message is dropped.
         Exceptions raised by event handler are ignored, only `RuntimeWarning` is emitted.
 
-        If there no session is found route, it first calls `Protocol.accept_new_session()`,
+        If there is no session found for route, it first calls `Protocol.accept_new_session()`,
         and message is handled only when new session is accepted.
 
         Arguments:
              timeout: The timeout (in milliseconds) to wait for message.
 
         Returns:
-            Whatever protocol message handler returns, sentinel TIMEOUT when timeout
-            expires, or sentinel INVALID when:
+            Whatever protocol message handler returns, sentinel `~saturnin.base.types.TIMEOUT`
+            when timeout expires, or sentinel `.INVALID` when:
             a) received message was not valid protocol message, or b) handler raises
             an exception, or c) there is no session associated with peer and new session
             was not accepted by protocol.
@@ -802,13 +849,17 @@ class Channel(TracedMixin):
         """
         return bool(self.endpoints)
     def set_wait_in(self, value: bool) -> None:
-        "Set/clear `Direction.IN` in `.wait_for`"
+        """Enable/disable receiving messages. It sets/clear `Direction.IN` in `.wait_for`
+
+        Arguments:
+           value: `True` to enable incoming messages, `False` to disable.
+        """
         if value:
             self.wait_for |= Direction.IN
         else:
             self.wait_for = (self.wait_for | Direction.IN) ^ Direction.IN
     def set_wait_out(self, value: bool, session: Session=None) -> None:
-        """Set/clear `Direction.OUT` in `.wait_for`.
+        """Enable/disable sending messages. It sets/clear `Direction.OUT` in `.wait_for`.
 
         Arguments:
             value: New value for wait_for_out flag.
@@ -926,15 +977,16 @@ class Channel(TracedMixin):
         return self._mngr.log_context
     @eventsocket
     def on_output_ready(self, channel: Channel) -> None:
-        """Event called when channel is ready to accept at least one outgoing message
-        without blocking (or dropping it).
+        """`~firebird.base.signal.eventsocket`  called when channel is ready to accept at
+        least one outgoing message without blocking (or dropping it).
 
         Arguments:
             channel: Channel ready for sending a message.
         """
     @eventsocket
     def on_shutdown(self, channel: Channel, forced: bool) -> None:
-        """Event called by :meth:`ChannelManager.shutdown` before the channel is shut down.
+        """`~firebird.base.signal.eventsocket`  called by :meth:`ChannelManager.shutdown`
+        before the channel is shut down.
 
         Important:
             All exceptions escaping this method are silently ignored.
@@ -945,35 +997,53 @@ class Channel(TracedMixin):
         """
     @eventsocket
     def on_send_failed(self, channel: Channel, session: Session, msg: Message, err_code: int) -> bool:
-        """Event called by :meth:`Channel.send` when send operation fails with `zmq.ZMQError`
-        exception other than EAGAIN.
+        """`~firebird.base.signal.eventsocket`  called by :meth:`Channel.send` when send
+        operation fails with `zmq.ZMQError` exception other than `EAGAIN`.
 
-        If event returns True, the error is ignored, otherwise the error code is reported
+        If event returns `True`, the error is ignored, otherwise the error code is reported
         to the caller.
+
+        Arguments:
+            channel: Channel where send operation failed.
+            session: Session associated with failed transmission.
+            msg: Message that wasn't sent.
+            err_code: Error code.
         """
     @eventsocket
     def on_send_later(self, channel: Channel, session: Session, msg: Message) -> bool:
-        """Event called by :meth:`Channel.send` when send operation fails with zmq.Again`
-        exception.
+        """`~firebird.base.signal.eventsocket`  called by :meth:`Channel.send` when send
+        operation fails with `zmq.Again` exception.
 
-        If event returns True, the error is ignored, otherwise the error code is reported
+        If event returns `True`, the error is ignored, otherwise the error code is reported
         to the caller.
+
+        Arguments:
+            channel: Channel where send operation failed.
+            session: Session associated with failed transmission.
+            msg: Message that wasn't sent.
         """
     @eventsocket
     def on_receive_failed(self, channel: Channel, err_code: int) -> bool:
-        """Event called by :meth:`Channel.receive` when receive operation fails with
-        `zmq.ZMQError` exception other than EAGAIN.
+        """`~firebird.base.signal.eventsocket`  called by :meth:`Channel.receive` when
+        receive operation fails with `zmq.ZMQError` exception other than EAGAIN.
 
-        If event returns True, the receive() returns INVALID, otherwise the exception is
+        If event returns `True`, the `.receive()` returns `.INVALID`, otherwise the exception is
         propagated to the caller.
+
+        Arguments:
+            channel: Channel where receive operation failed.
+            err_code: Error code.
         """
     @eventsocket
     def on_receive_later(self, channel: Channel) -> bool:
-        """Event called by :meth:`Channel.receive` when receive operation fails with
-        `zmq.Again` exception.
+        """`~firebird.base.signal.eventsocket`  called by :meth:`Channel.receive` when
+        receive operation fails with `zmq.Again` exception.
 
         If event returns True, the receive() returns INVALID, otherwise the exception is
         propagated to the caller.
+
+        Arguments:
+            channel: Channel where receive operation failed.
         """
 
 # Channels for individual ZMQ socket types
@@ -1073,12 +1143,3 @@ class RouterChannel(Channel):
         self.socket.router_mandatory = 1
 
 
-# Types
-TZMQMessage = List[Union[bytes, Frame]]
-"ZMQ multipart message"
-TMessageFactory = Callable[[Optional[TZMQMessage]], Message]
-"Message factory callable"
-TSocketOptions = Dict[str, Any]
-"ZMQ socket options"
-TMessageHandler = Callable[[Channel, Session, Message], None]
-"Message handler"

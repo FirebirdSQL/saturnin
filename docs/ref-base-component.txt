@@ -13,3 +13,8 @@ Classes
 
 .. autoclass:: ComponentConfig
 .. autoclass:: Component
+
+Functions
+=========
+
+.. autofunction:: create_config

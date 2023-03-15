@@ -43,13 +43,45 @@ import argparse
 from pathlib import Path
 from saturnin.lib.daemon import start_daemon
 
-#: Program name
-PROG_NAME = 'saturnin-daemon'
-
 def main():
-    """Starts or stops the daemon process.
+    """Saturnin script to start or stop the daemon process.
+
+    usage::
+
+      saturnin-daemon [-h] {start,stop} ...
+
+    optional arguments:
+      -h, --help    show this help message and exit
+
+    Commands:
+      {start,stop}
+        start       Starts daemon process
+        stop        Stops daemon process
+
+    start comand::
+
+      saturnin-daemon start [-h] [-p PID_FILE] daemon ...
+
+    positional arguments:
+      daemon                Path to daemon
+      arguments             Daemon arguments
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -p PID_FILE, --pid-file PID_FILE
+                            Path to PID file
+
+    stop command::
+
+      saturnin-daemon stop [-h] pid
+
+    positional arguments:
+      pid         Daemon PID or path to PID file
+
+    optional arguments:
+      -h, --help  show this help message and exit
     """
-    parser = argparse.ArgumentParser(PROG_NAME, description=main.__doc__)
+    parser = argparse.ArgumentParser(description="Starts or stops the daemon process.")
     subs = parser.add_subparsers(title="Commands", dest='action', required=True)
     start_args = subs.add_parser('start', help="Starts daemon process")
     start_args.add_argument('-p', '--pid-file', help="Path to PID file")

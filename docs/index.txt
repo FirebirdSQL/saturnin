@@ -3,7 +3,7 @@
 Saturnin
 ########
 
-Description.
+Saturnin is an implementation of Firebird Butler platform for Python.
 
 .. note:: Requires Python 3.8+
 

@@ -11,6 +11,7 @@ Constants and variables
 =======================
 
 .. autodata:: SVC_CHN
+   :no-value:
 
 Classes
 =======

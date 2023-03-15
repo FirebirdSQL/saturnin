@@ -19,14 +19,14 @@ import sphinx_bootstrap_theme
 # -- Project information -----------------------------------------------------
 
 project = 'saturnin'
-copyright = '2019-2022, The Firebird Project'
+copyright = '2019-2023, The Firebird Project'
 author = 'Pavel Císař'
 
 # The short X.Y version
-version = '0.7.1'
+version = '0.8.0'
 
 # The full version, including alpha/beta/rc tags
-release = '0.7.1'
+release = '0.8.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -38,6 +38,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
     #'sphinx_autodoc_typehints',
     'sphinx.ext.autosectionlabel',
     'sphinx.ext.todo',
@@ -170,6 +171,7 @@ autodoc_default_options = {
     'exclude-members': '__weakref__',
     'show-inheritance': True,
     'no-inherited-members': True,
+    'no-private-members': True,
 }
 set_type_checking_flag = True
 autodoc_class_signature = 'mixed'
@@ -219,6 +221,7 @@ napoleon_preprocess_types = True
 intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
                        'base': ('https://firebird-base.readthedocs.io/en/latest', None),
                        'pyzmq': ('https://pyzmq.readthedocs.io/en/latest/', None),
+                       'rich': ('https://rich.readthedocs.io/en/latest/', None),
                        }
 
 # -- Options for todo extension ----------------------------------------------

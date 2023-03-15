@@ -53,10 +53,9 @@ def start_daemon(args: List[str]) -> Optional[int]:
         PID for started daemon, or None if start failed.
 
     Note:
-        Gracefull shutdown on Windows is tricky. To allow shutdown via SIGINT signal handler
-        (note that SIGINT is not available on Windows, you have to use CTRL_C_EVENT),
-        it's necessry to start new shell with new console in background (i.e. detached from
-        console of this daemon starting script).
+        Gracefull shutdown on Windows is tricky. To allow shutdown of daemon process via
+        SIGINT signal handler (note that SIGINT is not available on Windows, you have to
+        send CTRL_C_EVENT), it's necessry to start new shell with new console in background.
     """
     kwargs = {}
     if platform.system() == 'Windows':

@@ -7,8 +7,15 @@ saturnin.component.registry
    :no-members:
    :synopsis: Saturnin component registry
 
-Functions
-=========
+Globals
+=======
 
-.. autofunction:: get_service_desciptors
+.. autodata:: service_registry
+   :no-value:
+
+Classes
+=======
+
+.. autoclass:: ServiceInfo
+.. autoclass:: ServiceRegistry
 

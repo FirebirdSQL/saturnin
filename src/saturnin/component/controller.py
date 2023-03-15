@@ -36,8 +36,7 @@
 """
 
 from __future__ import annotations
-from typing import Dict, List, cast
-import sys
+from typing import Dict, List, cast, Final
 import uuid
 import signal
 import warnings
@@ -58,13 +57,17 @@ from saturnin.protocol.iccp import ICCPComponent, ICCPController, ICCPMessage, M
 from .registry import ServiceInfo
 
 #: Service control channel name
-SVC_CTRL = sys.intern('iccp')
+SVC_CTRL: Final[str] = 'iccp'
 
 class ServiceExecConfig(Config):
     """Service executor configuration.
+
+    Arguments:
+        name: Default conf. section name
     """
     def __init__(self, name: str):
         super().__init__(name)
+        #: Agent (service) identification
         self.agent: UUIDOption = UUIDOption('agent', "Agent UID", required=True)
 
 class ServiceController(TracedMixin):

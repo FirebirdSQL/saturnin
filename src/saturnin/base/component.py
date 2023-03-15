@@ -59,7 +59,11 @@ def create_config(_cls: Type[ComponentConfig], agent: UUID, name: str) -> Compon
     return result
 
 class ComponentConfig(Config):
-    """Base Component configuration."""
+    """Base Component configuration.
+
+    Arguments:
+       name: Component name (used as conf. file section name for component).
+    """
     def __init__(self, name: str):
         super().__init__(name)
         #: Agent identification
@@ -75,11 +79,17 @@ class Component(ABC):
     @abstractmethod
     def initialize(self, config: ComponentConfig) -> None:
         """Verify configuration and assemble component structural parts.
+
+        Arguments:
+           config: Component configuration.
         """
     @abstractmethod
     def warm_up(self, ctrl_addr: Optional[ZMQAddress]) -> None:
         """Must initialize the `.ChannelManager` and connect component to control channel
         at provided address.
+
+        Arguments:
+            ctrl_addr: Controller's address for ICCP communication with component.
         """
     @abstractmethod
     def run(self) -> None:

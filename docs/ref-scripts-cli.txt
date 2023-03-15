@@ -10,7 +10,14 @@ saturnin._scripts.cli
 Globals
 =======
 
-.. autodata:: app
+.. autodata:: REPL_INTRO
+   :no-value:
+
+.. autodata:: REPL_HELP
+   :no-value:
+
+.. autodata:: command_groups
+   :no-value:
 
 Functions
 =========
@@ -18,5 +25,5 @@ Functions
 .. autofunction:: main
 .. autofunction:: find_group
 .. autofunction:: add_command
-.. autofunction:: load_commands
+.. autofunction:: cli_loop
 

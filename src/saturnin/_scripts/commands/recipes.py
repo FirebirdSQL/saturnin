@@ -66,7 +66,8 @@ from saturnin._scripts.completers import (recipe_completer, service_completer,
                                           path_completer, application_completer,
                                           get_first_line)
 
-typer_app = typer.Typer(rich_markup_mode="markdown", help="Saturnin recipes.")
+#: Typer command group for recipe management commands
+app = typer.Typer(rich_markup_mode="markdown", help="Saturnin recipes.")
 
 def run_recipe(ctx: typer.Context,
                section: str=typer.Option(None, help="Main recipe section name"),
@@ -126,7 +127,7 @@ def run_recipe(ctx: typer.Context,
     if result.returncode != 0:
         console.print_error('Recipe execution failed')
 
-@typer_app.command()
+@app.command()
 def list_recipes() -> None:
     """List installed Saturnin recipes.
     """
@@ -146,7 +147,7 @@ def list_recipes() -> None:
     else:
         console.print("There are no Saturnin recipes installed.")
 
-@typer_app.command()
+@app.command()
 def show_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
                                                 autocompletion=recipe_completer),
                 section: str=typer.Option(None, help="Configuration section name"),
@@ -224,7 +225,7 @@ def show_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
                 console.print(table)
                 console.print()
 
-@typer_app.command()
+@app.command()
 def edit_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
                                                 autocompletion=recipe_completer)):
     """Edit recipe.
@@ -242,7 +243,7 @@ def edit_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
     recipe_registry.load_from(directory_scheme.recipes)
     return RESTART
 
-@typer_app.command()
+@app.command()
 def install_recipe(recipe_name: str= \
                      typer.Option(None, help="Recipe name (default is recipe file name)"),
                    recipe_file: Path= \
@@ -328,7 +329,7 @@ def install_recipe(recipe_name: str= \
     recipe_registry.load_from(directory_scheme.recipes)
     return RESTART
 
-@typer_app.command()
+@app.command()
 def uninstall_recipe(recipe_name: str=typer.Argument(None, autocompletion=recipe_completer,
                                                      help="The name of the recipe to be uninstalled"),
                      save_to: Path=typer.Option(None, dir_okay=False, writable=True,
@@ -347,7 +348,7 @@ def uninstall_recipe(recipe_name: str=typer.Argument(None, autocompletion=recipe
     recipe_registry.load_from(directory_scheme.recipes)
     return RESTART
 
-@typer_app.command()
+@app.command()
 def create_recipe(plain: bool=typer.Option(False, '--plain', help="Create recipe without comments"),
                   recipe_name: str=typer.Argument(..., help="Recipe name", metavar='NAME'),
                   components: List[str]=typer.Argument(..., help="Recipe components",

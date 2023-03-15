@@ -7,36 +7,22 @@ saturnin._scripts.commands.pkg
    :no-members:
    :synopsis: Saturnin package manager commands
 
-Constants
-=========
-
-.. autodata:: PKG_TOML
-.. autodata:: CMP_UID
-.. autodata:: CMP_PACKAGE
-.. autodata:: CMP_NAME
-.. autodata:: CMP_VERSION
-.. autodata:: CMP_DESCRIPTION
-.. autodata:: CMP_DESCRIPTOR
-.. autodata:: CMP_TOPLEVEL
-
 Globals
 =======
 
 .. autodata:: app
-.. autodata:: mngr
+   :no-value:
 
-Classes
-=======
+Command functions
+=================
 
-.. autoclass: PackageManager
-
-Functions
-=========
-
-.. autofunction:: install
-.. autofunction:: uninstall
-.. autofunction:: _list
-.. autofunction:: pip
-.. autofunction:: copy_tree
-.. autofunction:: remove_dir
 .. autofunction:: install_package
+.. autofunction:: uninstall_package
+.. autofunction:: pip
+.. autofunction:: list_services
+.. autofunction:: show_service
+.. autofunction:: list_applications
+.. autofunction:: show_application
+.. autofunction:: list_packages
+.. autofunction:: update_registry
+

@@ -60,22 +60,24 @@ class SingleController(LoggingIdMixin, TracedMixin):
                  direct: bool=False):
         """
         Arguments:
-        controller_class: Inner controller class.
-            parser: ConfigParser instance to be used for bundle configuration.
+            controller_class: Inner controller class.
+            parser: ConfigParser instance to be used for service configuration.
             manager: ChannelManager to be used.
             direct: Use DirectController or ThreadController.
         """
+        #: Use DirectController instead ThreadController
         self.direct: bool = direct
         self.log_context = None
+        #: Channel manager
         self.mngr: ChannelManager = manager
         self._ext_mngr: bool = manager is not None
         if manager is None:
             self.mngr = ChannelManager(zmq.Context.instance())
             self.mngr.log_context = weakref.proxy(self)
-        #: ConfigParser with service bundle configuration
+        #: ConfigParser with service configuration
         self.config: ConfigParser = \
             ConfigParser(interpolation=ExtendedInterpolation()) if parser is None else parser
-        #: List with ThreadControllers for all service instances in bundle
+        #: Service controller
         self.controller: Union[ThreadController, DirectController] = None
         #: Registry with ServiceDescriptors for services that could be run
         #
@@ -93,7 +95,7 @@ class SingleController(LoggingIdMixin, TracedMixin):
     def configure(self, *, section: str=SECTION_SERVICE) -> None:
         """
         Arguments:
-            section: Configuration section with bundle definition.
+            section: Configuration section with service specification.
         """
         svc_cfg: ServiceExecConfig = ServiceExecConfig(section)
         svc_cfg.load_config(self.config)
@@ -111,16 +113,12 @@ class SingleController(LoggingIdMixin, TracedMixin):
         else:
             raise Error(f"Unknonw agent in section '{section}'")
     def start(self, *, timeout: int=10000) -> None:
-        """Start all services in bundle.
+        """Starts service.
 
         Arguments:
-            timeout: Timeout for starting each service. None (infinity), or a floating
+            timeout: Timeout for starting the service. `None` (infinity), or a floating
                      point number specifying a timeout for the operation in seconds (or
                      fractions thereof) [Default: 10s].
-
-        Important:
-            Services are started in order they are listed in bundle configuration.
-            If any service fails to start, all previously started services are stopped.
 
         Raises:
             ServiceError: On error in communication with service.
@@ -137,7 +135,7 @@ class SingleController(LoggingIdMixin, TracedMixin):
         """Stop runing service.
 
         Arguments:
-            timeout: Timeout for stopping each service. None (infinity), or a floating
+            timeout: Timeout for stopping the service. `None` (infinity), or a floating
                      point number specifying a timeout for the operation in seconds (or
                      fractions thereof) [Default: 10s].
 
@@ -155,7 +153,7 @@ class SingleController(LoggingIdMixin, TracedMixin):
                                   f"service thread terminated", RuntimeWarning)
                     self.controller.terminate()
     def join(self, timeout=None) -> None:
-        """Wait until all services stop.
+        """Wait until service stops.
 
         Arguments:
             timeout: Floating point number specifying a timeout for the operation in
@@ -170,11 +168,14 @@ class SingleExecutor():
         """
         Arguments:
             log_context: Log context for this executor.
-            direct: Use DirectController or ThreadController.
+            direct: Use `.DirectController` (True) or `.ThreadController`.
         """
+        #: Use DirectController instead ThreadController
         self.direct: bool = direct
         self.log_context = log_context
+        #: Channel manager
         self.mngr: ChannelManager = None
+        #: Controller
         self.controller: SingleController = None
     def __enter__(self) -> SingleExecutor:
         return self
@@ -187,7 +188,7 @@ class SingleExecutor():
 
         Arguments:
           cfg_files: List of configuration files.
-          section:   Configuration section name with list of services in bundle.
+          section:   Configuration section name with service specification.
         """
         self.mngr = ChannelManager(zmq.Context.instance())
         self.mngr.log_context = self.log_context

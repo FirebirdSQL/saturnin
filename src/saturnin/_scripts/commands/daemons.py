@@ -50,6 +50,7 @@ from saturnin.component.recipe import RecipeInfo, recipe_registry
 from saturnin.lib.console import console
 from saturnin.lib import daemon
 
+#: Typer command group for daemon management commands
 app = typer.Typer(rich_markup_mode="rich", help="Saturnin daemons.")
 
 def get_first_line(text: str) -> str:

@@ -51,6 +51,18 @@ from saturnin.lib.metadata import get_entry_point_distribution, iter_entry_point
 
 class ApplicationInfo(Distinct): # pylint: disable=R0902
     """Information about application stored in  `.ApplicationRegistry`.
+
+    Arguments:
+        uid: Application UID
+        name: Application name
+        version: Application version
+        vendor: Application vendor UID
+        classification: Application classification
+        description: Application description
+        factory: Application factory specification (entry point)
+        config: Application configuration factory (entry point)
+        descriptor: Application descriptor specification (entry point)
+        distribution: Installed distribution package that contains this application
     """
     def __init__(self, *, uid: UUID, name: str, version: str, vendor: UUID,
                  classification: str, description: str, factory: str, config: str,
@@ -104,7 +116,7 @@ class ApplicationInfo(Distinct): # pylint: disable=R0902
     @property
     def descriptor_obj(self) -> ApplicationDescriptor:
         """Application descriptor object. If it's not assigned directly, then it's loaded
-        using `.desciptor` on first access.
+        using `.descriptor` on first access.
         """
         if self.__desc_obj is None:
             self.__desc_obj = load(self.descriptor)
@@ -139,20 +151,26 @@ class ApplicationInfo(Distinct): # pylint: disable=R0902
         self.__conf_obj = value
 
 class ApplicationRegistry(Registry):
-    """Saturnin service registry.
+    """Saturnin application registry.
 
     Holds `.ApplicationInfo` instances.
 
     It is used in two modes:
-    1. In full saturnin deployment, the information about services is loaded from TOML file.
-       Service descriptors and factories are loaded on demand.
-    2. In standalone service/bundle mode, service information including service desciptors
+
+    1. In full saturnin deployment, the information about applications is loaded from TOML file.
+       Application descriptors and factories are loaded on demand.
+    2. In standalone service/bundle mode, application information including app. desciptors
        and factories is stored directly by executor script, so there is no dynamic discovery
        and the whole could be compiled with Nutika.
     """
     def add(self, descriptor: ApplicationDescriptor, factory: Any, distribution: str) -> None:
-        """Direct service registration. Used by systems that does not allow dynamic discovery,
+        """Direct application registration. Used by systems that does not allow dynamic discovery,
         for example programs compiled by Nuitka.
+
+        Arguments:
+            descriptor: Application descriptor
+            factory: Application factory
+            distribution: Distribution package name with application
         """
         kwargs = {}
         kwargs['distribution'] = distribution
@@ -170,7 +188,7 @@ class ApplicationRegistry(Registry):
         app_info.factory_obj = factory
         self.store(app_info)
     def load_from_installed(self, *, ignore_errors: bool=False) -> None:
-        """Populate registry from descriptors of installed services.
+        """Populate registry from descriptors of installed applications.
 
         Arguments:
           ignore_errors: When True, errors are ignored, otherwise `.Error` is raised.
@@ -234,12 +252,17 @@ class ApplicationRegistry(Registry):
         if directory_scheme.site_apps_toml.is_file():
             application_registry.load_from_toml(directory_scheme.site_apps_toml.read_text())
     def save(self) -> None:
-        "Save information about installed applications."
+        "Save information about installed applications to TOML file."
         directory_scheme.site_apps_toml.write_text(application_registry.as_toml())
     def get_by_name(self, name: str, default: Any=None) -> Distinct:
-        """Get service by its name.
+        """Get application by its name.
+
+        Arguments:
+            name: Application name.
+            default: Default value returned when application is not found.
         """
         return self.find(lambda x: x.name == name, default=default)
 
+#: Saturnin application registry
 application_registry: ApplicationRegistry = ApplicationRegistry()
 application_registry.load()

@@ -58,9 +58,13 @@ from .registry import service_registry
 
 class ServiceBundleConfig(Config):
     """Service bundle configuration.
+
+    Arguments:
+        name: Conf. section name
     """
     def __init__(self, name: str):
         super().__init__(name)
+        #: Agents (services) in bundle
         self.agents: ConfigListOption = ConfigListOption('agents', "Agent UIDs",
                                                          ServiceExecConfig, required=True)
 
@@ -74,6 +78,7 @@ class BundleThreadController(LoggingIdMixin, TracedMixin):
             manager: ChannelManager to be used.
         """
         self.log_context = None
+        #: Channel manager
         self.mngr: ChannelManager = manager
         self._ext_mngr: bool = manager is not None
         if manager is None:
@@ -96,7 +101,6 @@ class BundleThreadController(LoggingIdMixin, TracedMixin):
         # Assign Agent IDs for available services
         self.config[SECTION_SERVICE_UID].update((sd.name, sd.uid.hex) for sd
                                                 in service_registry)
-        #
     def configure(self, *, section: str=SECTION_BUNDLE) -> None:
         """
         Arguments:
@@ -190,10 +194,15 @@ class BundleThreadController(LoggingIdMixin, TracedMixin):
 
 class BundleExecutor():
     """Service bundle executor context manager.
+
+    Arguments:
+        log_context: Logging context for this instance.
     """
     def __init__(self, log_context: Any):
         self.log_context = log_context
+        #: Channel manager
         self.mngr: ChannelManager = None
+        #: Controller
         self.controller: BundleThreadController = None
     def __enter__(self) -> BundleExecutor:
         return self
@@ -220,9 +229,11 @@ class BundleExecutor():
         Returns:
           List with (service_name, outcome, details) tuples.
 
-        service_name: Name used for service in bundle configuration.
-        outcome: `.Outcome` of service execution.
-        details: List of strings with additional outcome information (typically error text)
+        Tuple items:
+
+        - service_name: Name used for service in bundle configuration.
+        - outcome: `.Outcome` of service execution.
+        - details: List of strings with additional outcome information (typically error text)
         """
         self.controller.start()
         try:

@@ -38,7 +38,7 @@ This is extended description.
 """
 
 from __future__ import annotations
-from typing import cast, Union
+from typing import cast, Union, Final
 from functools import partial
 import uuid
 import zmq
@@ -51,7 +51,8 @@ from saturnin.component.micro import MicroService
 from saturnin.protocol.fbdp import (ErrorCode, FBDPServer, FBDPClient, FBDPSession,
     FBDPMessage)
 
-PIPE_CHN = 'pipe'
+#: Channel & endpoint name
+PIPE_CHN: Final[str] = 'pipe'
 
 class BaseDataPipeConfig(ComponentConfig):
     """Base data provider/consumer microservice configuration.
@@ -218,6 +219,7 @@ class BaseDataPipeMicro(MicroService):
         """Event handler executed when client connects to the data pipe via OPEN message.
 
         Arguments:
+            channel: Channel associated with data pipe.
             session: Session associated with client.
 
         The session attributes `~.FBDPSession.pipe`, `~.FBDPSession.socket`,
@@ -251,7 +253,6 @@ class BaseDataPipeMicro(MicroService):
         Arguments:
             channel: Channel associated with data pipe.
             session: Session associated with client.
-            msg:     Message that triggered the scheduling.
 
         The event handler may cancel the transmission by raising the `.StopError` exception
         with `~Error.code` attribute containing the `~saturnin.protocol.fbdp.ErrorCode` to be

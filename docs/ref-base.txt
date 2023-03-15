@@ -13,7 +13,10 @@ Constants
 =========
 
 `.VERSION`, `.PLATFORM_OID`, `.PLATFORM_UID`, `.PLATFORM_VERSION`, `.VENDOR_OID`, `.VENDOR_UID`,
-`.INVALID`, `~saturnin.base.types.TIMEOUT`, `.MIME`, `.MIME_TYPE_PROTO`, `.MIME_TYPE_TEXT`,
+`.INVALID`, `~saturnin.base.types.TIMEOUT`, `.RESTART`, `~firebird.base.types.MIME`,
+`.MIME_TYPE_PROTO`, `.MIME_TYPE_TEXT`, `.SECTION_LOCAL_ADDRESS`, `.SECTION_NET_ADDRESS`,
+`.SECTION_NODE_ADDRESS`, `.SECTION_PEER_UID`, `.SECTION_SERVICE_UID`, `.SECTION_BUNDLE`,
+`.SECTION_SERVICE`, `.CONFIG_HDR`,
 `.PROTO_PEER`, `.INTERNAL_ROUTE`, `~firebird.base.types.DEFAULT`, `~firebird.base.types.UNDEFINED`,
 `~firebird.base.types.ANY`.
 
@@ -29,12 +32,12 @@ Exceptions
 ==========
 
 `~firebird.base.types.Error`, `.InvalidMessageError`, `.ChannelError`, `.ServiceError`,
-`.ClientError`, `.StopError`.
+`.ClientError`, `.StopError`, `RestartError`.
 
 Dataclasses
 ===========
 
-`.AgentDescriptor`, `.PeerDescriptor`, `.ServiceDescriptor`, `.PrioritizedItem`.
+`.AgentDescriptor`, `.PeerDescriptor`, `.ServiceDescriptor`, `.ApplicationDescriptor`, `.PrioritizedItem`.
 
 Classes
 =======
@@ -42,9 +45,16 @@ Classes
 `.ChannelManager`, `.Channel`, `.Message`, `.SimpleMessage`, `.Protocol`, `.Session`,
 `.DealerChannel`,  `.RouterChannel`, `.PushChannel`, `.PullChannel`, `.PubChannel`, `.SubChannel`,
 `.XPubChannel`, `.XSubChannel`, `.PairChannel`, `.Component`, `.ComponentConfig`,
-`~firebird.base.config.Config` and `~firebird.base.config.ConfigProto`.
+`.SaturninConfig`, `.SaturninScheme`, `~firebird.base.config.Config` and `~firebird.base.config.ConfigProto`.
 
 Globals
 =======
 
-`.site`.
+`.directory_scheme`, `~saturnin.base.config.saturnin_config`.
+
+Functions
+=========
+
+`~saturnin.base.component.create_config`, `~firebird.base.types.load`, `.is_virtual`, `.venv`.
+
+.. autodata:: VERSION

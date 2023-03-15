@@ -109,7 +109,7 @@ class ServiceClient:
 
         Raises:
             TimeoutError: When timeout expires.
-            Error: When `Channel.receive()` returns INVALID sentinel, or service closes
+            Error: When `Channel.receive()` returns `.INVALID` sentinel, or service closes
                    connection with CLOSE message.
         """
         msg = self.channel.receive(self.timeout)

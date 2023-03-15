@@ -10,9 +10,9 @@ saturnin.base.types
 Types for annotations
 =====================
 
-.. autodata:: saturnin.base.types.TSupplement
+.. autodata:: TSupplement
 .. autodata:: Token
-.. autodata:: saturnin.base.types.RoutingID
+.. autodata:: RoutingID
 
 Constants
 =========
@@ -25,6 +25,13 @@ Constants
 .. autodata:: MIME_TYPE_PROTO
 .. autodata:: MIME_TYPE_TEXT
 .. autodata:: MIME_TYPE_BINARY
+.. autodata:: SECTION_LOCAL_ADDRESS
+.. autodata:: SECTION_NODE_ADDRESS
+.. autodata:: SECTION_NET_ADDRESS
+.. autodata:: SECTION_SERVICE_UID
+.. autodata:: SECTION_PEER_UID
+.. autodata:: SECTION_BUNDLE
+.. autodata:: SECTION_SERVICE
 .. autodata:: PROTO_PEER
 
 Exceptions
@@ -35,12 +42,14 @@ Exceptions
 .. autoexception:: ServiceError
 .. autoexception:: ClientError
 .. autoexception:: StopError
+.. autoexception:: RestartError
 
 Sentinels
 =========
 
 .. autodata:: INVALID
 .. autodata:: TIMEOUT
+.. autodata:: RESTART
 
 Enums
 =====
@@ -61,5 +70,6 @@ Dataclasses
 .. autoclass:: AgentDescriptor
 .. autoclass:: PeerDescriptor
 .. autoclass:: ServiceDescriptor
+.. autoclass:: ApplicationDescriptor
 .. autoclass:: PrioritizedItem
 

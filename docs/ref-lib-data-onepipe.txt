@@ -7,6 +7,11 @@ saturnin.lib.data.onepipe
    :no-members:
    :synopsis: Saturnin base classes for data provider and consumer microservices
 
+Globals
+=======
+
+.. autodata:: PIPE_CHN
+
 Classes
 =======
 

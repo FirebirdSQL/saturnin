@@ -36,7 +36,7 @@
 """
 
 from __future__ import annotations
-from typing import Any, List, Union, cast
+from typing import Any, List, Union, cast, Final
 from functools import partial
 from collections import deque
 import uuid
@@ -50,13 +50,21 @@ from saturnin.component.micro import MicroService
 from saturnin.protocol.fbdp import (ErrorCode, FBDPServer, FBDPClient, FBDPSession,
     FBDPMessage)
 
-INPUT_PIPE_CHN = 'input-pipe'
-OUTPUT_PIPE_CHN = 'output-pipe'
-WAKE_PUSH_CHN = 'wake-push'
-WAKE_PULL_CHN = 'wake-pull'
+#: Pipe INPUT channel & endpoint name
+INPUT_PIPE_CHN: Final[str] = 'input-pipe'
+#: Pipe OUTPUT channel & endpoint name
+OUTPUT_PIPE_CHN: Final[str] = 'output-pipe'
+#: Wake PUSH channel & endpoint name
+WAKE_PUSH_CHN: Final[str] = 'wake-push'
+#: Wake PULL channel & endpoint name
+WAKE_PULL_CHN: Final[str] = 'wake-pull'
 
 class DataFilterConfig(ComponentConfig):
-    """Base data provider microservice configuration."""
+    """Base data provider microservice configuration.
+
+    Arguments:
+      name: Conf. section name.
+    """
     def __init__(self, name: str):
         super().__init__(name)
         #: When input pipe is closed with error, close output with error as well
@@ -127,7 +135,7 @@ class DataFilterMicro(MicroService):
     - `.handle_output_accept_client` to validate client request and aquire resources
       associated with output pipe.
     - `.handle_output_produce_data` to produce data for outgoing DATA message.
-    - `.handle_input_accept_data` to process received data. CONSUMER only.
+    - `.handle_input_accept_data` to process received data.
     - `.handle_input_pipe_closed` to release resource assiciated with input pipe.
     - `.handle_output_pipe_closed` to release resource assiciated with output pipe.
     """
@@ -189,6 +197,9 @@ class DataFilterMicro(MicroService):
         self.wake_in_chn: PullChannel = None
     def initialize(self, config: DataFilterConfig) -> None:
         """Verify configuration and assemble component structural parts.
+
+        Arguments:
+          config: Service configuration
         """
         super().initialize(config)
         self.closing = False
