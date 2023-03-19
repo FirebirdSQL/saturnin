@@ -110,4 +110,6 @@ a list of recipes that can be started with the `list recipes` command.
 
 For more information, see the `Usage Guide <usage-guide>`_.
 
+.. _pip: https://pypi.org/project/pip/
+.. _pipx: https://pypa.github.io/pipx/
 .. _usage-guide: https://saturnin.readthedocs.io/en/latest/usage-guide.html
