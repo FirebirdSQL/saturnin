@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>saturnin.base.transport &#8212; saturnin 0.8.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="brand" href="../../../index.html">
+          saturnin</a>
+        <span class="navbar-text pull-left"><b>0.8.0</b></span>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="../../../usage-guide.html">Usage Guide</a></li>
+                <li><a href="../../../py-modindex.html">Modules</a></li>
+                <li><a href="../../../genindex.html">Index</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Content <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#saturnin-console">Saturnin console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#installing-services">Installing services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#using-firebird-services">Using Firebird services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#saturnin-recipes">Saturnin recipes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage-guide.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../usage-guide.html#basic-architecture">Basic Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage-guide.html#butler-services">Butler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage-guide.html#service-containers">Service containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usage-guide.html#saturnin-console">Saturnin console</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Saturnin Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base.html">saturnin.base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#types">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#dataclasses">Dataclasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-types.html">saturnin.base.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#saturnin-common-type-definitions-and-constants">Saturnin common type definitions and constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#types-for-annotations">Types for annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#sentinels">Sentinels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#dataclasses">Dataclasses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-transport.html">saturnin.base.transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#types-for-type-hints">Types for type hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#channels-for-individual-0mq-socket-types">Channels for individual 0MQ socket types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-component.html">saturnin.base.component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-component.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-micro.html">saturnin.component.micro</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-micro.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-micro.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-service.html">saturnin.component.service</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-service.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-service.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-client.html">saturnin.component.client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-metadata.html">saturnin.lib.metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-metadata.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-onepipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-onepipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-filter.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-filter.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-fbsp.html">saturnin.protocol.fbsp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-fbdp.html">saturnin.protocol.fbdp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-iccp.html">saturnin.protocol.iccp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-iccp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-iccp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-svcrun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-bundlerun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-cli.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-cli.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-repl.html">saturnin._scripts.repl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-repl.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-repl.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-repl.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-completers.html">saturnin._scripts.completers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-completers.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#command-functions">Command functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-recipes.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-recipes.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-daemons.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-daemons.html#command-functions">Command functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-daemons.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-oids.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-oids.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-7-0">Version 0.7.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-1-0">Version 0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body span12 content" role="main">
+      
+  <h1>Source code for saturnin.base.transport</h1><div class="highlight"><pre>
+<span></span><span class="c1">#coding:utf-8</span>
+<span class="c1">#</span>
+<span class="c1"># PROGRAM/MODULE: saturnin</span>
+<span class="c1"># FILE:           saturnin/transport.py</span>
+<span class="c1"># DESCRIPTION:    ZeroMQ messaging - base classes and other definitions</span>
+<span class="c1"># CREATED:        28.2.2019</span>
+<span class="c1">#</span>
+<span class="c1"># The contents of this file are subject to the MIT License</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c1"># copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2019 Firebird Project (www.firebirdsql.org)</span>
+<span class="c1"># All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Contributor(s): Pavel Císař (original code)</span>
+<span class="c1">#                 ______________________________________.</span>
+<span class="c1"># pylint: disable=C0302, C0301, R0904, R0902, R0913</span>
+
+<span class="sd">&quot;&quot;&quot;Saturnin ZeroMQ messaging - base classes and other definitions.</span>
+
+<span class="sd">The messaging framework consists from:</span>
+
+<span class="sd">1. Channels, that manage ZeroMQ sockets for transmission of messages.</span>
+<span class="sd">2. Messages, that encapsulate ZeroMQ messages passed through Channels.</span>
+<span class="sd">3. Protocol, that is responsible for handling received ZeroMQ messages in accordance to</span>
+<span class="sd">   transport protocol definition.</span>
+<span class="sd">4. Session, that contains data related to client/server connections.</span>
+<span class="sd">5. ChannelManager, that manages communication Channels and is responsible for i/o loop.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span>  <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Final</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">weakref</span> <span class="kn">import</span> <span class="n">proxy</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">zmq</span>
+<span class="kn">from</span> <span class="nn">zmq</span> <span class="kn">import</span> <span class="n">Frame</span><span class="p">,</span> <span class="n">ZMQError</span><span class="p">,</span> <span class="n">Again</span><span class="p">,</span> <span class="n">POLLIN</span><span class="p">,</span> <span class="n">POLLOUT</span>
+<span class="kn">from</span> <span class="nn">firebird.base.types</span> <span class="kn">import</span> <span class="n">ZMQAddress</span><span class="p">,</span> <span class="n">DEFAULT</span><span class="p">,</span> <span class="n">UNDEFINED</span><span class="p">,</span> <span class="n">ANY</span>
+<span class="kn">from</span> <span class="nn">firebird.base.signal</span> <span class="kn">import</span> <span class="n">eventsocket</span>
+<span class="kn">from</span> <span class="nn">firebird.base.logging</span> <span class="kn">import</span> <span class="n">LoggingIdMixin</span>
+<span class="kn">from</span> <span class="nn">firebird.base.trace</span> <span class="kn">import</span> <span class="n">TracedMixin</span>
+<span class="kn">from</span> <span class="nn">.types</span> <span class="kn">import</span> <span class="p">(</span><span class="n">RoutingID</span><span class="p">,</span> <span class="n">SocketMode</span><span class="p">,</span> <span class="n">SocketType</span><span class="p">,</span> <span class="n">Direction</span><span class="p">,</span> <span class="n">InvalidMessageError</span><span class="p">,</span>
+    <span class="n">ChannelError</span><span class="p">,</span> <span class="n">INVALID</span><span class="p">,</span> <span class="n">TIMEOUT</span><span class="p">)</span>
+
+<span class="c1"># Types</span>
+<span class="n">TZMQMessage</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">Frame</span><span class="p">]]</span>
+<span class="s2">&quot;ZMQ multipart message&quot;</span>
+<span class="n">TMessageFactory</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;TZMQMessage&#39;</span><span class="p">]],</span> <span class="s1">&#39;Message&#39;</span><span class="p">]</span>
+<span class="s2">&quot;Message factory callable&quot;</span>
+<span class="n">TSocketOptions</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="s2">&quot;ZMQ socket options&quot;</span>
+<span class="n">TMessageHandler</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;Channel&#39;</span><span class="p">,</span> <span class="s1">&#39;Session&#39;</span><span class="p">,</span> <span class="s1">&#39;Message&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>
+<span class="s2">&quot;Message handler&quot;</span>
+
+<span class="c1">#: Internal routing ID</span>
+<span class="n">INTERNAL_ROUTE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">RoutingID</span><span class="p">]</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;INTERNAL&#39;</span>
+
+<div class="viewcode-block" id="ChannelManager"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.ChannelManager">[docs]</a><span class="k">class</span> <span class="nc">ChannelManager</span><span class="p">(</span><span class="n">LoggingIdMixin</span><span class="p">,</span> <span class="n">TracedMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manager of ZeroMQ communication channels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ChannelManager.__init__"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.ChannelManager.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            context: ZMQ Context instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#: ZMQ Context instance.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="c1">#: Dictionary with managed channels. Key is `Channel.name`, value is the `Channel`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Channel</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#: Logging context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_context</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">UNDEFINED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_poller</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Poller</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chmap</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">zmq</span><span class="o">.</span><span class="n">Socket</span><span class="p">,</span> <span class="n">Channel</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pollout</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
+<div class="viewcode-block" id="ChannelManager.create_channel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.ChannelManager.create_channel">[docs]</a>    <span class="k">def</span> <span class="nf">create_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Channel</span><span class="p">],</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">Protocol</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                       <span class="n">routing_id</span><span class="p">:</span> <span class="n">RoutingID</span><span class="o">=</span><span class="n">DEFAULT</span><span class="p">,</span> <span class="n">session_type</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">=</span><span class="n">DEFAULT</span><span class="p">,</span>
+                       <span class="n">wait_for</span><span class="p">:</span> <span class="n">Direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span>
+                       <span class="n">snd_timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">rcv_timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                       <span class="n">linger</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">sock_opts</span><span class="p">:</span> <span class="n">TSocketOptions</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Channel</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates new channel.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            cls: Channel class.</span>
+<span class="sd">            name: Channel name.</span>
+<span class="sd">            routing_id: Channel socket identity (routing ID for peers).</span>
+<span class="sd">            protocol: Protocol for serializing/deserializing messages.</span>
+<span class="sd">            session_type: Session type. DEFAULT session type is obtained from MessageHandler.</span>
+<span class="sd">            wait_for: Direction(s) of transmission events for this channel processed by `.wait()`.</span>
+<span class="sd">            snd_timeout: Timeout for send operation in milliseconds, None means infinite.</span>
+<span class="sd">            rcv_timeout: Timeout for receive operation in milliseconds, None means infinite.</span>
+<span class="sd">            linger: ZMQ socket linger period.</span>
+<span class="sd">            sock_opts: Dictionary with socket additional options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">,</span> <span class="s2">&quot;Duplicate channel name&quot;</span>
+        <span class="n">chn</span><span class="p">:</span> <span class="n">Channel</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">protocol</span><span class="p">,</span> <span class="n">routing_id</span><span class="p">,</span> <span class="n">session_type</span><span class="p">,</span> <span class="n">wait_for</span><span class="p">,</span>
+                           <span class="n">snd_timeout</span><span class="p">,</span> <span class="n">rcv_timeout</span><span class="p">,</span> <span class="n">linger</span><span class="p">,</span> <span class="n">sock_opts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="n">chn</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">chn</span>
+        <span class="k">return</span> <span class="n">chn</span></div>
+<div class="viewcode-block" id="ChannelManager.update_poller"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.ChannelManager.update_poller">[docs]</a>    <span class="k">def</span> <span class="nf">update_poller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Direction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update poller registration for channel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pollout</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">chn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pollout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pollout</span> <span class="ow">or</span> <span class="n">Direction</span><span class="o">.</span><span class="n">OUT</span> <span class="ow">in</span> <span class="n">chn</span><span class="o">.</span><span class="n">wait_for</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_poller</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_poller</span><span class="o">.</span><span class="n">modify</span><span class="p">(</span><span class="n">channel</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ChannelManager.has_pollout"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.ChannelManager.has_pollout">[docs]</a>    <span class="k">def</span> <span class="nf">has_pollout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if :meth:`wait` will check for POLLOUT event on any channel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pollout</span></div>
+<div class="viewcode-block" id="ChannelManager.wait"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.ChannelManager.wait">[docs]</a>    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Channel</span><span class="p">,</span> <span class="n">Direction</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wait for I/O events on channnels.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            timeout: The timeout in milliseconds. `None` value means `infinite`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary with channel keys and event values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_poller</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_poller</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Poller</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pollout</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">chn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_pollout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pollout</span> <span class="ow">or</span> <span class="n">Direction</span><span class="o">.</span><span class="n">OUT</span> <span class="ow">in</span> <span class="n">chn</span><span class="o">.</span><span class="n">wait_for</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_poller</span><span class="o">.</span><span class="n">modify</span><span class="p">(</span><span class="n">chn</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="n">chn</span><span class="o">.</span><span class="n">wait_for</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_chmap</span><span class="p">[</span><span class="n">socket</span><span class="p">]:</span> <span class="n">Direction</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">socket</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_poller</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout</span><span class="p">)}</span></div>
+<div class="viewcode-block" id="ChannelManager.warm_up"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.ChannelManager.warm_up">[docs]</a>    <span class="k">def</span> <span class="nf">warm_up</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create and set up ZMQ sockets for all registered channels that does not have socket.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">chn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">chn</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">chn</span><span class="o">.</span><span class="n">set_socket</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">chn</span><span class="o">.</span><span class="n">socket_type</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_chmap</span><span class="p">[</span><span class="n">chn</span><span class="o">.</span><span class="n">socket</span><span class="p">]</span> <span class="o">=</span> <span class="n">chn</span></div>
+<div class="viewcode-block" id="ChannelManager.shutdown"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.ChannelManager.shutdown">[docs]</a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">forced</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close all managed channels.</span>
+
+<span class="sd">        Calls unbind/disconnect on active channels, and clears all sessions.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            forced: When True, channels are closed with zero LINGER and all ZMQ errors are</span>
+<span class="sd">                    ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chmap</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">chn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_poller</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">chn</span><span class="o">.</span><span class="n">wait_for</span> <span class="o">!=</span> <span class="n">Direction</span><span class="o">.</span><span class="n">NONE</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_poller</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">chn</span><span class="o">.</span><span class="n">socket</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+                <span class="n">chn</span><span class="o">.</span><span class="n">on_shutdown</span><span class="p">(</span><span class="n">chn</span><span class="p">,</span> <span class="n">forced</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">chn</span><span class="o">.</span><span class="n">mode</span> <span class="ow">is</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">BIND</span><span class="p">:</span>
+                    <span class="n">chn</span><span class="o">.</span><span class="n">unbind</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">chn</span><span class="o">.</span><span class="n">mode</span> <span class="ow">is</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">CONNECT</span><span class="p">:</span>
+                    <span class="n">chn</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+            <span class="n">chn</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">forced</span><span class="p">:</span>
+                <span class="n">chn</span><span class="o">.</span><span class="n">drop_socket</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">chn</span><span class="o">.</span><span class="n">close_socket</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="Message"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Message">[docs]</a><span class="k">class</span> <span class="nc">Message</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for protocol message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__qualname__</span>
+    <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>
+<div class="viewcode-block" id="Message.from_zmsg"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Message.from_zmsg">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">from_zmsg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmsg</span><span class="p">:</span> <span class="n">TZMQMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Populate message data from sequence of ZMQ data frames.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            zmsg: Sequence of frames that should be deserialized.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InvalidMessageError: If message is not a valid protocol message.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="Message.as_zmsg"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Message.as_zmsg">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">as_zmsg</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TZMQMessage</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns message as sequence of ZMQ data frames.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="Message.clear"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Message.clear">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clears message data.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="Message.copy"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Message.copy">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Message</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns copy of the message.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="Message.get_keys"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Message.get_keys">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns iterable of dictionary keys to be used with `Protocol.handlers`.</span>
+<span class="sd">        Keys must be provided in order of precedence (from more specific to general).</span>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+
+<div class="viewcode-block" id="SimpleMessage"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.SimpleMessage">[docs]</a><span class="k">class</span> <span class="nc">SimpleMessage</span><span class="p">(</span><span class="n">Message</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple protocol message that holds items from ZMQ multipart message in its</span>
+<span class="sd">    :attr:`.data` attribute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#: Sequence of data frames</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="viewcode-block" id="SimpleMessage.from_zmsg"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.SimpleMessage.from_zmsg">[docs]</a>    <span class="k">def</span> <span class="nf">from_zmsg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmsg</span><span class="p">:</span> <span class="n">TZMQMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Populate message data from sequence of ZMQ data frames.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            zmsg: Sequence of frames that should be deserialized.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InvalidMessageError: If message is not a valid protocol message.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            This class just makes a copy of items from ZMQ message list into :attr:`data`.</span>
+<span class="sd">            All `~zmq.Frame` items are &#39;unpacked&#39; into bytes, other items are simply copied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">bytes</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Frame</span><span class="p">)</span> <span class="k">else</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">zmsg</span><span class="p">]</span></div>
+<div class="viewcode-block" id="SimpleMessage.as_zmsg"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.SimpleMessage.as_zmsg">[docs]</a>    <span class="k">def</span> <span class="nf">as_zmsg</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TZMQMessage</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns message as sequence of ZMQ data frames.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            This class simply returns the list kept in :attr:`.data` attribute. This may</span>
+<span class="sd">            cause problems if returned list is subsequently updated. In such a case, create</span>
+<span class="sd">            a copy of returned list, or create a subclass that overrides this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span></div>
+<div class="viewcode-block" id="SimpleMessage.clear"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.SimpleMessage.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clears message data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+<div class="viewcode-block" id="SimpleMessage.copy"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.SimpleMessage.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimpleMessage</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns copy of the message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">SimpleMessage</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
+<div class="viewcode-block" id="SimpleMessage.get_keys"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.SimpleMessage.get_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns iterable of dictionary keys to be used with `Protocol.handlers`.</span>
+
+<span class="sd">        The default implementation returns list with first data frame or None followed by</span>
+<span class="sd">        `~firebird.base.types.ANY` sentinel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ANY</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="Session"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Session">[docs]</a><span class="k">class</span> <span class="nc">Session</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base Peer Session class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#: Channel routing ID for connected peer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">routing_id</span><span class="p">:</span> <span class="n">RoutingID</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Connected endpoint address, if any</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ZMQAddress</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Flag indicating that session is waiting for send</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">send_pending</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_id</span>
+    <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">logging_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns `_logging_id_` or `&lt;class_name&gt;[&lt;routing_id&gt;::&lt;endpoint&gt;]`&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_logging_id_&#39;</span><span class="p">,</span>
+                       <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">routing_id</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Protocol"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol">[docs]</a><span class="k">class</span> <span class="nc">Protocol</span><span class="p">(</span><span class="n">TracedMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for protocol.</span>
+
+<span class="sd">    The main purpose of protocol class is to validate ZMQ messages, create protocol</span>
+<span class="sd">    messages and session objects used by `Channel` to manage transmissions, and to handle</span>
+<span class="sd">    messages received from channel. This base class defines common interface for message</span>
+<span class="sd">    convertsion and validation. Descendant classes typically add methods for creation</span>
+<span class="sd">    of protocol messages and message handling.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#: string with protocol OID (dot notation). MUST be set in child class.</span>
+    <span class="n">OID</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;1.3.6.1.4.1.53446.1.5&#39;</span> <span class="c1"># iso.org.dod.internet.private.enterprise.firebird.butler.protocol</span>
+    <span class="c1">#: UUID instance that identifies the protocol. MUST be set in child class.</span>
+    <span class="n">UID</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid5</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">NAMESPACE_OID</span><span class="p">,</span> <span class="n">OID</span><span class="p">)</span>
+    <span class="c1">#: Protocol revision (default 1)</span>
+    <span class="n">REVISION</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="viewcode-block" id="Protocol.__init__"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">session_type</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">=</span><span class="n">Session</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            session_type: Class for session objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session_type</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span> <span class="o">=</span> <span class="n">session_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message_factory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__message_factory</span>
+        <span class="c1">#: Message handlers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">TMessageHandler</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></div>
+    <span class="k">def</span> <span class="nf">__message_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmsg</span><span class="p">:</span> <span class="n">TZMQMessage</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Message</span><span class="p">:</span> <span class="c1"># pylint: disable=W0613</span>
+        <span class="s2">&quot;Internal message factory&quot;</span>
+        <span class="k">return</span> <span class="n">SimpleMessage</span><span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_id</span>
+    <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>
+<div class="viewcode-block" id="Protocol.is_valid"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol.is_valid">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmsg</span><span class="p">:</span> <span class="n">TZMQMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return True if ZMQ message is a valid protocol message, otherwise returns False.</span>
+
+<span class="sd">        Exceptions other than `~saturnin.core.types.InvalidMessageError` are not caught.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            zmsg: ZeroMQ multipart message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">zmsg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">InvalidMessageError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+<div class="viewcode-block" id="Protocol.validate"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmsg</span><span class="p">:</span> <span class="n">TZMQMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verifies that sequence of ZMQ data frames is a valid protocol message.</span>
+
+<span class="sd">        If this validation passes without exception, then `.convert_msg()` of the same</span>
+<span class="sd">        message must be successful as well.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            Implementation in base Protocol performs no validation and always returns True.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            zmsg:   ZeroMQ multipart message.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InvalidMessageError: If ZMQ message is not a valid protocol message.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="Protocol.convert_msg"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol.convert_msg">[docs]</a>    <span class="k">def</span> <span class="nf">convert_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmsg</span><span class="p">:</span> <span class="n">TZMQMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Message</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts ZMQ message into protocol message.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            zmsg: ZeroMQ multipart message.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            New protocol message instance with parsed ZMQ message. The base Protocol</span>
+<span class="sd">            implementation returns `.SimpleMessage` instance created by message factory.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InvalidMessageError: If message is not a valid protocol message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_factory</span><span class="p">(</span><span class="n">zmsg</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">from_zmsg</span><span class="p">(</span><span class="n">zmsg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
+<div class="viewcode-block" id="Protocol.accept_new_session"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol.accept_new_session">[docs]</a>    <span class="k">def</span> <span class="nf">accept_new_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">routing_id</span><span class="p">:</span> <span class="n">RoutingID</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span> <span class="c1"># pylint: disable=W0613</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates incoming message that initiated new session/transmission.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            Default implementation unconditionally accept new sessions (always returns True).</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel:    Channel that received the message.</span>
+<span class="sd">            routing_id: Routing ID of the sender.</span>
+<span class="sd">            msg:        Received message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+<div class="viewcode-block" id="Protocol.connect_with_session"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol.connect_with_session">[docs]</a>    <span class="k">def</span> <span class="nf">connect_with_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called by :meth:`Channel.connect` to determine whether new session should be</span>
+<span class="sd">        associated with connected peer.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Because it&#39;s not possible to call `Channel.send` without session, all protocols</span>
+<span class="sd">            that require connecting peers to send a message to initiate transmission must</span>
+<span class="sd">            return True.</span>
+
+<span class="sd">            The default implementation uses :attr:`Channel.direction` to determine the</span>
+<span class="sd">            return value (True if it contains `Direction.OUT`, else False).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Direction</span><span class="o">.</span><span class="n">OUT</span> <span class="ow">in</span> <span class="n">channel</span><span class="o">.</span><span class="n">direction</span></div>
+<div class="viewcode-block" id="Protocol.initialize_session"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol.initialize_session">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize new session instance. The default implementation does nothing.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            session: Session to be initialized.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="Protocol.handle_msg"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol.handle_msg">[docs]</a>    <span class="k">def</span> <span class="nf">handle_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process message received from peer.</span>
+
+<span class="sd">        Uses :attr:`handlers` dictionary and `.Message.get_keys()` to select and execute</span>
+<span class="sd">        the message handler. Exceptions raised by message handler are processed by</span>
+<span class="sd">        `on_exception` event handler (if assigned). Exceptions raised by event handler are</span>
+<span class="sd">        ignored, only `RuntimeWarning` is emitted.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel that received the message.</span>
+<span class="sd">            session: Session for this trasmission</span>
+<span class="sd">            msg:     Received message.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whatever handler returns, or None when handler raises an exception.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">handler</span><span class="p">:</span> <span class="n">TMessageHandler</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">msg</span><span class="o">.</span><span class="n">get_keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">handler</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+                <span class="k">break</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;Message without handler&quot;</span>
+            <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span> <span class="c1"># pylint: disable=W0703</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle_exception</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span> <span class="c1"># pylint: disable=W0703</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Exception raised in exception handler&#39;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">INVALID</span></div>
+<div class="viewcode-block" id="Protocol.handle_invalid_msg"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol.handle_invalid_msg">[docs]</a>    <span class="k">def</span> <span class="nf">handle_invalid_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="n">InvalidMessageError</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called by `.Channel.receive()` when message conversion raises `InvalidMessageError`.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            Executes `.on_invalid_msg` event. Descendant classes that override this method</span>
+<span class="sd">            must call super() or execute this event directly.</span>
+
+<span class="sd">            If this method is not overriden by descendant, and handler for this event is</span>
+<span class="sd">            not defined, all `InvalidMessageError` exceptions are silently ignored.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel that received the message.</span>
+<span class="sd">            session: Session for this trasmission</span>
+<span class="sd">            exc:     Exception raised while processing the message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_invalid_msg</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Protocol.handle_exception"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Protocol.handle_exception">[docs]</a>    <span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called by `.handle_msg()` on exception in message handler.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            Executes `.on_exception` event. Descendant classes that override this method</span>
+<span class="sd">            must call super() or execute this event directly.</span>
+
+<span class="sd">            If this method is not overriden by descendant, and handler for this event is</span>
+<span class="sd">            not defined, all exceptions raised in message handlers are silently ignored.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel that received the message.</span>
+<span class="sd">            session: Session for this trasmission</span>
+<span class="sd">            msg:     Message associated with exception</span>
+<span class="sd">            exc:     Exception raised while processing the message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_exception</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span></div>
+    <span class="nd">@eventsocket</span>
+    <span class="k">def</span> <span class="nf">message_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmsg</span><span class="p">:</span> <span class="n">TZMQMessage</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Message</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;`~firebird.base.signal.eventsocket` for message factory that must return protocol</span>
+<span class="sd">        message instance. The default factory produces new `SimpleMessage` instance on each</span>
+<span class="sd">        call.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            zmsg: ZeroMQ multipart message.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            The returned message SHOULD NOT be initialized from `zmsg`. This argument is</span>
+<span class="sd">            passed to fatory for cases when ZeroMQ message content must be analysed to</span>
+<span class="sd">            create instance of appropriate message class. See `FBSP` message factory for</span>
+<span class="sd">            example.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="nd">@eventsocket</span>
+    <span class="k">def</span> <span class="nf">on_invalid_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="n">InvalidMessageError</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;`~firebird.base.signal.eventsocket` called by `.Channel.receive()` when message</span>
+<span class="sd">        conversion raises `InvalidMessageError`.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel that received invalid message</span>
+<span class="sd">            session: Session associated with transmission</span>
+<span class="sd">            exc:     Exception raised</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            If handler for this event is not defined, all `InvalidMessageError` exceptions</span>
+<span class="sd">            are silently ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="nd">@eventsocket</span>
+    <span class="k">def</span> <span class="nf">on_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;`~firebird.base.signal.eventsocket` called by `.handle_msg()` on exception in</span>
+<span class="sd">        message handler.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel that received the message</span>
+<span class="sd">            session: Session associated with transmission</span>
+<span class="sd">            msg:     Received message</span>
+<span class="sd">            exc:     Exception raised</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            If handler for this event is not defined, all exceptions raised in message</span>
+<span class="sd">            handlers are silently ignored.</span>
+
+<span class="sd">            The exception thrown in this event handler is also not handled, and propagates</span>
+<span class="sd">            to the upper layers (usually an I/O loop).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">session_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">Session</span><span class="p">]:</span>
+        <span class="s2">&quot;Class for session objects.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_type</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">logging_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="s2">&quot;Returns _logging_id_ or &lt;class_name&gt;[&lt;uid&gt;/&lt;revision&gt;]&quot;</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_logging_id_&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">UID</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">REVISION</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Channel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel">[docs]</a><span class="k">class</span> <span class="nc">Channel</span><span class="p">(</span><span class="n">TracedMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base Class for ZMQ communication channel (socket).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Channel.__init__"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mngr</span><span class="p">:</span> <span class="n">ChannelManager</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="n">Protocol</span><span class="p">,</span>
+                 <span class="n">routing_id</span><span class="p">:</span> <span class="n">RoutingID</span><span class="p">,</span> <span class="n">session_type</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Session</span><span class="p">],</span> <span class="n">wait_for</span><span class="p">:</span> <span class="n">Direction</span><span class="p">,</span>
+                 <span class="n">snd_timeout</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rcv_timeout</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">linger</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sock_opts</span><span class="p">:</span> <span class="n">TSocketOptions</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            mngr: Channel manager.</span>
+<span class="sd">            name: Channel name.</span>
+<span class="sd">            routing_id: Routing ID for ZMQ socket.</span>
+<span class="sd">            protocol: Protocol for serializing/deserializing messages.</span>
+<span class="sd">            session_type: Session type. `DEFAULT` session type is obtained from Protocol.</span>
+<span class="sd">            wait_for: Direction(s) of transmission events for this channel processed by</span>
+<span class="sd">                      `ChannelManager.wait()`.</span>
+<span class="sd">            snd_timeout: Timeout for send operation on the socket in milliseconds.</span>
+<span class="sd">            rcv_timeout: Timeout for receive operation on the socket in milliseconds.</span>
+<span class="sd">            linger: ZMQ socket linger period.</span>
+<span class="sd">            sock_opts: Dictionary with socket options that should be set after socket creation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mngr</span><span class="p">:</span> <span class="n">ChannelManager</span> <span class="o">=</span> <span class="n">proxy</span><span class="p">(</span><span class="n">mngr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_routing_id</span><span class="p">:</span> <span class="n">RoutingID</span> <span class="o">=</span> \
+            <span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span> <span class="k">if</span> <span class="n">routing_id</span> <span class="ow">is</span> <span class="n">DEFAULT</span> <span class="k">else</span> <span class="n">routing_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_protocol</span><span class="p">:</span> <span class="n">Protocol</span> <span class="o">=</span> <span class="n">protocol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session_type</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">protocol</span><span class="o">.</span><span class="n">session_type</span> <span class="k">if</span> <span class="n">session_type</span> <span class="ow">is</span> <span class="n">DEFAULT</span> <span class="k">else</span> <span class="n">session_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_snd_timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">snd_timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rcv_timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">rcv_timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_linger</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">linger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for</span><span class="p">:</span> <span class="n">Direction</span> <span class="o">=</span> <span class="n">wait_for</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span><span class="p">:</span> <span class="n">SocketMode</span> <span class="o">=</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">UNKNOWN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span><span class="p">:</span> <span class="n">SocketType</span> <span class="o">=</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">UNKNOWN_TYPE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span><span class="p">:</span> <span class="n">Direction</span> <span class="o">=</span> <span class="n">Direction</span><span class="o">.</span><span class="n">BOTH</span>
+        <span class="c1">#: ZMQ socket for transmission of messages</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Socket</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Dictionary with socket options that should be set after socket creation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sock_opts</span><span class="p">:</span> <span class="n">TSocketOptions</span> <span class="o">=</span> <span class="n">sock_opts</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="c1">#: True if channel uses internal routing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">routed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1">#: List of binded/connected endpoints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ZMQAddress</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1">#: Dictionary of active sessions, key=routing_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">RoutingID</span><span class="p">,</span> <span class="n">Session</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adjust</span><span class="p">()</span></div>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_id</span>
+    <span class="fm">__repr__</span> <span class="o">=</span> <span class="fm">__str__</span>
+<div class="viewcode-block" id="Channel._adjust"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel._adjust">[docs]</a>    <span class="k">def</span> <span class="nf">_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called by `__init__()` to configure the channel parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="Channel.set_socket"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.set_socket">[docs]</a>    <span class="k">def</span> <span class="nf">set_socket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">socket</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Socket</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Used by `.ChannelManager` to set socket to be used by `.Channel`.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">           socket: 0MQ socket to be used by channel</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Channel socket is already set&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="n">socket</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_routing_id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">routing_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_routing_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">immediate</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sndtimeo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_snd_timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">rcvtimeo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rcv_timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">linger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_linger</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock_opts</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock_opts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configure</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Channel._configure"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel._configure">[docs]</a>    <span class="k">def</span> <span class="nf">_configure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called by `.set_socket()` to configure the 0MQ socket.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="Channel.close_socket"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.close_socket">[docs]</a>    <span class="k">def</span> <span class="nf">close_socket</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close the ZMQ socket.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This will not change the linger value for socket, so underlying socket may not</span>
+<span class="sd">            close if there are undelivered messages. The socket is actually closed only</span>
+<span class="sd">            after all messages are delivered or discarded by reaching the socket’s LINGER</span>
+<span class="sd">            timeout.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">closed</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="Channel.drop_socket"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.drop_socket">[docs]</a>    <span class="k">def</span> <span class="nf">drop_socket</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unconditionally drops the ZMQ socket and all pending messages (forces LINGER=0).</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            All ZMQ errors raised by this operation are silently ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="n">ZMQError</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">closed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="Channel.create_session"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.create_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">routing_id</span><span class="p">:</span> <span class="n">RoutingID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Session</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns newly created session.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            routing_id: Routing ID for new session.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ChannelError: When session for specified `routing_id` already exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">routing_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChannelError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Session for route </span><span class="si">{</span><span class="n">routing_id</span><span class="si">}</span><span class="s2"> already exists&quot;</span><span class="p">)</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_type</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">routing_id</span> <span class="o">=</span> <span class="n">routing_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">[</span><span class="n">routing_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">initialize_session</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">session</span></div>
+<div class="viewcode-block" id="Channel.discard_session"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.discard_session">[docs]</a>    <span class="k">def</span> <span class="nf">discard_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Discard session object.</span>
+
+<span class="sd">        If `.Session.endpoint` value is set, it also disconnects channel from this endpoint.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            session: The Session to be discarded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">session</span><span class="o">.</span><span class="n">routing_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span>
+        <span class="k">if</span> <span class="n">session</span><span class="o">.</span><span class="n">endpoint</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">endpoint</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">[</span><span class="n">session</span><span class="o">.</span><span class="n">routing_id</span><span class="p">]</span></div>
+<div class="viewcode-block" id="Channel.bind"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="n">ZMQAddress</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ZMQAddress</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Bind the 0MQ socket to an address.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            endpoint: Address to bind</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The endpoint address.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ChannelError: On attempt to a) bind another endpoint for PAIR socket, or</span>
+<span class="sd">                b) bind to already binded endpoint.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            The returned address MAY differ from original address</span>
+<span class="sd">            when wildcard specification is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">CONNECT</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">socket_type</span> <span class="o">==</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">PAIR</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChannelError</span><span class="p">(</span><span class="s2">&quot;Cannot open multiple endpoints for PAIR socket&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChannelError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Endpoint &#39;</span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2">&#39; already openned&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span>
+        <span class="n">endpoint</span> <span class="o">=</span> <span class="n">ZMQAddress</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">last_endpoint</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">BIND</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">endpoint</span></div>
+<div class="viewcode-block" id="Channel.unbind"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.unbind">[docs]</a>    <span class="k">def</span> <span class="nf">unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="n">ZMQAddress</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unbind from an address (undoes a call to `bind()`).</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            endpoint: Endpoint address, or `None` to unbind from all binded endpoints.</span>
+<span class="sd">                      Note: The address must be the same as the addresss returned by `.bind()`.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ChannelError: If channel is not binded to specified `endpoint`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">BIND</span>
+        <span class="k">if</span> <span class="n">endpoint</span> <span class="ow">and</span> <span class="n">endpoint</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChannelError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Endpoint &#39;</span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2">&#39; not binded&quot;</span><span class="p">)</span>
+        <span class="n">addrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">endpoint</span><span class="p">]</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">addrs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">UNKNOWN</span></div>
+<div class="viewcode-block" id="Channel.connect"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="n">ZMQAddress</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">routing_id</span><span class="p">:</span> <span class="n">RoutingID</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Session</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Connect to a remote channel.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            endpoint:   Endpoint address for connected peer.</span>
+<span class="sd">            routing_id: Channel routing ID (required for routed channels).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Session associated with connected peer, or None if no session was created.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ChannelError: On attempt to a) connect another endpoint for PAIR socket, or</span>
+<span class="sd">                b) connect to already connected endpoint.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">BIND</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">socket_type</span> <span class="o">==</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">PAIR</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChannelError</span><span class="p">(</span><span class="s2">&quot;Cannot connect multiple endpoints for PAIR socket&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChannelError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Endpoint &#39;</span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2">&#39; already connected&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">routed</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">routing_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">routing_id</span> <span class="o">=</span> <span class="n">INTERNAL_ROUTE</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">connect_with_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_session</span><span class="p">(</span><span class="n">routing_id</span><span class="p">)</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="n">endpoint</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">routed</span> <span class="ow">and</span> <span class="n">routing_id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">connect_routing_id</span> <span class="o">=</span> <span class="n">routing_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">CONNECT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">endpoint</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">session</span></div>
+<div class="viewcode-block" id="Channel.disconnect"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="n">ZMQAddress</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Disconnect from a remote socket (undoes a call to `connect()`).</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            Does not discards sessions that are bound to any disconnected endpoint.</span>
+<span class="sd">            Use :meth:`discard_session` to disconnect &amp; discard associated session.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            endpoint: Endpoint address or None to disconnect from all connected endpoints.</span>
+<span class="sd">                      Note: The address must be the same as the addresss returned by</span>
+<span class="sd">                      :meth:`connect`.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ChannelError: If channel is not connected to specified `endpoint`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">CONNECT</span>
+        <span class="k">if</span> <span class="n">endpoint</span> <span class="ow">and</span> <span class="n">endpoint</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChannelError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Endpoint &#39;</span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2">&#39; not openned&quot;</span><span class="p">)</span>
+        <span class="n">addrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">endpoint</span><span class="p">]</span> <span class="k">if</span> <span class="n">endpoint</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">addrs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span> <span class="o">=</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">UNKNOWN</span></div>
+<div class="viewcode-block" id="Channel.can_send"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.can_send">[docs]</a>    <span class="k">def</span> <span class="nf">can_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if underlying ZMQ socket is ready to accept at least one outgoing</span>
+<span class="sd">        message without blocking (or dropping it).</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            It may return True for some sockets although subsequent `send()` may fail or</span>
+<span class="sd">            block. Typicall situation is ROUTER socket that is attached to multiple peers.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            timeout: Timeout in milliseconds passed to socket poll() call.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">POLLOUT</span><span class="p">)</span> <span class="o">==</span> <span class="n">POLLOUT</span></div>
+<div class="viewcode-block" id="Channel.message_available"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.message_available">[docs]</a>    <span class="k">def</span> <span class="nf">message_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if underlying ZMQ socket is ready to receive at least one message</span>
+<span class="sd">        without blocking (or error).</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            timeout: Timeout in milliseconds passed to socket poll() call.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">POLLIN</span><span class="p">)</span> <span class="o">==</span> <span class="n">POLLIN</span></div>
+<div class="viewcode-block" id="Channel.send"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends protocol message.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            msg: Message to be sent.</span>
+<span class="sd">            session: Session to which the message belongs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Zero for success, or ZMQ error code.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">zmsg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">as_zmsg</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">routed</span><span class="p">:</span>
+            <span class="n">zmsg</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">routing_id</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_zmsg</span><span class="p">(</span><span class="n">zmsg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Again</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_send_later</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_send_later</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span> <span class="c1"># pylint: disable=E1101</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">errno</span>
+        <span class="k">except</span> <span class="n">ZMQError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_send_failed</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_send_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">errno</span><span class="p">):</span> <span class="c1"># pylint: disable=E1101</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">errno</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+<div class="viewcode-block" id="Channel.send_zmsg"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.send_zmsg">[docs]</a>    <span class="k">def</span> <span class="nf">send_zmsg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmsg</span><span class="p">:</span> <span class="n">TZMQMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends ZMQ multipart message.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            Does not handle any ZMQError exception.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">Direction</span><span class="o">.</span><span class="n">OUT</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">,</span> <span class="s2">&quot;Call to send() on RECEIVE-only channel&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">send_multipart</span><span class="p">(</span><span class="n">zmsg</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Channel.receive"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.receive">[docs]</a>    <span class="k">def</span> <span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Receive and process protocol message with assigned protocol.</span>
+
+<span class="sd">        If protocol raises `InvalidMessageError` on message conversion, it calls</span>
+<span class="sd">        `Protocol.on_invalid_msg` event handler (if defined) before message is dropped.</span>
+<span class="sd">        Exceptions raised by event handler are ignored, only `RuntimeWarning` is emitted.</span>
+
+<span class="sd">        If there is no session found for route, it first calls `Protocol.accept_new_session()`,</span>
+<span class="sd">        and message is handled only when new session is accepted.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">             timeout: The timeout (in milliseconds) to wait for message.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whatever protocol message handler returns, sentinel `~saturnin.base.types.TIMEOUT`</span>
+<span class="sd">            when timeout expires, or sentinel `.INVALID` when:</span>
+<span class="sd">            a) received message was not valid protocol message, or b) handler raises</span>
+<span class="sd">            an exception, or c) there is no session associated with peer and new session</span>
+<span class="sd">            was not accepted by protocol.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="n">POLLIN</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">TIMEOUT</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">zmsg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">receive_zmsg</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">Again</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_receive_later</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_receive_later</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span> <span class="c1"># pylint: disable=E1101</span>
+                <span class="k">raise</span>
+            <span class="k">return</span> <span class="n">INVALID</span>
+        <span class="k">except</span> <span class="n">ZMQError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_receive_failed</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_receive_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">errno</span><span class="p">)):</span> <span class="c1"># pylint: disable=E1101</span>
+                <span class="k">raise</span>
+            <span class="k">return</span> <span class="n">INVALID</span>
+        <span class="n">routing_id</span><span class="p">:</span> <span class="n">RoutingID</span> <span class="o">=</span> <span class="n">zmsg</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">routed</span> <span class="k">else</span> <span class="n">INTERNAL_ROUTE</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">routing_id</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_protocol</span><span class="o">.</span><span class="n">convert_msg</span><span class="p">(</span><span class="n">zmsg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">InvalidMessageError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_protocol</span><span class="o">.</span><span class="n">handle_invalid_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span> <span class="c1"># pylint: disable=W0703</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Exception raised in invalid message handler&#39;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">INVALID</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="n">session</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># This is the first message received for transmission with this peer</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_protocol</span><span class="o">.</span><span class="n">accept_new_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">routing_id</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">INVALID</span>
+            <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_session</span><span class="p">(</span><span class="n">routing_id</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_protocol</span><span class="o">.</span><span class="n">handle_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Channel.receive_zmsg"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.receive_zmsg">[docs]</a>    <span class="k">def</span> <span class="nf">receive_zmsg</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TZMQMessage</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Receive ZMQ multipart message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">Direction</span><span class="o">.</span><span class="n">IN</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">,</span> <span class="s2">&quot;Call to receive() on SEND-only channel&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">recv_multipart</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Channel.is_active"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.is_active">[docs]</a>    <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if channel is active (binded or connected).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Channel.set_wait_in"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.set_wait_in">[docs]</a>    <span class="k">def</span> <span class="nf">set_wait_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enable/disable receiving messages. It sets/clear `Direction.IN` in `.wait_for`</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">           value: `True` to enable incoming messages, `False` to disable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait_for</span> <span class="o">|=</span> <span class="n">Direction</span><span class="o">.</span><span class="n">IN</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait_for</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_for</span> <span class="o">|</span> <span class="n">Direction</span><span class="o">.</span><span class="n">IN</span><span class="p">)</span> <span class="o">^</span> <span class="n">Direction</span><span class="o">.</span><span class="n">IN</span></div>
+<div class="viewcode-block" id="Channel.set_wait_out"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.set_wait_out">[docs]</a>    <span class="k">def</span> <span class="nf">set_wait_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enable/disable sending messages. It sets/clear `Direction.OUT` in `.wait_for`.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            value: New value for wait_for_out flag.</span>
+<span class="sd">            session: Related session.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ChannelError: For routed channel with active sessions when session is not provided.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            If channel has active sessions, the `Session.send_pending` flag is also altered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">session</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">routed</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ChannelError</span><span class="p">(</span><span class="s2">&quot;Session required for routed channel&quot;</span><span class="p">)</span>
+            <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait_for</span> <span class="o">|=</span> <span class="n">Direction</span><span class="o">.</span><span class="n">OUT</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait_for</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait_for</span> <span class="o">|</span> <span class="n">Direction</span><span class="o">.</span><span class="n">OUT</span><span class="p">)</span> <span class="o">^</span> <span class="n">Direction</span><span class="o">.</span><span class="n">OUT</span>
+        <span class="k">if</span> <span class="n">session</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">send_pending</span> <span class="o">=</span> <span class="n">value</span></div>
+<div class="viewcode-block" id="Channel.wait"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.Channel.wait">[docs]</a>    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Direction</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wait for socket events specified by :attr:`wait_for`.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            timeout: The timeout (in milliseconds) to wait for an event. If unspecified,</span>
+<span class="sd">                     will wait forever for an event.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">Direction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for</span><span class="o">.</span><span class="n">value</span><span class="p">))</span></div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="s2">&quot;Channel name.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">socket_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SocketType</span><span class="p">:</span>
+        <span class="s2">&quot;ZMQ socket type this channel uses.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">direction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Direction</span><span class="p">:</span>
+        <span class="s2">&quot;Possible directions of transmission over this channel.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SocketMode</span><span class="p">:</span>
+        <span class="s2">&quot;ZMQ Socket mode.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mode</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">manager</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChannelManager</span><span class="p">:</span>
+        <span class="s2">&quot;The channel manager to which this channel belongs.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mngr</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">routing_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RoutingID</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Routing_id value for ZMQ socket.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_routing_id</span>
+    <span class="nd">@routing_id</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">routing_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_active</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">ChannelError</span><span class="p">(</span><span class="s2">&quot;Cannot set routing_id of active channel&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_routing_id</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">routing_id</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Protocol</span><span class="p">:</span>
+        <span class="s2">&quot;Protocol used by channel&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_protocol</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Session</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Session associated with channel.</span>
+
+<span class="sd">        Important: Valid *only* when channel has exactly one associated session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sessions</span><span class="p">[</span><span class="n">INTERNAL_ROUTE</span><span class="p">]</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">snd_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="s2">&quot;Timeout for send operations.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_snd_timeout</span>
+    <span class="nd">@snd_timeout</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">snd_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sndtimeo</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_snd_timeout</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rcv_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="s2">&quot;Timeout for receive operations.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rcv_timeout</span>
+    <span class="nd">@rcv_timeout</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rcv_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">rcvtimeo</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rcv_timeout</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">wait_for</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Direction</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Direction(s) of transmission events for this channel processed by</span>
+<span class="sd">        `ChannelManager.wait()` or `Channel.wait()`.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ChannelError: When assigned value contains direction not supported by channel</span>
+<span class="sd">                          for transmission.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for</span>
+    <span class="nd">@wait_for</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">wait_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Direction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ChannelError</span><span class="p">(</span><span class="s2">&quot;Cannot wait for events in direction not supported &quot;</span>
+                               <span class="s2">&quot;by channel for transmission.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mngr</span><span class="o">.</span><span class="n">update_poller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">logging_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="s2">&quot;Returns _logging_id_ or &lt;class_name&gt;[&lt;name&gt;]&quot;</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_logging_id_&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">log_context</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="s2">&quot;Logging context. Returns `log_context` from ChannelManager.&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mngr</span><span class="o">.</span><span class="n">log_context</span>
+    <span class="nd">@eventsocket</span>
+    <span class="k">def</span> <span class="nf">on_output_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;`~firebird.base.signal.eventsocket`  called when channel is ready to accept at</span>
+<span class="sd">        least one outgoing message without blocking (or dropping it).</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel ready for sending a message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="nd">@eventsocket</span>
+    <span class="k">def</span> <span class="nf">on_shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">forced</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;`~firebird.base.signal.eventsocket`  called by :meth:`ChannelManager.shutdown`</span>
+<span class="sd">        before the channel is shut down.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            All exceptions escaping this method are silently ignored.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel to be shut down.</span>
+<span class="sd">            forced:  When True, the channel will be closed with zero LINGER and all ZMQ errors will be ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="nd">@eventsocket</span>
+    <span class="k">def</span> <span class="nf">on_send_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">,</span> <span class="n">err_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;`~firebird.base.signal.eventsocket`  called by :meth:`Channel.send` when send</span>
+<span class="sd">        operation fails with `zmq.ZMQError` exception other than `EAGAIN`.</span>
+
+<span class="sd">        If event returns `True`, the error is ignored, otherwise the error code is reported</span>
+<span class="sd">        to the caller.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel where send operation failed.</span>
+<span class="sd">            session: Session associated with failed transmission.</span>
+<span class="sd">            msg: Message that wasn&#39;t sent.</span>
+<span class="sd">            err_code: Error code.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="nd">@eventsocket</span>
+    <span class="k">def</span> <span class="nf">on_send_later</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;`~firebird.base.signal.eventsocket`  called by :meth:`Channel.send` when send</span>
+<span class="sd">        operation fails with `zmq.Again` exception.</span>
+
+<span class="sd">        If event returns `True`, the error is ignored, otherwise the error code is reported</span>
+<span class="sd">        to the caller.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel where send operation failed.</span>
+<span class="sd">            session: Session associated with failed transmission.</span>
+<span class="sd">            msg: Message that wasn&#39;t sent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="nd">@eventsocket</span>
+    <span class="k">def</span> <span class="nf">on_receive_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">err_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;`~firebird.base.signal.eventsocket`  called by :meth:`Channel.receive` when</span>
+<span class="sd">        receive operation fails with `zmq.ZMQError` exception other than EAGAIN.</span>
+
+<span class="sd">        If event returns `True`, the `.receive()` returns `.INVALID`, otherwise the exception is</span>
+<span class="sd">        propagated to the caller.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel where receive operation failed.</span>
+<span class="sd">            err_code: Error code.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="nd">@eventsocket</span>
+    <span class="k">def</span> <span class="nf">on_receive_later</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;`~firebird.base.signal.eventsocket`  called by :meth:`Channel.receive` when</span>
+<span class="sd">        receive operation fails with `zmq.Again` exception.</span>
+
+<span class="sd">        If event returns True, the receive() returns INVALID, otherwise the exception is</span>
+<span class="sd">        propagated to the caller.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel where receive operation failed.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<span class="c1"># Channels for individual ZMQ socket types</span>
+<div class="viewcode-block" id="DealerChannel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.DealerChannel">[docs]</a><span class="k">class</span> <span class="nc">DealerChannel</span><span class="p">(</span><span class="n">Channel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Communication channel over DEALER socket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span> <span class="o">=</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">DEALER</span></div>
+
+<div class="viewcode-block" id="PushChannel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.PushChannel">[docs]</a><span class="k">class</span> <span class="nc">PushChannel</span><span class="p">(</span><span class="n">Channel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Communication channel over PUSH socket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span> <span class="o">=</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">PUSH</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span> <span class="o">=</span> <span class="n">Direction</span><span class="o">.</span><span class="n">OUT</span></div>
+
+<div class="viewcode-block" id="PullChannel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.PullChannel">[docs]</a><span class="k">class</span> <span class="nc">PullChannel</span><span class="p">(</span><span class="n">Channel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Communication channel over PULL socket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span> <span class="o">=</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">PULL</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span> <span class="o">=</span> <span class="n">Direction</span><span class="o">.</span><span class="n">IN</span></div>
+
+<div class="viewcode-block" id="PubChannel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.PubChannel">[docs]</a><span class="k">class</span> <span class="nc">PubChannel</span><span class="p">(</span><span class="n">Channel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Communication channel over PUB socket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span> <span class="o">=</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">PUB</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span> <span class="o">=</span> <span class="n">Direction</span><span class="o">.</span><span class="n">OUT</span></div>
+
+<div class="viewcode-block" id="SubChannel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.SubChannel">[docs]</a><span class="k">class</span> <span class="nc">SubChannel</span><span class="p">(</span><span class="n">Channel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Communication channel over SUB socket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span> <span class="o">=</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">SUB</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span> <span class="o">=</span> <span class="n">Direction</span><span class="o">.</span><span class="n">IN</span>
+<div class="viewcode-block" id="SubChannel.subscribe"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.SubChannel.subscribe">[docs]</a>    <span class="k">def</span> <span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subscribe to topic.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            topic: ZMQ topic.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">subscribe</span> <span class="o">=</span> <span class="n">topic</span></div>
+<div class="viewcode-block" id="SubChannel.unsubscribe"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.SubChannel.unsubscribe">[docs]</a>    <span class="k">def</span> <span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unsubscribe from topic.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            topic: ZMQ topic.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">unsubscribe</span> <span class="o">=</span> <span class="n">topic</span></div></div>
+
+<div class="viewcode-block" id="XPubChannel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.XPubChannel">[docs]</a><span class="k">class</span> <span class="nc">XPubChannel</span><span class="p">(</span><span class="n">Channel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Communication channel over XPUB socket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span> <span class="o">=</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">XPUB</span>
+<div class="viewcode-block" id="XPubChannel._configure"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.XPubChannel._configure">[docs]</a>    <span class="k">def</span> <span class="nf">_configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;Create XPUB socket for this channel.&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_configure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">xpub_verboser</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># pass subscribe and unsubscribe messages on XPUB socket</span></div></div>
+
+<div class="viewcode-block" id="XSubChannel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.XSubChannel">[docs]</a><span class="k">class</span> <span class="nc">XSubChannel</span><span class="p">(</span><span class="n">Channel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Communication channel over XSUB socket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span> <span class="o">=</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">XSUB</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_direction</span> <span class="o">=</span> <span class="n">Direction</span><span class="o">.</span><span class="n">IN</span>
+<div class="viewcode-block" id="XSubChannel.subscribe"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.XSubChannel.subscribe">[docs]</a>    <span class="k">def</span> <span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subscribe to topic.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            topic: ZMQ topic.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">send_multipart</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x01</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">topic</span><span class="p">)</span></div>
+<div class="viewcode-block" id="XSubChannel.unsubscribe"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.XSubChannel.unsubscribe">[docs]</a>    <span class="k">def</span> <span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unsubscribe to topic.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            topic: ZMQ topic.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">send_multipart</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">topic</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="PairChannel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.PairChannel">[docs]</a><span class="k">class</span> <span class="nc">PairChannel</span><span class="p">(</span><span class="n">Channel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Communication channel over PAIR socket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span> <span class="o">=</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">PAIR</span></div>
+
+<div class="viewcode-block" id="RouterChannel"><a class="viewcode-back" href="../../../ref-base-transport.html#saturnin.base.transport.RouterChannel">[docs]</a><span class="k">class</span> <span class="nc">RouterChannel</span><span class="p">(</span><span class="n">Channel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Communication channel over ROUTER socket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_adjust</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket_type</span> <span class="o">=</span> <span class="n">SocketType</span><span class="o">.</span><span class="n">ROUTER</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">routed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">def</span> <span class="nf">_configure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_configure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">router_mandatory</span> <span class="o">=</span> <span class="mi">1</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019-2023, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

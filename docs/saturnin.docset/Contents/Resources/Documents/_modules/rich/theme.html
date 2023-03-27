@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rich.theme &#8212; saturnin 0.8.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="brand" href="../../index.html">
+          saturnin</a>
+        <span class="navbar-text pull-left"><b>0.8.0</b></span>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="../../usage-guide.html">Usage Guide</a></li>
+                <li><a href="../../py-modindex.html">Modules</a></li>
+                <li><a href="../../genindex.html">Index</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Content <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Saturnin Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-base.html">saturnin.base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base.html#types">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base.html#dataclasses">Dataclasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-base-types.html">saturnin.base.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-types.html#saturnin-common-type-definitions-and-constants">Saturnin common type definitions and constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-types.html#types-for-annotations">Types for annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-types.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-types.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-types.html#sentinels">Sentinels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-types.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-types.html#dataclasses">Dataclasses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-config.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-base-transport.html">saturnin.base.transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-transport.html#types-for-type-hints">Types for type hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-transport.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-transport.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-transport.html#channels-for-individual-0mq-socket-types">Channels for individual 0MQ socket types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-base-component.html">saturnin.base.component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-base-component.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-controller.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-component-micro.html">saturnin.component.micro</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-micro.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-micro.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-component-service.html">saturnin.component.service</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-service.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-service.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-component-client.html">saturnin.component.client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-lib-console.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-lib-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-lib-metadata.html">saturnin.lib.metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-lib-data-onepipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-lib-data-filter.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-protocol-fbsp.html">saturnin.protocol.fbsp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-protocol-fbsp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-protocol-fbsp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-protocol-fbsp.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-protocol-fbsp.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-protocol-fbdp.html">saturnin.protocol.fbdp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-protocol-fbdp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-protocol-fbdp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-protocol-fbdp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-protocol-iccp.html">saturnin.protocol.iccp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-protocol-iccp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-protocol-iccp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-scripts-svcrun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-scripts-daemon.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-scripts-bundlerun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-scripts-cli.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-scripts-cli.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-repl.html">saturnin._scripts.repl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-completers.html">saturnin._scripts.completers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-scripts-commands-site.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-7-0">Version 0.7.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog.html#version-0-1-0">Version 0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body span12 content" role="main">
+      
+  <h1>Source code for rich.theme</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">.default_styles</span> <span class="kn">import</span> <span class="n">DEFAULT_STYLES</span>
+<span class="kn">from</span> <span class="nn">.style</span> <span class="kn">import</span> <span class="n">Style</span><span class="p">,</span> <span class="n">StyleType</span>
+
+
+<span class="k">class</span> <span class="nc">Theme</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A container for style information, used by :class:`~rich.console.Console`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        styles (Dict[str, Style], optional): A mapping of style names on to styles. Defaults to None for a theme with no styles.</span>
+<span class="sd">        inherit (bool, optional): Inherit default styles. Defaults to True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">styles</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Style</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">styles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StyleType</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">inherit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">styles</span> <span class="o">=</span> <span class="n">DEFAULT_STYLES</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">inherit</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">styles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">styles</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="n">name</span><span class="p">:</span> <span class="n">style</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="n">Style</span><span class="p">)</span> <span class="k">else</span> <span class="n">Style</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="n">styles</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get contents of a config file for this theme.&quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="s2">&quot;[styles]</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">style</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">style</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">styles</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">config</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">config_file</span><span class="p">:</span> <span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">source</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">inherit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Theme&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a theme from a text mode file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config_file (IO[str]): An open conf file.</span>
+<span class="sd">            source (str, optional): The filename of the open file. Defaults to None.</span>
+<span class="sd">            inherit (bool, optional): Inherit default styles. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Theme: A New theme instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">styles</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">Style</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="s2">&quot;styles&quot;</span><span class="p">)}</span>
+        <span class="n">theme</span> <span class="o">=</span> <span class="n">Theme</span><span class="p">(</span><span class="n">styles</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="n">inherit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">theme</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">inherit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Theme&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read a theme from a path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to a config file readable by Python configparser module.</span>
+<span class="sd">            inherit (bool, optional): Inherit default styles. Defaults to True.</span>
+<span class="sd">            encoding (str, optional): Encoding of the config file. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Theme: A new theme instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span> <span class="k">as</span> <span class="n">config_file</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="n">inherit</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ThemeStackError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for errors related to the theme stack.&quot;&quot;&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">ThemeStack</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A stack of themes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        theme (Theme): A theme instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theme</span><span class="p">:</span> <span class="n">Theme</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Style</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">theme</span><span class="o">.</span><span class="n">styles</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span>
+
+    <span class="k">def</span> <span class="nf">push_theme</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theme</span><span class="p">:</span> <span class="n">Theme</span><span class="p">,</span> <span class="n">inherit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Push a theme on the top of the stack.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            theme (Theme): A Theme instance.</span>
+<span class="sd">            inherit (boolean, optional): Inherit styles from current top of stack.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">styles</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Style</span><span class="p">]</span>
+        <span class="n">styles</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">theme</span><span class="o">.</span><span class="n">styles</span><span class="p">}</span> <span class="k">if</span> <span class="n">inherit</span> <span class="k">else</span> <span class="n">theme</span><span class="o">.</span><span class="n">styles</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">styles</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span>
+
+    <span class="k">def</span> <span class="nf">pop_theme</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pop (and discard) the top-most theme.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ThemeStackError</span><span class="p">(</span><span class="s2">&quot;Unable to pop base theme&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="n">theme</span> <span class="o">=</span> <span class="n">Theme</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">theme</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019-2022, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

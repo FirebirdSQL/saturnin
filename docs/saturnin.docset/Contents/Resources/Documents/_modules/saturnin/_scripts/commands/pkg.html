@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>saturnin._scripts.commands.pkg &#8212; saturnin 0.8.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="brand" href="../../../../index.html">
+          saturnin</a>
+        <span class="navbar-text pull-left"><b>0.8.0</b></span>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="../../../../usage-guide.html">Usage Guide</a></li>
+                <li><a href="../../../../py-modindex.html">Modules</a></li>
+                <li><a href="../../../../genindex.html">Index</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Content <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started.html#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started.html#saturnin-console">Saturnin console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started.html#installing-services">Installing services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started.html#using-firebird-services">Using Firebird services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started.html#saturnin-recipes">Saturnin recipes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage-guide.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage-guide.html#basic-architecture">Basic Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage-guide.html#butler-services">Butler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage-guide.html#service-containers">Service containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage-guide.html#saturnin-recipes">Saturnin recipes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage-guide.html#saturnin-applications">Saturnin applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage-guide.html#saturnin-console">Saturnin console</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage-guide.html#saturnin-environment">Saturnin environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage-guide.html#directories">Directories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage-guide.html#configuration-files">Configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../usage-guide.html#data-files">Data files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage-guide.html#managing-saturnin-packages">Managing Saturnin packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage-guide.html#oid-registry">OID registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../usage-guide.html#working-with-recipes">Working with recipes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference.html">Saturnin Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-base.html">saturnin.base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#types">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#dataclasses">Dataclasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-base-types.html">saturnin.base.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#saturnin-common-type-definitions-and-constants">Saturnin common type definitions and constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#types-for-annotations">Types for annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#sentinels">Sentinels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#dataclasses">Dataclasses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-config.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-base-transport.html">saturnin.base.transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-transport.html#types-for-type-hints">Types for type hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-transport.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-transport.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-transport.html#channels-for-individual-0mq-socket-types">Channels for individual 0MQ socket types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-base-component.html">saturnin.base.component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-component.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-controller.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-micro.html">saturnin.component.micro</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-micro.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-micro.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-service.html">saturnin.component.service</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-service.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-service.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-client.html">saturnin.component.client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-recipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-console.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-lib-metadata.html">saturnin.lib.metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-metadata.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-data-onepipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-data-onepipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-data-filter.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-data-filter.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-protocol-fbsp.html">saturnin.protocol.fbsp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbsp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbsp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbsp.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbsp.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-protocol-fbdp.html">saturnin.protocol.fbdp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbdp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbdp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbdp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-protocol-iccp.html">saturnin.protocol.iccp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-iccp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-iccp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-svcrun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-bundlerun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-cli.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-cli.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-repl.html">saturnin._scripts.repl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-repl.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-repl.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-repl.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-completers.html">saturnin._scripts.completers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-completers.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-site.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-site.html#command-functions">Command functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-site.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-recipes.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-recipes.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-daemons.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-daemons.html#command-functions">Command functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-daemons.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-oids.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-oids.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../changelog.html#version-0-7-0">Version 0.7.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../changelog.html#version-0-1-0">Version 0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body span12 content" role="main">
+      
+  <h1>Source code for saturnin._scripts.commands.pkg</h1><div class="highlight"><pre>
+<span></span><span class="c1">#coding:utf-8</span>
+<span class="c1">#</span>
+<span class="c1"># PROGRAM/MODULE: saturnin</span>
+<span class="c1"># FILE:           saturnin/_scripts/commands/pkg.py</span>
+<span class="c1"># DESCRIPTION:    Saturnin package manager commands</span>
+<span class="c1"># CREATED:        19.1.2021</span>
+<span class="c1">#</span>
+<span class="c1"># The contents of this file are subject to the MIT License</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c1"># copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2021 Firebird Project (www.firebirdsql.org)</span>
+<span class="c1"># All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Contributor(s): Pavel Císař (original code)</span>
+<span class="c1">#                 ______________________________________</span>
+ <span class="c1"># pylint: disable=W1510</span>
+
+<span class="sd">&quot;&quot;&quot;Saturnin package manager commands</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">UUID</span>
+<span class="kn">from</span> <span class="nn">re</span> <span class="kn">import</span> <span class="n">sub</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
+<span class="kn">from</span> <span class="nn">rich.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">rich.text</span> <span class="kn">import</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">rich.progress</span> <span class="kn">import</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">SpinnerColumn</span><span class="p">,</span> <span class="n">TextColumn</span>
+<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="n">box</span>
+<span class="kn">import</span> <span class="nn">typer</span>
+<span class="kn">from</span> <span class="nn">firebird.uuid</span> <span class="kn">import</span> <span class="n">oid_registry</span>
+<span class="kn">from</span> <span class="nn">saturnin.base</span> <span class="kn">import</span> <span class="n">directory_scheme</span><span class="p">,</span> <span class="n">RESTART</span>
+<span class="kn">from</span> <span class="nn">saturnin.component.recipe</span> <span class="kn">import</span> <span class="n">recipe_registry</span>
+<span class="kn">from</span> <span class="nn">saturnin.component.registry</span> <span class="kn">import</span> <span class="n">service_registry</span><span class="p">,</span> <span class="n">ServiceInfo</span>
+<span class="kn">from</span> <span class="nn">saturnin.component.apps</span> <span class="kn">import</span> <span class="n">application_registry</span><span class="p">,</span> <span class="n">ApplicationInfo</span>
+<span class="kn">from</span> <span class="nn">saturnin.lib.console</span> <span class="kn">import</span> <span class="n">console</span><span class="p">,</span> <span class="n">_h</span><span class="p">,</span> <span class="n">RICH_YES</span><span class="p">,</span> <span class="n">RICH_NO</span>
+<span class="kn">from</span> <span class="nn">saturnin.lib.metadata</span> <span class="kn">import</span> <span class="n">distribution</span>
+<span class="kn">from</span> <span class="nn">saturnin._scripts.completers</span> <span class="kn">import</span> <span class="n">service_completer</span><span class="p">,</span> <span class="n">application_completer</span><span class="p">,</span> <span class="n">get_first_line</span>
+
+<span class="c1">#: Typer command group for package management commands</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">(</span><span class="n">rich_markup_mode</span><span class="o">=</span><span class="s2">&quot;rich&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Package management.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="list_services"><a class="viewcode-back" href="../../../../ref-scripts-commands-pkg.html#saturnin._scripts.commands.pkg.list_services">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">list_services</span><span class="p">(</span><span class="n">with_name</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span> \
+                    <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;List only services with this string in name&quot;</span><span class="p">)):</span>
+    <span class="s2">&quot;Lists installed Saturnin services.&quot;</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">service_registry</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">with_name</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="n">services</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">services</span><span class="p">:</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Registered services&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">with_name</span>
+                      <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;Registered services with name containing &#39;</span><span class="si">{</span><span class="n">with_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                      <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="o">.</span><span class="n">ROUNDED</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;Service&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;Version&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;number&#39;</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;Description&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">svc</span> <span class="ow">in</span> <span class="n">services</span><span class="p">:</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">svc</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">get_first_line</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">description</span><span class="p">))</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;There are no Saturnin services registered.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="show_service"><a class="viewcode-back" href="../../../../ref-scripts-commands-pkg.html#saturnin._scripts.commands.pkg.show_service">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">show_service</span><span class="p">(</span><span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Service UID or name&quot;</span><span class="p">,</span>
+                                                <span class="n">autocompletion</span><span class="o">=</span><span class="n">service_completer</span><span class="p">)):</span>
+    <span class="s2">&quot;Show information about installed service.&quot;</span>
+    <span class="n">svc</span><span class="p">:</span> <span class="n">ServiceInfo</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">svc</span> <span class="o">=</span> <span class="n">service_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">UUID</span><span class="p">(</span><span class="n">service_id</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span> <span class="c1"># pylint: disable=W0703</span>
+        <span class="n">svc</span> <span class="o">=</span> <span class="n">service_registry</span><span class="o">.</span><span class="n">get_by_name</span><span class="p">(</span><span class="n">service_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">svc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print_error</span><span class="p">(</span><span class="s1">&#39;Service not registered!&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">api</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">uid</span> <span class="ow">in</span> <span class="n">svc</span><span class="o">.</span><span class="n">api</span><span class="p">:</span>
+        <span class="n">inf</span><span class="p">:</span> <span class="n">ServiceInfo</span> <span class="o">=</span> <span class="n">oid_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+        <span class="n">api</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span> <span class="k">if</span> <span class="n">inf</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">inf</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">vendor</span> <span class="o">=</span> <span class="n">oid_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">vendor</span><span class="p">)</span>
+    <span class="n">vendor</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">vendor</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">vendor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Text</span><span class="p">(</span><span class="n">vendor</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">()</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;UID:&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">uid</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Name:&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Version:&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;cyan&#39;</span><span class="p">))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Vendor:&#39;</span><span class="p">,</span> <span class="n">vendor</span><span class="p">)</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Classification: &#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">classification</span><span class="p">))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Description:&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">description</span><span class="p">))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Facilities:&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">facilities</span><span class="p">)))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;API:&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">api</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Distribution:&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="n">svc</span><span class="o">.</span><span class="n">distribution</span><span class="p">))</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="list_applications"><a class="viewcode-back" href="../../../../ref-scripts-commands-pkg.html#saturnin._scripts.commands.pkg.list_applications">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">list_applications</span><span class="p">(</span><span class="n">with_name</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span> \
+                      <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;List only applications with this string in name&quot;</span><span class="p">)):</span>
+    <span class="s2">&quot;Lists installed Saturnin applications.&quot;</span>
+    <span class="n">apps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">application_registry</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">with_name</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="n">apps</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">apps</span><span class="p">:</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Registered applications&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">with_name</span>
+                      <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;Registered applications with name containing &#39;</span><span class="si">{</span><span class="n">with_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                      <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="o">.</span><span class="n">ROUNDED</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;Application&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;Version&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;number&#39;</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;Used&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;Description&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="n">apps</span><span class="p">:</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">RICH_YES</span> <span class="k">if</span>
+                          <span class="n">recipe_registry</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">application</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                                              <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">application</span> <span class="o">==</span> <span class="n">app</span><span class="o">.</span><span class="n">uid</span><span class="p">)</span>
+                          <span class="k">else</span> <span class="n">RICH_NO</span><span class="p">,</span> <span class="n">get_first_line</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">description</span><span class="p">))</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;There are no Saturnin applications registered.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="show_application"><a class="viewcode-back" href="../../../../ref-scripts-commands-pkg.html#saturnin._scripts.commands.pkg.show_application">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">show_application</span><span class="p">(</span><span class="n">app_id</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Application UID or name&quot;</span><span class="p">,</span>
+                                                    <span class="n">autocompletion</span><span class="o">=</span><span class="n">application_completer</span><span class="p">)):</span>
+    <span class="s2">&quot;Show information about installed application.&quot;</span>
+    <span class="n">app</span><span class="p">:</span> <span class="n">ApplicationInfo</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">application_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">UUID</span><span class="p">(</span><span class="n">app_id</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span> <span class="c1"># pylint: disable=W0703</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">application_registry</span><span class="o">.</span><span class="n">get_by_name</span><span class="p">(</span><span class="n">app_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print_error</span><span class="p">(</span><span class="s1">&#39;Application not registered!&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">vendor</span> <span class="o">=</span> <span class="n">oid_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">vendor</span><span class="p">)</span>
+    <span class="n">vendor</span> <span class="o">=</span> <span class="n">_h</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">vendor</span><span class="p">)</span> <span class="k">if</span> <span class="n">vendor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">vendor</span><span class="o">.</span><span class="n">description</span><span class="p">))</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">()</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;UID:&#39;</span><span class="p">,</span> <span class="n">_h</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">uid</span><span class="p">))))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Name:&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Version:&#39;</span><span class="p">,</span> <span class="n">_h</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">version</span><span class="p">)))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Vendor:&#39;</span><span class="p">,</span> <span class="n">vendor</span><span class="p">)</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Classification: &#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">classification</span><span class="p">))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Description:&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">description</span><span class="p">))</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s1">&#39;Distribution:&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">distribution</span><span class="p">))</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="list_packages"><a class="viewcode-back" href="../../../../ref-scripts-commands-pkg.html#saturnin._scripts.commands.pkg.list_packages">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">list_packages</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lists installed distribution packages with Saturnin components.</span>
+
+<span class="sd">    This command does not list ALL packages installed in Saturnin virtual environment, but</span>
+<span class="sd">    only those that contain registered Saturnin components. To list all installed packages,</span>
+<span class="sd">    use: **pip list**.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">service_registry</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;item.distribution&#39;</span><span class="p">))</span>
+    <span class="n">packages</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">application_registry</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;item.distribution&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">packages</span><span class="p">:</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Installed Saturnin packages&#39;</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="o">.</span><span class="n">ROUNDED</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;Package&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s1">&#39;Version&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;number&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dist</span> <span class="ow">in</span> <span class="p">(</span><span class="n">distribution</span><span class="p">(</span><span class="n">pkg</span><span class="p">)</span> <span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">):</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">dist</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;No Saturnin packages are installed.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="update_registry"><a class="viewcode-back" href="../../../../ref-scripts-commands-pkg.html#saturnin._scripts.commands.pkg.update_registry">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">update_registry</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Updates registry of installed Saturnin components.</span>
+
+<span class="sd">    The registry is updated automatically when Saturnin packages are manipulated with</span>
+<span class="sd">    built-in **install**, **uninstall** or **pip** commands. Manual update is required only</span>
+<span class="sd">    when packages are added/updated/removed in differet way.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;Updating Saturnin service registry ... &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">service_registry</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">service_registry</span><span class="o">.</span><span class="n">load_from_installed</span><span class="p">()</span>
+        <span class="n">service_registry</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;[ok]OK&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span> <span class="c1"># pylint: disable=W0703</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;[warning]ERROR&#39;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print_exception</span><span class="p">()</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;Updating Saturnin application registry ... &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">application_registry</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">application_registry</span><span class="o">.</span><span class="n">load_from_installed</span><span class="p">()</span>
+        <span class="n">application_registry</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;[ok]OK&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span> <span class="c1"># pylint: disable=W0703</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;[warning]ERROR&#39;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print_exception</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="pip"><a class="viewcode-back" href="../../../../ref-scripts-commands-pkg.html#saturnin._scripts.commands.pkg.pip">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">pip</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Arguments for pip.&quot;</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs &#39;pip&#39; package manager in Saturnin virtual environment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pip_cmd</span> <span class="o">=</span> <span class="n">directory_scheme</span><span class="o">.</span><span class="n">get_pip_cmd</span><span class="p">()</span>
+    <span class="n">pip_cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;--help&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">pip_cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># pylint: disable=W1510</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">_h</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="n">pip</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">pip_cmd</span><span class="p">)</span> <span class="c1"># pylint: disable=W1510</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s1">&#39;--help&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">args</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;install&#39;</span> <span class="ow">in</span> <span class="n">args</span> <span class="ow">or</span> <span class="s1">&#39;uninstall&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">):</span>
+        <span class="n">update_registry</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="install_package"><a class="viewcode-back" href="../../../../ref-scripts-commands-pkg.html#saturnin._scripts.commands.pkg.install_package">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">install_package</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Arguments for pip install.&quot;</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Installs Python package into Saturnin virtual environment via &#39;pip&#39;.</span>
+
+<span class="sd">Note:</span>
+<span class="sd">   This command is used also to upgrade installed packages using &#39;-U&#39; or &#39;--upgrade&#39; option.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pip_cmd</span> <span class="o">=</span> <span class="n">directory_scheme</span><span class="o">.</span><span class="n">get_pip_cmd</span><span class="p">(</span><span class="s1">&#39;install&#39;</span><span class="p">)</span>
+    <span class="n">pip_cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;--help&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">pip_cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># pylint: disable=W1510</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">install_package</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+</span> <span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\bpip install\b)&#39;</span><span class="p">,</span> <span class="s1">&#39;install package&#39;</span><span class="p">,</span>
+                                             <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?s)\b(?:Description:).+(?:Install Options:)&#39;</span><span class="p">,</span> <span class="s2">&quot;Install Options:&quot;</span><span class="p">,</span>
+                   <span class="n">text</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">_h</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1">#</span>
+    <span class="k">with</span> <span class="n">Progress</span><span class="p">(</span><span class="n">SpinnerColumn</span><span class="p">(),</span> <span class="n">TextColumn</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{task.description}</span><span class="s2">&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">progress</span><span class="p">:</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="s2">&quot;Installing...&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">pip_cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+                                <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="n">update_registry</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">RESTART</span></div>
+
+<div class="viewcode-block" id="uninstall_package"><a class="viewcode-back" href="../../../../ref-scripts-commands-pkg.html#saturnin._scripts.commands.pkg.uninstall_package">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">uninstall_package</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Arguments for pip uninstall.&quot;</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Uninstalls Python package from Saturnin virtual environment via `pip`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pip_cmd</span> <span class="o">=</span> <span class="n">directory_scheme</span><span class="o">.</span><span class="n">get_pip_cmd</span><span class="p">(</span><span class="s1">&#39;uninstall&#39;</span><span class="p">)</span>
+    <span class="n">pip_cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--yes&#39;</span><span class="p">)</span>
+    <span class="n">pip_cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;--help&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">pip_cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">uninstall_package</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+</span> <span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\bpip uninstall\b)&#39;</span><span class="p">,</span> <span class="s1">&#39;uninstall package&#39;</span><span class="p">,</span>
+                                               <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?s)\b(?:Description:).+(?:Uninstall Options:)&#39;</span><span class="p">,</span> <span class="s2">&quot;Uninstall Options:&quot;</span><span class="p">,</span>
+                   <span class="n">text</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">_h</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1">#</span>
+    <span class="k">with</span> <span class="n">Progress</span><span class="p">(</span><span class="n">SpinnerColumn</span><span class="p">(),</span> <span class="n">TextColumn</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{task.description}</span><span class="s2">&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">progress</span><span class="p">:</span>
+        <span class="n">progress</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="s2">&quot;Uninstalling...&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">pip_cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+                                <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="n">update_registry</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">RESTART</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019-2023, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -3,20 +3,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
-<title>Changelog — saturnin 0.7.1 documentation</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
+<title>Changelog — saturnin 0.8.0 documentation</title>
 <link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
 <link href="_static/bootstrap-sphinx.css" rel="stylesheet" type="text/css"/>
 <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-<script src="_static/jquery.js"></script>
-<script src="_static/underscore.js"></script>
-<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
 <script src="_static/doctools.js"></script>
 <script src="_static/sphinx_highlight.js"></script>
 <link href="genindex.html" rel="index" title="Index"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="license.html" rel="next" title="License"/>
-<link href="ref-scripts-commands-site.html" rel="prev" title="saturnin._scripts.commands.site"/>
+<link href="ref-scripts-commands-oids.html" rel="prev" title="saturnin._scripts.commands.oids"/>
 <meta charset="utf-8"/>
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1" name="viewport"/>
@@ -37,7 +34,7 @@
 </button>
 <a class="brand" href="index.html">
           saturnin</a>
-<span class="navbar-text pull-left"><b>0.7.1</b></span>
+<span class="navbar-text pull-left"><b>0.8.0</b></span>
 <div class="nav-collapse">
 <ul class="nav">
 <li class="divider-vertical"></li>
@@ -47,12 +44,27 @@
 <li class="dropdown globaltoc-container">
 <a data-target="#" data-toggle="dropdown" href="index.html" id="dLabelGlobalToc" role="button">Content <b class="caret"></b></a>
 <ul aria-labelledby="dLabelGlobalToc" class="dropdown-menu globaltoc" role="menu"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#basic-architecture">Basic Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#butler-services">Butler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#service-containers">Service containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#saturnin-recipes">Saturnin recipes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#saturnin-applications">Saturnin applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#saturnin-console">Saturnin console</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#saturnin-environment">Saturnin environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#directories">Directories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#configuration-files">Configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#data-files">Data files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#managing-saturnin-packages">Managing Saturnin packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#oid-registry">OID registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#working-with-recipes">Working with recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#daemon-processes">Daemon processes</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Saturnin Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ref-base.html">saturnin.base</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base.html#constants">Constants</a></li>
@@ -74,10 +86,11 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#dataclasses">Dataclasses</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-site.html">saturnin.base.site</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-transport.html">saturnin.base.transport</a><ul>
@@ -89,15 +102,13 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-component.html">saturnin.base.component</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-recipe.html">saturnin.base.recipe</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-recipe.html#classes">Classes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#service-registration">Service registration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-micro.html">saturnin.component.micro</a><ul>
@@ -110,30 +121,56 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-component-service.html#classes">Classes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-client.html">saturnin.component.client</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-daemon.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-lib-pyproject.html">saturnin.lib.pyproject</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-metadata.html">saturnin.lib.metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-metadata.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#classes">Classes</a></li>
 </ul>
 </li>
@@ -156,13 +193,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
@@ -170,26 +209,49 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-cli.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-repl.html">saturnin._scripts.repl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#classes">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-completers.html">saturnin._scripts.completers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-completers.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#command-functions">Command functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#command-functions">Command functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#command-functions">Command functions</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-0-8-0">Version 0.8.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unreleased-versions-0-7-1-0-7-12">Unreleased versions 0.7.1 - 0.7.12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-0-7-0">Version 0.7.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-0-1-0">Version 0.1.0</a></li>
 </ul>
@@ -202,6 +264,8 @@
 <a data-target="#" data-toggle="dropdown" href="#" id="dLabelLocalToc" role="button">Page <b class="caret"></b></a>
 <ul aria-labelledby="dLabelLocalToc" class="dropdown-menu localtoc" role="menu"><ul>
 <li><a class="reference internal" href="#">Changelog</a><ul>
+<li><a class="reference internal" href="#version-0-8-0">Version 0.8.0</a></li>
+<li><a class="reference internal" href="#unreleased-versions-0-7-1-0-7-12">Unreleased versions 0.7.1 - 0.7.12</a></li>
 <li><a class="reference internal" href="#version-0-7-0">Version 0.7.0</a></li>
 <li><a class="reference internal" href="#version-0-1-0">Version 0.1.0</a></li>
 </ul>
@@ -226,6 +290,23 @@
 <div class="body span12 content" role="main">
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Changelog"></a><section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading">¶</a></h1>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Version 0.8.0"></a><section id="version-0-8-0">
+<h2>Version 0.8.0<a class="headerlink" href="#version-0-8-0" title="Permalink to this heading">¶</a></h2>
+<ul>
+<li><p>Milestone 5.</p>
+<p>Saturnin can now be considered as early beta. There will be more additions, extensions
+and improvements before the 1.0 release, but the platform is almost feature-complete and
+the functionality provided is considered stable and ready for testing. However, some
+backwards incompatible changes in future releases are still possible.</p>
+</li>
+</ul>
+</section>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Unreleased versions 0.7.1 - 0.7.12"></a><section id="unreleased-versions-0-7-1-0-7-12">
+<h2>Unreleased versions 0.7.1 - 0.7.12<a class="headerlink" href="#unreleased-versions-0-7-1-0-7-12" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Milestones 3 and 4.</p></li>
+</ul>
+</section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Version 0.7.0"></a><section id="version-0-7-0">
 <h2>Version 0.7.0<a class="headerlink" href="#version-0-7-0" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
@@ -246,8 +327,8 @@
 <a href="#">Back to top</a>
 </p>
 <p>
-        © Copyright 2019-2022, The Firebird Project.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+        © Copyright 2019-2023, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
 </p>
 </div>
 </footer>

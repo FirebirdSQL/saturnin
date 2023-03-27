@@ -153,14 +153,19 @@ def show_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
                 section: str=typer.Option(None, help="Configuration section name"),
                 raw: bool=typer.Option(False, '--raw',
                                        help="Print recipe file content instead normal output")):
-    """Show recipe content.
+    """It analyzes the content of the recipe and displays its structure and configuration according to the default 
+   sections of the container configuration. If the recipe contains several variants, it is necessary to enter 
+   the name of the specific section for the configuration of the container to display them.
+
+   Alternatively, it is possible to display the entire recipe in text form (with syntax highlighting).
+
     """
     recipe: RecipeInfo = recipe_registry.get(recipe_name)
     if recipe is None:
         console.print_error(f"Recipe '{recipe_name}' not installed")
         return
     if raw:
-        console.print(Syntax(recipe.filename.read_text(), 'cfg'))
+        console.print(Syntax(recipe.filename.read_text(), 'cfg',word_wrap=True))
     else:
         config: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
         config.read(recipe.filename)
@@ -245,13 +250,14 @@ def edit_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
 
 @app.command()
 def install_recipe(recipe_name: str= \
-                     typer.Option(None, help="Recipe name (default is recipe file name)"),
+                     typer.Option(None, help="Recipe name (default is recipe file name / application name)"),
                    recipe_file: Path= \
                      typer.Option(None, help="Recipe file. Mutually exclusive with ",
                                   dir_okay=False, autocompletion=path_completer),
                    app_id: str=typer.Option(None, help="Application UID or name",
                                             autocompletion=application_completer)):
-    """Install new recipe from external recipe file, or from installed application.
+    """Installs a new recipe from an external recipe file or from an installed application.
+    Once installed, recipe can be executed immediately with the `run <recipe-name>` command.
     """
     if recipe_file is None and app_id is None:
         console.print_error("Either recipe file or application must be specified.")
@@ -353,7 +359,9 @@ def create_recipe(plain: bool=typer.Option(False, '--plain', help="Create recipe
                   recipe_name: str=typer.Argument(..., help="Recipe name", metavar='NAME'),
                   components: List[str]=typer.Argument(..., help="Recipe components",
                                                        autocompletion=service_completer)):
-    """Edit recipe.
+    """Creates a recipe template that uses the specified Butler services. Such a template
+    contains only default settings and usually needs to be modified to achieve the desired
+    results.
     """
     if recipe_name in recipe_registry:
         console.print_error(f"Recipe '{recipe_name}' already exists")

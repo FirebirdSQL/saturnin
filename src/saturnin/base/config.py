@@ -105,10 +105,6 @@ class SaturninScheme(DirectoryScheme):
                 # No pip shortcut in venv, we must relly on python -m to run it, typical for pipx
                 self.__pip_path = None
                 self.__pip_cmd = [str(python_path), '-m', 'pip']
-            #home_dir: Path = venv() / 'home'
-            #if home_dir.is_dir():
-                #os.environ['SATURNIN_HOME'] = str(home_dir)
-        #self.dir_map.update(get_directory_scheme('saturnin').dir_map)
     def get_pip_cmd(self, *args) -> List[str]:
         """Returns list with command to run pip.
 

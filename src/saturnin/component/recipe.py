@@ -66,14 +66,14 @@ class SaturninRecipe(Config):
     """
     def __init__(self):
         super().__init__('saturnin.recipe')
-        #: Recipe type
+        #: Recipe type - `.RecipeType` enum.
         self.recipe_type: EnumOption = \
             EnumOption('recipe_type', RecipeType, "Type of recipe", required=True)
-        #: Recipe execution mode
+        #: Recipe execution mode - `.RecipeExecutionMode` enum.
         self.execution_mode: EnumOption = \
-            EnumOption('execution_mode', RecipeExecutionMode,"Execution mode",
+            EnumOption('execution_mode', RecipeExecutionMode, "Execution mode",
                        default=RecipeExecutionMode.NORMAL)
-        #: Recipe executor
+        #: Recipe executor (container). If not provided, the default executor according to recipe type is used.
         self.executor: PathOption = PathOption('executor', "Recipe executor.")
         #: Application (if any)
         self.application: UUIDOption = \

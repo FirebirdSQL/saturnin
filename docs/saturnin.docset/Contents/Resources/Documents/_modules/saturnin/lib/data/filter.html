@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>saturnin.lib.data.filter &#8212; saturnin 0.8.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="brand" href="../../../../index.html">
+          saturnin</a>
+        <span class="navbar-text pull-left"><b>0.8.0</b></span>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="../../../../usage-guide.html">Usage Guide</a></li>
+                <li><a href="../../../../py-modindex.html">Modules</a></li>
+                <li><a href="../../../../genindex.html">Index</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Content <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../reference.html">Saturnin Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-base.html">saturnin.base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#types">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#dataclasses">Dataclasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-base-types.html">saturnin.base.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#saturnin-common-type-definitions-and-constants">Saturnin common type definitions and constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#types-for-annotations">Types for annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#sentinels">Sentinels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-types.html#dataclasses">Dataclasses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-config.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-base-transport.html">saturnin.base.transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-transport.html#types-for-type-hints">Types for type hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-transport.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-transport.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-transport.html#channels-for-individual-0mq-socket-types">Channels for individual 0MQ socket types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-base-component.html">saturnin.base.component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-base-component.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-controller.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-micro.html">saturnin.component.micro</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-micro.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-micro.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-service.html">saturnin.component.service</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-service.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-service.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-client.html">saturnin.component.client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-recipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-console.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-lib-metadata.html">saturnin.lib.metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-metadata.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-data-onepipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-data-onepipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-data-filter.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-lib-data-filter.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-protocol-fbsp.html">saturnin.protocol.fbsp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbsp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbsp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbsp.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbsp.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-protocol-fbdp.html">saturnin.protocol.fbdp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbdp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbdp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-fbdp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-protocol-iccp.html">saturnin.protocol.iccp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-iccp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-protocol-iccp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-svcrun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-daemon.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-bundlerun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-cli.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-cli.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-repl.html">saturnin._scripts.repl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-completers.html">saturnin._scripts.completers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-site.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../changelog.html#version-0-7-0">Version 0.7.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../changelog.html#version-0-1-0">Version 0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body span12 content" role="main">
+      
+  <h1>Source code for saturnin.lib.data.filter</h1><div class="highlight"><pre>
+<span></span><span class="c1">#coding:utf-8</span>
+<span class="c1">#</span>
+<span class="c1"># PROGRAM/MODULE: saturnin</span>
+<span class="c1"># FILE:           saturnin/lib/data/filter.py</span>
+<span class="c1"># DESCRIPTION:    Base class for Saturnin data filter microservices</span>
+<span class="c1"># CREATED:        14.12.2020</span>
+<span class="c1">#</span>
+<span class="c1"># The contents of this file are subject to the MIT License</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c1"># copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2020 Firebird Project (www.firebirdsql.org)</span>
+<span class="c1"># All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Contributor(s): Pavel Císař (original code)</span>
+<span class="c1">#                 ______________________________________</span>
+<span class="c1"># pylint: disable=R0903, R0902, R0915, C0301</span>
+
+<span class="sd">&quot;&quot;&quot;Saturnin base class for data filter microservices</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Final</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">zmq</span>
+<span class="kn">from</span> <span class="nn">firebird.base.config</span> <span class="kn">import</span> <span class="p">(</span><span class="n">StrOption</span><span class="p">,</span> <span class="n">EnumOption</span><span class="p">,</span> <span class="n">IntOption</span><span class="p">,</span> <span class="n">BoolOption</span><span class="p">,</span>
+    <span class="n">ZMQAddressOption</span><span class="p">,</span> <span class="n">MIMEOption</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">saturnin.base</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Error</span><span class="p">,</span> <span class="n">StopError</span><span class="p">,</span> <span class="n">Direction</span><span class="p">,</span> <span class="n">SocketMode</span><span class="p">,</span> <span class="n">PipeSocket</span><span class="p">,</span> <span class="n">Outcome</span><span class="p">,</span>
+     <span class="n">ZMQAddress</span><span class="p">,</span> <span class="n">MIME</span><span class="p">,</span> <span class="n">ComponentConfig</span><span class="p">,</span> <span class="n">Message</span><span class="p">,</span> <span class="n">SimpleMessage</span><span class="p">,</span> <span class="n">Session</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Channel</span><span class="p">,</span>
+     <span class="n">DealerChannel</span><span class="p">,</span> <span class="n">PushChannel</span><span class="p">,</span> <span class="n">PullChannel</span><span class="p">,</span> <span class="n">ANY</span><span class="p">,</span> <span class="n">ServiceDescriptor</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">saturnin.component.micro</span> <span class="kn">import</span> <span class="n">MicroService</span>
+<span class="kn">from</span> <span class="nn">saturnin.protocol.fbdp</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ErrorCode</span><span class="p">,</span> <span class="n">FBDPServer</span><span class="p">,</span> <span class="n">FBDPClient</span><span class="p">,</span> <span class="n">FBDPSession</span><span class="p">,</span>
+    <span class="n">FBDPMessage</span><span class="p">)</span>
+
+<span class="c1">#: Pipe INPUT channel &amp; endpoint name</span>
+<span class="n">INPUT_PIPE_CHN</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;input-pipe&#39;</span>
+<span class="c1">#: Pipe OUTPUT channel &amp; endpoint name</span>
+<span class="n">OUTPUT_PIPE_CHN</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;output-pipe&#39;</span>
+<span class="c1">#: Wake PUSH channel &amp; endpoint name</span>
+<span class="n">WAKE_PUSH_CHN</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;wake-push&#39;</span>
+<span class="c1">#: Wake PULL channel &amp; endpoint name</span>
+<span class="n">WAKE_PULL_CHN</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;wake-pull&#39;</span>
+
+<div class="viewcode-block" id="DataFilterConfig"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterConfig">[docs]</a><span class="k">class</span> <span class="nc">DataFilterConfig</span><span class="p">(</span><span class="n">ComponentConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base data provider microservice configuration.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">      name: Conf. section name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1">#: When input pipe is closed with error, close output with error as well</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagate_input_error</span><span class="p">:</span> <span class="n">BoolOption</span> <span class="o">=</span> \
+            <span class="n">BoolOption</span><span class="p">(</span><span class="s1">&#39;propagate_input_error&#39;</span><span class="p">,</span>
+                       <span class="s2">&quot;When input pipe is closed with error, close output with error as well&quot;</span><span class="p">,</span>
+                       <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Input pipe</span>
+        <span class="c1">#: Input Data Pipe Identification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe</span><span class="p">:</span> <span class="n">StrOption</span> <span class="o">=</span> \
+            <span class="n">StrOption</span><span class="p">(</span><span class="s1">&#39;input_pipe&#39;</span><span class="p">,</span> <span class="s2">&quot;Input Data Pipe Identification&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1">#: Input Data Pipe endpoint address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_address</span><span class="p">:</span> <span class="n">ZMQAddressOption</span> <span class="o">=</span> \
+            <span class="n">ZMQAddressOption</span><span class="p">(</span><span class="s1">&#39;input_pipe_address&#39;</span><span class="p">,</span> <span class="s2">&quot;Input Data Pipe endpoint address&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1">#: Input Data Pipe Mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_mode</span><span class="p">:</span> <span class="n">EnumOption</span> <span class="o">=</span> \
+            <span class="n">EnumOption</span><span class="p">(</span><span class="s1">&#39;input_pipe_mode&#39;</span><span class="p">,</span> <span class="n">SocketMode</span><span class="p">,</span> <span class="s2">&quot;Input Data Pipe Mode&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1">#: Input Pipe data format specification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_format</span><span class="p">:</span> <span class="n">MIMEOption</span> <span class="o">=</span> \
+            <span class="n">MIMEOption</span><span class="p">(</span><span class="s1">&#39;input_pipe_format&#39;</span><span class="p">,</span> <span class="s2">&quot;Input Pipe data format specification&quot;</span><span class="p">)</span>
+        <span class="c1">#: Input Pipe Data batch size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_batch_size</span><span class="p">:</span> <span class="n">IntOption</span> <span class="o">=</span> \
+            <span class="n">IntOption</span><span class="p">(</span><span class="s1">&#39;input_batch_size&#39;</span><span class="p">,</span> <span class="s2">&quot;Input Pipe Data batch size&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+        <span class="c1">#: Input Pipe READY message schedule interval in milliseconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_ready_schedule_interval</span><span class="p">:</span> <span class="n">IntOption</span> <span class="o">=</span> \
+            <span class="n">IntOption</span><span class="p">(</span><span class="s1">&#39;input_ready_schedule_interval&#39;</span><span class="p">,</span>
+                      <span class="s2">&quot;Input Pipe READY message schedule interval in milliseconds&quot;</span><span class="p">,</span>
+                      <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="c1"># Output pipe</span>
+        <span class="c1">#: Output Data Pipe Identification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe</span><span class="p">:</span> <span class="n">StrOption</span> <span class="o">=</span> \
+            <span class="n">StrOption</span><span class="p">(</span><span class="s1">&#39;output_pipe&#39;</span><span class="p">,</span> <span class="s2">&quot;Output Data Pipe Identification&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1">#: Output Data Pipe endpoint address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_address</span><span class="p">:</span> <span class="n">ZMQAddressOption</span> <span class="o">=</span> \
+            <span class="n">ZMQAddressOption</span><span class="p">(</span><span class="s1">&#39;output_pipe_address&#39;</span><span class="p">,</span> <span class="s2">&quot;Output Data Pipe endpoint address&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1">#: Output Data Pipe Mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_mode</span><span class="p">:</span> <span class="n">EnumOption</span> <span class="o">=</span> \
+            <span class="n">EnumOption</span><span class="p">(</span><span class="s1">&#39;output_pipe_mode&#39;</span><span class="p">,</span> <span class="n">SocketMode</span><span class="p">,</span> <span class="s2">&quot;Output Data Pipe Mode&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1">#: Output Pipe data format specification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_format</span><span class="p">:</span> <span class="n">MIMEOption</span> <span class="o">=</span> \
+            <span class="n">MIMEOption</span><span class="p">(</span><span class="s1">&#39;output_pipe_format&#39;</span><span class="p">,</span> <span class="s2">&quot;Output Pipe data format specification&quot;</span><span class="p">)</span>
+        <span class="c1">#: Output Pipe Data batch size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_batch_size</span><span class="p">:</span> <span class="n">IntOption</span> <span class="o">=</span> \
+            <span class="n">IntOption</span><span class="p">(</span><span class="s1">&#39;output_batch_size&#39;</span><span class="p">,</span> <span class="s2">&quot;Output Pipe Data batch size&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+        <span class="c1">#: Output Pipe READY message schedule interval in milliseconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_ready_schedule_interval</span><span class="p">:</span> <span class="n">IntOption</span> <span class="o">=</span> \
+            <span class="n">IntOption</span><span class="p">(</span><span class="s1">&#39;output_ready_schedule_interval&#39;</span><span class="p">,</span>
+                      <span class="s2">&quot;Output Pipe READY message schedule interval in milliseconds&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                      <span class="n">default</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<div class="viewcode-block" id="DataFilterConfig.validate"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterConfig.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extended validation.</span>
+
+<span class="sd">        - `pipe_format` is required for CONNECT `pipe_mode`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_mode</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">CONNECT</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_format</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s2">&quot;&#39;input_pipe_format&#39; required for CONNECT pipe mode.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_mode</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">CONNECT</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_format</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s2">&quot;&#39;output_pipe_format&#39; required for CONNECT pipe mode.&quot;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="DataFilterMicro"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro">[docs]</a><span class="k">class</span> <span class="nc">DataFilterMicro</span><span class="p">(</span><span class="n">MicroService</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base data provider microservice.</span>
+
+<span class="sd">    Descendant classes should override:</span>
+
+<span class="sd">    - `.handle_input_accept_client` to validate client request and aquire resources</span>
+<span class="sd">      associated with input pipe.</span>
+<span class="sd">    - `.handle_output_accept_client` to validate client request and aquire resources</span>
+<span class="sd">      associated with output pipe.</span>
+<span class="sd">    - `.handle_output_produce_data` to produce data for outgoing DATA message.</span>
+<span class="sd">    - `.handle_input_accept_data` to process received data.</span>
+<span class="sd">    - `.handle_input_pipe_closed` to release resource assiciated with input pipe.</span>
+<span class="sd">    - `.handle_output_pipe_closed` to release resource assiciated with output pipe.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="DataFilterMicro.__init__"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">:</span> <span class="n">ServiceDescriptor</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                 <span class="n">peer_uid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            zmq_context: ZeroMQ Context.</span>
+<span class="sd">            descriptor: Service descriptor.</span>
+<span class="sd">            peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">,</span> <span class="n">peer_uid</span><span class="o">=</span><span class="n">peer_uid</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">=</span> <span class="n">Outcome</span><span class="o">.</span><span class="n">UNKNOWN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">details</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Data to be sent to output.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">:</span> <span class="n">deque</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="c1"># Next members are set in initialize()</span>
+        <span class="c1">#: Closing flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">closing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1">#: [Configuration] When input pipe is closed with error, close output with error as well</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagate_input_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] Data Pipe Identification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] Data Pipe Mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_mode</span><span class="p">:</span> <span class="n">SocketMode</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] Data Pipe endpoint address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_address</span><span class="p">:</span> <span class="n">ZMQAddress</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] Pipe data format specification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_format</span><span class="p">:</span> <span class="n">MIME</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] Data batch size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] pipe READY message schedule interval in milliseconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_ready_schedule_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: FDBP protocol handler (server or client) for input pipe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FBDPServer</span><span class="p">,</span> <span class="n">FBDPClient</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Input pipe channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="p">:</span> <span class="n">Channel</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] Data Pipe Identification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] Data Pipe Mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_mode</span><span class="p">:</span> <span class="n">SocketMode</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] Data Pipe endpoint address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_address</span><span class="p">:</span> <span class="n">ZMQAddress</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] Pipe data format specification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_format</span><span class="p">:</span> <span class="n">MIME</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] Data batch size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: [Configuration] pipe READY message schedule interval in milliseconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_ready_schedule_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: FDBP protocol handler (server or client) for output pipe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FBDPServer</span><span class="p">,</span> <span class="n">FBDPClient</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Output pipe channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="p">:</span> <span class="n">Channel</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Internal AWAKE address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_address</span><span class="p">:</span> <span class="n">ZMQAddress</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Internal AWAKE output channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_out_chn</span><span class="p">:</span> <span class="n">PushChannel</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Internal AWAKE input channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_in_chn</span><span class="p">:</span> <span class="n">PullChannel</span> <span class="o">=</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="DataFilterMicro.initialize"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">DataFilterConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify configuration and assemble component structural parts.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">          config: Service configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">closing</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagate_input_error</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">propagate_input_error</span><span class="o">.</span><span class="n">value</span>
+        <span class="c1"># INPUT pipe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">input_pipe</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_mode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">input_pipe_mode</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_address</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">input_pipe_address</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_format</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">input_pipe_format</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_batch_size</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">input_batch_size</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_ready_schedule_interval</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">input_ready_schedule_interval</span><span class="o">.</span><span class="n">value</span>
+        <span class="c1"># Set up FBDP protocol</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_mode</span> <span class="o">==</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">BIND</span><span class="p">:</span>
+            <span class="c1"># server</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span> <span class="o">=</span> <span class="n">FBDPServer</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span><span class="o">.</span><span class="n">on_exception</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_exception</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span><span class="o">.</span><span class="n">on_accept_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_input_accept_client</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span><span class="o">.</span><span class="n">on_schedule_ready</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_input_schedule_ready</span>
+            <span class="c1"># We have an endpoint to bind</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="n">INPUT_PIPE_CHN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_address</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># client</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span> <span class="o">=</span> <span class="n">FBDPClient</span><span class="p">()</span>
+        <span class="c1"># common parts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span><span class="o">.</span><span class="n">on_pipe_closed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_input_pipe_closed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span><span class="o">.</span><span class="n">on_accept_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_input_accept_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span><span class="o">.</span><span class="n">on_get_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_input_get_data</span>
+        <span class="c1"># Create INPUT pipe channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mngr</span><span class="o">.</span><span class="n">create_channel</span><span class="p">(</span><span class="n">DealerChannel</span><span class="p">,</span> <span class="n">INPUT_PIPE_CHN</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">input_protocol</span><span class="p">,</span>
+                                                    <span class="n">wait_for</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">IN</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">log_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_id</span>
+        <span class="c1"># OUTPUT pipe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">output_pipe</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_mode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">output_pipe_mode</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_address</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">output_pipe_address</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_format</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">output_pipe_format</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_batch_size</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">output_batch_size</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_ready_schedule_interval</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">output_ready_schedule_interval</span><span class="o">.</span><span class="n">value</span>
+        <span class="c1"># Set up FBDP protocol</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_mode</span> <span class="o">==</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">BIND</span><span class="p">:</span>
+            <span class="c1"># server</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span> <span class="o">=</span> <span class="n">FBDPServer</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span><span class="o">.</span><span class="n">on_exception</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_exception</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span><span class="o">.</span><span class="n">on_accept_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_output_accept_client</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span><span class="o">.</span><span class="n">on_schedule_ready</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_output_schedule_ready</span>
+            <span class="c1"># We have an endpoint to bind</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="n">OUTPUT_PIPE_CHN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_address</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># client</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span> <span class="o">=</span> <span class="n">FBDPClient</span><span class="p">()</span>
+        <span class="c1"># common parts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span><span class="o">.</span><span class="n">on_pipe_closed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_output_pipe_closed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span><span class="o">.</span><span class="n">on_produce_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_output_produce_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span><span class="o">.</span><span class="n">on_get_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_output_get_data</span>
+        <span class="c1"># Create OUTPUT pipe channel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mngr</span><span class="o">.</span><span class="n">create_channel</span><span class="p">(</span><span class="n">DealerChannel</span><span class="p">,</span> <span class="n">OUTPUT_PIPE_CHN</span><span class="p">,</span>
+                                                              <span class="bp">self</span><span class="o">.</span><span class="n">output_protocol</span><span class="p">,</span>
+                                                              <span class="n">wait_for</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">IN</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">log_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_id</span>
+        <span class="c1"># Awake channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_address</span> <span class="o">=</span> <span class="n">ZMQAddress</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;inproc://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">peer</span><span class="o">.</span><span class="n">uid</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s1">-wake&#39;</span><span class="p">)</span>
+        <span class="n">wake_protocol</span> <span class="o">=</span> <span class="n">Protocol</span><span class="p">()</span>
+        <span class="n">wake_protocol</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="n">ANY</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_wake_msg</span>
+        <span class="c1"># PUSH wake</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_out_chn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mngr</span><span class="o">.</span><span class="n">create_channel</span><span class="p">(</span><span class="n">PushChannel</span><span class="p">,</span> <span class="n">WAKE_PUSH_CHN</span><span class="p">,</span>
+                                                              <span class="n">wake_protocol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_out_chn</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">log_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_id</span>
+        <span class="c1"># PULL wake</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_in_chn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mngr</span><span class="o">.</span><span class="n">create_channel</span><span class="p">(</span><span class="n">PullChannel</span><span class="p">,</span> <span class="n">WAKE_PULL_CHN</span><span class="p">,</span>
+                                                             <span class="n">wake_protocol</span><span class="p">,</span>
+                                                             <span class="n">wait_for</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">IN</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_in_chn</span><span class="o">.</span><span class="n">protocol</span><span class="o">.</span><span class="n">log_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logging_id</span>
+        <span class="c1"># We have an endpoint to bind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="n">WAKE_PULL_CHN</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">wake_address</span><span class="p">]</span></div>
+<div class="viewcode-block" id="DataFilterMicro.aquire_resources"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.aquire_resources">[docs]</a>    <span class="k">def</span> <span class="nf">aquire_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Aquire resources required by component:</span>
+
+<span class="sd">        1. Connect wake PUSH channel</span>
+<span class="sd">        2. Connects to input and output data pipes (if necessary).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Connect wake PUSH</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_out_chn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wake_address</span><span class="p">)</span>
+        <span class="c1"># Connect to the data pipes</span>
+        <span class="c1"># INPUT pipe</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_mode</span> <span class="o">==</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">CONNECT</span><span class="p">:</span>
+            <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_address</span><span class="p">)</span>
+            <span class="c1"># OPEN the data pipe connection, this also fills session attributes</span>
+            <span class="c1"># We are CONSUMER client, we must attach to server OUTPUT</span>
+            <span class="n">cast</span><span class="p">(</span><span class="n">FBDPClient</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="o">.</span><span class="n">protocol</span><span class="p">)</span><span class="o">.</span><span class="n">send_open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="p">,</span>
+                                                                  <span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe</span><span class="p">,</span>
+                                                                  <span class="n">PipeSocket</span><span class="o">.</span><span class="n">OUTPUT</span><span class="p">,</span>
+                                                                  <span class="bp">self</span><span class="o">.</span><span class="n">input_pipe_format</span><span class="p">)</span>
+        <span class="c1"># OUTPUT pipe</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_mode</span> <span class="o">==</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">CONNECT</span><span class="p">:</span>
+            <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_address</span><span class="p">)</span>
+            <span class="c1"># OPEN the data pipe connection, this also fills session attributes</span>
+            <span class="c1"># We are PRODUCER client, we must attach to server INPUT</span>
+            <span class="n">cast</span><span class="p">(</span><span class="n">FBDPClient</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">protocol</span><span class="p">)</span><span class="o">.</span><span class="n">send_open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="p">,</span>
+                                                                   <span class="n">session</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe</span><span class="p">,</span>
+                                                                   <span class="n">PipeSocket</span><span class="o">.</span><span class="n">INPUT</span><span class="p">,</span>
+                                                                   <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_format</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.release_resources"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.release_resources">[docs]</a>    <span class="k">def</span> <span class="nf">release_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Release resources aquired by component:</span>
+
+<span class="sd">        1. Disconnect the wake PUSH channel</span>
+<span class="sd">        2. Close all active data input sessions</span>
+<span class="sd">        3. Close all active data output sessions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Disonnect wake PUSH</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wake_out_chn</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wake_out_chn</span><span class="o">.</span><span class="n">discard_session</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="c1"># CLOSE all active data input pipe sessions</span>
+        <span class="c1"># send_close() will discard session, so we can&#39;t iterate over sessions.values() directly</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="c1"># We have to report error here, because normal is to close pipes before</span>
+            <span class="c1"># shutdown is commenced. Mind that service shutdown could be also caused by error!</span>
+            <span class="n">cast</span><span class="p">(</span><span class="n">FBDPServer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="o">.</span><span class="n">protocol</span><span class="p">)</span><span class="o">.</span><span class="n">send_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+        <span class="c1"># CLOSE all active data output pipe sessions</span>
+        <span class="c1"># send_close() will discard session, so we can&#39;t iterate over sessions.values() directly</span>
+        <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">sessions</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="c1"># We have to report error here, because normal is to close pipes before</span>
+            <span class="c1"># shutdown is commenced. Mind that service shutdown could be also caused by error!</span>
+            <span class="n">cast</span><span class="p">(</span><span class="n">FBDPServer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">protocol</span><span class="p">)</span><span class="o">.</span><span class="n">send_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="p">,</span>
+                                                                    <span class="n">session</span><span class="p">,</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.store_output"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.store_output">[docs]</a>    <span class="k">def</span> <span class="nf">store_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store data to output queue and send wake notification.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            data: Data to be stored to output queue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">SimpleMessage</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;wake&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wake_out_chn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wake_out_chn</span><span class="o">.</span><span class="n">session</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.store_batch_output"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.store_batch_output">[docs]</a>    <span class="k">def</span> <span class="nf">store_batch_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store batch of data to output queue and send wake notification.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            batch: Data to be stored to output queue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">SimpleMessage</span><span class="p">()</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;wake&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wake_out_chn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wake_out_chn</span><span class="o">.</span><span class="n">session</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.finish_input_processing"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.finish_input_processing">[docs]</a>    <span class="k">def</span> <span class="nf">finish_input_processing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="n">ErrorCode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when input pipe is closed while output pipe will remain open.</span>
+
+<span class="sd">        When code is `ErrorCode.OK`, the input was closed normally. Otherwise it indicates</span>
+<span class="sd">        the type of problem that caused the input to be closed.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with data pipe.</span>
+<span class="sd">            session: Session associated with peer.</span>
+<span class="sd">            code:    Input pipe closing ErrorCode.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The default implementation does nothing.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+<div class="viewcode-block" id="DataFilterMicro.handle_wake_msg"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_wake_msg">[docs]</a>    <span class="k">def</span> <span class="nf">handle_wake_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># pylint: disable=W0613</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handler for &quot;data available&quot; pings sent via wake channels.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with wake delivery.</span>
+<span class="sd">            session: Session associated with client.</span>
+<span class="sd">            msg: Wake message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="c1"># Unlikely case when we&#39;ve got wake but all data were already sent</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+            <span class="c1"># We need active pipe connection</span>
+            <span class="k">return</span>
+        <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">session</span>
+        <span class="k">if</span> <span class="n">session</span><span class="o">.</span><span class="n">transmit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Transmission in progress, make sure that we will send data</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">set_wait_out</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe_mode</span> <span class="ow">is</span> <span class="n">SocketMode</span><span class="o">.</span><span class="n">BIND</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">session</span><span class="o">.</span><span class="n">await_ready</span><span class="p">:</span>
+            <span class="c1"># We are server without active transmission and READY was not sent yet, so we</span>
+            <span class="c1"># can send READY immediately</span>
+            <span class="n">cast</span><span class="p">(</span><span class="n">FBDPServer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">protocol</span><span class="p">)</span><span class="o">.</span><span class="n">_init_new_batch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="p">,</span>
+                                                                         <span class="n">session</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.handle_exception"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_exception">[docs]</a>    <span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">,</span> <span class="c1"># pylint: disable=W0613</span>
+                         <span class="n">exc</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler called by `.handle_msg()` on exception in message handler.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with data pipe.</span>
+<span class="sd">            session: Session associated with connection.</span>
+<span class="sd">            msg:     Message.</span>
+<span class="sd">            exc:     Exception.</span>
+
+<span class="sd">        Sets service outcome to ERROR and notes exception as details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">StopError</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+                <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">=</span> <span class="n">Outcome</span><span class="o">.</span><span class="n">ERROR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">details</span> <span class="o">=</span> <span class="n">exc</span></div>
+<div class="viewcode-block" id="DataFilterMicro.handle_input_get_data"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_input_get_data">[docs]</a>    <span class="k">def</span> <span class="nf">handle_input_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span> <span class="c1"># pylint: disable=W0613</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler executed to query the service whether is ready to accept input data.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with input data pipe.</span>
+<span class="sd">            session: Session associated with server.</span>
+
+<span class="sd">        Returns True if output pipe is open, otherwise false.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="o">.</span><span class="n">sessions</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.handle_output_get_data"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_output_get_data">[docs]</a>    <span class="k">def</span> <span class="nf">handle_output_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span> <span class="c1"># pylint: disable=W0613</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler executed to query the data source for data availability.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with output data pipe.</span>
+<span class="sd">            session: Session associated with connection.</span>
+
+<span class="sd">        Returns True if output deque contains any data.</span>
+
+<span class="sd">        Cancels the transmission by raising the `.StopError` if there are no output data</span>
+<span class="sd">        and input pipe is closed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">have_data</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">have_data</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StopError</span><span class="p">(</span><span class="s2">&quot;EOF&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="n">ErrorCode</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">have_data</span></div>
+    <span class="c1"># FBDP server only</span>
+<div class="viewcode-block" id="DataFilterMicro.handle_input_accept_client"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_client">[docs]</a>    <span class="k">def</span> <span class="nf">handle_input_accept_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># pylint: disable=W0613</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler executed when client connects to INPUT data pipe via OPEN message.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with data pipe.</span>
+<span class="sd">            session: Session associated with client.</span>
+
+<span class="sd">        The session attributes `~.FBDPSession.pipe`, `~.FBDPSession.socket`,</span>
+<span class="sd">        `~.FBDPSession.data_format` and `~.FBDPSession.params` contain information sent by</span>
+<span class="sd">        client, and the event handler validates the request.</span>
+
+<span class="sd">        If request should be rejected, it raises the `.StopError` exception with `code`</span>
+<span class="sd">        attribute containing the `~saturnin.protocol.fbdp.ErrorCode` to be returned in</span>
+<span class="sd">        CLOSE message.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            Base implementation validates pipe identification and pipe socket, and converts</span>
+<span class="sd">            data format from string to MIME (in session).</span>
+
+<span class="sd">            The descendant class that overrides this method must call `super` as first</span>
+<span class="sd">            action.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">session</span><span class="o">.</span><span class="n">pipe</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StopError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown data pipe &#39;</span><span class="si">{</span><span class="n">session</span><span class="o">.</span><span class="n">pipe</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                            <span class="n">code</span> <span class="o">=</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">PIPE_ENDPOINT_UNAVAILABLE</span><span class="p">)</span>
+        <span class="c1"># Clients can attach only to INPUT</span>
+        <span class="k">if</span> <span class="n">session</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">PipeSocket</span><span class="o">.</span><span class="n">INPUT</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StopError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">session</span><span class="o">.</span><span class="n">socket</span><span class="si">}</span><span class="s2">&#39; socket not available&quot;</span><span class="p">,</span>
+                            <span class="n">code</span> <span class="o">=</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">PIPE_ENDPOINT_UNAVAILABLE</span><span class="p">)</span>
+        <span class="c1"># We work with MIME formats, so we&#39;ll convert the format specification to MIME</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">data_format</span> <span class="o">=</span> <span class="n">MIME</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">data_format</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.handle_output_accept_client"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_output_accept_client">[docs]</a>    <span class="k">def</span> <span class="nf">handle_output_accept_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># pylint: disable=W0613</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler executed when client connects to OUTPUT data pipe via OPEN message.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with data pipe.</span>
+<span class="sd">            session: Session associated with client.</span>
+
+<span class="sd">        The session attributes `~.FBDPSession.pipe`, `~.FBDPSession.socket`,</span>
+<span class="sd">        `~.FBDPSession.data_format` and `~.FBDPSession.params` contain information sent by</span>
+<span class="sd">        client, and the event handler validates the request.</span>
+
+<span class="sd">        If request should be rejected, it raises the `.StopError` exception with `~.Error.code`</span>
+<span class="sd">        attribute containing the `~saturnin.protocol.fbdp.ErrorCode` to be returned in</span>
+<span class="sd">        CLOSE message.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            Base implementation validates pipe identification and pipe socket, and converts</span>
+<span class="sd">            data format from string to MIME (in session).</span>
+
+<span class="sd">            The descendant class that overrides this method must call `super` as first</span>
+<span class="sd">            action.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">session</span><span class="o">.</span><span class="n">pipe</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_pipe</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StopError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown data pipe &#39;</span><span class="si">{</span><span class="n">session</span><span class="o">.</span><span class="n">pipe</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span>
+                            <span class="n">code</span> <span class="o">=</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">PIPE_ENDPOINT_UNAVAILABLE</span><span class="p">)</span>
+        <span class="c1"># Clients can attach only to our OUTPUT</span>
+        <span class="k">if</span> <span class="n">session</span><span class="o">.</span><span class="n">socket</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">PipeSocket</span><span class="o">.</span><span class="n">OUTPUT</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StopError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">session</span><span class="o">.</span><span class="n">socket</span><span class="si">}</span><span class="s2">&#39; socket not available&quot;</span><span class="p">,</span>
+                            <span class="n">code</span> <span class="o">=</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">PIPE_ENDPOINT_UNAVAILABLE</span><span class="p">)</span>
+        <span class="c1"># We work with MIME formats, so we&#39;ll convert the format specification to MIME</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">data_format</span> <span class="o">=</span> <span class="n">MIME</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">data_format</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.handle_input_schedule_ready"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_input_schedule_ready">[docs]</a>    <span class="k">def</span> <span class="nf">handle_input_schedule_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler executed in order to send the READY message to the client later.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with data pipe.</span>
+<span class="sd">            session: Session associated with client.</span>
+
+<span class="sd">        The event handler may cancel the transmission by raising the `.StopError` exception</span>
+<span class="sd">        with `~.Error.code` attribute containing the `~saturnin.protocol.fbdp.ErrorCode`</span>
+<span class="sd">        to be returned in CLOSE message.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            The base implementation schedules `~.FBDPServer.resend_ready()` according to</span>
+<span class="sd">            `.input_ready_schedule_interval` configuration option.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="n">FBDPServer</span><span class="p">,</span> <span class="n">channel</span><span class="o">.</span><span class="n">protocol</span><span class="p">)</span><span class="o">.</span><span class="n">resend_ready</span><span class="p">,</span>
+                              <span class="n">channel</span><span class="p">,</span> <span class="n">session</span><span class="p">),</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">input_ready_schedule_interval</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.handle_output_schedule_ready"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_output_schedule_ready">[docs]</a>    <span class="k">def</span> <span class="nf">handle_output_schedule_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler executed in order to send the READY message to the client later.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with data pipe.</span>
+<span class="sd">            session: Session associated with client.</span>
+
+<span class="sd">        The event handler may cancel the transmission by raising the `.StopError` exception</span>
+<span class="sd">        with `~.Error.code` attribute containing the `~saturnin.protocol.fbdp.ErrorCode` to</span>
+<span class="sd">        be returned in CLOSE message.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            The base implementation schedules `~.FBDPServer.resend_ready()` according to</span>
+<span class="sd">            `.output_ready_schedule_interval` configuration option.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="n">FBDPServer</span><span class="p">,</span> <span class="n">channel</span><span class="o">.</span><span class="n">protocol</span><span class="p">)</span><span class="o">.</span><span class="n">resend_ready</span><span class="p">,</span>
+                              <span class="n">channel</span><span class="p">,</span> <span class="n">session</span><span class="p">),</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">output_ready_schedule_interval</span><span class="p">)</span></div>
+    <span class="c1"># FBDP common</span>
+<div class="viewcode-block" id="DataFilterMicro.handle_output_produce_data"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_output_produce_data">[docs]</a>    <span class="k">def</span> <span class="nf">handle_output_produce_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">FBDPMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler executed to store data into outgoing DATA message.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with data pipe.</span>
+<span class="sd">            session: Session associated with client.</span>
+<span class="sd">            msg: DATA message that will be sent to client.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            The base implementation simply raises `.StopError` with</span>
+<span class="sd">            `~saturnin.protocol.fbdp.ErrorCode.OK` code, so the descendant class must</span>
+<span class="sd">            override this method without `super` call.</span>
+
+<span class="sd">            The event handler must `popleft()` data from `.output` queue and store them in</span>
+<span class="sd">            `msg.data_frame` attribute. It may also set ACK-REQUEST flag and `type_data`</span>
+<span class="sd">            attribute.</span>
+
+<span class="sd">            The event handler may cancel the transmission by raising the `StopError`</span>
+<span class="sd">            exception with `code` attribute containing the `~saturnin.protocol.fbdp.ErrorCode`</span>
+<span class="sd">            to be returned in CLOSE message.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            To indicate end of data, raise `.StopError` with `~saturnin.protocol.fbdp.ErrorCode.OK` code.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">StopError</span><span class="p">(</span><span class="s1">&#39;OK&#39;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="n">ErrorCode</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.handle_input_accept_data"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_data">[docs]</a>    <span class="k">def</span> <span class="nf">handle_input_accept_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler executed to process data received in DATA message.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with data pipe.</span>
+<span class="sd">            session: Session associated with client.</span>
+<span class="sd">            data: Data received from client.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            Any output data produced by event handler must be stored into output queue via</span>
+<span class="sd">            `.store_output()` method.</span>
+
+<span class="sd">            The base implementation simply raises `.StopError` with</span>
+<span class="sd">            `~saturnin.protocol.fbdp.ErrorCode.OK` code, so the descendant class must</span>
+<span class="sd">            override this method without `super` call.</span>
+
+<span class="sd">            The event handler may cancel the transmission by raising the `.StopError`</span>
+<span class="sd">            exception with `code` attribute containing the `~saturnin.protocol.fbdp.ErrorCode`</span>
+<span class="sd">            to be returned in CLOSE message.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The ACK-REQUEST in received DATA message is handled automatically by protocol.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">StopError</span><span class="p">(</span><span class="s1">&#39;OK&#39;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="n">ErrorCode</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DataFilterMicro.handle_input_pipe_closed"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_input_pipe_closed">[docs]</a>    <span class="k">def</span> <span class="nf">handle_input_pipe_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">FBDPMessage</span><span class="p">,</span>
+                                 <span class="n">exc</span><span class="p">:</span> <span class="ne">Exception</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler executed when CLOSE message is received or sent, to release any</span>
+<span class="sd">        resources associated with current transmission.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with data pipe.</span>
+<span class="sd">            session: Session associated with peer.</span>
+<span class="sd">            msg: Received/sent CLOSE message.</span>
+<span class="sd">            exc: Exception that caused the error.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            The base implementation does next actions:</span>
+
+<span class="sd">            - If exception is provided, sets service execution outcome to ERROR</span>
+<span class="sd">              and notes exception in details.</span>
+<span class="sd">            - Closes the output pipe it&#39;s still open  and `.closing` flag is False, and if</span>
+<span class="sd">              the input is not closed normally and `.propagate_input_error` is True.</span>
+<span class="sd">            - Sets the signal to stop the service.</span>
+
+<span class="sd">            The descendant class that overrides this method must call `super`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># FDBP converts exceptions raised in our event handler to CLOSE messages, so</span>
+        <span class="c1"># here is the central place to handle errors in data pipe processing.</span>
+        <span class="n">code</span><span class="p">:</span> <span class="n">ErrorCode</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">type_data</span>
+        <span class="k">if</span> <span class="n">exc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Note problem in service execution outcome</span>
+            <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">=</span> <span class="n">Outcome</span><span class="o">.</span><span class="n">ERROR</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">details</span> <span class="o">=</span> <span class="n">exc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finish_input_processing</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+        <span class="c1"># If input is not closed normally and we should propagate the problem, or when</span>
+        <span class="c1"># there is no data for output, close the output pipe if it&#39;s still open</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">OK</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagate_input_error</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">closing</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">closing</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">for</span> <span class="n">_session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+                    <span class="n">cast</span><span class="p">(</span><span class="n">FBDPServer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="o">.</span><span class="n">protocol</span><span class="p">)</span><span class="o">.</span><span class="n">send_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe_out_chn</span><span class="p">,</span>
+                                                                            <span class="n">_session</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+            <span class="c1"># Request service to stop</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">closing</span> <span class="o">=</span> <span class="kc">False</span></div>
+<div class="viewcode-block" id="DataFilterMicro.handle_output_pipe_closed"><a class="viewcode-back" href="../../../../ref-lib-data-filter.html#saturnin.lib.data.filter.DataFilterMicro.handle_output_pipe_closed">[docs]</a>    <span class="k">def</span> <span class="nf">handle_output_pipe_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">FBDPSession</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">FBDPMessage</span><span class="p">,</span> <span class="c1"># pylint: disable=W0613</span>
+                                  <span class="n">exc</span><span class="p">:</span> <span class="ne">Exception</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Event handler executed when CLOSE message is received or sent, to release any</span>
+<span class="sd">        resources associated with current transmission.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            channel: Channel associated with data pipe.</span>
+<span class="sd">            session: Session associated with peer.</span>
+<span class="sd">            msg: Received/sent CLOSE message.</span>
+<span class="sd">            exc: Exception that caused the error.</span>
+
+<span class="sd">        Important:</span>
+<span class="sd">            The base implementation does next actions:</span>
+
+<span class="sd">            - If exception is provided, sets service execution outcome to ERROR</span>
+<span class="sd">              and notes exception in details.</span>
+<span class="sd">            - Closes the input pipe if it&#39;s still open and `.closing` flag is False.</span>
+<span class="sd">            - Sets the signal to stop the service.</span>
+
+<span class="sd">            The descendant class that overrides this method must call `super`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># FDBP converts exceptions raised in our event handler to CLOSE messages, so</span>
+        <span class="c1"># here is the central place to handle errors in data pipe processing.</span>
+        <span class="n">code</span><span class="p">:</span> <span class="n">ErrorCode</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">type_data</span>
+        <span class="k">if</span> <span class="n">exc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Note problem in service execution outcome</span>
+            <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">ErrorCode</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span> <span class="o">=</span> <span class="n">Outcome</span><span class="o">.</span><span class="n">ERROR</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">details</span> <span class="o">=</span> <span class="n">exc</span>
+        <span class="c1"># Close the input pipe if it&#39;s still open</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">closing</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">closing</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">_session</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="o">.</span><span class="n">sessions</span><span class="p">:</span>
+                <span class="n">cast</span><span class="p">(</span><span class="n">FBDPServer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="o">.</span><span class="n">protocol</span><span class="p">)</span><span class="o">.</span><span class="n">send_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe_in_chn</span><span class="p">,</span>
+                                                                       <span class="n">_session</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+        <span class="c1"># Request service to stop</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">closing</span> <span class="o">=</span> <span class="kc">False</span></div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019-2022, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

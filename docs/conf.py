@@ -51,7 +51,7 @@ templates_path = ['_templates']
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = '.txt'
+source_suffix = '.rst'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

@@ -3,10 +3,96 @@
 Usage Guide
 ===========
 
-.. currentModule:: saturnin
+The Saturnin package contains the basic runtime environment for `Firebird Butler services`_,
+and forms the basis of the Python implementation of the Firebird Butler platform. The Butler
+services themselves are not part of the base distribution, and packages with these services
+must be installed separately. The basic set of services for Saturnin is distributed as
+`saturnin-core`_ package.
+
+The basic concepts on which Saturnin is built are described in `introduction to Firebird Butler`_.
+
+For instructions how to install and setup Saturnin on your machine, see the
+:doc:`Getting Started <getting-started>` guide.
+
+Basic Architecture
+==================
+
+Saturnin can be divided into two main parts:
+
+1. Basic modules for implementing Butler services in Python. This documentation provides
+   only the :doc:`reference guide <reference>` for these modules. Instructions (and examples)
+   for their use for creating Butler services for the Saturnin platform are part of the documentation
+   for the `saturnin-sdk`_ package.
+2. Tools for managing and running Butler services, and their composition into functional
+   units. This user guide describes this part of the platform.
+
+Butler Services
+***************
+
+Saturnin currently supports two types of Butler services:
+
+1. **Standard Butler services.** These services use the FBSP_ protocol and work in client/server
+   mode.
+2. **Microservices.** These are primarily data processing services that use the FBDP_ protocol
+   for communication within the data processing pipeline.
+
+Butler services are implemented as Python classes in Saturnin. Service properties are
+defined by a standard `.ServiceDescriptor` structure, which is registered during installation
+using a standard entry point in `saturnin.service` group.
+
+Service containers
+******************
+
+Because services are classes, they cannot be invoked directly. Saturnin provides special
+containers / utilities for running services:
+
+1. The `saturnin-bundle` tool provides an environment for running multiple services in
+   separate threads. It can be used both for running related services (eg data processing
+   pipelines) and for centralized operation of unrelated services.
+
+2. The `saturnin-service` tool allows you to run only one service, but allows that service
+   to run either in the main process thread or in a separate thread.
+
+Any number of such service container processes can be started. The definition of parameters
+of the runtime environment, the list of services to be executed and their configuration is
+described in a special configuration file called Saturnin **recipe.**
+
+Service containers can also be run as daemons using the `saturnin-daemon` tool.
+
+Saturnin console
+****************
+
+The `saturnin` tool is used to manage the Saturnin platform installation. It can be operated
+in two modes:
+
+- **Single command (direct) mode.** The required command and parameters are entered directly on
+  the command line, and after the command is executed, the tool is terminated.
+
+- **Interactive console mode** activated by running the tool without additional parameters.
+  The interactive console offers an enhanced command line with persistent command history,
+  command and parameter completion, and interactive help.
+
+.. note::
+
+   The command set available in console mode differs from command set available in direct mode,
+   as some commands (typically those required to run only once or not very often like initialize
+   or create home) are available only in direct mode.
+
+For normal work, we recommend using the interactive console mode. In the following sections,
+all the commands described are entered in the interactive console.
+
+
 
 .. _setuptools: https://pypi.org/project/setuptools/
 .. _PYPI: https://pypi.org/
 .. _ctypes: http://docs.python.org/library/ctypes.html
 .. _pip: https://pypi.org/project/pip/
 .. _firebird-base: https://firebird-base.rtfd.io
+.. _introduction to Firebird Butler: https://firebird-butler.readthedocs.io/en/latest/introduction.html
+.. _saturnin-core: https://github.com/FirebirdSQL/saturnin-core
+.. _Saturnin CORE: https://saturnin-core.rtfd.io/
+.. _Saturnin SDK: https://saturnin-sdk.rtfd.io/
+.. _saturnin-sdk: https://github.com/FirebirdSQL/saturnin-sdk
+.. _FBSP: https://firebird-butler.readthedocs.io/en/latest/rfc/4/FBSP.html
+.. _FBDP: https://firebird-butler.readthedocs.io/en/latest/rfc/9/FBDP.html
+.. _Firebird Butler services: https://firebird-butler.readthedocs.io/en/latest/rfc/3/FBSD.html

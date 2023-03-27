@@ -3,14 +3,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
-<title>saturnin.lib.data.filter — saturnin 0.7.1 documentation</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
+<title>saturnin.lib.data.filter — saturnin 0.8.0 documentation</title>
 <link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
 <link href="_static/bootstrap-sphinx.css" rel="stylesheet" type="text/css"/>
 <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-<script src="_static/jquery.js"></script>
-<script src="_static/underscore.js"></script>
-<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
 <script src="_static/doctools.js"></script>
 <script src="_static/sphinx_highlight.js"></script>
 <link href="genindex.html" rel="index" title="Index"/>
@@ -37,7 +34,7 @@
 </button>
 <a class="brand" href="index.html">
           saturnin</a>
-<span class="navbar-text pull-left"><b>0.7.1</b></span>
+<span class="navbar-text pull-left"><b>0.8.0</b></span>
 <div class="nav-collapse">
 <ul class="nav">
 <li class="divider-vertical"></li>
@@ -49,10 +46,22 @@
 <ul aria-labelledby="dLabelGlobalToc" class="dropdown-menu globaltoc" role="menu"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting-started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#saturnin-console">Saturnin console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#installing-services">Installing services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#using-firebird-services">Using Firebird services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#saturnin-recipes">Saturnin recipes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#basic-architecture">Basic Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#butler-services">Butler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#service-containers">Service containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#saturnin-console">Saturnin console</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Saturnin Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ref-base.html">saturnin.base</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base.html#constants">Constants</a></li>
@@ -74,10 +83,11 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#dataclasses">Dataclasses</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-site.html">saturnin.base.site</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-transport.html">saturnin.base.transport</a><ul>
@@ -89,15 +99,13 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-component.html">saturnin.base.component</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-recipe.html">saturnin.base.recipe</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-recipe.html#classes">Classes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#service-registration">Service registration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-micro.html">saturnin.component.micro</a><ul>
@@ -110,30 +118,56 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-component-service.html#classes">Classes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-client.html">saturnin.component.client</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-daemon.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-lib-pyproject.html">saturnin.lib.pyproject</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-metadata.html">saturnin.lib.metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-metadata.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a></li>
 </ul>
 </li>
@@ -156,13 +190,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
@@ -170,21 +206,42 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-cli.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-repl.html">saturnin._scripts.repl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#classes">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-completers.html">saturnin._scripts.completers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-completers.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#command-functions">Command functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#command-functions">Command functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#command-functions">Command functions</a></li>
 </ul>
 </li>
 </ul>
@@ -202,9 +259,17 @@
 <a data-target="#" data-toggle="dropdown" href="#" id="dLabelLocalToc" role="button">Page <b class="caret"></b></a>
 <ul aria-labelledby="dLabelLocalToc" class="dropdown-menu localtoc" role="menu"><ul>
 <li><a class="reference internal" href="#">saturnin.lib.data.filter</a><ul>
+<li><a class="reference internal" href="#globals">Globals</a><ul>
+<li><a class="reference internal" href="#saturnin.lib.data.filter.INPUT_PIPE_CHN"><code class="docutils literal notranslate"><span class="pre">INPUT_PIPE_CHN</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.lib.data.filter.OUTPUT_PIPE_CHN"><code class="docutils literal notranslate"><span class="pre">OUTPUT_PIPE_CHN</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.lib.data.filter.WAKE_PUSH_CHN"><code class="docutils literal notranslate"><span class="pre">WAKE_PUSH_CHN</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.lib.data.filter.WAKE_PULL_CHN"><code class="docutils literal notranslate"><span class="pre">WAKE_PULL_CHN</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#classes">Classes</a><ul>
 <li><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterConfig"><code class="docutils literal notranslate"><span class="pre">DataFilterConfig</span></code></a><ul>
 <li><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterConfig.validate"><code class="docutils literal notranslate"><span class="pre">DataFilterConfig.validate()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterConfig.agent"><code class="docutils literal notranslate"><span class="pre">DataFilterConfig.agent</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterConfig.input_batch_size"><code class="docutils literal notranslate"><span class="pre">DataFilterConfig.input_batch_size</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterConfig.input_pipe"><code class="docutils literal notranslate"><span class="pre">DataFilterConfig.input_pipe</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterConfig.input_pipe_address"><code class="docutils literal notranslate"><span class="pre">DataFilterConfig.input_pipe_address</span></code></a></li>
@@ -298,30 +363,58 @@
 <a class="dashAnchor" name="//apple_ref/cpp/Section/saturnin.lib.data.filter"></a><section id="module-saturnin.lib.data.filter">
 <span id="saturnin-lib-data-filter"></span><a class="dashAnchor" name="//apple_ref/cpp/Module/saturnin.lib.data.filter"></a><h1>saturnin.lib.data.filter<a class="headerlink" href="#module-saturnin.lib.data.filter" title="Permalink to this heading">¶</a></h1>
 <p>Saturnin base class for data filter microservices</p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Globals"></a><section id="globals">
+<h2>Globals<a class="headerlink" href="#globals" title="Permalink to this heading">¶</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.lib.data.filter.INPUT_PIPE_CHN">
+<span class="sig-prename descclassname"><span class="pre">saturnin.lib.data.filter.</span></span><span class="sig-name descname"><span class="pre">INPUT_PIPE_CHN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'input-pipe'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.lib.data.filter.INPUT_PIPE_CHN"></a><a class="headerlink" href="#saturnin.lib.data.filter.INPUT_PIPE_CHN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pipe INPUT channel &amp; endpoint name</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.lib.data.filter.OUTPUT_PIPE_CHN">
+<span class="sig-prename descclassname"><span class="pre">saturnin.lib.data.filter.</span></span><span class="sig-name descname"><span class="pre">OUTPUT_PIPE_CHN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'output-pipe'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.lib.data.filter.OUTPUT_PIPE_CHN"></a><a class="headerlink" href="#saturnin.lib.data.filter.OUTPUT_PIPE_CHN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pipe OUTPUT channel &amp; endpoint name</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.lib.data.filter.WAKE_PUSH_CHN">
+<span class="sig-prename descclassname"><span class="pre">saturnin.lib.data.filter.</span></span><span class="sig-name descname"><span class="pre">WAKE_PUSH_CHN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'wake-push'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.lib.data.filter.WAKE_PUSH_CHN"></a><a class="headerlink" href="#saturnin.lib.data.filter.WAKE_PUSH_CHN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wake PUSH channel &amp; endpoint name</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.lib.data.filter.WAKE_PULL_CHN">
+<span class="sig-prename descclassname"><span class="pre">saturnin.lib.data.filter.</span></span><span class="sig-name descname"><span class="pre">WAKE_PULL_CHN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'wake-pull'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.lib.data.filter.WAKE_PULL_CHN"></a><a class="headerlink" href="#saturnin.lib.data.filter.WAKE_PULL_CHN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wake PULL channel &amp; endpoint name</p>
+</dd></dl>
+</section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Classes"></a><section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.lib.data.filter.</span></span><span class="sig-name descname"><span class="pre">DataFilterConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.lib.data.filter.DataFilterConfig"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterConfig" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.lib.data.filter.</span></span><span class="sig-name descname"><span class="pre">DataFilterConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.lib.data.filter.DataFilterConfig"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ref-base-component.html#saturnin.base.component.ComponentConfig" title="saturnin.base.component.ComponentConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComponentConfig</span></code></a></p>
 <p>Base data provider microservice configuration.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Conf. section name.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterConfig.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterConfig.validate"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterConfig.validate" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterConfig.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterConfig.validate"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterConfig.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extended validation.</p>
 <ul class="simple">
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pipe_format</span></code> is required for CONNECT <code class="xref py py-obj docutils literal notranslate"><span class="pre">pipe_mode</span></code>.</p></li>
 </ul>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterConfig.agent">
+<span class="sig-name descname"><span class="pre">agent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UUIDOption</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.lib.data.filter.DataFilterConfig.agent"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterConfig.agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Agent identification</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterConfig.input_batch_size">
@@ -396,7 +489,7 @@
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.lib.data.filter.</span></span><span class="sig-name descname"><span class="pre">DataFilterMicro</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.lib.data.filter.DataFilterMicro"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.lib.data.filter.</span></span><span class="sig-name descname"><span class="pre">DataFilterMicro</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.lib.data.filter.DataFilterMicro"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ref-component-micro.html#saturnin.component.micro.MicroService" title="saturnin.component.micro.MicroService"><code class="xref py py-class docutils literal notranslate"><span class="pre">MicroService</span></code></a></p>
 <p>Base data provider microservice.</p>
 <p>Descendant classes should override:</p>
@@ -406,52 +499,52 @@ associated with input pipe.</p></li>
 <li><p><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_accept_client" title="saturnin.lib.data.filter.DataFilterMicro.handle_output_accept_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_output_accept_client</span></code></a> to validate client request and aquire resources
 associated with output pipe.</p></li>
 <li><p><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_produce_data" title="saturnin.lib.data.filter.DataFilterMicro.handle_output_produce_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_output_produce_data</span></code></a> to produce data for outgoing DATA message.</p></li>
-<li><p><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_data" title="saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_input_accept_data</span></code></a> to process received data. CONSUMER only.</p></li>
+<li><p><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_data" title="saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_input_accept_data</span></code></a> to process received data.</p></li>
 <li><p><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_pipe_closed" title="saturnin.lib.data.filter.DataFilterMicro.handle_input_pipe_closed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_input_pipe_closed</span></code></a> to release resource assiciated with input pipe.</p></li>
 <li><p><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_pipe_closed" title="saturnin.lib.data.filter.DataFilterMicro.handle_output_pipe_closed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_output_pipe_closed</span></code></a> to release resource assiciated with output pipe.</p></li>
 </ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zmq_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pyzmq.readthedocs.io/en/latest/api/zmq.html#zmq.Context" title="(in PyZMQ v25.0)"><span class="pre">Context</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><span class="pre">ServiceDescriptor</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peer_uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.__init__"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zmq_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pyzmq.readthedocs.io/en/latest/api/zmq.html#zmq.Context" title="(in PyZMQ v25.1)"><span class="pre">Context</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><span class="pre">ServiceDescriptor</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peer_uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.__init__"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>zmq_context</strong> (<a class="reference external" href="https://pyzmq.readthedocs.io/en/latest/api/zmq.html#zmq.Context" title="(in PyZMQ v25.0)"><em>Context</em></a>) – ZeroMQ Context.</p></li>
+<li><p><strong>zmq_context</strong> (<a class="reference external" href="https://pyzmq.readthedocs.io/en/latest/api/zmq.html#zmq.Context" title="(in PyZMQ v25.1)"><em>Context</em></a>) – ZeroMQ Context.</p></li>
 <li><p><strong>descriptor</strong> (<a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><em>ServiceDescriptor</em></a>) – Service descriptor.</p></li>
-<li><p><strong>peer_uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a><em>]</em>) – Peer ID, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> means that newly generated UUID type 1 should be used.</p></li>
+<li><p><strong>peer_uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a><em> | </em><em>None</em>) – Peer ID, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> means that newly generated UUID type 1 should be used.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.aquire_resources">
-<span class="sig-name descname"><span class="pre">aquire_resources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.aquire_resources"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.aquire_resources" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">aquire_resources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.aquire_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.aquire_resources"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.aquire_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Aquire resources required by component:</p>
 <ol class="arabic simple">
 <li><p>Connect wake PUSH channel</p></li>
 <li><p>Connects to input and output data pipes (if necessary).</p></li>
 </ol>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.finish_input_processing">
-<span class="sig-name descname"><span class="pre">finish_input_processing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><span class="pre">ErrorCode</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.finish_input_processing"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.finish_input_processing" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">finish_input_processing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><span class="pre">ErrorCode</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.finish_input_processing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.finish_input_processing"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.finish_input_processing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called when input pipe is closed while output pipe will remain open.</p>
 <p>When code is <code class="xref py py-obj docutils literal notranslate"><span class="pre">ErrorCode.OK</span></code>, the input was closed normally. Otherwise it indicates
 the type of problem that caused the input to be closed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with peer.</p></li>
 <li><p><strong>code</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.ErrorCode" title="saturnin.protocol.fbdp.ErrorCode"><em>ErrorCode</em></a>) – Input pipe closing ErrorCode.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -462,10 +555,10 @@ the type of problem that caused the input to be closed.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_exception">
-<span class="sig-name descname"><span class="pre">handle_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Session" title="saturnin.base.transport.Session"><span class="pre">Session</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><span class="pre">Message</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_exception"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_exception" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Session" title="saturnin.base.transport.Session"><span class="pre">Session</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><span class="pre">Message</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_exception"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_exception"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler called by <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Protocol.handle_msg" title="saturnin.base.transport.Protocol.handle_msg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_msg()</span></code></a> on exception in message handler.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Session" title="saturnin.base.transport.Session"><em>Session</em></a>) – Session associated with connection.</p></li>
@@ -473,7 +566,7 @@ the type of problem that caused the input to be closed.</p>
 <li><p><strong>exc</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><em>Exception</em></a>) – Exception.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -481,16 +574,16 @@ the type of problem that caused the input to be closed.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_client">
-<span class="sig-name descname"><span class="pre">handle_input_accept_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_client"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_client" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_input_accept_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_input_accept_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_client"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler executed when client connects to INPUT data pipe via OPEN message.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with client.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -510,17 +603,17 @@ action.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_data">
-<span class="sig-name descname"><span class="pre">handle_input_accept_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_data"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_input_accept_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_input_accept_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_data"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_accept_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler executed to process data received in DATA message.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with client.</p></li>
 <li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – Data received from client.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -542,16 +635,16 @@ to be returned in CLOSE message.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_input_get_data">
-<span class="sig-name descname"><span class="pre">handle_input_get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_input_get_data"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_get_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_input_get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_input_get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_input_get_data"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_get_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler executed to query the service whether is ready to accept input data.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with input data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with server.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
 </dd>
 </dl>
@@ -559,19 +652,19 @@ to be returned in CLOSE message.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_input_pipe_closed">
-<span class="sig-name descname"><span class="pre">handle_input_pipe_closed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_input_pipe_closed"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_pipe_closed" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_input_pipe_closed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_input_pipe_closed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_input_pipe_closed"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_pipe_closed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler executed when CLOSE message is received or sent, to release any
 resources associated with current transmission.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with peer.</p></li>
 <li><p><strong>msg</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Received/sent CLOSE message.</p></li>
-<li><p><strong>exc</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><em>Exception</em></a><em>]</em>) – Exception that caused the error.</p></li>
+<li><p><strong>exc</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><em>Exception</em></a><em> | </em><em>None</em>) – Exception that caused the error.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -590,16 +683,16 @@ the input is not closed normally and <a class="reference internal" href="#saturn
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_input_schedule_ready">
-<span class="sig-name descname"><span class="pre">handle_input_schedule_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_input_schedule_ready"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_schedule_ready" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_input_schedule_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_input_schedule_ready"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_input_schedule_ready"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_input_schedule_ready" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler executed in order to send the READY message to the client later.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with client.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -614,16 +707,16 @@ to be returned in CLOSE message.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_output_accept_client">
-<span class="sig-name descname"><span class="pre">handle_output_accept_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_output_accept_client"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_accept_client" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_output_accept_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_output_accept_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_output_accept_client"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_accept_client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler executed when client connects to OUTPUT data pipe via OPEN message.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with client.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -643,16 +736,16 @@ action.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_output_get_data">
-<span class="sig-name descname"><span class="pre">handle_output_get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_output_get_data"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_get_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_output_get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_output_get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_output_get_data"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_get_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler executed to query the data source for data availability.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with output data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with connection.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
 </dd>
 </dl>
@@ -662,19 +755,19 @@ and input pipe is closed.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_output_pipe_closed">
-<span class="sig-name descname"><span class="pre">handle_output_pipe_closed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_output_pipe_closed"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_pipe_closed" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_output_pipe_closed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_output_pipe_closed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_output_pipe_closed"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_pipe_closed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler executed when CLOSE message is received or sent, to release any
 resources associated with current transmission.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with peer.</p></li>
 <li><p><strong>msg</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – Received/sent CLOSE message.</p></li>
-<li><p><strong>exc</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><em>Exception</em></a><em>]</em>) – Exception that caused the error.</p></li>
+<li><p><strong>exc</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><em>Exception</em></a><em> | </em><em>None</em>) – Exception that caused the error.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -692,17 +785,17 @@ and notes exception in details.</p></li>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_output_produce_data">
-<span class="sig-name descname"><span class="pre">handle_output_produce_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_output_produce_data"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_produce_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_output_produce_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><span class="pre">FBDPMessage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_output_produce_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_output_produce_data"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_produce_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler executed to store data into outgoing DATA message.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with client.</p></li>
 <li><p><strong>msg</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPMessage" title="saturnin.protocol.fbdp.FBDPMessage"><em>FBDPMessage</em></a>) – DATA message that will be sent to client.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -725,16 +818,16 @@ to be returned in CLOSE message.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_output_schedule_ready">
-<span class="sig-name descname"><span class="pre">handle_output_schedule_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_output_schedule_ready"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_schedule_ready" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_output_schedule_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><span class="pre">FBDPSession</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_output_schedule_ready"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_output_schedule_ready"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_output_schedule_ready" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event handler executed in order to send the READY message to the client later.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with data pipe.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPSession" title="saturnin.protocol.fbdp.FBDPSession"><em>FBDPSession</em></a>) – Session associated with client.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -749,37 +842,37 @@ be returned in CLOSE message.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.handle_wake_msg">
-<span class="sig-name descname"><span class="pre">handle_wake_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Session" title="saturnin.base.transport.Session"><span class="pre">Session</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><span class="pre">Message</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_wake_msg"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_wake_msg" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">handle_wake_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><span class="pre">Channel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Session" title="saturnin.base.transport.Session"><span class="pre">Session</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><span class="pre">Message</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.handle_wake_msg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.handle_wake_msg"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.handle_wake_msg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handler for “data available” pings sent via wake channels.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>channel</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><em>Channel</em></a>) – Channel associated with wake delivery.</p></li>
 <li><p><strong>session</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Session" title="saturnin.base.transport.Session"><em>Session</em></a>) – Session associated with client.</p></li>
 <li><p><strong>msg</strong> (<a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><em>Message</em></a>) – Wake message.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.initialize">
-<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterConfig" title="saturnin.lib.data.filter.DataFilterConfig"><span class="pre">DataFilterConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.initialize"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.initialize" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.lib.data.filter.DataFilterConfig" title="saturnin.lib.data.filter.DataFilterConfig"><span class="pre">DataFilterConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.initialize"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.initialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Verify configuration and assemble component structural parts.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="#saturnin.lib.data.filter.DataFilterConfig" title="saturnin.lib.data.filter.DataFilterConfig"><em>DataFilterConfig</em></a>) – </p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="#saturnin.lib.data.filter.DataFilterConfig" title="saturnin.lib.data.filter.DataFilterConfig"><em>DataFilterConfig</em></a>) – Service configuration</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.release_resources">
-<span class="sig-name descname"><span class="pre">release_resources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.release_resources"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.release_resources" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">release_resources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.release_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.release_resources"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.release_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Release resources aquired by component:</p>
 <ol class="arabic simple">
 <li><p>Disconnect the wake PUSH channel</p></li>
@@ -787,33 +880,33 @@ be returned in CLOSE message.</p>
 <li><p>Close all active data output sessions</p></li>
 </ol>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.store_batch_output">
-<span class="sig-name descname"><span class="pre">store_batch_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.store_batch_output"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.store_batch_output" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">store_batch_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.store_batch_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.store_batch_output"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.store_batch_output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store batch of data to output queue and send wake notification.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>batch</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a>) – Data to be stored to output queue.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.store_output">
-<span class="sig-name descname"><span class="pre">store_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.store_output"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.store_output" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">store_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/lib/data/filter.html#DataFilterMicro.store_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.lib.data.filter.DataFilterMicro.store_output"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.store_output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store data to output queue and send wake notification.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a>) – Data to be stored to output queue.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -830,7 +923,7 @@ be returned in CLOSE message.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.details">
-<span class="sig-name descname"><span class="pre">details</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.lib.data.filter.DataFilterMicro.details"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.details" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">details</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><span class="pre">Exception</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.lib.data.filter.DataFilterMicro.details"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Service execution outcome details</p>
 </dd></dl>
 <dl class="py attribute">
@@ -867,7 +960,7 @@ Initially empty.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.input_protocol">
-<span class="sig-name descname"><span class="pre">input_protocol</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPServer" title="saturnin.protocol.fbdp.FBDPServer"><span class="pre">FBDPServer</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPClient" title="saturnin.protocol.fbdp.FBDPClient"><span class="pre">FBDPClient</span></a><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.lib.data.filter.DataFilterMicro.input_protocol"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.input_protocol" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">input_protocol</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPServer" title="saturnin.protocol.fbdp.FBDPServer"><span class="pre">FBDPServer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPClient" title="saturnin.protocol.fbdp.FBDPClient"><span class="pre">FBDPClient</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.lib.data.filter.DataFilterMicro.input_protocol"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.input_protocol" title="Permalink to this definition">¶</a></dt>
 <dd><p>FDBP protocol handler (server or client) for input pipe</p>
 </dd></dl>
 <dl class="py attribute">
@@ -917,7 +1010,7 @@ Initially empty.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.lib.data.filter.DataFilterMicro.output_protocol">
-<span class="sig-name descname"><span class="pre">output_protocol</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPServer" title="saturnin.protocol.fbdp.FBDPServer"><span class="pre">FBDPServer</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPClient" title="saturnin.protocol.fbdp.FBDPClient"><span class="pre">FBDPClient</span></a><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.lib.data.filter.DataFilterMicro.output_protocol"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.output_protocol" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">output_protocol</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPServer" title="saturnin.protocol.fbdp.FBDPServer"><span class="pre">FBDPServer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="ref-protocol-fbdp.html#saturnin.protocol.fbdp.FBDPClient" title="saturnin.protocol.fbdp.FBDPClient"><span class="pre">FBDPClient</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.lib.data.filter.DataFilterMicro.output_protocol"></a><a class="headerlink" href="#saturnin.lib.data.filter.DataFilterMicro.output_protocol" title="Permalink to this definition">¶</a></dt>
 <dd><p>FDBP protocol handler (server or client) for output pipe</p>
 </dd></dl>
 <dl class="py attribute">
@@ -982,8 +1075,8 @@ Initially empty.</p>
 <a href="#">Back to top</a>
 </p>
 <p>
-        © Copyright 2019-2022, The Firebird Project.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+        © Copyright 2019-2023, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
 </p>
 </div>
 </footer>

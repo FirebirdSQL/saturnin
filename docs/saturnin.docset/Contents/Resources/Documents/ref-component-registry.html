@@ -3,20 +3,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
-<title>saturnin.component.registry — saturnin 0.7.1 documentation</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
+<title>saturnin.component.registry — saturnin 0.8.0 documentation</title>
 <link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
 <link href="_static/bootstrap-sphinx.css" rel="stylesheet" type="text/css"/>
 <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-<script src="_static/jquery.js"></script>
-<script src="_static/underscore.js"></script>
-<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
 <script src="_static/doctools.js"></script>
 <script src="_static/sphinx_highlight.js"></script>
 <link href="genindex.html" rel="index" title="Index"/>
 <link href="search.html" rel="search" title="Search"/>
-<link href="ref-component-micro.html" rel="next" title="saturnin.component.micro"/>
-<link href="ref-base-recipe.html" rel="prev" title="saturnin.base.recipe"/>
+<link href="ref-component-apps.html" rel="next" title="saturnin.component.apps"/>
+<link href="ref-component-bundle.html" rel="prev" title="saturnin.component.bundle"/>
 <meta charset="utf-8"/>
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1" name="viewport"/>
@@ -37,7 +34,7 @@
 </button>
 <a class="brand" href="index.html">
           saturnin</a>
-<span class="navbar-text pull-left"><b>0.7.1</b></span>
+<span class="navbar-text pull-left"><b>0.8.0</b></span>
 <div class="nav-collapse">
 <ul class="nav">
 <li class="divider-vertical"></li>
@@ -49,10 +46,22 @@
 <ul aria-labelledby="dLabelGlobalToc" class="dropdown-menu globaltoc" role="menu"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting-started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#saturnin-console">Saturnin console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#installing-services">Installing services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#using-firebird-services">Using Firebird services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#saturnin-recipes">Saturnin recipes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#basic-architecture">Basic Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#butler-services">Butler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#service-containers">Service containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#saturnin-console">Saturnin console</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Saturnin Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ref-base.html">saturnin.base</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base.html#constants">Constants</a></li>
@@ -74,10 +83,11 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#dataclasses">Dataclasses</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-site.html">saturnin.base.site</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-transport.html">saturnin.base.transport</a><ul>
@@ -89,15 +99,13 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-component.html">saturnin.base.component</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-recipe.html">saturnin.base.recipe</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-recipe.html#classes">Classes</a></li>
-</ul>
-</li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">saturnin.component.registry</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#service-registration">Service registration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-micro.html">saturnin.component.micro</a><ul>
@@ -110,30 +118,56 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-component-service.html#classes">Classes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-client.html">saturnin.component.client</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-daemon.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-lib-pyproject.html">saturnin.lib.pyproject</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-metadata.html">saturnin.lib.metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-metadata.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#classes">Classes</a></li>
 </ul>
 </li>
@@ -156,13 +190,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
@@ -170,21 +206,42 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-cli.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-repl.html">saturnin._scripts.repl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#classes">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-completers.html">saturnin._scripts.completers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-completers.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#command-functions">Command functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#command-functions">Command functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#command-functions">Command functions</a></li>
 </ul>
 </li>
 </ul>
@@ -202,9 +259,39 @@
 <a data-target="#" data-toggle="dropdown" href="#" id="dLabelLocalToc" role="button">Page <b class="caret"></b></a>
 <ul aria-labelledby="dLabelLocalToc" class="dropdown-menu localtoc" role="menu"><ul>
 <li><a class="reference internal" href="#">saturnin.component.registry</a><ul>
-<li><a class="reference internal" href="#service-registration">Service registration</a></li>
-<li><a class="reference internal" href="#functions">Functions</a><ul>
-<li><a class="reference internal" href="#saturnin.component.registry.get_service_desciptors"><code class="docutils literal notranslate"><span class="pre">get_service_desciptors()</span></code></a></li>
+<li><a class="reference internal" href="#globals">Globals</a><ul>
+<li><a class="reference internal" href="#saturnin.component.registry.service_registry"><code class="docutils literal notranslate"><span class="pre">service_registry</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo"><code class="docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.as_toml_dict"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.as_toml_dict()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.get_key"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.get_key()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.api"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.api</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.classification"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.classification</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.description"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.description</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.descriptor"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.descriptor</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.descriptor_obj"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.descriptor_obj</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.distribution"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.distribution</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.facilities"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.facilities</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.factory"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.factory</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.factory_obj"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.factory_obj</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.name"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.name</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.uid"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.uid</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.vendor"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.vendor</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceInfo.version"><code class="docutils literal notranslate"><span class="pre">ServiceInfo.version</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceRegistry"><code class="docutils literal notranslate"><span class="pre">ServiceRegistry</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceRegistry.add"><code class="docutils literal notranslate"><span class="pre">ServiceRegistry.add()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceRegistry.as_toml"><code class="docutils literal notranslate"><span class="pre">ServiceRegistry.as_toml()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceRegistry.get_by_name"><code class="docutils literal notranslate"><span class="pre">ServiceRegistry.get_by_name()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceRegistry.load"><code class="docutils literal notranslate"><span class="pre">ServiceRegistry.load()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceRegistry.load_from_installed"><code class="docutils literal notranslate"><span class="pre">ServiceRegistry.load_from_installed()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceRegistry.load_from_toml"><code class="docutils literal notranslate"><span class="pre">ServiceRegistry.load_from_toml()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.component.registry.ServiceRegistry.save"><code class="docutils literal notranslate"><span class="pre">ServiceRegistry.save()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -229,37 +316,248 @@
 <div class="body span12 content" role="main">
 <a class="dashAnchor" name="//apple_ref/cpp/Section/saturnin.component.registry"></a><section id="module-saturnin.component.registry">
 <span id="saturnin-component-registry"></span><a class="dashAnchor" name="//apple_ref/cpp/Module/saturnin.component.registry"></a><h1>saturnin.component.registry<a class="headerlink" href="#module-saturnin.component.registry" title="Permalink to this heading">¶</a></h1>
-<p>Saturnin component registration and discovery</p>
-<a class="dashAnchor" name="//apple_ref/cpp/Section/Service registration"></a><section id="service-registration">
-<h2>Service registration<a class="headerlink" href="#service-registration" title="Permalink to this heading">¶</a></h2>
-<p>Services are registered as entry points for their <code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceDescriptor</span></code> - i.e. the instance
-of <code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceDescriptor</span></code> for installed service is returned by <code class="xref py py-obj docutils literal notranslate"><span class="pre">EntryPoint.load()</span></code>.</p>
+<p>Saturnin component registration and discovery.</p>
+<p>Services are registered as entry points for their <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceDescriptor</span></code></a> - i.e. the instance
+of <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceDescriptor</span></code></a> for installed service is returned by <code class="xref py py-obj docutils literal notranslate"><span class="pre">EntryPoint.load()</span></code>.</p>
 <p>The default group for service registration is <code class="xref py py-obj docutils literal notranslate"><span class="pre">saturnin.service</span></code>, but it’s possible to
 install additional service discovery iterators.</p>
 <p>Custom service iterator must be a generator that accepts optional <code class="xref py py-obj docutils literal notranslate"><span class="pre">uid</span></code> in string format,
-and yileds <code class="xref py py-obj docutils literal notranslate"><span class="pre">EntryPoint</span></code> instances. If <code class="xref py py-obj docutils literal notranslate"><span class="pre">uid</span></code> is specified, it must return only <code class="xref py py-obj docutils literal notranslate"><span class="pre">EntryPoint</span></code>
-only for service with given <code class="xref py py-obj docutils literal notranslate"><span class="pre">uid</span></code>, otherwise it should return all services.</p>
+and yileds <code class="xref py py-obj docutils literal notranslate"><span class="pre">importlib.metadata.EntryPoint</span></code> instances. If <code class="xref py py-obj docutils literal notranslate"><span class="pre">uid</span></code> is specified, it must return
+only <code class="xref py py-obj docutils literal notranslate"><span class="pre">EntryPoint</span></code> only for service with given <code class="xref py py-obj docutils literal notranslate"><span class="pre">uid</span></code>, otherwise it should return all services.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Custom iterator can return objects that are not <code class="xref py py-obj docutils literal notranslate"><span class="pre">EntryPoint</span></code> instances, but they MUST
-implement <code class="xref py py-obj docutils literal notranslate"><span class="pre">load()</span></code> method that will return <code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceDescriptor</span></code> instance.</p>
+<p>Custom iterator can return objects that are not <code class="xref py py-obj docutils literal notranslate"><span class="pre">EntryPoint</span></code> instances,
+but they MUST implement <code class="xref py py-obj docutils literal notranslate"><span class="pre">load()</span></code> method that will return <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceDescriptor</span></code></a> instance.</p>
 </div>
 <p>Custom iterators must be registered as entry points in <code class="xref py py-obj docutils literal notranslate"><span class="pre">saturnin.service.iterator</span></code> group.</p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Globals"></a><section id="globals">
+<h2>Globals<a class="headerlink" href="#globals" title="Permalink to this heading">¶</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.component.registry.service_registry">
+<span class="sig-prename descclassname"><span class="pre">saturnin.component.registry.</span></span><span class="sig-name descname"><span class="pre">service_registry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#saturnin.component.registry.ServiceRegistry" title="saturnin.component.registry.ServiceRegistry"><span class="pre">ServiceRegistry</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.component.registry.service_registry"></a><a class="headerlink" href="#saturnin.component.registry.service_registry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saturnin service registry</p>
+</dd></dl>
 </section>
-<a class="dashAnchor" name="//apple_ref/cpp/Section/Functions"></a><section id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="saturnin.component.registry.get_service_desciptors">
-<span class="sig-prename descclassname"><span class="pre">saturnin.component.registry.</span></span><span class="sig-name descname"><span class="pre">get_service_desciptors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><span class="pre">ServiceDescriptor</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin.component.registry.get_service_desciptors"></a><a class="headerlink" href="#saturnin.component.registry.get_service_desciptors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns list of service descriptors for registered services.</p>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Classes"></a><section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.component.registry.</span></span><span class="sig-name descname"><span class="pre">ServiceInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vendor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">facilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.component.registry.ServiceInfo"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Distinct" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Distinct</span></code></a></p>
+<p>Information about service stored in  <a class="reference internal" href="#saturnin.component.registry.ServiceRegistry" title="saturnin.component.registry.ServiceRegistry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceRegistry</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – When specified, returns only descriptor for service with given <code class="xref py py-obj docutils literal notranslate"><span class="pre">uid</span></code>.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a>[<a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><em>ServiceDescriptor</em></a>]</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uid</strong> (<em>UUID</em>) – Service UID</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Service name</p></li>
+<li><p><strong>version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Service version</p></li>
+<li><p><strong>vendor</strong> (<em>UUID</em>) – Service vendor UID</p></li>
+<li><p><strong>classification</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Service classification</p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Service description</p></li>
+<li><p><strong>facilities</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – List of service facilities</p></li>
+<li><p><strong>api</strong> (<em>List</em><em>[</em><em>UUID</em><em>]</em>) – List of interfaces provided by service</p></li>
+<li><p><strong>factory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Service factory specification (entry point)</p></li>
+<li><p><strong>descriptor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Service descriptor specification (entry point)</p></li>
+<li><p><strong>distribution</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Installed distribution package that contains this service</p></li>
+</ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.as_toml_dict">
+<span class="sig-name descname"><span class="pre">as_toml_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceInfo.as_toml_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.component.registry.ServiceInfo.as_toml_dict"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.as_toml_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns dictionary with instance data suitable for storage in TOML format
+(values that are not of basic type are converted to string).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><em>Dict</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.get_key">
+<span class="sig-name descname"><span class="pre">get_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Hashable" title="(in Python v3.11)"><span class="pre">Hashable</span></a></span></span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceInfo.get_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.component.registry.ServiceInfo.get_key"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.get_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns service UID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Hashable" title="(in Python v3.11)"><em>Hashable</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.api">
+<span class="sig-name descname"><span class="pre">api</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.api"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.api" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of interfaces provided by service</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.classification">
+<span class="sig-name descname"><span class="pre">classification</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.classification"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.classification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service classification</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.description"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service description</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.descriptor">
+<span class="sig-name descname"><span class="pre">descriptor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.descriptor"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service descriptor specification (entry point)</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.descriptor_obj">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">descriptor_obj</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><span class="pre">ServiceDescriptor</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Property/saturnin.component.registry.ServiceInfo.descriptor_obj"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.descriptor_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service descriptor object. If it’s not assigned directly, then it’s loaded
+using <a class="reference internal" href="#saturnin.component.registry.ServiceInfo.descriptor" title="saturnin.component.registry.ServiceInfo.descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">descriptor</span></code></a> on first access.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.distribution">
+<span class="sig-name descname"><span class="pre">distribution</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.distribution"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installed distribution package that contains this service</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.facilities">
+<span class="sig-name descname"><span class="pre">facilities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.facilities"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.facilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of service facilities</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.factory">
+<span class="sig-name descname"><span class="pre">factory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.factory"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service factory specification (entry point)</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.factory_obj">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">factory_obj</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Property/saturnin.component.registry.ServiceInfo.factory_obj"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.factory_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service factory object. If it’s not assigned directly, then it’s loaded
+using <a class="reference internal" href="#saturnin.component.registry.ServiceInfo.factory" title="saturnin.component.registry.ServiceInfo.factory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">factory</span></code></a> on first access.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.name"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service name</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.uid">
+<span class="sig-name descname"><span class="pre">uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.uid"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.uid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service UID</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.vendor">
+<span class="sig-name descname"><span class="pre">vendor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.vendor"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.vendor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service vendor UID</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceInfo.version">
+<span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.component.registry.ServiceInfo.version"></a><a class="headerlink" href="#saturnin.component.registry.ServiceInfo.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Service version</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceRegistry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.component.registry.</span></span><span class="sig-name descname"><span class="pre">ServiceRegistry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.11)"><span class="pre">Mapping</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><span class="pre">Sequence</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/collections.html#firebird.base.collections.Registry" title="(in Firebird-base v1.6.1)"><span class="pre">Registry</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceRegistry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.component.registry.ServiceRegistry"></a><a class="headerlink" href="#saturnin.component.registry.ServiceRegistry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/collections.html#firebird.base.collections.Registry" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Registry</span></code></a></p>
+<p>Saturnin service registry.</p>
+<p>Holds <a class="reference internal" href="#saturnin.component.registry.ServiceInfo" title="saturnin.component.registry.ServiceInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceInfo</span></code></a> instances.</p>
+<p>It is used in two modes:</p>
+<ol class="arabic simple">
+<li><p>In full saturnin deployment, the information about services is loaded from TOML file.
+Service descriptors and factories are loaded on demand.</p></li>
+<li><p>In standalone service/bundle mode, service information including service desciptors
+and factories is stored directly by executor script, so there is no dynamic discovery
+and the whole could be compiled with Nutika.</p></li>
+</ol>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceRegistry.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">descriptor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><span class="pre">ServiceDescriptor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceRegistry.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.component.registry.ServiceRegistry.add"></a><a class="headerlink" href="#saturnin.component.registry.ServiceRegistry.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direct service registration. Used by systems that does not allow dynamic discovery,
+for example programs compiled by Nuitka.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>descriptor</strong> (<a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><em>ServiceDescriptor</em></a>) – Service descriptor</p></li>
+<li><p><strong>factory</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a>) – Service factory</p></li>
+<li><p><strong>distribution</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Distribution package name with service</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceRegistry.as_toml">
+<span class="sig-name descname"><span class="pre">as_toml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceRegistry.as_toml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.component.registry.ServiceRegistry.as_toml"></a><a class="headerlink" href="#saturnin.component.registry.ServiceRegistry.as_toml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns registry content as TOML document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceRegistry.get_by_name">
+<span class="sig-name descname"><span class="pre">get_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Distinct" title="(in Firebird-base v1.6.1)"><span class="pre">Distinct</span></a></span></span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceRegistry.get_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.component.registry.ServiceRegistry.get_by_name"></a><a class="headerlink" href="#saturnin.component.registry.ServiceRegistry.get_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get service by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Service name.</p></li>
+<li><p><strong>default</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a><em> | </em><em>None</em>) – Default value returned when service is not found.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Distinct" title="(in Firebird-base v1.6.1)"><em>Distinct</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceRegistry.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceRegistry.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.component.registry.ServiceRegistry.load"></a><a class="headerlink" href="#saturnin.component.registry.ServiceRegistry.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read information about installed services from previously saved TOML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceRegistry.load_from_installed">
+<span class="sig-name descname"><span class="pre">load_from_installed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_errors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceRegistry.load_from_installed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.component.registry.ServiceRegistry.load_from_installed"></a><a class="headerlink" href="#saturnin.component.registry.ServiceRegistry.load_from_installed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populate registry from descriptors of installed services.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ignore_errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – When True, errors are ignored, otherwise <code class="xref py py-obj docutils literal notranslate"><span class="pre">Error</span></code> is raised.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceRegistry.load_from_toml">
+<span class="sig-name descname"><span class="pre">load_from_toml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toml</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_errors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceRegistry.load_from_toml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.component.registry.ServiceRegistry.load_from_toml"></a><a class="headerlink" href="#saturnin.component.registry.ServiceRegistry.load_from_toml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populate registry from TOML document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>toml</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – TOML document (as created by <a class="reference internal" href="#saturnin.component.registry.ServiceRegistry.as_toml" title="saturnin.component.registry.ServiceRegistry.as_toml"><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_toml</span></code></a> method).</p></li>
+<li><p><strong>ignore_errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – When True, errors are ignored, otherwise <code class="xref py py-obj docutils literal notranslate"><span class="pre">Error</span></code> is raised.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.component.registry.ServiceRegistry.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/saturnin/component/registry.html#ServiceRegistry.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.component.registry.ServiceRegistry.save"></a><a class="headerlink" href="#saturnin.component.registry.ServiceRegistry.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save information about installed services to TOML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 </section>
 </section>
@@ -272,8 +570,8 @@ implement <code class="xref py py-obj docutils literal notranslate"><span class=
 <a href="#">Back to top</a>
 </p>
 <p>
-        © Copyright 2019-2022, The Firebird Project.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+        © Copyright 2019-2023, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
 </p>
 </div>
 </footer>

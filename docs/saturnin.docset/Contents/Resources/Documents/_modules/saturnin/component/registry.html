@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>saturnin.component.registry &#8212; saturnin 0.8.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="brand" href="../../../index.html">
+          saturnin</a>
+        <span class="navbar-text pull-left"><b>0.8.0</b></span>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="../../../usage-guide.html">Usage Guide</a></li>
+                <li><a href="../../../py-modindex.html">Modules</a></li>
+                <li><a href="../../../genindex.html">Index</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Content <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Saturnin Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base.html">saturnin.base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#types">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#dataclasses">Dataclasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-types.html">saturnin.base.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#saturnin-common-type-definitions-and-constants">Saturnin common type definitions and constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#types-for-annotations">Types for annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#sentinels">Sentinels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#dataclasses">Dataclasses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-transport.html">saturnin.base.transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#types-for-type-hints">Types for type hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#channels-for-individual-0mq-socket-types">Channels for individual 0MQ socket types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-component.html">saturnin.base.component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-component.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-micro.html">saturnin.component.micro</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-micro.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-micro.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-service.html">saturnin.component.service</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-service.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-service.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-client.html">saturnin.component.client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-metadata.html">saturnin.lib.metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-onepipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-filter.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-fbsp.html">saturnin.protocol.fbsp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-fbdp.html">saturnin.protocol.fbdp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-iccp.html">saturnin.protocol.iccp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-iccp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-iccp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-svcrun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-daemon.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-bundlerun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-cli.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-cli.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-repl.html">saturnin._scripts.repl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-completers.html">saturnin._scripts.completers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-7-0">Version 0.7.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-1-0">Version 0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body span12 content" role="main">
+      
+  <h1>Source code for saturnin.component.registry</h1><div class="highlight"><pre>
+<span></span><span class="c1">#coding:utf-8</span>
+<span class="c1">#</span>
+<span class="c1"># PROGRAM/MODULE: saturnin</span>
+<span class="c1"># FILE:           saturnin/component/registry.py</span>
+<span class="c1"># DESCRIPTION:    Component registration and discovery</span>
+<span class="c1"># CREATED:        4.12.2020</span>
+<span class="c1">#</span>
+<span class="c1"># The contents of this file are subject to the MIT License</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c1"># copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2020 Firebird Project (www.firebirdsql.org)</span>
+<span class="c1"># All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Contributor(s): Pavel Císař (original code)</span>
+<span class="c1">#                 ______________________________________</span>
+
+<span class="sd">&quot;&quot;&quot;Saturnin component registration and discovery.</span>
+
+<span class="sd">Services are registered as entry points for their `.ServiceDescriptor` - i.e. the instance</span>
+<span class="sd">of `.ServiceDescriptor` for installed service is returned by `EntryPoint.load()`.</span>
+
+<span class="sd">The default group for service registration is `saturnin.service`, but it&#39;s possible to</span>
+<span class="sd">install additional service discovery iterators.</span>
+
+<span class="sd">Custom service iterator must be a generator that accepts optional `uid` in string format,</span>
+<span class="sd">and yileds `importlib.metadata.EntryPoint` instances. If `uid` is specified, it must return</span>
+<span class="sd">only `EntryPoint` only for service with given `uid`, otherwise it should return all services.</span>
+
+<span class="sd">Note:</span>
+
+<span class="sd">  Custom iterator can return objects that are not `~importlib.metadata.EntryPoint` instances,</span>
+<span class="sd">  but they MUST implement `load()` method that will return `.ServiceDescriptor` instance.</span>
+
+<span class="sd">Custom iterators must be registered as entry points in `saturnin.service.iterator` group.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
+<span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">UUID</span>
+<span class="kn">from</span> <span class="nn">toml</span> <span class="kn">import</span> <span class="n">dumps</span><span class="p">,</span> <span class="n">loads</span>
+<span class="kn">from</span> <span class="nn">firebird.base.types</span> <span class="kn">import</span> <span class="n">Distinct</span><span class="p">,</span> <span class="n">load</span>
+<span class="kn">from</span> <span class="nn">firebird.base.collections</span> <span class="kn">import</span> <span class="n">Registry</span>
+<span class="kn">from</span> <span class="nn">saturnin.base</span> <span class="kn">import</span> <span class="n">directory_scheme</span><span class="p">,</span> <span class="n">ServiceDescriptor</span><span class="p">,</span> <span class="n">Error</span>
+<span class="kn">from</span> <span class="nn">saturnin.lib.metadata</span> <span class="kn">import</span> <span class="n">iter_entry_points</span><span class="p">,</span> <span class="n">get_entry_point_distribution</span>
+
+<div class="viewcode-block" id="ServiceInfo"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceInfo">[docs]</a><span class="k">class</span> <span class="nc">ServiceInfo</span><span class="p">(</span><span class="n">Distinct</span><span class="p">):</span> <span class="c1"># pylint: disable=R0902</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Information about service stored in  `.ServiceRegistry`.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        uid: Service UID</span>
+<span class="sd">        name: Service name</span>
+<span class="sd">        version: Service version</span>
+<span class="sd">        vendor: Service vendor UID</span>
+<span class="sd">        classification: Service classification</span>
+<span class="sd">        description: Service description</span>
+<span class="sd">        facilities: List of service facilities</span>
+<span class="sd">        api: List of interfaces provided by service</span>
+<span class="sd">        factory: Service factory specification (entry point)</span>
+<span class="sd">        descriptor: Service descriptor specification (entry point)</span>
+<span class="sd">        distribution: Installed distribution package that contains this service</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">uid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">vendor</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+                 <span class="n">classification</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">facilities</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                 <span class="n">api</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">UUID</span><span class="p">],</span> <span class="n">factory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">distribution</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__desc_obj</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__fact_obj</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#: Service UID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">=</span> <span class="n">uid</span>
+        <span class="c1">#: Service name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="c1">#: Service version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">version</span>
+        <span class="c1">#: Service vendor UID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vendor</span><span class="p">:</span> <span class="n">UUID</span> <span class="o">=</span> <span class="n">vendor</span>
+        <span class="c1">#: Service classification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classification</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">classification</span>
+        <span class="c1">#: Service description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="c1">#: List of service facilities</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">facilities</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">facilities</span>
+        <span class="c1">#: List of interfaces provided by service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="n">api</span>
+        <span class="c1">#: Service factory specification (entry point)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">factory</span>
+        <span class="c1">#: Service descriptor specification (entry point)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">descriptor</span>
+        <span class="c1">#: Installed distribution package that contains this service</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">distribution</span>
+<div class="viewcode-block" id="ServiceInfo.get_key"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceInfo.get_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hashable</span><span class="p">:</span>
+        <span class="s2">&quot;Returns service UID&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span></div>
+<div class="viewcode-block" id="ServiceInfo.as_toml_dict"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceInfo.as_toml_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_toml_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns dictionary with instance data suitable for storage in TOML format</span>
+<span class="sd">        (values that are not of basic type are converted to string).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">),</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+                <span class="s1">&#39;vendor&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vendor</span><span class="p">),</span>
+                <span class="s1">&#39;classification&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">classification</span><span class="p">,</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                <span class="s1">&#39;facilities&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">facilities</span><span class="p">,</span>
+                <span class="s1">&#39;api&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="p">],</span>
+                <span class="s1">&#39;factory&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="p">,</span>
+                <span class="s1">&#39;descriptor&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="p">,</span>
+                <span class="s1">&#39;distribution&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="p">,</span>
+                <span class="p">}</span></div>
+    <span class="k">def</span> <span class="nf">__get_descriptor_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ServiceDescriptor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Service descriptor object. If it&#39;s not assigned directly, then it&#39;s loaded</span>
+<span class="sd">        using `.descriptor` on first access.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__desc_obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__desc_obj</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__desc_obj</span>
+    <span class="k">def</span> <span class="nf">__set_descriptor_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ServiceDescriptor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="s2">&quot;Property setter&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__desc_obj</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="n">descriptor_obj</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__get_descriptor_obj</span><span class="p">,</span> <span class="n">__set_descriptor_obj</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="n">__get_descriptor_obj</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__get_factory_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Service factory object. If it&#39;s not assigned directly, then it&#39;s loaded</span>
+<span class="sd">        using `.factory` on first access.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fact_obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__fact_obj</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fact_obj</span>
+    <span class="k">def</span> <span class="nf">__set_factory_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="s2">&quot;Property setter&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__fact_obj</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="n">factory_obj</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">__get_factory_obj</span><span class="p">,</span> <span class="n">__set_factory_obj</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">__get_factory_obj</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ServiceRegistry"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceRegistry">[docs]</a><span class="k">class</span> <span class="nc">ServiceRegistry</span><span class="p">(</span><span class="n">Registry</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Saturnin service registry.</span>
+
+<span class="sd">    Holds `.ServiceInfo` instances.</span>
+
+<span class="sd">    It is used in two modes:</span>
+
+<span class="sd">    1. In full saturnin deployment, the information about services is loaded from TOML file.</span>
+<span class="sd">       Service descriptors and factories are loaded on demand.</span>
+<span class="sd">    2. In standalone service/bundle mode, service information including service desciptors</span>
+<span class="sd">       and factories is stored directly by executor script, so there is no dynamic discovery</span>
+<span class="sd">       and the whole could be compiled with Nutika.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ServiceRegistry.add"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceRegistry.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">descriptor</span><span class="p">:</span> <span class="n">ServiceDescriptor</span><span class="p">,</span> <span class="n">factory</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">distribution</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Direct service registration. Used by systems that does not allow dynamic discovery,</span>
+<span class="sd">        for example programs compiled by Nuitka.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            descriptor: Service descriptor</span>
+<span class="sd">            factory: Service factory</span>
+<span class="sd">            distribution: Distribution package name with service</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;distribution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">distribution</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;descriptor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">uid</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">version</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;vendor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">vendor_uid</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;classification&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">classification</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">description</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;facilities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">facilities</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;api&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">get_uid</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">api</span><span class="p">]</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;factory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">factory</span>
+        <span class="n">svc_info</span> <span class="o">=</span> <span class="n">ServiceInfo</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># pylint: disable=E1125</span>
+        <span class="n">svc_info</span><span class="o">.</span><span class="n">descriptor_obj</span> <span class="o">=</span> <span class="n">descriptor</span>
+        <span class="n">svc_info</span><span class="o">.</span><span class="n">factory_obj</span> <span class="o">=</span> <span class="n">factory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">svc_info</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ServiceRegistry.load_from_installed"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceRegistry.load_from_installed">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_installed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Populate registry from descriptors of installed services.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">          ignore_errors: When True, errors are ignored, otherwise `.Error` is raised.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">([</span><span class="n">i</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_iterators</span><span class="p">]):</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">get_entry_point_distribution</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;distribution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span> <span class="k">if</span> <span class="n">dist</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">dist</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;descriptor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">desc</span><span class="p">:</span> <span class="n">ServiceDescriptor</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ignore_errors</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load service &#39;</span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;from &#39;</span><span class="si">{</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;distribution&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">uid</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">version</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;vendor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">vendor_uid</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;classification&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">classification</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">description</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;facilities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">facilities</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;api&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">get_uid</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">desc</span><span class="o">.</span><span class="n">api</span><span class="p">]</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;factory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">factory</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">svc_info</span> <span class="o">=</span> <span class="n">ServiceInfo</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># pylint: disable=E1125</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ignore_errors</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Malformed service descriptor for &#39;</span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;from &#39;</span><span class="si">{</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;distribution&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+            <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">svc_info</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ServiceRegistry.load_from_toml"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceRegistry.load_from_toml">[docs]</a>    <span class="k">def</span> <span class="nf">load_from_toml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toml</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Populate registry from TOML document.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">          toml: TOML document (as created by `as_toml` method).</span>
+<span class="sd">          ignore_errors: When True, errors are ignored, otherwise `.Error` is raised.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">loads</span><span class="p">(</span><span class="n">toml</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">uid</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">])</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;vendor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;vendor&#39;</span><span class="p">])</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;api&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">UUID</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;api&#39;</span><span class="p">]]</span>
+                <span class="n">svc_info</span> <span class="o">=</span> <span class="n">ServiceInfo</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ignore_errors</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Malformed service data for &#39;</span><span class="si">{</span><span class="n">uid</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;from &#39;</span><span class="si">{</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;distribution&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">svc_info</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ServiceRegistry.as_toml"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceRegistry.as_toml">[docs]</a>    <span class="k">def</span> <span class="nf">as_toml</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns registry content as TOML document.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">uid</span><span class="p">):</span> <span class="n">node</span><span class="o">.</span><span class="n">as_toml_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reg</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+        <span class="k">return</span> <span class="n">dumps</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ServiceRegistry.load"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceRegistry.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="s2">&quot;Read information about installed services from previously saved TOML file.&quot;</span>
+        <span class="k">if</span> <span class="n">directory_scheme</span><span class="o">.</span><span class="n">site_services_toml</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">service_registry</span><span class="o">.</span><span class="n">load_from_toml</span><span class="p">(</span><span class="n">directory_scheme</span><span class="o">.</span><span class="n">site_services_toml</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span></div>
+<div class="viewcode-block" id="ServiceRegistry.save"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceRegistry.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="s2">&quot;Save information about installed services to TOML file.&quot;</span>
+        <span class="n">directory_scheme</span><span class="o">.</span><span class="n">site_services_toml</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">service_registry</span><span class="o">.</span><span class="n">as_toml</span><span class="p">())</span></div>
+<div class="viewcode-block" id="ServiceRegistry.get_by_name"><a class="viewcode-back" href="../../../ref-component-registry.html#saturnin.component.registry.ServiceRegistry.get_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">Any</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Distinct</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get service by its name.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            name: Service name.</span>
+<span class="sd">            default: Default value returned when service is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span></div></div>
+
+<span class="c1"># Default service registration</span>
+<span class="n">_iterators</span> <span class="o">=</span> <span class="p">[</span><span class="n">partial</span><span class="p">(</span><span class="n">iter_entry_points</span><span class="p">,</span> <span class="s1">&#39;saturnin.service&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Load custom service iterators</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">iter_entry_points</span><span class="p">(</span><span class="s1">&#39;saturnin.service.iterator&#39;</span><span class="p">):</span>
+    <span class="n">_iterators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">load</span><span class="p">())</span>
+
+<span class="c1">#: Saturnin service registry</span>
+<span class="n">service_registry</span><span class="p">:</span> <span class="n">ServiceRegistry</span> <span class="o">=</span> <span class="n">ServiceRegistry</span><span class="p">()</span>
+<span class="n">service_registry</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019-2022, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

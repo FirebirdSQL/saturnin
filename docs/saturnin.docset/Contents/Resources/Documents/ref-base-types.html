@@ -3,19 +3,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
-<title>saturnin.base.types — saturnin 0.7.1 documentation</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
+<title>saturnin.base.types — saturnin 0.8.0 documentation</title>
 <link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
 <link href="_static/bootstrap-sphinx.css" rel="stylesheet" type="text/css"/>
 <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-<script src="_static/jquery.js"></script>
-<script src="_static/underscore.js"></script>
-<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
 <script src="_static/doctools.js"></script>
 <script src="_static/sphinx_highlight.js"></script>
 <link href="genindex.html" rel="index" title="Index"/>
 <link href="search.html" rel="search" title="Search"/>
-<link href="ref-base-site.html" rel="next" title="saturnin.base.site"/>
+<link href="ref-base-config.html" rel="next" title="saturnin.base.config"/>
 <link href="ref-base.html" rel="prev" title="saturnin.base"/>
 <meta charset="utf-8"/>
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
@@ -37,7 +34,7 @@
 </button>
 <a class="brand" href="index.html">
           saturnin</a>
-<span class="navbar-text pull-left"><b>0.7.1</b></span>
+<span class="navbar-text pull-left"><b>0.8.0</b></span>
 <div class="nav-collapse">
 <ul class="nav">
 <li class="divider-vertical"></li>
@@ -49,10 +46,22 @@
 <ul aria-labelledby="dLabelGlobalToc" class="dropdown-menu globaltoc" role="menu"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting-started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#saturnin-console">Saturnin console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#installing-services">Installing services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#using-firebird-services">Using Firebird services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#saturnin-recipes">Saturnin recipes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#basic-architecture">Basic Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#butler-services">Butler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#service-containers">Service containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#saturnin-console">Saturnin console</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Saturnin Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ref-base.html">saturnin.base</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base.html#constants">Constants</a></li>
@@ -74,10 +83,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#dataclasses">Dataclasses</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-site.html">saturnin.base.site</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-transport.html">saturnin.base.transport</a><ul>
@@ -89,15 +99,13 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-component.html">saturnin.base.component</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-recipe.html">saturnin.base.recipe</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-recipe.html#classes">Classes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#service-registration">Service registration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-micro.html">saturnin.component.micro</a><ul>
@@ -110,30 +118,56 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-component-service.html#classes">Classes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-client.html">saturnin.component.client</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-daemon.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-lib-pyproject.html">saturnin.lib.pyproject</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-metadata.html">saturnin.lib.metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-metadata.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#classes">Classes</a></li>
 </ul>
 </li>
@@ -156,13 +190,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
@@ -170,21 +206,42 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-cli.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-repl.html">saturnin._scripts.repl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#classes">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-completers.html">saturnin._scripts.completers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-completers.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#command-functions">Command functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#command-functions">Command functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#command-functions">Command functions</a></li>
 </ul>
 </li>
 </ul>
@@ -218,6 +275,13 @@
 <li><a class="reference internal" href="#saturnin.base.types.MIME_TYPE_PROTO"><code class="docutils literal notranslate"><span class="pre">MIME_TYPE_PROTO</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.base.types.MIME_TYPE_TEXT"><code class="docutils literal notranslate"><span class="pre">MIME_TYPE_TEXT</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.base.types.MIME_TYPE_BINARY"><code class="docutils literal notranslate"><span class="pre">MIME_TYPE_BINARY</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.SECTION_LOCAL_ADDRESS"><code class="docutils literal notranslate"><span class="pre">SECTION_LOCAL_ADDRESS</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.SECTION_NODE_ADDRESS"><code class="docutils literal notranslate"><span class="pre">SECTION_NODE_ADDRESS</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.SECTION_NET_ADDRESS"><code class="docutils literal notranslate"><span class="pre">SECTION_NET_ADDRESS</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.SECTION_SERVICE_UID"><code class="docutils literal notranslate"><span class="pre">SECTION_SERVICE_UID</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.SECTION_PEER_UID"><code class="docutils literal notranslate"><span class="pre">SECTION_PEER_UID</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.SECTION_BUNDLE"><code class="docutils literal notranslate"><span class="pre">SECTION_BUNDLE</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.SECTION_SERVICE"><code class="docutils literal notranslate"><span class="pre">SECTION_SERVICE</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.base.types.PROTO_PEER"><code class="docutils literal notranslate"><span class="pre">PROTO_PEER</span></code></a></li>
 </ul>
 </li>
@@ -227,11 +291,13 @@
 <li><a class="reference internal" href="#saturnin.base.types.ServiceError"><code class="docutils literal notranslate"><span class="pre">ServiceError</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.base.types.ClientError"><code class="docutils literal notranslate"><span class="pre">ClientError</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.base.types.StopError"><code class="docutils literal notranslate"><span class="pre">StopError</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.RestartError"><code class="docutils literal notranslate"><span class="pre">RestartError</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#sentinels">Sentinels</a><ul>
 <li><a class="reference internal" href="#saturnin.base.types.INVALID"><code class="docutils literal notranslate"><span class="pre">INVALID</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.base.types.TIMEOUT"><code class="docutils literal notranslate"><span class="pre">TIMEOUT</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.RESTART"><code class="docutils literal notranslate"><span class="pre">RESTART</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#enums">Enums</a><ul>
@@ -348,7 +414,18 @@
 <li><a class="reference internal" href="#saturnin.base.types.ServiceDescriptor.description"><code class="docutils literal notranslate"><span class="pre">ServiceDescriptor.description</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.base.types.ServiceDescriptor.facilities"><code class="docutils literal notranslate"><span class="pre">ServiceDescriptor.facilities</span></code></a></li>
 <li><a class="reference internal" href="#saturnin.base.types.ServiceDescriptor.factory"><code class="docutils literal notranslate"><span class="pre">ServiceDescriptor.factory</span></code></a></li>
-<li><a class="reference internal" href="#saturnin.base.types.ServiceDescriptor.package"><code class="docutils literal notranslate"><span class="pre">ServiceDescriptor.package</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor"><code class="docutils literal notranslate"><span class="pre">ApplicationDescriptor</span></code></a><ul>
+<li><a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor.get_key"><code class="docutils literal notranslate"><span class="pre">ApplicationDescriptor.get_key()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor.classification"><code class="docutils literal notranslate"><span class="pre">ApplicationDescriptor.classification</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor.config"><code class="docutils literal notranslate"><span class="pre">ApplicationDescriptor.config</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor.description"><code class="docutils literal notranslate"><span class="pre">ApplicationDescriptor.description</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor.factory"><code class="docutils literal notranslate"><span class="pre">ApplicationDescriptor.factory</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor.name"><code class="docutils literal notranslate"><span class="pre">ApplicationDescriptor.name</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor.uid"><code class="docutils literal notranslate"><span class="pre">ApplicationDescriptor.uid</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor.vendor_uid"><code class="docutils literal notranslate"><span class="pre">ApplicationDescriptor.vendor_uid</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor.version"><code class="docutils literal notranslate"><span class="pre">ApplicationDescriptor.version</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#saturnin.base.types.PrioritizedItem"><code class="docutils literal notranslate"><span class="pre">PrioritizedItem</span></code></a><ul>
@@ -402,64 +479,91 @@
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.Token">
-<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">Token</span></span><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.Token"></a><a class="headerlink" href="#saturnin.base.types.Token" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">Token</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;function</span> <span class="pre">NewType.&lt;locals&gt;.new_type&gt;</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.Token"></a><a class="headerlink" href="#saturnin.base.types.Token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Message token</p>
-<p>alias of <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ByteString" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ByteString</span></code></a></p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.RoutingID">
-<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">RoutingID</span></span><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.RoutingID"></a><a class="headerlink" href="#saturnin.base.types.RoutingID" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">RoutingID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;function</span> <span class="pre">NewType.&lt;locals&gt;.new_type&gt;</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.RoutingID"></a><a class="headerlink" href="#saturnin.base.types.RoutingID" title="Permalink to this definition">¶</a></dt>
 <dd><p>Routing ID</p>
-<p>alias of <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ByteString" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ByteString</span></code></a></p>
 </dd></dl>
 </section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Constants"></a><section id="constants">
 <h2>Constants<a class="headerlink" href="#constants" title="Permalink to this heading">¶</a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.PLATFORM_OID">
-<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PLATFORM_OID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'1.3.6.1.4.1.53446.1.2.0'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.PLATFORM_OID"></a><a class="headerlink" href="#saturnin.base.types.PLATFORM_OID" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PLATFORM_OID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'1.3.6.1.4.1.53446.1.1.0'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.PLATFORM_OID"></a><a class="headerlink" href="#saturnin.base.types.PLATFORM_OID" title="Permalink to this definition">¶</a></dt>
 <dd><p>Platform OID (<code class="xref py py-obj docutils literal notranslate"><span class="pre">firebird.butler.platform.saturnin</span></code>)</p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.PLATFORM_UID">
-<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PLATFORM_UID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">uuid.UUID</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">UUID('c26a6600-d579-5ec7-a9d6-5b0a8b214d3f')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.PLATFORM_UID"></a><a class="headerlink" href="#saturnin.base.types.PLATFORM_UID" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PLATFORM_UID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">uuid.UUID</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">UUID('46cd9e8a-c697-5cb5-abb5-bceac5a17075')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.PLATFORM_UID"></a><a class="headerlink" href="#saturnin.base.types.PLATFORM_UID" title="Permalink to this definition">¶</a></dt>
 <dd><p>Platform UID (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.uuid5" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">uuid5()</span></code></a> - NAMESPACE_OID)</p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.PLATFORM_VERSION">
-<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PLATFORM_VERSION</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'0.7.0'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.PLATFORM_VERSION"></a><a class="headerlink" href="#saturnin.base.types.PLATFORM_VERSION" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PLATFORM_VERSION</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'0.8.0'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.PLATFORM_VERSION"></a><a class="headerlink" href="#saturnin.base.types.PLATFORM_VERSION" title="Permalink to this definition">¶</a></dt>
 <dd><p>Platform version (semver)</p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.VENDOR_OID">
-<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">VENDOR_OID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'1.3.6.1.4.1.53446.1.3.0'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.VENDOR_OID"></a><a class="headerlink" href="#saturnin.base.types.VENDOR_OID" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">VENDOR_OID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'1.3.6.1.4.1.53446.1.2.0'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.VENDOR_OID"></a><a class="headerlink" href="#saturnin.base.types.VENDOR_OID" title="Permalink to this definition">¶</a></dt>
 <dd><p>Platform vendor OID (<code class="xref py py-obj docutils literal notranslate"><span class="pre">firebird.butler.vendor.firebird</span></code>)</p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.VENDOR_UID">
-<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">VENDOR_UID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">uuid.UUID</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">UUID('a86ff2d2-73eb-593f-8b14-f2f7af0233d1')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.VENDOR_UID"></a><a class="headerlink" href="#saturnin.base.types.VENDOR_UID" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">VENDOR_UID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">uuid.UUID</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">UUID('c26a6600-d579-5ec7-a9d6-5b0a8b214d3f')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.VENDOR_UID"></a><a class="headerlink" href="#saturnin.base.types.VENDOR_UID" title="Permalink to this definition">¶</a></dt>
 <dd><p>Platform vendor UID (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.uuid5" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">uuid5()</span></code></a> - NAMESPACE_OID)</p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.MIME_TYPE_PROTO">
 <span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">MIME_TYPE_PROTO</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">MIME('application/x.fb.proto')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.MIME_TYPE_PROTO"></a><a class="headerlink" href="#saturnin.base.types.MIME_TYPE_PROTO" title="Permalink to this definition">¶</a></dt>
-<dd><p>MIME type specification.</p>
-<p>It behaves like <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, but checks that value is valid MIME type specification, has
-additional R/O properties and meaningful <code class="xref py py-obj docutils literal notranslate"><span class="pre">repr()</span></code>.</p>
+<dd><p>MIME type for protobuf messages</p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.MIME_TYPE_TEXT">
 <span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">MIME_TYPE_TEXT</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">MIME('text/plain')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.MIME_TYPE_TEXT"></a><a class="headerlink" href="#saturnin.base.types.MIME_TYPE_TEXT" title="Permalink to this definition">¶</a></dt>
-<dd><p>MIME type specification.</p>
-<p>It behaves like <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, but checks that value is valid MIME type specification, has
-additional R/O properties and meaningful <code class="xref py py-obj docutils literal notranslate"><span class="pre">repr()</span></code>.</p>
+<dd><p>MIME type for plain text</p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.MIME_TYPE_BINARY">
 <span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">MIME_TYPE_BINARY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">MIME('application/octet-stream')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.MIME_TYPE_BINARY"></a><a class="headerlink" href="#saturnin.base.types.MIME_TYPE_BINARY" title="Permalink to this definition">¶</a></dt>
-<dd><p>MIME type specification.</p>
-<p>It behaves like <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, but checks that value is valid MIME type specification, has
-additional R/O properties and meaningful <code class="xref py py-obj docutils literal notranslate"><span class="pre">repr()</span></code>.</p>
+<dd><p>MIME type for binary data</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.base.types.SECTION_LOCAL_ADDRESS">
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SECTION_LOCAL_ADDRESS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'local_address'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.SECTION_LOCAL_ADDRESS"></a><a class="headerlink" href="#saturnin.base.types.SECTION_LOCAL_ADDRESS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration section name for local service addresses</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.base.types.SECTION_NODE_ADDRESS">
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SECTION_NODE_ADDRESS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'node_address'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.SECTION_NODE_ADDRESS"></a><a class="headerlink" href="#saturnin.base.types.SECTION_NODE_ADDRESS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration section name for node service addresses</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.base.types.SECTION_NET_ADDRESS">
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SECTION_NET_ADDRESS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'net_address'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.SECTION_NET_ADDRESS"></a><a class="headerlink" href="#saturnin.base.types.SECTION_NET_ADDRESS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration section name for network service addresses</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.base.types.SECTION_SERVICE_UID">
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SECTION_SERVICE_UID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'service_uid'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.SECTION_SERVICE_UID"></a><a class="headerlink" href="#saturnin.base.types.SECTION_SERVICE_UID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration section name for service UIDs</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.base.types.SECTION_PEER_UID">
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SECTION_PEER_UID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'peer_uid'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.SECTION_PEER_UID"></a><a class="headerlink" href="#saturnin.base.types.SECTION_PEER_UID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration section name for service peer UIDs</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.base.types.SECTION_BUNDLE">
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SECTION_BUNDLE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bundle'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.SECTION_BUNDLE"></a><a class="headerlink" href="#saturnin.base.types.SECTION_BUNDLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default configuration section name for service bundle</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.base.types.SECTION_SERVICE">
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SECTION_SERVICE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'service'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.SECTION_SERVICE"></a><a class="headerlink" href="#saturnin.base.types.SECTION_SERVICE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default configuration section name for single service</p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.PROTO_PEER">
@@ -471,63 +575,74 @@ additional R/O properties and meaningful <code class="xref py py-obj docutils li
 <h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this heading">¶</a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="saturnin.base.types.InvalidMessageError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">InvalidMessageError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.InvalidMessageError"></a><a class="headerlink" href="#saturnin.base.types.InvalidMessageError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></p>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">InvalidMessageError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#InvalidMessageError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.InvalidMessageError"></a><a class="headerlink" href="#saturnin.base.types.InvalidMessageError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Error" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
 <p>A formal error was detected in a message</p>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="saturnin.base.types.ChannelError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ChannelError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.ChannelError"></a><a class="headerlink" href="#saturnin.base.types.ChannelError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></p>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ChannelError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#ChannelError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.ChannelError"></a><a class="headerlink" href="#saturnin.base.types.ChannelError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Error" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
 <p>Transmission channel error</p>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="saturnin.base.types.ServiceError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ServiceError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.ServiceError"></a><a class="headerlink" href="#saturnin.base.types.ServiceError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></p>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ServiceError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#ServiceError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.ServiceError"></a><a class="headerlink" href="#saturnin.base.types.ServiceError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Error" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
 <p>Error raised by service</p>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="saturnin.base.types.ClientError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ClientError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.ClientError"></a><a class="headerlink" href="#saturnin.base.types.ClientError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></p>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ClientError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#ClientError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.ClientError"></a><a class="headerlink" href="#saturnin.base.types.ClientError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Error" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
 <p>Error raised by Client</p>
 </dd></dl>
 <dl class="py exception">
 <dt class="sig sig-object py" id="saturnin.base.types.StopError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">StopError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.StopError"></a><a class="headerlink" href="#saturnin.base.types.StopError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></p>
-<p>Error that should stop furter processing.</p>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">StopError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#StopError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.StopError"></a><a class="headerlink" href="#saturnin.base.types.StopError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Error" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
+<p>Exception that should stop furter processing.</p>
+</dd></dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="saturnin.base.types.RestartError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">RestartError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#RestartError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Exception/saturnin.base.types.RestartError"></a><a class="headerlink" href="#saturnin.base.types.RestartError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Error" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
+<p>Exception signaling that restart is needed for further processing.</p>
 </dd></dl>
 </section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Sentinels"></a><section id="sentinels">
 <h2>Sentinels<a class="headerlink" href="#sentinels" title="Permalink to this heading">¶</a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.INVALID">
-<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">INVALID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sentinel</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Sentinel('INVALID')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.INVALID"></a><a class="headerlink" href="#saturnin.base.types.INVALID" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">INVALID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">Sentinel</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Sentinel('INVALID')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.INVALID"></a><a class="headerlink" href="#saturnin.base.types.INVALID" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sentinel for return values that indicates failed message processing</p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin.base.types.TIMEOUT">
-<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">TIMEOUT</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sentinel</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Sentinel('TIMEOUT')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.TIMEOUT"></a><a class="headerlink" href="#saturnin.base.types.TIMEOUT" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">TIMEOUT</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">Sentinel</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Sentinel('TIMEOUT')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.TIMEOUT"></a><a class="headerlink" href="#saturnin.base.types.TIMEOUT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sentinel for return values that indicates timeout expiration</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.base.types.RESTART">
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">RESTART</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">Sentinel</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Sentinel('RESTART')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.types.RESTART"></a><a class="headerlink" href="#saturnin.base.types.RESTART" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sentinel for return values that indicates restart request</p>
 </dd></dl>
 </section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Enums"></a><section id="enums">
 <h2>Enums<a class="headerlink" href="#enums" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.Origin">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">Origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.Origin"></a><a class="headerlink" href="#saturnin.base.types.Origin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">Origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#Origin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.Origin"></a><a class="headerlink" href="#saturnin.base.types.Origin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a></p>
 <p>Origin of received message in protocol context.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.Origin.peer_role">
-<span class="sig-name descname"><span class="pre">peer_role</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.Origin" title="saturnin.base.types.Origin"><span class="pre">Origin</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.Origin.peer_role"></a><a class="headerlink" href="#saturnin.base.types.Origin.peer_role" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">peer_role</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.Origin" title="saturnin.base.types.Origin"><span class="pre">Origin</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#Origin.peer_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.Origin.peer_role"></a><a class="headerlink" href="#saturnin.base.types.Origin.peer_role" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns peer’s role, i.e. complementary to current (CLIENT/SERVICE,
 PROVIDER/CONSULER) value.</p>
 <p>Note: Returns current value if it’s <a class="reference internal" href="#saturnin.base.types.Origin.ANY" title="saturnin.base.types.Origin.ANY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANY</span></code></a> or <a class="reference internal" href="#saturnin.base.types.Origin.UNKNOWN" title="saturnin.base.types.Origin.UNKNOWN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UNKNOWN</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#saturnin.base.types.Origin" title="saturnin.base.types.Origin"><em>Origin</em></a></p>
 </dd>
 </dl>
@@ -559,7 +674,7 @@ PROVIDER/CONSULER) value.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.SocketMode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SocketMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.SocketMode"></a><a class="headerlink" href="#saturnin.base.types.SocketMode" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SocketMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#SocketMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.SocketMode"></a><a class="headerlink" href="#saturnin.base.types.SocketMode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a></p>
 <p>ZeroMQ socket mode.</p>
 <dl class="py attribute">
@@ -577,7 +692,7 @@ PROVIDER/CONSULER) value.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.Direction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">Direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.Direction"></a><a class="headerlink" href="#saturnin.base.types.Direction" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">Direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#Direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.Direction"></a><a class="headerlink" href="#saturnin.base.types.Direction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntFlag" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntFlag</span></code></a></p>
 <p>ZeroMQ socket direction of transmission.</p>
 <dl class="py attribute">
@@ -599,7 +714,7 @@ PROVIDER/CONSULER) value.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.SocketType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SocketType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.SocketType"></a><a class="headerlink" href="#saturnin.base.types.SocketType" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">SocketType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#SocketType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.SocketType"></a><a class="headerlink" href="#saturnin.base.types.SocketType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a></p>
 <p>ZeroMQ socket type.</p>
 <dl class="py attribute">
@@ -649,7 +764,7 @@ PROVIDER/CONSULER) value.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.State">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">State</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.State"></a><a class="headerlink" href="#saturnin.base.types.State" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">State</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#State"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.State"></a><a class="headerlink" href="#saturnin.base.types.State" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a></p>
 <p>General state information.</p>
 <dl class="py attribute">
@@ -699,7 +814,7 @@ PROVIDER/CONSULER) value.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.PipeSocket">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PipeSocket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.PipeSocket"></a><a class="headerlink" href="#saturnin.base.types.PipeSocket" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PipeSocket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#PipeSocket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.PipeSocket"></a><a class="headerlink" href="#saturnin.base.types.PipeSocket" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a></p>
 <p>Data Pipe Socket identification.</p>
 <dl class="py attribute">
@@ -717,7 +832,7 @@ PROVIDER/CONSULER) value.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.FileOpenMode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">FileOpenMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.FileOpenMode"></a><a class="headerlink" href="#saturnin.base.types.FileOpenMode" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">FileOpenMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#FileOpenMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.FileOpenMode"></a><a class="headerlink" href="#saturnin.base.types.FileOpenMode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a></p>
 <p>File open mode.</p>
 <dl class="py attribute">
@@ -747,7 +862,7 @@ PROVIDER/CONSULER) value.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.Outcome">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">Outcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.Outcome"></a><a class="headerlink" href="#saturnin.base.types.Outcome" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">Outcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#Outcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.Outcome"></a><a class="headerlink" href="#saturnin.base.types.Outcome" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
 <p>Service execution outcome.</p>
 <dl class="py attribute">
@@ -765,15 +880,15 @@ PROVIDER/CONSULER) value.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.ButlerInterface">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ButlerInterface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.ButlerInterface"></a><a class="headerlink" href="#saturnin.base.types.ButlerInterface" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ButlerInterface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#ButlerInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.ButlerInterface"></a><a class="headerlink" href="#saturnin.base.types.ButlerInterface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></a></p>
 <p>Base class for service API code enumerations (FBSP interfaces).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.ButlerInterface.get_uid">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_uid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.ButlerInterface.get_uid"></a><a class="headerlink" href="#saturnin.base.types.ButlerInterface.get_uid" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_uid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#ButlerInterface.get_uid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.ButlerInterface.get_uid"></a><a class="headerlink" href="#saturnin.base.types.ButlerInterface.get_uid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns interface UUID.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a></p>
 </dd>
 </dl>
@@ -784,8 +899,8 @@ PROVIDER/CONSULER) value.</p>
 <h2>Dataclasses<a class="headerlink" href="#dataclasses" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">AgentDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vendor_uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">platform_uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">UUID('c26a6600-d579-5ec7-a9d6-5b0a8b214d3f')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">platform_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0.7.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supplement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">TSupplement</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.AgentDescriptor"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Distinct</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">AgentDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vendor_uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">platform_uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">UUID('46cd9e8a-c697-5cb5-abb5-bceac5a17075')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">platform_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'0.8.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supplement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TSupplement</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#AgentDescriptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.AgentDescriptor"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Distinct" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Distinct</span></code></a></p>
 <p>Service or Client descriptor dataclass.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -793,45 +908,45 @@ PROVIDER/CONSULER) value.</p>
 default value. Other attributes are created in constructor.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a>) – </p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>vendor_uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a>) – </p></li>
-<li><p><strong>classification</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>platform_uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a>) – </p></li>
-<li><p><strong>platform_version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>supplement</strong> (<em>TSupplement</em>) – </p></li>
+<li><p><strong>uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a>) – Agent ID</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Agent name</p></li>
+<li><p><strong>version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Agent version string</p></li>
+<li><p><strong>vendor_uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a>) – Vendor ID</p></li>
+<li><p><strong>classification</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Agent classification string</p></li>
+<li><p><strong>platform_uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a>) – Butler platform ID</p></li>
+<li><p><strong>platform_version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Butler platform version string</p></li>
+<li><p><strong>supplement</strong> (<em>TSupplement</em>) – Optional list of supplemental information</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><span class="pre">AgentDescriptor</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.AgentDescriptor.copy"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.copy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><span class="pre">AgentDescriptor</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#AgentDescriptor.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.AgentDescriptor.copy"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns copy of this AgentDescriptor instance.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><em>AgentDescriptor</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.get_key">
-<span class="sig-name descname"><span class="pre">get_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.AgentDescriptor.get_key"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.get_key" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#AgentDescriptor.get_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.AgentDescriptor.get_key"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.get_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <a class="reference internal" href="#saturnin.base.types.AgentDescriptor.uid" title="saturnin.base.types.AgentDescriptor.uid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uid</span></code></a> (instance key). Used for instance hash computation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.replace">
-<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">changes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><span class="pre">AgentDescriptor</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.AgentDescriptor.replace"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.replace" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">changes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><span class="pre">AgentDescriptor</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#AgentDescriptor.replace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.AgentDescriptor.replace"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new <a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AgentDescriptor</span></code></a>, replacing fields with values from <code class="xref py py-obj docutils literal notranslate"><span class="pre">changes</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><em>AgentDescriptor</em></a></p>
 </dd>
 </dl>
@@ -839,110 +954,102 @@ default value. Other attributes are created in constructor.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.classification">
 <span class="sig-name descname"><span class="pre">classification</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.AgentDescriptor.classification"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.classification" title="Permalink to this definition">¶</a></dt>
-<dd><p>Agent classification string</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.name">
 <span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.AgentDescriptor.name"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Agent name</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.platform_uid">
-<span class="sig-name descname"><span class="pre">platform_uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">UUID('c26a6600-d579-5ec7-a9d6-5b0a8b214d3f')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.AgentDescriptor.platform_uid"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.platform_uid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Butler platform ID</p>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">platform_uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">UUID('46cd9e8a-c697-5cb5-abb5-bceac5a17075')</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.AgentDescriptor.platform_uid"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.platform_uid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.platform_version">
-<span class="sig-name descname"><span class="pre">platform_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'0.7.0'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.AgentDescriptor.platform_version"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.platform_version" title="Permalink to this definition">¶</a></dt>
-<dd><p>Butler platform version string</p>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">platform_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'0.8.0'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.AgentDescriptor.platform_version"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.platform_version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.supplement">
 <span class="sig-name descname"><span class="pre">supplement</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TSupplement</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.AgentDescriptor.supplement"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.supplement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional list of supplemental information</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.uid">
 <span class="sig-name descname"><span class="pre">uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.AgentDescriptor.uid"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.uid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Agent ID</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.vendor_uid">
 <span class="sig-name descname"><span class="pre">vendor_uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.AgentDescriptor.vendor_uid"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.vendor_uid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Vendor ID</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.AgentDescriptor.version">
 <span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.AgentDescriptor.version"></a><a class="headerlink" href="#saturnin.base.types.AgentDescriptor.version" title="Permalink to this definition">¶</a></dt>
-<dd><p>Agent version string</p>
-</dd></dl>
+<dd></dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.PeerDescriptor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PeerDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">supplement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">TSupplement</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.PeerDescriptor"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Distinct</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PeerDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">supplement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TSupplement</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#PeerDescriptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.PeerDescriptor"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Distinct" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Distinct</span></code></a></p>
 <p>Peer descriptor.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a>) – </p></li>
-<li><p><strong>pid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – </p></li>
-<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>supplement</strong> (<em>TSupplement</em>) – </p></li>
+<li><p><strong>uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a>) – Peer ID</p></li>
+<li><p><strong>pid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Peer process ID</p></li>
+<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Host name</p></li>
+<li><p><strong>supplement</strong> (<em>TSupplement</em>) – Optional list of supplemental information</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.PeerDescriptor.as_proto">
-<span class="sig-name descname"><span class="pre">as_proto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.PeerDescriptor.as_proto"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.as_proto" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">as_proto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#PeerDescriptor.as_proto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.PeerDescriptor.as_proto"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.as_proto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <code class="xref py py-obj docutils literal notranslate"><span class="pre">firebird.butler.PeerIdentification</span></code> protobuf message initialized
 from instance data.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.PeerDescriptor.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><span class="pre">PeerDescriptor</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.PeerDescriptor.copy"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.copy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><span class="pre">PeerDescriptor</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#PeerDescriptor.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.PeerDescriptor.copy"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns copy of this PeerDescriptor instance.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><em>PeerDescriptor</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.PeerDescriptor.from_proto">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_proto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><span class="pre">PeerDescriptor</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.PeerDescriptor.from_proto"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.from_proto" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_proto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><span class="pre">PeerDescriptor</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#PeerDescriptor.from_proto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.PeerDescriptor.from_proto"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.from_proto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates new PeerDescriptor from <code class="xref py py-obj docutils literal notranslate"><span class="pre">firebird.butler.PeerIdentification</span></code> protobuf
 message.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>proto</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a>) – </p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><em>PeerDescriptor</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.PeerDescriptor.get_key">
-<span class="sig-name descname"><span class="pre">get_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.PeerDescriptor.get_key"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.get_key" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#PeerDescriptor.get_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.PeerDescriptor.get_key"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.get_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <a class="reference internal" href="#saturnin.base.types.PeerDescriptor.uid" title="saturnin.base.types.PeerDescriptor.uid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uid</span></code></a> (instance key). Used for instance hash computation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.PeerDescriptor.replace">
-<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">changes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><span class="pre">PeerDescriptor</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.PeerDescriptor.replace"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.replace" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">changes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><span class="pre">PeerDescriptor</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#PeerDescriptor.replace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.PeerDescriptor.replace"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new <a class="reference internal" href="#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PeerDescriptor</span></code></a>, replacing fields with values from <code class="xref py py-obj docutils literal notranslate"><span class="pre">changes</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><em>PeerDescriptor</em></a></p>
 </dd>
 </dl>
@@ -950,48 +1057,43 @@ message.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.PeerDescriptor.host">
 <span class="sig-name descname"><span class="pre">host</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.PeerDescriptor.host"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.host" title="Permalink to this definition">¶</a></dt>
-<dd><p>Host name</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.PeerDescriptor.pid">
 <span class="sig-name descname"><span class="pre">pid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.PeerDescriptor.pid"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.pid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Peer process ID</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.PeerDescriptor.supplement">
 <span class="sig-name descname"><span class="pre">supplement</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TSupplement</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.PeerDescriptor.supplement"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.supplement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional list of supplemental information</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.PeerDescriptor.uid">
 <span class="sig-name descname"><span class="pre">uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.PeerDescriptor.uid"></a><a class="headerlink" href="#saturnin.base.types.PeerDescriptor.uid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Peer ID</p>
-</dd></dl>
+<dd></dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.ServiceDescriptor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ServiceDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><span class="pre">AgentDescriptor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">api</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#saturnin.base.types.ButlerInterface" title="saturnin.base.types.ButlerInterface"><span class="pre">ButlerInterface</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">facilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.11)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Config</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.ServiceDescriptor"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Distinct</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ServiceDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><span class="pre">AgentDescriptor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">api</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#saturnin.base.types.ButlerInterface" title="saturnin.base.types.ButlerInterface"><span class="pre">ButlerInterface</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">facilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.11)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/config.html#firebird.base.config.Config" title="(in Firebird-base v1.6.1)"><span class="pre">Config</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#ServiceDescriptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.ServiceDescriptor"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Distinct" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Distinct</span></code></a></p>
 <p>Service descriptor.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>agent</strong> (<a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><em>AgentDescriptor</em></a>) – </p></li>
-<li><p><strong>api</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a><em>[</em><a class="reference internal" href="#saturnin.base.types.ButlerInterface" title="saturnin.base.types.ButlerInterface"><em>ButlerInterface</em></a><em>]</em>) – </p></li>
-<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>facilities</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
-<li><p><strong>package</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>factory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
-<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.11)"><em>Callable</em></a><em>[</em><em>[</em><em>]</em><em>, </em><em>Config</em><em>]</em>) – </p></li>
+<li><p><strong>agent</strong> (<a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><em>AgentDescriptor</em></a>) – Service agent descriptor</p></li>
+<li><p><strong>api</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a><em>[</em><a class="reference internal" href="#saturnin.base.types.ButlerInterface" title="saturnin.base.types.ButlerInterface"><em>ButlerInterface</em></a><em>]</em>) – Service FBSP API description or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> for microservice</p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Text describing the service</p></li>
+<li><p><strong>facilities</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – List of Saturnin facilities that this service uses</p></li>
+<li><p><strong>factory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Locator string for service factory</p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.11)"><em>Callable</em></a><em>[</em><em>[</em><em>]</em><em>, </em><a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/config.html#firebird.base.config.Config" title="(in Firebird-base v1.6.1)"><em>Config</em></a><em>]</em>) – Service configuration factory</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="saturnin.base.types.ServiceDescriptor.get_key">
-<span class="sig-name descname"><span class="pre">get_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.ServiceDescriptor.get_key"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor.get_key" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#ServiceDescriptor.get_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.ServiceDescriptor.get_key"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor.get_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns <code class="xref py py-obj docutils literal notranslate"><span class="pre">agent.uid</span></code> (instance key). Used for instance hash computation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a></p>
 </dd>
 </dl>
@@ -999,49 +1101,100 @@ message.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.ServiceDescriptor.agent">
 <span class="sig-name descname"><span class="pre">agent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><span class="pre">AgentDescriptor</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ServiceDescriptor.agent"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor.agent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Service agent descriptor</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.ServiceDescriptor.api">
 <span class="sig-name descname"><span class="pre">api</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#saturnin.base.types.ButlerInterface" title="saturnin.base.types.ButlerInterface"><span class="pre">ButlerInterface</span></a><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ServiceDescriptor.api"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor.api" title="Permalink to this definition">¶</a></dt>
-<dd><p>Service FBSP API description or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> for microservice</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.ServiceDescriptor.config">
-<span class="sig-name descname"><span class="pre">config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.11)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Config</span><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ServiceDescriptor.config"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor.config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Service configuration factory</p>
-</dd></dl>
+<span class="sig-name descname"><span class="pre">config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.11)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/config.html#firebird.base.config.Config" title="(in Firebird-base v1.6.1)"><span class="pre">Config</span></a><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ServiceDescriptor.config"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.ServiceDescriptor.description">
 <span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ServiceDescriptor.description"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor.description" title="Permalink to this definition">¶</a></dt>
-<dd><p>Text describing the service</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.ServiceDescriptor.facilities">
 <span class="sig-name descname"><span class="pre">facilities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ServiceDescriptor.facilities"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor.facilities" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of Saturnin facilities that this service uses</p>
-</dd></dl>
+<dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="saturnin.base.types.ServiceDescriptor.factory">
 <span class="sig-name descname"><span class="pre">factory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ServiceDescriptor.factory"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor.factory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Locator string for service factory</p>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="saturnin.base.types.ApplicationDescriptor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">ApplicationDescriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vendor_uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#ApplicationDescriptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.ApplicationDescriptor"></a><a class="headerlink" href="#saturnin.base.types.ApplicationDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Distinct" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Distinct</span></code></a></p>
+<p>Application descriptor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a>) – Application ID</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Application name</p></li>
+<li><p><strong>version</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Application version string</p></li>
+<li><p><strong>vendor_uid</strong> (<a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><em>UUID</em></a>) – Vendor ID</p></li>
+<li><p><strong>classification</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Application classification string</p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Text describing the application</p></li>
+<li><p><strong>factory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Locator string for application <code class="xref py py-obj docutils literal notranslate"><span class="pre">typer</span></code> command</p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Locator string for application configuration factory</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="saturnin.base.types.ApplicationDescriptor.get_key">
+<span class="sig-name descname"><span class="pre">get_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="_modules/saturnin/base/types.html#ApplicationDescriptor.get_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Method/saturnin.base.types.ApplicationDescriptor.get_key"></a><a class="headerlink" href="#saturnin.base.types.ApplicationDescriptor.get_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <a class="reference internal" href="#saturnin.base.types.ApplicationDescriptor.uid" title="saturnin.base.types.ApplicationDescriptor.uid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uid</span></code></a> (instance key). Used for instance hash computation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a></p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="saturnin.base.types.ServiceDescriptor.package">
-<span class="sig-name descname"><span class="pre">package</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ServiceDescriptor.package"></a><a class="headerlink" href="#saturnin.base.types.ServiceDescriptor.package" title="Permalink to this definition">¶</a></dt>
-<dd><p>Python package that contains this service</p>
-</dd></dl>
+<dt class="sig sig-object py" id="saturnin.base.types.ApplicationDescriptor.classification">
+<span class="sig-name descname"><span class="pre">classification</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ApplicationDescriptor.classification"></a><a class="headerlink" href="#saturnin.base.types.ApplicationDescriptor.classification" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.base.types.ApplicationDescriptor.config">
+<span class="sig-name descname"><span class="pre">config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ApplicationDescriptor.config"></a><a class="headerlink" href="#saturnin.base.types.ApplicationDescriptor.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.base.types.ApplicationDescriptor.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ApplicationDescriptor.description"></a><a class="headerlink" href="#saturnin.base.types.ApplicationDescriptor.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.base.types.ApplicationDescriptor.factory">
+<span class="sig-name descname"><span class="pre">factory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ApplicationDescriptor.factory"></a><a class="headerlink" href="#saturnin.base.types.ApplicationDescriptor.factory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.base.types.ApplicationDescriptor.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ApplicationDescriptor.name"></a><a class="headerlink" href="#saturnin.base.types.ApplicationDescriptor.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.base.types.ApplicationDescriptor.uid">
+<span class="sig-name descname"><span class="pre">uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ApplicationDescriptor.uid"></a><a class="headerlink" href="#saturnin.base.types.ApplicationDescriptor.uid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.base.types.ApplicationDescriptor.vendor_uid">
+<span class="sig-name descname"><span class="pre">vendor_uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/uuid.html#uuid.UUID" title="(in Python v3.11)"><span class="pre">UUID</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ApplicationDescriptor.vendor_uid"></a><a class="headerlink" href="#saturnin.base.types.ApplicationDescriptor.vendor_uid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="saturnin.base.types.ApplicationDescriptor.version">
+<span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="dashAnchor" name="//apple_ref/cpp/Attribute/saturnin.base.types.ApplicationDescriptor.version"></a><a class="headerlink" href="#saturnin.base.types.ApplicationDescriptor.version" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="saturnin.base.types.PrioritizedItem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PrioritizedItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.PrioritizedItem"></a><a class="headerlink" href="#saturnin.base.types.PrioritizedItem" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">saturnin.base.types.</span></span><span class="sig-name descname"><span class="pre">PrioritizedItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/base/types.html#PrioritizedItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Class/saturnin.base.types.PrioritizedItem"></a><a class="headerlink" href="#saturnin.base.types.PrioritizedItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Prioritized item for use with <a class="reference external" href="https://docs.python.org/3/library/heapq.html#module-heapq" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">heapq</span></code></a> to implement priority queue.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – </p></li>
-<li><p><strong>item</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a>) – </p></li>
+<li><p><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Item priority</p></li>
+<li><p><strong>item</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a>) – Prioritized item</p></li>
 </ul>
 </dd>
 </dl>
@@ -1065,8 +1218,8 @@ message.</p>
 <a href="#">Back to top</a>
 </p>
 <p>
-        © Copyright 2019-2022, The Firebird Project.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+        © Copyright 2019-2023, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
 </p>
 </div>
 </footer>

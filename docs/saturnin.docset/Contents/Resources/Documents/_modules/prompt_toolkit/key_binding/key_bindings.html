@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>prompt_toolkit.key_binding.key_bindings &#8212; saturnin 0.8.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="brand" href="../../../index.html">
+          saturnin</a>
+        <span class="navbar-text pull-left"><b>0.8.0</b></span>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="../../../usage-guide.html">Usage Guide</a></li>
+                <li><a href="../../../py-modindex.html">Modules</a></li>
+                <li><a href="../../../genindex.html">Index</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Content <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Saturnin Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base.html">saturnin.base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#types">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#dataclasses">Dataclasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-types.html">saturnin.base.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#saturnin-common-type-definitions-and-constants">Saturnin common type definitions and constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#types-for-annotations">Types for annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#sentinels">Sentinels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#dataclasses">Dataclasses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-transport.html">saturnin.base.transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#types-for-type-hints">Types for type hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#channels-for-individual-0mq-socket-types">Channels for individual 0MQ socket types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-component.html">saturnin.base.component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-component.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-micro.html">saturnin.component.micro</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-micro.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-micro.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-service.html">saturnin.component.service</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-service.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-service.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-client.html">saturnin.component.client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-metadata.html">saturnin.lib.metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-metadata.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-onepipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-onepipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-filter.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-filter.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-fbsp.html">saturnin.protocol.fbsp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-fbdp.html">saturnin.protocol.fbdp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-iccp.html">saturnin.protocol.iccp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-iccp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-iccp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-svcrun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-bundlerun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-cli.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-cli.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-repl.html">saturnin._scripts.repl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-repl.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-repl.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-repl.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-completers.html">saturnin._scripts.completers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-7-0">Version 0.7.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-1-0">Version 0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body span12 content" role="main">
+      
+  <h1>Source code for prompt_toolkit.key_binding.key_bindings</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Key bindings registry.</span>
+
+<span class="sd">A `KeyBindings` object is a container that holds a list of key bindings. It has a</span>
+<span class="sd">very efficient internal data structure for checking which key bindings apply</span>
+<span class="sd">for a pressed key.</span>
+
+<span class="sd">Typical usage::</span>
+
+<span class="sd">    kb = KeyBindings()</span>
+
+<span class="sd">    @kb.add(Keys.ControlX, Keys.ControlC, filter=INSERT)</span>
+<span class="sd">    def handler(event):</span>
+<span class="sd">        # Handle ControlX-ControlC key sequence.</span>
+<span class="sd">        pass</span>
+
+<span class="sd">It is also possible to combine multiple KeyBindings objects. We do this in the</span>
+<span class="sd">default key bindings. There are some KeyBindings objects that contain the Emacs</span>
+<span class="sd">bindings, while others contain the Vi bindings. They are merged together using</span>
+<span class="sd">`merge_key_bindings`.</span>
+
+<span class="sd">We also have a `ConditionalKeyBindings` object that can enable/disable a group of</span>
+<span class="sd">key bindings at once.</span>
+
+
+<span class="sd">It is also possible to add a filter to a function, before a key binding has</span>
+<span class="sd">been assigned, through the `key_binding` decorator.::</span>
+
+<span class="sd">    # First define a key handler with the `filter`.</span>
+<span class="sd">    @key_binding(filter=condition)</span>
+<span class="sd">    def my_key_binding(event):</span>
+<span class="sd">        ...</span>
+
+<span class="sd">    # Later, add it to the key bindings.</span>
+<span class="sd">    kb.add(Keys.A, my_key_binding)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">abstractproperty</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">isawaitable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TYPE_CHECKING</span><span class="p">,</span>
+    <span class="n">Awaitable</span><span class="p">,</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Hashable</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Sequence</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">TypeVar</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+    <span class="n">cast</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">prompt_toolkit.cache</span> <span class="kn">import</span> <span class="n">SimpleCache</span>
+<span class="kn">from</span> <span class="nn">prompt_toolkit.filters</span> <span class="kn">import</span> <span class="n">FilterOrBool</span><span class="p">,</span> <span class="n">Never</span><span class="p">,</span> <span class="n">to_filter</span>
+<span class="kn">from</span> <span class="nn">prompt_toolkit.keys</span> <span class="kn">import</span> <span class="n">KEY_ALIASES</span><span class="p">,</span> <span class="n">Keys</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="c1"># Avoid circular imports.</span>
+    <span class="kn">from</span> <span class="nn">.key_processor</span> <span class="kn">import</span> <span class="n">KeyPressEvent</span>
+
+    <span class="c1"># The only two return values for a mouse hander (and key bindings) are</span>
+    <span class="c1"># `None` and `NotImplemented`. For the type checker it&#39;s best to annotate</span>
+    <span class="c1"># this as `object`. (The consumer never expects a more specific instance:</span>
+    <span class="c1"># checking for NotImplemented can be done using `is NotImplemented`.)</span>
+    <span class="n">NotImplementedOrNone</span> <span class="o">=</span> <span class="nb">object</span>
+    <span class="c1"># Other non-working options are:</span>
+    <span class="c1"># * Optional[Literal[NotImplemented]]</span>
+    <span class="c1">#      --&gt; Doesn&#39;t work, Literal can&#39;t take an Any.</span>
+    <span class="c1"># * None</span>
+    <span class="c1">#      --&gt; Doesn&#39;t work. We can&#39;t assign the result of a function that</span>
+    <span class="c1">#          returns `None` to a variable.</span>
+    <span class="c1"># * Any</span>
+    <span class="c1">#      --&gt; Works, but too broad.</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;NotImplementedOrNone&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Binding&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KeyBindingsBase&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;KeyBindings&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ConditionalKeyBindings&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;merge_key_bindings&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DynamicKeyBindings&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GlobalOnlyKeyBindings&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Key bindings can be regular functions or coroutines.</span>
+<span class="c1"># In both cases, if they return `NotImplemented`, the UI won&#39;t be invalidated.</span>
+<span class="c1"># This is mainly used in case of mouse move events, to prevent excessive</span>
+<span class="c1"># repainting during mouse move events.</span>
+<span class="n">KeyHandlerCallable</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span>
+    <span class="p">[</span><span class="s2">&quot;KeyPressEvent&quot;</span><span class="p">],</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;NotImplementedOrNone&quot;</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="s2">&quot;NotImplementedOrNone&quot;</span><span class="p">]]</span>
+<span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">Binding</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Key binding: (key sequence + handler + filter).</span>
+<span class="sd">    (Immutable binding class.)</span>
+
+<span class="sd">    :param record_in_macro: When True, don&#39;t record this key binding when a</span>
+<span class="sd">        macro is recorded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">keys</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span>
+        <span class="n">handler</span><span class="p">:</span> <span class="n">KeyHandlerCallable</span><span class="p">,</span>
+        <span class="nb">filter</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">eager</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">is_global</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">save_before</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s2">&quot;KeyPressEvent&quot;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">record_in_macro</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="n">keys</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="n">to_filter</span><span class="p">(</span><span class="nb">filter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eager</span> <span class="o">=</span> <span class="n">to_filter</span><span class="p">(</span><span class="n">eager</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_global</span> <span class="o">=</span> <span class="n">to_filter</span><span class="p">(</span><span class="n">is_global</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_before</span> <span class="o">=</span> <span class="n">save_before</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">record_in_macro</span> <span class="o">=</span> <span class="n">to_filter</span><span class="p">(</span><span class="n">record_in_macro</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="s2">&quot;KeyPressEvent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="c1"># If the handler is a coroutine, create an asyncio task.</span>
+        <span class="k">if</span> <span class="n">isawaitable</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+            <span class="n">awaitable</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Awaitable</span><span class="p">[</span><span class="s2">&quot;NotImplementedOrNone&quot;</span><span class="p">],</span> <span class="n">result</span><span class="p">)</span>
+
+            <span class="k">async</span> <span class="k">def</span> <span class="nf">bg_task</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">awaitable</span>
+                <span class="k">if</span> <span class="n">result</span> <span class="o">!=</span> <span class="bp">NotImplemented</span><span class="p">:</span>
+                    <span class="n">event</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">invalidate</span><span class="p">()</span>
+
+            <span class="n">event</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">create_background_task</span><span class="p">(</span><span class="n">bg_task</span><span class="p">())</span>
+
+        <span class="k">elif</span> <span class="n">result</span> <span class="o">!=</span> <span class="bp">NotImplemented</span><span class="p">:</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">invalidate</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(keys=</span><span class="si">{!r}</span><span class="s2">, handler=</span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span>
+        <span class="p">)</span>
+
+
+<span class="c1"># Sequence of keys presses.</span>
+<span class="n">KeysTuple</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">KeyBindingsBase</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interface for a KeyBindings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractproperty</span>
+    <span class="k">def</span> <span class="nf">_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hashable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For cache invalidation. - This should increase every time that</span>
+<span class="sd">        something changes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_bindings_for_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">KeysTuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a list of key bindings that can handle these keys.</span>
+<span class="sd">        (This return also inactive bindings, so the `filter` still has to be</span>
+<span class="sd">        called, for checking it.)</span>
+
+<span class="sd">        :param keys: tuple of keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_bindings_starting_with_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">KeysTuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a list of key bindings that handle a key sequence starting with</span>
+<span class="sd">        `keys`. (It does only return bindings for which the sequences are</span>
+<span class="sd">        longer than `keys`. And like `get_bindings_for_keys`, it also includes</span>
+<span class="sd">        inactive bindings.)</span>
+
+<span class="sd">        :param keys: tuple of keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="nd">@abstractproperty</span>
+    <span class="k">def</span> <span class="nf">bindings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List of `Binding` objects.</span>
+<span class="sd">        (These need to be exposed, so that `KeyBindings` objects can be merged</span>
+<span class="sd">        together.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="c1"># `add` and `remove` don&#39;t have to be part of this interface.</span>
+
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="n">KeyHandlerCallable</span><span class="p">,</span> <span class="n">Binding</span><span class="p">])</span>
+
+
+<span class="k">class</span> <span class="nc">KeyBindings</span><span class="p">(</span><span class="n">KeyBindingsBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A container for a set of key bindings.</span>
+
+<span class="sd">    Example usage::</span>
+
+<span class="sd">        kb = KeyBindings()</span>
+
+<span class="sd">        @kb.add(&#39;c-t&#39;)</span>
+<span class="sd">        def _(event):</span>
+<span class="sd">            print(&#39;Control-T pressed&#39;)</span>
+
+<span class="sd">        @kb.add(&#39;c-a&#39;, &#39;c-b&#39;)</span>
+<span class="sd">        def _(event):</span>
+<span class="sd">            print(&#39;Control-A pressed, followed by Control-B&#39;)</span>
+
+<span class="sd">        @kb.add(&#39;c-x&#39;, filter=is_searching)</span>
+<span class="sd">        def _(event):</span>
+<span class="sd">            print(&#39;Control-X pressed&#39;)  # Works only if we are searching.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_bindings_for_keys_cache</span><span class="p">:</span> <span class="n">SimpleCache</span><span class="p">[</span>
+            <span class="n">KeysTuple</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">SimpleCache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_bindings_starting_with_keys_cache</span><span class="p">:</span> <span class="n">SimpleCache</span><span class="p">[</span>
+            <span class="n">KeysTuple</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">SimpleCache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__version</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># For cache invalidation.</span>
+
+    <span class="k">def</span> <span class="nf">_clear_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__version</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_bindings_for_keys_cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_bindings_starting_with_keys_cache</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bindings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hashable</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__version</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">keys</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="nb">filter</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">eager</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">is_global</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">save_before</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s2">&quot;KeyPressEvent&quot;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">record_in_macro</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">T</span><span class="p">],</span> <span class="n">T</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decorator for adding a key bindings.</span>
+
+<span class="sd">        :param filter: :class:`~prompt_toolkit.filters.Filter` to determine</span>
+<span class="sd">            when this key binding is active.</span>
+<span class="sd">        :param eager: :class:`~prompt_toolkit.filters.Filter` or `bool`.</span>
+<span class="sd">            When True, ignore potential longer matches when this key binding is</span>
+<span class="sd">            hit. E.g. when there is an active eager key binding for Ctrl-X,</span>
+<span class="sd">            execute the handler immediately and ignore the key binding for</span>
+<span class="sd">            Ctrl-X Ctrl-E of which it is a prefix.</span>
+<span class="sd">        :param is_global: When this key bindings is added to a `Container` or</span>
+<span class="sd">            `Control`, make it a global (always active) binding.</span>
+<span class="sd">        :param save_before: Callable that takes an `Event` and returns True if</span>
+<span class="sd">            we should save the current buffer, before handling the event.</span>
+<span class="sd">            (That&#39;s the default.)</span>
+<span class="sd">        :param record_in_macro: Record these key bindings when a macro is</span>
+<span class="sd">            being recorded. (True by default.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">keys</span>
+
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_parse_key</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">filter</span><span class="p">,</span> <span class="n">Never</span><span class="p">):</span>
+            <span class="c1"># When a filter is Never, it will always stay disabled, so in that</span>
+            <span class="c1"># case don&#39;t bother putting it in the key bindings. It will slow</span>
+            <span class="c1"># down every key press otherwise.</span>
+            <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">func</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">Binding</span><span class="p">):</span>
+                    <span class="c1"># We&#39;re adding an existing Binding object.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">Binding</span><span class="p">(</span>
+                            <span class="n">keys</span><span class="p">,</span>
+                            <span class="n">func</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span>
+                            <span class="nb">filter</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">filter</span> <span class="o">&amp;</span> <span class="n">to_filter</span><span class="p">(</span><span class="nb">filter</span><span class="p">),</span>
+                            <span class="n">eager</span><span class="o">=</span><span class="n">to_filter</span><span class="p">(</span><span class="n">eager</span><span class="p">)</span> <span class="o">|</span> <span class="n">func</span><span class="o">.</span><span class="n">eager</span><span class="p">,</span>
+                            <span class="n">is_global</span><span class="o">=</span><span class="n">to_filter</span><span class="p">(</span><span class="n">is_global</span><span class="p">)</span> <span class="o">|</span> <span class="n">func</span><span class="o">.</span><span class="n">is_global</span><span class="p">,</span>
+                            <span class="n">save_before</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">save_before</span><span class="p">,</span>
+                            <span class="n">record_in_macro</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">record_in_macro</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">Binding</span><span class="p">(</span>
+                            <span class="n">keys</span><span class="p">,</span>
+                            <span class="n">cast</span><span class="p">(</span><span class="n">KeyHandlerCallable</span><span class="p">,</span> <span class="n">func</span><span class="p">),</span>
+                            <span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">,</span>
+                            <span class="n">eager</span><span class="o">=</span><span class="n">eager</span><span class="p">,</span>
+                            <span class="n">is_global</span><span class="o">=</span><span class="n">is_global</span><span class="p">,</span>
+                            <span class="n">save_before</span><span class="o">=</span><span class="n">save_before</span><span class="p">,</span>
+                            <span class="n">record_in_macro</span><span class="o">=</span><span class="n">record_in_macro</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_clear_cache</span><span class="p">()</span>
+
+                <span class="k">return</span> <span class="n">func</span>
+
+        <span class="k">return</span> <span class="n">decorator</span>
+
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">KeyHandlerCallable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove a key binding.</span>
+
+<span class="sd">        This expects either a function that was given to `add` method as</span>
+<span class="sd">        parameter or a sequence of key bindings.</span>
+
+<span class="sd">        Raises `ValueError` when no bindings was found.</span>
+
+<span class="sd">        Usage::</span>
+
+<span class="sd">            remove(handler)  # Pass handler.</span>
+<span class="sd">            remove(&#39;c-x&#39;, &#39;c-a&#39;)  # Or pass the key bindings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="n">function</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Remove the given function.</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">handler</span> <span class="o">==</span> <span class="n">function</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">args</span><span class="p">)</span>
+
+            <span class="c1"># Remove this sequence of key bindings.</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_parse_key</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">keys</span> <span class="o">==</span> <span class="n">keys</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">found</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clear_cache</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># No key binding found for this function. Raise ValueError.</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Binding not found: </span><span class="si">{</span><span class="n">function</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># For backwards-compatibility.</span>
+    <span class="n">add_binding</span> <span class="o">=</span> <span class="n">add</span>
+    <span class="n">remove_binding</span> <span class="o">=</span> <span class="n">remove</span>
+
+    <span class="k">def</span> <span class="nf">get_bindings_for_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">KeysTuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a list of key bindings that can handle this key.</span>
+<span class="sd">        (This return also inactive bindings, so the `filter` still has to be</span>
+<span class="sd">        called, for checking it.)</span>
+
+<span class="sd">        :param keys: tuple of keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">get</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+            <span class="n">result</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Binding</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">keys</span><span class="p">):</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">any_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">Keys</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+                            <span class="n">match</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">break</span>
+
+                        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">Keys</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+                            <span class="n">any_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">any_count</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+
+            <span class="c1"># Place bindings that have more &#39;Any&#39; occurrences in them at the end.</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="o">-</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="k">return</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_bindings_for_keys_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">get</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_bindings_starting_with_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">KeysTuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a list of key bindings that handle a key sequence starting with</span>
+<span class="sd">        `keys`. (It does only return bindings for which the sequences are</span>
+<span class="sd">        longer than `keys`. And like `get_bindings_for_keys`, it also includes</span>
+<span class="sd">        inactive bindings.)</span>
+
+<span class="sd">        :param keys: tuple of keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">get</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bindings</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">keys</span><span class="p">):</span>
+                    <span class="n">match</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">Keys</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+                            <span class="n">match</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">break</span>
+                    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_bindings_starting_with_keys_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">get</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_parse_key</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Keys</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Keys</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replace key by alias and verify whether it&#39;s a valid one.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Already a parse key? -&gt; Return it.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">Keys</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">key</span>
+
+    <span class="c1"># Lookup aliases.</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">KEY_ALIASES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="c1"># Replace &#39;space&#39; by &#39; &#39;</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;space&quot;</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+
+    <span class="c1"># Return as `Key` object when it&#39;s a special key.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Keys</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Final validation.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid key: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">key</span>
+
+
+<span class="k">def</span> <span class="nf">key_binding</span><span class="p">(</span>
+    <span class="nb">filter</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">eager</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">is_global</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">save_before</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s2">&quot;KeyPressEvent&quot;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">record_in_macro</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">KeyHandlerCallable</span><span class="p">],</span> <span class="n">Binding</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator that turn a function into a `Binding` object. This can be added</span>
+<span class="sd">    to a `KeyBindings` object when a key binding is assigned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">save_before</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">callable</span><span class="p">(</span><span class="n">save_before</span><span class="p">)</span>
+
+    <span class="nb">filter</span> <span class="o">=</span> <span class="n">to_filter</span><span class="p">(</span><span class="nb">filter</span><span class="p">)</span>
+    <span class="n">eager</span> <span class="o">=</span> <span class="n">to_filter</span><span class="p">(</span><span class="n">eager</span><span class="p">)</span>
+    <span class="n">is_global</span> <span class="o">=</span> <span class="n">to_filter</span><span class="p">(</span><span class="n">is_global</span><span class="p">)</span>
+    <span class="n">save_before</span> <span class="o">=</span> <span class="n">save_before</span>
+    <span class="n">record_in_macro</span> <span class="o">=</span> <span class="n">to_filter</span><span class="p">(</span><span class="n">record_in_macro</span><span class="p">)</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">function</span><span class="p">:</span> <span class="n">KeyHandlerCallable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Binding</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Binding</span><span class="p">(</span>
+            <span class="n">keys</span><span class="p">,</span>
+            <span class="n">function</span><span class="p">,</span>
+            <span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">,</span>
+            <span class="n">eager</span><span class="o">=</span><span class="n">eager</span><span class="p">,</span>
+            <span class="n">is_global</span><span class="o">=</span><span class="n">is_global</span><span class="p">,</span>
+            <span class="n">save_before</span><span class="o">=</span><span class="n">save_before</span><span class="p">,</span>
+            <span class="n">record_in_macro</span><span class="o">=</span><span class="n">record_in_macro</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+
+
+<span class="k">class</span> <span class="nc">_Proxy</span><span class="p">(</span><span class="n">KeyBindingsBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Common part for ConditionalKeyBindings and _MergedKeyBindings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># `KeyBindings` to be synchronized with all the others.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bindings2</span><span class="p">:</span> <span class="n">KeyBindingsBase</span> <span class="o">=</span> <span class="n">KeyBindings</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_version</span><span class="p">:</span> <span class="n">Hashable</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_update_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If `self._last_version` is outdated, then this should update</span>
+<span class="sd">        the version and `self._bindings2`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="c1"># Proxy methods to self._bindings2.</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bindings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_cache</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bindings2</span><span class="o">.</span><span class="n">bindings</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hashable</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_cache</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_version</span>
+
+    <span class="k">def</span> <span class="nf">get_bindings_for_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">KeysTuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_cache</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bindings2</span><span class="o">.</span><span class="n">get_bindings_for_keys</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_bindings_starting_with_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">:</span> <span class="n">KeysTuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Binding</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_cache</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bindings2</span><span class="o">.</span><span class="n">get_bindings_starting_with_keys</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ConditionalKeyBindings</span><span class="p">(</span><span class="n">_Proxy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wraps around a `KeyBindings`. Disable/enable all the key bindings according to</span>
+<span class="sd">    the given (additional) filter.::</span>
+
+<span class="sd">        @Condition</span>
+<span class="sd">        def setting_is_true():</span>
+<span class="sd">            return True  # or False</span>
+
+<span class="sd">        registry = ConditionalKeyBindings(key_bindings, setting_is_true)</span>
+
+<span class="sd">    When new key bindings are added to this object. They are also</span>
+<span class="sd">    enable/disabled according to the given `filter`.</span>
+
+<span class="sd">    :param registries: List of :class:`.KeyBindings` objects.</span>
+<span class="sd">    :param filter: :class:`~prompt_toolkit.filters.Filter` object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">key_bindings</span><span class="p">:</span> <span class="n">KeyBindingsBase</span><span class="p">,</span> <span class="nb">filter</span><span class="p">:</span> <span class="n">FilterOrBool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">_Proxy</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_bindings</span> <span class="o">=</span> <span class="n">key_bindings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter</span> <span class="o">=</span> <span class="n">to_filter</span><span class="p">(</span><span class="nb">filter</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="s2">&quot;If the original key bindings was changed. Update our copy version.&quot;</span>
+        <span class="n">expected_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_bindings</span><span class="o">.</span><span class="n">_version</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_version</span> <span class="o">!=</span> <span class="n">expected_version</span><span class="p">:</span>
+            <span class="n">bindings2</span> <span class="o">=</span> <span class="n">KeyBindings</span><span class="p">()</span>
+
+            <span class="c1"># Copy all bindings from `self.key_bindings`, adding our condition.</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_bindings</span><span class="o">.</span><span class="n">bindings</span><span class="p">:</span>
+                <span class="n">bindings2</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">Binding</span><span class="p">(</span>
+                        <span class="n">keys</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">keys</span><span class="p">,</span>
+                        <span class="n">handler</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span>
+                        <span class="nb">filter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filter</span> <span class="o">&amp;</span> <span class="n">b</span><span class="o">.</span><span class="n">filter</span><span class="p">,</span>
+                        <span class="n">eager</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">eager</span><span class="p">,</span>
+                        <span class="n">is_global</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">is_global</span><span class="p">,</span>
+                        <span class="n">save_before</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">save_before</span><span class="p">,</span>
+                        <span class="n">record_in_macro</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">record_in_macro</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bindings2</span> <span class="o">=</span> <span class="n">bindings2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_version</span> <span class="o">=</span> <span class="n">expected_version</span>
+
+
+<span class="k">class</span> <span class="nc">_MergedKeyBindings</span><span class="p">(</span><span class="n">_Proxy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Merge multiple registries of key bindings into one.</span>
+
+<span class="sd">    This class acts as a proxy to multiple :class:`.KeyBindings` objects, but</span>
+<span class="sd">    behaves as if this is just one bigger :class:`.KeyBindings`.</span>
+
+<span class="sd">    :param registries: List of :class:`.KeyBindings` objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">registries</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KeyBindingsBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_Proxy</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">registries</span> <span class="o">=</span> <span class="n">registries</span>
+
+    <span class="k">def</span> <span class="nf">_update_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If one of the original registries was changed. Update our merged</span>
+<span class="sd">        version.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">expected_version</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">_version</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">registries</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_version</span> <span class="o">!=</span> <span class="n">expected_version</span><span class="p">:</span>
+            <span class="n">bindings2</span> <span class="o">=</span> <span class="n">KeyBindings</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">registries</span><span class="p">:</span>
+                <span class="n">bindings2</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">bindings</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bindings2</span> <span class="o">=</span> <span class="n">bindings2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_version</span> <span class="o">=</span> <span class="n">expected_version</span>
+
+
+<span class="k">def</span> <span class="nf">merge_key_bindings</span><span class="p">(</span><span class="n">bindings</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KeyBindingsBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">_MergedKeyBindings</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Merge multiple :class:`.Keybinding` objects together.</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">        bindings = merge_key_bindings([bindings1, bindings2, ...])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_MergedKeyBindings</span><span class="p">(</span><span class="n">bindings</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DynamicKeyBindings</span><span class="p">(</span><span class="n">_Proxy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    KeyBindings class that can dynamically returns any KeyBindings.</span>
+
+<span class="sd">    :param get_key_bindings: Callable that returns a :class:`.KeyBindings` instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">get_key_bindings</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">KeyBindingsBase</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_key_bindings</span> <span class="o">=</span> <span class="n">get_key_bindings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__version</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_child_version</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dummy</span> <span class="o">=</span> <span class="n">KeyBindings</span><span class="p">()</span>  <span class="c1"># Empty key bindings.</span>
+
+    <span class="k">def</span> <span class="nf">_update_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">key_bindings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_key_bindings</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dummy</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key_bindings</span><span class="p">,</span> <span class="n">KeyBindingsBase</span><span class="p">)</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">key_bindings</span><span class="p">),</span> <span class="n">key_bindings</span><span class="o">.</span><span class="n">_version</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bindings2</span> <span class="o">=</span> <span class="n">key_bindings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_version</span> <span class="o">=</span> <span class="n">version</span>
+
+
+<span class="k">class</span> <span class="nc">GlobalOnlyKeyBindings</span><span class="p">(</span><span class="n">_Proxy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper around a :class:`.KeyBindings` object that only exposes the global</span>
+<span class="sd">    key bindings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key_bindings</span><span class="p">:</span> <span class="n">KeyBindingsBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_Proxy</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_bindings</span> <span class="o">=</span> <span class="n">key_bindings</span>
+
+    <span class="k">def</span> <span class="nf">_update_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If one of the original registries was changed. Update our merged</span>
+<span class="sd">        version.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">expected_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_bindings</span><span class="o">.</span><span class="n">_version</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_version</span> <span class="o">!=</span> <span class="n">expected_version</span><span class="p">:</span>
+            <span class="n">bindings2</span> <span class="o">=</span> <span class="n">KeyBindings</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_bindings</span><span class="o">.</span><span class="n">bindings</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">is_global</span><span class="p">():</span>
+                    <span class="n">bindings2</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bindings2</span> <span class="o">=</span> <span class="n">bindings2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_version</span> <span class="o">=</span> <span class="n">expected_version</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019-2022, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>saturnin.lib.console &#8212; saturnin 0.8.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="brand" href="../../../index.html">
+          saturnin</a>
+        <span class="navbar-text pull-left"><b>0.8.0</b></span>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="../../../usage-guide.html">Usage Guide</a></li>
+                <li><a href="../../../py-modindex.html">Modules</a></li>
+                <li><a href="../../../genindex.html">Index</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Content <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Saturnin Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base.html">saturnin.base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#types">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#dataclasses">Dataclasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-types.html">saturnin.base.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#saturnin-common-type-definitions-and-constants">Saturnin common type definitions and constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#types-for-annotations">Types for annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#sentinels">Sentinels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#dataclasses">Dataclasses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-transport.html">saturnin.base.transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#types-for-type-hints">Types for type hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#channels-for-individual-0mq-socket-types">Channels for individual 0MQ socket types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-component.html">saturnin.base.component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-component.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-micro.html">saturnin.component.micro</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-micro.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-micro.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-service.html">saturnin.component.service</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-service.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-service.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-client.html">saturnin.component.client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-metadata.html">saturnin.lib.metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-onepipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-filter.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-fbsp.html">saturnin.protocol.fbsp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-fbdp.html">saturnin.protocol.fbdp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-iccp.html">saturnin.protocol.iccp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-iccp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-iccp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-svcrun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-daemon.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-bundlerun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-cli.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-cli.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-repl.html">saturnin._scripts.repl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-completers.html">saturnin._scripts.completers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-7-0">Version 0.7.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-1-0">Version 0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body span12 content" role="main">
+      
+  <h1>Source code for saturnin.lib.console</h1><div class="highlight"><pre>
+<span></span><span class="c1">#coding:utf-8</span>
+<span class="c1">#</span>
+<span class="c1"># PROGRAM/MODULE: saturnin</span>
+<span class="c1"># FILE:           saturnin/lib/console.py</span>
+<span class="c1"># DESCRIPTION:    Saturnin console manager</span>
+<span class="c1"># CREATED:        7.12.2020</span>
+<span class="c1">#</span>
+<span class="c1"># The contents of this file are subject to the MIT License</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c1"># copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2020 Firebird Project (www.firebirdsql.org)</span>
+<span class="c1"># All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Contributor(s): Pavel Císař (original code)</span>
+<span class="c1">#                 ______________________________________</span>
+<span class="c1"># pylint: disable=C0301</span>
+
+<span class="sd">&quot;&quot;&quot;Saturnin console manager for terminal configuration and output.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
+<span class="kn">from</span> <span class="nn">rich.theme</span> <span class="kn">import</span> <span class="n">Theme</span>
+<span class="kn">from</span> <span class="nn">rich.text</span> <span class="kn">import</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">rich.highlighter</span> <span class="kn">import</span> <span class="n">RegexHighlighter</span>
+<span class="kn">from</span> <span class="nn">saturnin.base</span> <span class="kn">import</span> <span class="n">directory_scheme</span>
+
+<span class="c1">#: Default console theme</span>
+<span class="n">DEFAULT_THEME</span><span class="p">:</span> <span class="n">Theme</span> <span class="o">=</span> <span class="n">Theme</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;option&#39;</span><span class="p">:</span> <span class="s1">&#39;bold cyan&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;switch&#39;</span><span class="p">:</span> <span class="s1">&#39;bold green&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;metavar&#39;</span><span class="p">:</span> <span class="s1">&#39;bold yellow&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;section&#39;</span><span class="p">:</span> <span class="s1">&#39;bold white&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;help_require&#39;</span><span class="p">:</span> <span class="s1">&#39;dim&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;args_and_cmds&#39;</span><span class="p">:</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;bold cyan&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;bold yellow&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;ok&#39;</span><span class="p">:</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;important&#39;</span><span class="p">:</span> <span class="s1">&#39;bold yellow&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;warning&#39;</span><span class="p">:</span> <span class="s1">&#39;bold yellow&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;bold red&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;item&#39;</span><span class="p">:</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;attrib_equal&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;attrib_name&#39;</span><span class="p">:</span> <span class="s1">&#39;not italic yellow&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;attrib_value&#39;</span><span class="p">:</span> <span class="s1">&#39;not italic magenta&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;bool_false&#39;</span><span class="p">:</span> <span class="s1">&#39;italic bright_red&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;bool_true&#39;</span><span class="p">:</span> <span class="s1">&#39;italic bright_green&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;brace&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;call&#39;</span><span class="p">:</span> <span class="s1">&#39;bold magenta&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;comma&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;ellipsis&#39;</span><span class="p">:</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;eui48&#39;</span><span class="p">:</span> <span class="s1">&#39;bold bright_green&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;eui64&#39;</span><span class="p">:</span> <span class="s1">&#39;bold bright_green&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="s1">&#39;bright_magenta&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;indent&#39;</span><span class="p">:</span> <span class="s1">&#39;dim green&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;ipv4&#39;</span><span class="p">:</span> <span class="s1">&#39;bold bright_green&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;ipv6&#39;</span><span class="p">:</span> <span class="s1">&#39;bold bright_green&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;py_none&#39;</span><span class="p">:</span> <span class="s1">&#39;italic magenta&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;number&#39;</span><span class="p">:</span> <span class="s1">&#39;bold not italic cyan&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;number_complex&#39;</span><span class="p">:</span> <span class="s1">&#39;bold not italic cyan&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;str&#39;</span><span class="p">:</span> <span class="s1">&#39;not bold not italic green&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;tag_contents&#39;</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;tag_end&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;tag_name&#39;</span><span class="p">:</span> <span class="s1">&#39;bold bright_magenta&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;tag_start&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;not bold not italic underline bright_blue&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;zmq_address&#39;</span><span class="p">:</span> <span class="s1">&#39;not bold not italic bright_blue&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;uuid&#39;</span><span class="p">:</span> <span class="s1">&#39;not bold bright_yellow&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;uuid2&#39;</span><span class="p">:</span> <span class="s1">&#39;not bold bright_yellow&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;mime&#39;</span><span class="p">:</span> <span class="s1">&#39;bold blue&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;mime_param&#39;</span><span class="p">:</span> <span class="s1">&#39;italic cyan&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="s1">&#39;bold not italic white&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="s1">&#39;bold magenta&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="s1">&#39;magenta&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;timezone&#39;</span><span class="p">:</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span>
+     <span class="p">})</span>
+
+<span class="c1">#: Use rich terminal or not</span>
+<span class="n">FORCE_TERMINAL</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;FORCE_COLOR&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PY_COLORS&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+<span class="c1">#: Standard rich text for YES</span>
+<span class="n">RICH_YES</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s1">&#39;✔&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;ok&#39;</span><span class="p">)</span>
+<span class="c1">#: Standard rich text for NO</span>
+<span class="n">RICH_NO</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s1">&#39;✖&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+<span class="c1">#: Standard rich text for OK</span>
+<span class="n">RICH_OK</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s1">&#39;OK&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;ok&#39;</span><span class="p">)</span>
+<span class="c1">#: Standard rich text for WARNING</span>
+<span class="n">RICH_WARNING</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s1">&#39;WARNING&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;warning&#39;</span><span class="p">)</span>
+<span class="c1">#: Standard rich text for ERROR</span>
+<span class="n">RICH_ERROR</span><span class="p">:</span> <span class="n">Text</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="s1">&#39;ERROR&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_combine_regex</span><span class="p">(</span><span class="o">*</span><span class="n">regexes</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Combine a number of regexes in to a single regex.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: New regex with all regexes ORed together.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">regexes</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SaturninHighlighter"><a class="viewcode-back" href="../../../ref-lib-console.html#saturnin.lib.console.SaturninHighlighter">[docs]</a><span class="k">class</span> <span class="nc">SaturninHighlighter</span><span class="p">(</span><span class="n">RegexHighlighter</span><span class="p">):</span> <span class="c1"># pylint: disable=R0903</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Highlights our special options.&quot;&quot;&quot;</span>
+    <span class="c1">#: Regular expressions used by `.highlight`.</span>
+    <span class="n">highlights</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">r</span><span class="s2">&quot;(^|\W)(?P&lt;switch&gt;\-\w+)(?![a-zA-Z0-9])&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;(^|\W)(?P&lt;option&gt;\-\-[\w\-]+)(?![a-zA-Z0-9])&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;(?P&lt;metavar&gt;\&lt;[^\&gt;]+\&gt;)&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;(?P&lt;section&gt;\n[A-Z][^:\n]*(:)\s?)&quot;</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="c1"># Dates</span>
+        <span class="c1">#</span>
+        <span class="c1"># Calendar month (e.g. 2008-08). The hyphen is required</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;year&gt;[0-9]</span><span class="si">{4}</span><span class="s2">)-(?P&lt;month&gt;1[0-2]|0[1-9])$&quot;</span><span class="p">,</span>
+        <span class="c1"># Calendar date w/o hyphens (e.g. 20080830)</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;date&gt;(?P&lt;year&gt;[0-9]</span><span class="si">{4}</span><span class="s2">)(?P&lt;month&gt;1[0-2]|0[1-9])(?P&lt;day&gt;3[01]|0[1-9]|[12][0-9]))$&quot;</span><span class="p">,</span>
+        <span class="c1"># Ordinal date (e.g. 2008-243). The hyphen is optional</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;date&gt;(?P&lt;year&gt;[0-9]</span><span class="si">{4}</span><span class="s2">)-?(?P&lt;day&gt;36[0-6]|3[0-5][0-9]|[12][0-9]</span><span class="si">{2}</span><span class="s2">|0[1-9][0-9]|00[1-9]))$&quot;</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="c1"># Weeks</span>
+        <span class="c1">#</span>
+        <span class="c1"># Week of the year (e.g., 2008-W35). The hyphen is optional</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;date&gt;(?P&lt;year&gt;[0-9]</span><span class="si">{4}</span><span class="s2">)-?W(?P&lt;week&gt;5[0-3]|[1-4][0-9]|0[1-9]))$&quot;</span><span class="p">,</span>
+        <span class="c1"># Week date (e.g., 2008-W35-6). The hyphens are optional</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;date&gt;(?P&lt;year&gt;[0-9]</span><span class="si">{4}</span><span class="s2">)-?W(?P&lt;week&gt;5[0-3]|[1-4][0-9]|0[1-9])-?(?P&lt;day&gt;[1-7]))$&quot;</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="c1"># Times</span>
+        <span class="c1">#</span>
+        <span class="c1"># Hours and minutes (e.g., 17:21). The colon is optional</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;time&gt;(?P&lt;hour&gt;2[0-3]|[01][0-9]):?(?P&lt;minute&gt;[0-5][0-9]))$&quot;</span><span class="p">,</span>
+        <span class="c1"># Hours, minutes, and seconds w/o colons (e.g., 172159)</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;time&gt;(?P&lt;hour&gt;2[0-3]|[01][0-9])(?P&lt;minute&gt;[0-5][0-9])(?P&lt;second&gt;[0-5][0-9]))$&quot;</span><span class="p">,</span>
+        <span class="c1"># Time zone designator (e.g., Z, +07 or +07:00). The colons and the minutes are optional</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;timezone&gt;(Z|[+-](?:2[0-3]|[01][0-9])(?::?(?:[0-5][0-9]))?))$&quot;</span><span class="p">,</span>
+        <span class="c1"># Hours, minutes, and seconds with time zone designator (e.g., 17:21:59+07:00).</span>
+        <span class="c1"># All the colons are optional. The minutes in the time zone designator are also optional</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;time&gt;(?P&lt;hour&gt;2[0-3]|[01][0-9])(?P&lt;minute&gt;[0-5][0-9])(?P&lt;second&gt;[0-5][0-9]))(?P&lt;timezone&gt;Z|[+-](?:2[0-3]|[01][0-9])(?::?(?:[0-5][0-9]))?)$&quot;</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="c1"># Date and Time</span>
+        <span class="c1">#</span>
+        <span class="c1"># Calendar date with hours, minutes, and seconds (e.g., 2008-08-30 17:21:59 or 20080830 172159).</span>
+        <span class="c1"># A space is required between the date and the time. The hyphens and colons are optional.</span>
+        <span class="c1"># This regex matches dates and times that specify some hyphens or colons but omit others.</span>
+        <span class="c1"># This does not follow ISO 8601</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;date&gt;(?P&lt;year&gt;[0-9]</span><span class="si">{4}</span><span class="s2">)(?P&lt;hyphen&gt;-)?(?P&lt;month&gt;1[0-2]|0[1-9])(?(hyphen)-)(?P&lt;day&gt;3[01]|0[1-9]|[12][0-9])) (?P&lt;time&gt;(?P&lt;hour&gt;2[0-3]|[01][0-9])(?(hyphen):)(?P&lt;minute&gt;[0-5][0-9])(?(hyphen):)(?P&lt;second&gt;[0-5][0-9]))$&quot;</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="c1"># XML Schema dates and times</span>
+        <span class="c1">#</span>
+        <span class="c1"># Date, with optional time zone (e.g., 2008-08-30 or 2008-08-30+07:00).</span>
+        <span class="c1"># Hyphens are required. This is the XML Schema &#39;date&#39; type</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;date&gt;(?P&lt;year&gt;-?(?:[1-9][0-9]*)?[0-9]</span><span class="si">{4}</span><span class="s2">)-(?P&lt;month&gt;1[0-2]|0[1-9])-(?P&lt;day&gt;3[01]|0[1-9]|[12][0-9]))(?P&lt;timezone&gt;Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$&quot;</span><span class="p">,</span>
+        <span class="c1"># Time, with optional fractional seconds and time zone (e.g., 01:45:36 or 01:45:36.123+07:00).</span>
+        <span class="c1"># There is no limit on the number of digits for the fractional seconds. This is the XML Schema &#39;time&#39; type</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;time&gt;(?P&lt;hour&gt;2[0-3]|[01][0-9]):(?P&lt;minute&gt;[0-5][0-9]):(?P&lt;second&gt;[0-5][0-9])(?P&lt;frac&gt;\.[0-9]+)?)(?P&lt;timezone&gt;Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$&quot;</span><span class="p">,</span>
+        <span class="c1"># Date and time, with optional fractional seconds and time zone (e.g., 2008-08-30T01:45:36 or 2008-08-30T01:45:36.123Z).</span>
+        <span class="c1"># This is the XML Schema &#39;dateTime&#39; type</span>
+        <span class="sa">r</span><span class="s2">&quot;^(?P&lt;date&gt;(?P&lt;year&gt;-?(?:[1-9][0-9]*)?[0-9]</span><span class="si">{4}</span><span class="s2">)-(?P&lt;month&gt;1[0-2]|0[1-9])-(?P&lt;day&gt;3[01]|0[1-9]|[12][0-9]))T(?P&lt;time&gt;(?P&lt;hour&gt;2[0-3]|[01][0-9]):(?P&lt;minute&gt;[0-5][0-9]):(?P&lt;second&gt;[0-5][0-9])(?P&lt;ms&gt;\.[0-9]+)?)(?P&lt;timezone&gt;Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$&quot;</span><span class="p">,</span>
+        <span class="c1"># Values</span>
+        <span class="n">_combine_regex</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;ipv4&gt;[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;ipv6&gt;([A-Fa-f0-9]{1,4}::?){1,7}[A-Fa-f0-9]{1,4})&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;eui64&gt;(?:[0-9A-Fa-f]{1,2}-)</span><span class="si">{7}</span><span class="s2">[0-9A-Fa-f]{1,2}|(?:[0-9A-Fa-f]{1,2}:)</span><span class="si">{7}</span><span class="s2">[0-9A-Fa-f]{1,2}|(?:[0-9A-Fa-f]</span><span class="si">{4}</span><span class="s2">\.)</span><span class="si">{3}</span><span class="s2">[0-9A-Fa-f]</span><span class="si">{4}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;eui48&gt;(?:[0-9A-Fa-f]{1,2}-)</span><span class="si">{5}</span><span class="s2">[0-9A-Fa-f]{1,2}|(?:[0-9A-Fa-f]{1,2}:)</span><span class="si">{5}</span><span class="s2">[0-9A-Fa-f]{1,2}|(?:[0-9A-Fa-f]</span><span class="si">{4}</span><span class="s2">\.)</span><span class="si">{2}</span><span class="s2">[0-9A-Fa-f]</span><span class="si">{4}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;uuid&gt;[a-fA-F0-9]</span><span class="si">{8}</span><span class="s2">-[a-fA-F0-9]</span><span class="si">{4}</span><span class="s2">-[a-fA-F0-9]</span><span class="si">{4}</span><span class="s2">-[a-fA-F0-9]</span><span class="si">{4}</span><span class="s2">-[a-fA-F0-9]</span><span class="si">{12}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;uuid2&gt;[a-fA-F0-9]</span><span class="si">{32}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;call&gt;[\w.]*?)\(&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;\b(?P&lt;bool_true&gt;True)\b|\b(?P&lt;bool_false&gt;False)\b|\b(?P&lt;py_none&gt;None)\b&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;ellipsis&gt;\.\.\.)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;number_complex&gt;(?&lt;!\w)(?:\-?[0-9]+\.?[0-9]*(?:e[-+]?\d+?)?)(?:[-+](?:[0-9]+\.?[0-9]*(?:e[-+]?\d+)?))?j)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;number&gt;(?&lt;!\w)\-?[0-9]+\.?[0-9]*(e[-+]?\d+?)?\b|0x[0-9a-fA-F]*)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;path&gt;\B(/[-\w._+]+)*\/)(?P&lt;filename&gt;[-\w._+]*)?&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?&lt;![</span><span class="se">\\</span><span class="s2">\w])(?P&lt;str&gt;b?&#39;&#39;&#39;.*?(?&lt;!</span><span class="se">\\</span><span class="s2">)&#39;&#39;&#39;|b?&#39;.*?(?&lt;!</span><span class="se">\\</span><span class="s2">)&#39;|b?</span><span class="se">\&quot;\&quot;\&quot;</span><span class="s2">.*?(?&lt;!</span><span class="se">\\</span><span class="s2">)</span><span class="se">\&quot;\&quot;\&quot;</span><span class="s2">|b?</span><span class="se">\&quot;</span><span class="s2">.*?(?&lt;!</span><span class="se">\\</span><span class="s2">)</span><span class="se">\&quot;</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;url&gt;(file|https|http|ws|wss)://[-0-9a-zA-Z$_+!`(),.?/;:&amp;=%#]*)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;zmq_address&gt;(inproc|ipc|tcp|pgm|epgm|vmci)://[-0-9a-zA-Z$_+!`(),.?/;:&amp;=%#]*)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;mime&gt;(application|audio|font|example|image|message|model|multipart|text|video|x-(?:[0-9A-Za-z!#$%&amp;&#39;*+.^_`|~-]+))/([0-9A-Za-z!#$%&amp;&#39;*+.^_`|~-]+))(?P&lt;mime_param&gt;((?:[ \t]*;[ \t]*[0-9A-Za-z!#$%&amp;&#39;*+.^_`|~-]+=(?:[0-9A-Za-z!#$%&amp;&#39;*+.^_`|~-]+|</span><span class="se">\&quot;</span><span class="s2">(?:[^</span><span class="se">\&quot;\\\\</span><span class="s2">]|</span><span class="se">\\</span><span class="s2">.)*</span><span class="se">\&quot;</span><span class="s2">))*))&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;enum&gt;\b[A-Z_]*\b)&quot;</span><span class="p">,</span>
+            <span class="sa">r</span><span class="s2">&quot;(?P&lt;email&gt;[.\w-]+@([\w-]+\.)+[\w-]+)&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+<div class="viewcode-block" id="SaturninHighlighter.highlight"><a class="viewcode-back" href="../../../ref-lib-console.html#saturnin.lib.console.SaturninHighlighter.highlight">[docs]</a>    <span class="k">def</span> <span class="nf">highlight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n">Text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Highlight `~rich.text.Text` using regular expressions.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            text: Text to highlighted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">highlight_regex</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">highlight_regex</span>
+        <span class="k">for</span> <span class="n">re_highlight</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">highlights</span><span class="p">:</span>
+            <span class="n">highlight_regex</span><span class="p">(</span><span class="n">re_highlight</span><span class="p">,</span> <span class="n">style_prefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_style</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span></div></div>
+
+<span class="c1">#: Saturnin text highlighter</span>
+<span class="n">highlighter</span><span class="p">:</span> <span class="n">SaturninHighlighter</span> <span class="o">=</span> <span class="n">SaturninHighlighter</span><span class="p">()</span>
+<span class="c1">#: Shortcut to `highlighter.highlight`</span>
+<span class="n">_h</span> <span class="o">=</span> <span class="n">highlighter</span><span class="o">.</span><span class="n">highlight</span>
+
+<div class="viewcode-block" id="ConsoleManager"><a class="viewcode-back" href="../../../ref-lib-console.html#saturnin.lib.console.ConsoleManager">[docs]</a><span class="k">class</span> <span class="nc">ConsoleManager</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Saturnin site manager.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#: Suppress output flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1">#: Verbose output flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1">#: Rich main console</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">std_console</span><span class="p">:</span> <span class="n">Console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="n">Theme</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">directory_scheme</span><span class="o">.</span><span class="n">theme_file</span><span class="p">)</span>
+                                            <span class="k">if</span> <span class="n">directory_scheme</span><span class="o">.</span><span class="n">theme_file</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+                                            <span class="k">else</span> <span class="n">DEFAULT_THEME</span><span class="p">,</span> <span class="n">tab_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="c1">#emoji=False,</span>
+                                            <span class="n">highlighter</span><span class="o">=</span><span class="n">highlighter</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                            <span class="n">force_terminal</span><span class="o">=</span><span class="n">FORCE_TERMINAL</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">isatty</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">std_console</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">5000</span>
+        <span class="c1">#: Rich error console</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">err_console</span><span class="p">:</span> <span class="n">Console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">(</span><span class="n">stderr</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;bold red&#39;</span><span class="p">,</span> <span class="n">tab_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="c1">#emoji=False,</span>
+                                            <span class="n">force_terminal</span><span class="o">=</span><span class="n">FORCE_TERMINAL</span><span class="p">)</span>
+<div class="viewcode-block" id="ConsoleManager.print_info"><a class="viewcode-back" href="../../../ref-lib-console.html#saturnin.lib.console.ConsoleManager.print_info">[docs]</a>    <span class="k">def</span> <span class="nf">print_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="s2">&quot;Prints information message to console.&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">message</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">std_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">std_console</span><span class="o">.</span><span class="n">print</span><span class="p">()</span></div>
+<div class="viewcode-block" id="ConsoleManager.print_error"><a class="viewcode-back" href="../../../ref-lib-console.html#saturnin.lib.console.ConsoleManager.print_error">[docs]</a>    <span class="k">def</span> <span class="nf">print_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="s2">&quot;Prints error message to error console.&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ConsoleManager.print_exception"><a class="viewcode-back" href="../../../ref-lib-console.html#saturnin.lib.console.ConsoleManager.print_exception">[docs]</a>    <span class="k">def</span> <span class="nf">print_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="s2">&quot;Prints exception to error console.&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">err_console</span><span class="o">.</span><span class="n">print_exception</span><span class="p">()</span></div>
+<div class="viewcode-block" id="ConsoleManager.print"><a class="viewcode-back" href="../../../ref-lib-console.html#saturnin.lib.console.ConsoleManager.print">[docs]</a>    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="s2">&quot;Prints message to console.&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">std_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">highlight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+
+<span class="c1">#: Saturnin site manager</span>
+<span class="n">console</span><span class="p">:</span> <span class="n">ConsoleManager</span> <span class="o">=</span> <span class="n">ConsoleManager</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019-2022, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

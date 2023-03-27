@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>saturnin.base.types &#8212; saturnin 0.8.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="brand" href="../../../index.html">
+          saturnin</a>
+        <span class="navbar-text pull-left"><b>0.8.0</b></span>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="divider-vertical"></li>
+            
+                <li><a href="../../../usage-guide.html">Usage Guide</a></li>
+                <li><a href="../../../py-modindex.html">Modules</a></li>
+                <li><a href="../../../genindex.html">Index</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Content <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">Saturnin Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base.html">saturnin.base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#types">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#dataclasses">Dataclasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-types.html">saturnin.base.types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#saturnin-common-type-definitions-and-constants">Saturnin common type definitions and constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#types-for-annotations">Types for annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#exceptions">Exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#sentinels">Sentinels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-types.html#dataclasses">Dataclasses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-config.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-transport.html">saturnin.base.transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#types-for-type-hints">Types for type hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-transport.html#channels-for-individual-0mq-socket-types">Channels for individual 0MQ socket types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-base-component.html">saturnin.base.component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-base-component.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-controller.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-micro.html">saturnin.component.micro</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-micro.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-micro.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-service.html">saturnin.component.service</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-service.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-service.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-client.html">saturnin.component.client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-console.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-metadata.html">saturnin.lib.metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-onepipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-lib-data-filter.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-fbsp.html">saturnin.protocol.fbsp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbsp.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-fbdp.html">saturnin.protocol.fbdp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-fbdp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-protocol-iccp.html">saturnin.protocol.iccp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-iccp.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-protocol-iccp.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-svcrun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-daemon.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-bundlerun.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-cli.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-cli.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-repl.html">saturnin._scripts.repl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-completers.html">saturnin._scripts.completers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-site.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-7-0">Version 0.7.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog.html#version-0-1-0">Version 0.1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body span12 content" role="main">
+      
+  <h1>Source code for saturnin.base.types</h1><div class="highlight"><pre>
+<span></span><span class="c1">#coding:utf-8</span>
+<span class="c1">#</span>
+<span class="c1"># PROGRAM/MODULE: saturnin-core</span>
+<span class="c1"># FILE:           saturnin/core/types.py</span>
+<span class="c1"># DESCRIPTION:    Saturnin type definitions and constants</span>
+<span class="c1"># CREATED:        22.4.2019</span>
+<span class="c1">#</span>
+<span class="c1"># The contents of this file are subject to the MIT License</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c1"># copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2019 Firebird Project (www.firebirdsql.org)</span>
+<span class="c1"># All Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Contributor(s): Pavel Císař (original code)</span>
+<span class="c1">#                 ______________________________________.</span>
+<span class="c1"># pylint: disable=R0902</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Saturnin common type definitions and constants</span>
+<span class="sd">==============================================</span>
+
+<span class="sd">This module contains:</span>
+
+<span class="sd">1. Type aliases and new types for type annotations.</span>
+<span class="sd">2. Commonly used constants like platform, vendor and mime type identifiers.</span>
+<span class="sd">3. Exceptions.</span>
+<span class="sd">4. Sentinels.</span>
+<span class="sd">5. Enums.</span>
+<span class="sd">6. Dataclasses.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">ByteString</span><span class="p">,</span> <span class="n">Final</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span><span class="p">,</span> <span class="n">IntFlag</span><span class="p">,</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">replace</span> <span class="k">as</span> <span class="n">_dcls_replace</span>
+<span class="kn">import</span> <span class="nn">zmq</span>
+<span class="kn">from</span> <span class="nn">firebird.base.types</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Distinct</span><span class="p">,</span> <span class="n">MIME</span><span class="p">,</span> <span class="n">Sentinel</span>
+<span class="kn">from</span> <span class="nn">firebird.base.config</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">firebird.base.protobuf</span> <span class="kn">import</span> <span class="n">PROTO_STRUCT</span><span class="p">,</span> <span class="n">load_registered</span><span class="p">,</span> <span class="n">create_message</span><span class="p">,</span> \
+     <span class="n">struct2dict</span><span class="p">,</span> <span class="n">dict2struct</span>
+
+<span class="c1"># Type annotation types</span>
+<span class="n">TSupplement</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+<span class="sd">&quot;&quot;&quot;name/value dictionary&quot;&quot;&quot;</span>
+<span class="n">Token</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">&#39;Token&#39;</span><span class="p">,</span> <span class="n">ByteString</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Message token&quot;&quot;&quot;</span>
+<span class="n">RoutingID</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">&#39;RoutingID&#39;</span><span class="p">,</span> <span class="n">ByteString</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;Routing ID&quot;&quot;&quot;</span>
+
+<span class="c1"># Constants</span>
+<span class="c1">#: Platform OID (`firebird.butler.platform.saturnin`)</span>
+<span class="n">PLATFORM_OID</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1.3.6.1.4.1.53446.1.1.0&#39;</span>
+<span class="c1">#: Platform UID (:func:`~uuid.uuid5` - NAMESPACE_OID)</span>
+<span class="n">PLATFORM_UID</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid5</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">NAMESPACE_OID</span><span class="p">,</span> <span class="n">PLATFORM_OID</span><span class="p">)</span>
+<span class="c1">#: Platform version (semver)</span>
+<span class="n">PLATFORM_VERSION</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0.8.0&#39;</span>
+<span class="c1">#: Platform vendor OID (`firebird.butler.vendor.firebird`)</span>
+<span class="n">VENDOR_OID</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1.3.6.1.4.1.53446.1.2.0&#39;</span>
+<span class="c1">#: Platform vendor UID (:func:`~uuid.uuid5` - NAMESPACE_OID)</span>
+<span class="n">VENDOR_UID</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid5</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">NAMESPACE_OID</span><span class="p">,</span> <span class="n">VENDOR_OID</span><span class="p">)</span>
+
+<span class="c1">#: MIME type for protobuf messages</span>
+<span class="n">MIME_TYPE_PROTO</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">MIME</span><span class="p">(</span><span class="s1">&#39;application/x.fb.proto&#39;</span><span class="p">)</span>
+<span class="c1">#: MIME type for plain text</span>
+<span class="n">MIME_TYPE_TEXT</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">MIME</span><span class="p">(</span><span class="s1">&#39;text/plain&#39;</span><span class="p">)</span>
+<span class="c1">#: MIME type for binary data</span>
+<span class="n">MIME_TYPE_BINARY</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">MIME</span><span class="p">(</span><span class="s1">&#39;application/octet-stream&#39;</span><span class="p">)</span>
+
+<span class="c1">#: Configuration section name for local service addresses</span>
+<span class="n">SECTION_LOCAL_ADDRESS</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;local_address&#39;</span>
+<span class="c1">#: Configuration section name for node service addresses</span>
+<span class="n">SECTION_NODE_ADDRESS</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;node_address&#39;</span>
+<span class="c1">#: Configuration section name for network service addresses</span>
+<span class="n">SECTION_NET_ADDRESS</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;net_address&#39;</span>
+<span class="c1">#: Configuration section name for service UIDs</span>
+<span class="n">SECTION_SERVICE_UID</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;service_uid&#39;</span>
+<span class="c1">#: Configuration section name for service peer UIDs</span>
+<span class="n">SECTION_PEER_UID</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;peer_uid&#39;</span>
+<span class="c1">#: Default configuration section name for service bundle</span>
+<span class="n">SECTION_BUNDLE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;bundle&#39;</span>
+<span class="c1">#: Default configuration section name for single service</span>
+<span class="n">SECTION_SERVICE</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;service&#39;</span>
+
+<span class="c1">#: protobuf ID for peer information message</span>
+<span class="n">PROTO_PEER</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;firebird.butler.PeerIdentification&#39;</span>
+
+<span class="c1">#  Exceptions</span>
+<div class="viewcode-block" id="InvalidMessageError"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.InvalidMessageError">[docs]</a><span class="k">class</span> <span class="nc">InvalidMessageError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="s2">&quot;A formal error was detected in a message&quot;</span></div>
+
+<div class="viewcode-block" id="ChannelError"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.ChannelError">[docs]</a><span class="k">class</span> <span class="nc">ChannelError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="s2">&quot;Transmission channel error&quot;</span></div>
+
+<div class="viewcode-block" id="ServiceError"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.ServiceError">[docs]</a><span class="k">class</span> <span class="nc">ServiceError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="s2">&quot;Error raised by service&quot;</span></div>
+
+<div class="viewcode-block" id="ClientError"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.ClientError">[docs]</a><span class="k">class</span> <span class="nc">ClientError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="s2">&quot;Error raised by Client&quot;</span></div>
+
+<div class="viewcode-block" id="StopError"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.StopError">[docs]</a><span class="k">class</span> <span class="nc">StopError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="s2">&quot;Exception that should stop furter processing.&quot;</span></div>
+
+<div class="viewcode-block" id="RestartError"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.RestartError">[docs]</a><span class="k">class</span> <span class="nc">RestartError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
+    <span class="s2">&quot;Exception signaling that restart is needed for further processing.&quot;</span></div>
+
+<span class="c1">#Sentinels</span>
+<span class="c1">#: Sentinel for return values that indicates failed message processing</span>
+<span class="n">INVALID</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">Sentinel</span><span class="p">]</span> <span class="o">=</span> <span class="n">Sentinel</span><span class="p">(</span><span class="s1">&#39;INVALID&#39;</span><span class="p">)</span>
+<span class="c1">#: Sentinel for return values that indicates timeout expiration</span>
+<span class="n">TIMEOUT</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">Sentinel</span><span class="p">]</span> <span class="o">=</span> <span class="n">Sentinel</span><span class="p">(</span><span class="s1">&#39;TIMEOUT&#39;</span><span class="p">)</span>
+<span class="c1">#: Sentinel for return values that indicates restart request</span>
+<span class="n">RESTART</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">Sentinel</span><span class="p">]</span> <span class="o">=</span> <span class="n">Sentinel</span><span class="p">(</span><span class="s1">&#39;RESTART&#39;</span><span class="p">)</span>
+
+<span class="c1"># Enums</span>
+<div class="viewcode-block" id="Origin"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.Origin">[docs]</a><span class="k">class</span> <span class="nc">Origin</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Origin of received message in protocol context.&quot;&quot;&quot;</span>
+    <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SERVICE</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">CLIENT</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">ANY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="c1"># Aliases</span>
+    <span class="n">PROVIDER</span> <span class="o">=</span> <span class="n">SERVICE</span>
+    <span class="n">CONSUMER</span> <span class="o">=</span> <span class="n">CLIENT</span>
+<div class="viewcode-block" id="Origin.peer_role"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.Origin.peer_role">[docs]</a>    <span class="k">def</span> <span class="nf">peer_role</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Origin</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns peer&#39;s role, i.e. complementary to current (CLIENT/SERVICE,</span>
+<span class="sd">        PROVIDER/CONSULER) value.</span>
+
+<span class="sd">        Note: Returns current value if it&#39;s `ANY` or `UNKNOWN`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Origin</span><span class="o">.</span><span class="n">ANY</span><span class="p">,</span> <span class="n">Origin</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="n">Origin</span><span class="o">.</span><span class="n">CLIENT</span> <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">Origin</span><span class="o">.</span><span class="n">SERVICE</span> <span class="k">else</span> <span class="n">Origin</span><span class="o">.</span><span class="n">SERVICE</span></div></div>
+
+<div class="viewcode-block" id="SocketMode"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.SocketMode">[docs]</a><span class="k">class</span> <span class="nc">SocketMode</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ZeroMQ socket mode.&quot;&quot;&quot;</span>
+    <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">BIND</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">CONNECT</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Direction"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.Direction">[docs]</a><span class="k">class</span> <span class="nc">Direction</span><span class="p">(</span><span class="n">IntFlag</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ZeroMQ socket direction of transmission.&quot;&quot;&quot;</span>
+    <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">IN</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">POLLIN</span>
+    <span class="n">OUT</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">POLLOUT</span>
+    <span class="n">BOTH</span> <span class="o">=</span> <span class="n">OUT</span> <span class="o">|</span> <span class="n">IN</span></div>
+
+<div class="viewcode-block" id="SocketType"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.SocketType">[docs]</a><span class="k">class</span> <span class="nc">SocketType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ZeroMQ socket type.&quot;&quot;&quot;</span>
+    <span class="n">UNKNOWN_TYPE</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># Not a valid option, defined only to handle undefined values</span>
+    <span class="n">DEALER</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">DEALER</span>
+    <span class="n">ROUTER</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">ROUTER</span>
+    <span class="n">PUB</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">PUB</span>
+    <span class="n">SUB</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">SUB</span>
+    <span class="n">XPUB</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">XPUB</span>
+    <span class="n">XSUB</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">XSUB</span>
+    <span class="n">PUSH</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">PUSH</span>
+    <span class="n">PULL</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">PULL</span>
+    <span class="n">STREAM</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">STREAM</span>
+    <span class="n">PAIR</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">PAIR</span></div>
+
+<div class="viewcode-block" id="State"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.State">[docs]</a><span class="k">class</span> <span class="nc">State</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;General state information.&quot;&quot;&quot;</span>
+    <span class="n">UNKNOWN_STATE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">READY</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">RUNNING</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">WAITING</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">SUSPENDED</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">FINISHED</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">ABORTED</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="c1"># Aliases</span>
+    <span class="n">CREATED</span> <span class="o">=</span> <span class="n">READY</span>
+    <span class="n">BLOCKED</span> <span class="o">=</span> <span class="n">WAITING</span>
+    <span class="n">STOPPED</span> <span class="o">=</span> <span class="n">SUSPENDED</span>
+    <span class="n">TERMINATED</span> <span class="o">=</span> <span class="n">ABORTED</span></div>
+
+<div class="viewcode-block" id="PipeSocket"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.PipeSocket">[docs]</a><span class="k">class</span> <span class="nc">PipeSocket</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data Pipe Socket identification.&quot;&quot;&quot;</span>
+    <span class="n">UNKNOWN_PIPE_SOCKET</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Not a valid option, defined only to handle undefined values</span>
+    <span class="n">INPUT</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">OUTPUT</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+<div class="viewcode-block" id="FileOpenMode"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.FileOpenMode">[docs]</a><span class="k">class</span> <span class="nc">FileOpenMode</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;File open mode.&quot;&quot;&quot;</span>
+    <span class="n">UNKNOWN_FILE_OPEN_MODE</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Not a valid option, defined only to handle undefined values</span>
+    <span class="n">READ</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">CREATE</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">WRITE</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">APPEND</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">RENAME</span> <span class="o">=</span> <span class="mi">5</span></div>
+
+<div class="viewcode-block" id="Outcome"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.Outcome">[docs]</a><span class="k">class</span> <span class="nc">Outcome</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service execution outcome.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="s1">&#39;UNKNOWN&#39;</span>
+    <span class="n">OK</span> <span class="o">=</span> <span class="s1">&#39;OK&#39;</span>
+    <span class="n">ERROR</span> <span class="o">=</span> <span class="s1">&#39;ERROR&#39;</span></div>
+
+<div class="viewcode-block" id="ButlerInterface"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.ButlerInterface">[docs]</a><span class="k">class</span> <span class="nc">ButlerInterface</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for service API code enumerations (FBSP interfaces).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ButlerInterface.get_uid"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.ButlerInterface.get_uid">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_uid</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">:</span>
+        <span class="s2">&quot;Returns interface UUID.&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
+<span class="c1"># Dataclasses</span>
+<div class="viewcode-block" id="AgentDescriptor"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.AgentDescriptor">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AgentDescriptor</span><span class="p">(</span><span class="n">Distinct</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service or Client descriptor dataclass.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Because this is a `dataclass`, the class variables are those attributes that have</span>
+<span class="sd">        default value. Other attributes are created in constructor.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        uid: Agent ID</span>
+<span class="sd">        name: Agent name</span>
+<span class="sd">        version: Agent version string</span>
+<span class="sd">        vendor_uid: Vendor ID</span>
+<span class="sd">        classification: Agent classification string</span>
+<span class="sd">        platform_uid: Butler platform ID</span>
+<span class="sd">        platform_version: Butler platform version string</span>
+<span class="sd">        supplement: Optional list of supplemental information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">uid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">vendor_uid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span>
+    <span class="n">classification</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">platform_uid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span> <span class="o">=</span> <span class="n">PLATFORM_UID</span>
+    <span class="n">platform_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">PLATFORM_VERSION</span>
+    <span class="n">supplement</span><span class="p">:</span> <span class="n">TSupplement</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="AgentDescriptor.get_key"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.AgentDescriptor.get_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns `uid` (instance key). Used for instance hash computation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span></div>
+<div class="viewcode-block" id="AgentDescriptor.copy"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.AgentDescriptor.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentDescriptor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns copy of this AgentDescriptor instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_dcls_replace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+<div class="viewcode-block" id="AgentDescriptor.replace"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.AgentDescriptor.replace">[docs]</a>    <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">changes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentDescriptor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a new `AgentDescriptor`, replacing fields with values from `changes`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_dcls_replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">changes</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="PeerDescriptor"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.PeerDescriptor">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PeerDescriptor</span><span class="p">(</span><span class="n">Distinct</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Peer descriptor.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">       uid: Peer ID</span>
+<span class="sd">       pid: Peer process ID</span>
+<span class="sd">       host: Host name</span>
+<span class="sd">       supplement: Optional list of supplemental information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">uid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span>
+    <span class="n">pid</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">supplement</span><span class="p">:</span> <span class="n">TSupplement</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="PeerDescriptor.get_key"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.PeerDescriptor.get_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns `uid` (instance key). Used for instance hash computation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span></div>
+<div class="viewcode-block" id="PeerDescriptor.as_proto"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.PeerDescriptor.as_proto">[docs]</a>    <span class="k">def</span> <span class="nf">as_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns `firebird.butler.PeerIdentification` protobuf message initialized</span>
+<span class="sd">        from instance data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">create_message</span><span class="p">(</span><span class="n">PROTO_PEER</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">uid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="o">.</span><span class="n">bytes</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">pid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pid</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">supplement</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sup</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">supplement</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+            <span class="n">sup</span><span class="o">.</span><span class="n">Pack</span><span class="p">(</span><span class="n">dict2struct</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">supplement</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
+<div class="viewcode-block" id="PeerDescriptor.copy"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.PeerDescriptor.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeerDescriptor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns copy of this PeerDescriptor instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_dcls_replace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+<div class="viewcode-block" id="PeerDescriptor.replace"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.PeerDescriptor.replace">[docs]</a>    <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">changes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeerDescriptor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a new `PeerDescriptor`, replacing fields with values from `changes`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_dcls_replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">changes</span><span class="p">)</span></div>
+<div class="viewcode-block" id="PeerDescriptor.from_proto"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.PeerDescriptor.from_proto">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_proto</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">proto</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PeerDescriptor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates new PeerDescriptor from `firebird.butler.PeerIdentification` protobuf</span>
+<span class="sd">        message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">proto</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span> <span class="o">!=</span> <span class="n">PROTO_PEER</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;PeerIdentification protobuf message required&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">proto</span><span class="o">.</span><span class="n">supplement</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">proto</span><span class="o">.</span><span class="n">supplement</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">TypeName</span><span class="p">()</span> <span class="o">==</span> <span class="n">PROTO_STRUCT</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="n">create_message</span><span class="p">(</span><span class="n">PROTO_STRUCT</span><span class="p">)</span>
+                    <span class="n">i</span><span class="o">.</span><span class="n">Unpack</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">struct2dict</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">break</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="nb">bytes</span><span class="o">=</span><span class="n">proto</span><span class="o">.</span><span class="n">uid</span><span class="p">),</span> <span class="n">proto</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="ServiceDescriptor"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.ServiceDescriptor">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ServiceDescriptor</span><span class="p">(</span><span class="n">Distinct</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service descriptor.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">       agent: Service agent descriptor</span>
+<span class="sd">       api: Service FBSP API description or `None` for microservice</span>
+<span class="sd">       description: Text describing the service</span>
+<span class="sd">       facilities: List of Saturnin facilities that this service uses</span>
+<span class="sd">       factory: Locator string for service factory</span>
+<span class="sd">       config: Service configuration factory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">agent</span><span class="p">:</span> <span class="n">AgentDescriptor</span>
+    <span class="n">api</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ButlerInterface</span><span class="p">]</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">facilities</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">factory</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">Config</span><span class="p">]</span>
+<div class="viewcode-block" id="ServiceDescriptor.get_key"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.ServiceDescriptor.get_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns `agent.uid` (instance key). Used for instance hash computation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">uid</span></div></div>
+
+<div class="viewcode-block" id="ApplicationDescriptor"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.ApplicationDescriptor">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ApplicationDescriptor</span><span class="p">(</span><span class="n">Distinct</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Application descriptor.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">       uid: Application ID</span>
+<span class="sd">       name: Application name</span>
+<span class="sd">       version: Application version string</span>
+<span class="sd">       vendor_uid: Vendor ID</span>
+<span class="sd">       classification: Application classification string</span>
+<span class="sd">       description: Text describing the application</span>
+<span class="sd">       factory: Locator string for application `typer` command</span>
+<span class="sd">       config: Locator string for application configuration factory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">uid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">vendor_uid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span>
+    <span class="n">classification</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">factory</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">config</span><span class="p">:</span> <span class="nb">str</span>
+<div class="viewcode-block" id="ApplicationDescriptor.get_key"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.ApplicationDescriptor.get_key">[docs]</a>    <span class="k">def</span> <span class="nf">get_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns `uid` (instance key). Used for instance hash computation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span></div></div>
+
+
+<div class="viewcode-block" id="PrioritizedItem"><a class="viewcode-back" href="../../../ref-base-types.html#saturnin.base.types.PrioritizedItem">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PrioritizedItem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prioritized item for use with `heapq` to implement priority queue.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">       priority: Item priority</span>
+<span class="sd">       item: Prioritized item</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">item</span><span class="p">:</span> <span class="n">Any</span><span class="o">=</span><span class="n">field</span><span class="p">(</span><span class="n">compare</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<span class="n">load_registered</span><span class="p">(</span><span class="s1">&#39;firebird.butler.protobuf&#39;</span><span class="p">)</span>
+<span class="n">load_registered</span><span class="p">(</span><span class="s1">&#39;firebird.base.protobuf&#39;</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">load_registered</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019-2022, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

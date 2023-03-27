@@ -63,7 +63,7 @@ app = typer.Typer(rich_markup_mode="rich", help="Package management.")
 @app.command()
 def list_services(with_name: str= \
                     typer.Option('',help="List only services with this string in name")):
-    "List installed Saturnin services."
+    "Lists installed Saturnin services."
     services = list(service_registry.filter(lambda x: with_name in x.name))
     services.sort(key=attrgetter('name'))
     if services:
@@ -117,7 +117,7 @@ def show_service(service_id: str=typer.Argument('', help="Service UID or name",
 @app.command()
 def list_applications(with_name: str= \
                       typer.Option('',help="List only applications with this string in name")):
-    "List installed Saturnin applications."
+    "Lists installed Saturnin applications."
     apps = list(application_registry.filter(lambda x: with_name in x.name))
     apps.sort(key=attrgetter('name'))
     if apps:
@@ -126,7 +126,7 @@ def list_applications(with_name: str= \
                       box=box.ROUNDED)
         table.add_column('Application', style='green')
         table.add_column('Version', style='number')
-        table.add_column('Installed', width=9, justify='center')
+        table.add_column('Used', width=9, justify='center')
         table.add_column('Description')
         for app in apps:
             table.add_row(app.name, app.version, RICH_YES if
@@ -167,7 +167,7 @@ def show_application(app_id: str=typer.Argument('', help="Application UID or nam
 
 @app.command()
 def list_packages():
-    """List installed distribution packages with Saturnin components.
+    """Lists installed distribution packages with Saturnin components.
 
     This command does not list ALL packages installed in Saturnin virtual environment, but
     only those that contain registered Saturnin components. To list all installed packages,
@@ -214,7 +214,7 @@ def update_registry():
 
 @app.command()
 def pip(args: List[str]=typer.Argument(None, help="Arguments for pip.")):
-    """Run 'pip' package manager in Saturnin virtual environment.
+    """Runs 'pip' package manager in Saturnin virtual environment.
     """
     pip_cmd = directory_scheme.get_pip_cmd()
     pip_cmd.extend(args)
@@ -230,7 +230,7 @@ def pip(args: List[str]=typer.Argument(None, help="Arguments for pip.")):
 
 @app.command()
 def install_package(args: List[str]=typer.Argument(..., help="Arguments for pip install.")):
-    """Install Python package into Saturnin virtual environment via 'pip'.
+    """Installs Python package into Saturnin virtual environment via 'pip'.
 
 Note:
    This command is used also to upgrade installed packages using '-U' or '--upgrade' option.
@@ -257,7 +257,7 @@ Note:
 
 @app.command()
 def uninstall_package(args: List[str]=typer.Argument(..., help="Arguments for pip uninstall.")):
-    """Uninstall Python package from Saturnin virtual environment via `pip`.
+    """Uninstalls Python package from Saturnin virtual environment via `pip`.
     """
     pip_cmd = directory_scheme.get_pip_cmd('uninstall')
     pip_cmd.append('--yes')

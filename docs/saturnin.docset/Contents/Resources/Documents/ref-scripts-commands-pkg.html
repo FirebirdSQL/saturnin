@@ -3,20 +3,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
-<title>saturnin._scripts.commands.pkg — saturnin 0.7.1 documentation</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
+<title>saturnin._scripts.commands.pkg — saturnin 0.8.0 documentation</title>
 <link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
 <link href="_static/bootstrap-sphinx.css" rel="stylesheet" type="text/css"/>
 <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-<script src="_static/jquery.js"></script>
-<script src="_static/underscore.js"></script>
-<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
 <script src="_static/doctools.js"></script>
 <script src="_static/sphinx_highlight.js"></script>
 <link href="genindex.html" rel="index" title="Index"/>
 <link href="search.html" rel="search" title="Search"/>
-<link href="ref-scripts-commands-site.html" rel="next" title="saturnin._scripts.commands.site"/>
-<link href="ref-scripts-bundlerun.html" rel="prev" title="saturnin._scripts.bundlerun"/>
+<link href="ref-scripts-commands-recipes.html" rel="next" title="saturnin._scripts.commands.recipes"/>
+<link href="ref-scripts-commands-site.html" rel="prev" title="saturnin._scripts.commands.site"/>
 <meta charset="utf-8"/>
 <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1" name="viewport"/>
@@ -37,7 +34,7 @@
 </button>
 <a class="brand" href="index.html">
           saturnin</a>
-<span class="navbar-text pull-left"><b>0.7.1</b></span>
+<span class="navbar-text pull-left"><b>0.8.0</b></span>
 <div class="nav-collapse">
 <ul class="nav">
 <li class="divider-vertical"></li>
@@ -49,10 +46,33 @@
 <ul aria-labelledby="dLabelGlobalToc" class="dropdown-menu globaltoc" role="menu"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting-started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#saturnin-console">Saturnin console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#installing-services">Installing services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#using-firebird-services">Using Firebird services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#saturnin-recipes">Saturnin recipes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#basic-architecture">Basic Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#butler-services">Butler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#service-containers">Service containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#saturnin-recipes">Saturnin recipes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#saturnin-applications">Saturnin applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#saturnin-console">Saturnin console</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#saturnin-environment">Saturnin environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#directories">Directories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#configuration-files">Configuration files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#data-files">Data files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#managing-saturnin-packages">Managing Saturnin packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#oid-registry">OID registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#working-with-recipes">Working with recipes</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Saturnin Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ref-base.html">saturnin.base</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base.html#constants">Constants</a></li>
@@ -74,10 +94,11 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#dataclasses">Dataclasses</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-site.html">saturnin.base.site</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-transport.html">saturnin.base.transport</a><ul>
@@ -89,15 +110,13 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-component.html">saturnin.base.component</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-recipe.html">saturnin.base.recipe</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-recipe.html#classes">Classes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#service-registration">Service registration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-micro.html">saturnin.component.micro</a><ul>
@@ -110,30 +129,56 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-component-service.html#classes">Classes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-client.html">saturnin.component.client</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-daemon.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-lib-pyproject.html">saturnin.lib.pyproject</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-metadata.html">saturnin.lib.metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-metadata.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#classes">Classes</a></li>
 </ul>
 </li>
@@ -156,13 +201,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
@@ -170,21 +217,42 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-cli.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-repl.html">saturnin._scripts.repl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">saturnin._scripts.commands.pkg</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-completers.html">saturnin._scripts.completers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-completers.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#command-functions">Command functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#command-functions">Command functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#command-functions">Command functions</a></li>
 </ul>
 </li>
 </ul>
@@ -202,31 +270,20 @@
 <a data-target="#" data-toggle="dropdown" href="#" id="dLabelLocalToc" role="button">Page <b class="caret"></b></a>
 <ul aria-labelledby="dLabelLocalToc" class="dropdown-menu localtoc" role="menu"><ul>
 <li><a class="reference internal" href="#">saturnin._scripts.commands.pkg</a><ul>
-<li><a class="reference internal" href="#constants">Constants</a><ul>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.PKG_TOML"><code class="docutils literal notranslate"><span class="pre">PKG_TOML</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.CMP_UID"><code class="docutils literal notranslate"><span class="pre">CMP_UID</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.CMP_PACKAGE"><code class="docutils literal notranslate"><span class="pre">CMP_PACKAGE</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.CMP_NAME"><code class="docutils literal notranslate"><span class="pre">CMP_NAME</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.CMP_VERSION"><code class="docutils literal notranslate"><span class="pre">CMP_VERSION</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.CMP_DESCRIPTION"><code class="docutils literal notranslate"><span class="pre">CMP_DESCRIPTION</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.CMP_DESCRIPTOR"><code class="docutils literal notranslate"><span class="pre">CMP_DESCRIPTOR</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.CMP_TOPLEVEL"><code class="docutils literal notranslate"><span class="pre">CMP_TOPLEVEL</span></code></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#globals">Globals</a><ul>
 <li><a class="reference internal" href="#saturnin._scripts.commands.pkg.app"><code class="docutils literal notranslate"><span class="pre">app</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.mngr"><code class="docutils literal notranslate"><span class="pre">mngr</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#classes">Classes</a></li>
-<li><a class="reference internal" href="#functions">Functions</a><ul>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.install"><code class="docutils literal notranslate"><span class="pre">install()</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.uninstall"><code class="docutils literal notranslate"><span class="pre">uninstall()</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg._list"><code class="docutils literal notranslate"><span class="pre">_list()</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.pip"><code class="docutils literal notranslate"><span class="pre">pip()</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.copy_tree"><code class="docutils literal notranslate"><span class="pre">copy_tree()</span></code></a></li>
-<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.remove_dir"><code class="docutils literal notranslate"><span class="pre">remove_dir()</span></code></a></li>
+<li><a class="reference internal" href="#command-functions">Command functions</a><ul>
 <li><a class="reference internal" href="#saturnin._scripts.commands.pkg.install_package"><code class="docutils literal notranslate"><span class="pre">install_package()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.uninstall_package"><code class="docutils literal notranslate"><span class="pre">uninstall_package()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.pip"><code class="docutils literal notranslate"><span class="pre">pip()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.list_services"><code class="docutils literal notranslate"><span class="pre">list_services()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.show_service"><code class="docutils literal notranslate"><span class="pre">show_service()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.list_applications"><code class="docutils literal notranslate"><span class="pre">list_applications()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.show_application"><code class="docutils literal notranslate"><span class="pre">show_application()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.list_packages"><code class="docutils literal notranslate"><span class="pre">list_packages()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin._scripts.commands.pkg.update_registry"><code class="docutils literal notranslate"><span class="pre">update_registry()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -252,155 +309,116 @@
 <a class="dashAnchor" name="//apple_ref/cpp/Section/saturnin._scripts.commands.pkg"></a><section id="module-saturnin._scripts.commands.pkg">
 <span id="saturnin-scripts-commands-pkg"></span><a class="dashAnchor" name="//apple_ref/cpp/Module/saturnin._scripts.commands.pkg"></a><h1>saturnin._scripts.commands.pkg<a class="headerlink" href="#module-saturnin._scripts.commands.pkg" title="Permalink to this heading">¶</a></h1>
 <p>Saturnin package manager commands</p>
-<a class="dashAnchor" name="//apple_ref/cpp/Section/Constants"></a><section id="constants">
-<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this heading">¶</a></h2>
-<dl class="py data">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.PKG_TOML">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">PKG_TOML</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pyproject.toml'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.PKG_TOML"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.PKG_TOML" title="Permalink to this definition">¶</a></dt>
-<dd><p>Package TOML file</p>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.CMP_UID">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">CMP_UID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'uid'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.CMP_UID"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.CMP_UID" title="Permalink to this definition">¶</a></dt>
-<dd><p>Component UID item</p>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.CMP_PACKAGE">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">CMP_PACKAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'package'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.CMP_PACKAGE"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.CMP_PACKAGE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Component PACKAGE item</p>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.CMP_NAME">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">CMP_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'name'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.CMP_NAME"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.CMP_NAME" title="Permalink to this definition">¶</a></dt>
-<dd><p>Component NAME item</p>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.CMP_VERSION">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">CMP_VERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'version'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.CMP_VERSION"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.CMP_VERSION" title="Permalink to this definition">¶</a></dt>
-<dd><p>Component VERSION item</p>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.CMP_DESCRIPTION">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">CMP_DESCRIPTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'description'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.CMP_DESCRIPTION"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.CMP_DESCRIPTION" title="Permalink to this definition">¶</a></dt>
-<dd><p>Component DESCRIPTION item</p>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.CMP_DESCRIPTOR">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">CMP_DESCRIPTOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'descriptor'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.CMP_DESCRIPTOR"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.CMP_DESCRIPTOR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Component DESCIPTOR item</p>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.CMP_TOPLEVEL">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">CMP_TOPLEVEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'top-level'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.CMP_TOPLEVEL"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.CMP_TOPLEVEL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Component TOP-LEVEL item</p>
-</dd></dl>
-</section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Globals"></a><section id="globals">
 <h2>Globals<a class="headerlink" href="#globals" title="Permalink to this heading">¶</a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.app">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">app</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;typer.main.Typer</span> <span class="pre">object&gt;</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.app"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.app" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">app</span></span><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.app"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Typer command group for package management commands</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a>) – </p></li>
 <li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a></p>
 </dd>
 </dl>
 </dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.mngr">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">mngr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">PackageManager</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;saturnin._scripts.commands.pkg.PackageManager</span> <span class="pre">object&gt;</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin._scripts.commands.pkg.mngr"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.mngr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saturnin package manager.</p>
-</dd></dl>
 </section>
-<a class="dashAnchor" name="//apple_ref/cpp/Section/Classes"></a><section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
-</section>
-<a class="dashAnchor" name="//apple_ref/cpp/Section/Functions"></a><section id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
+<a class="dashAnchor" name="//apple_ref/cpp/Section/Command functions"></a><section id="command-functions">
+<h2>Command functions<a class="headerlink" href="#command-functions" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.install">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package:</span> <span class="pre">~pathlib.Path</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.ArgumentInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.ArgumentInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.install"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.install" title="Permalink to this definition">¶</a></dt>
-<dd><p>Installation of Saturnin packages.</p>
+<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.install_package">
+<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">install_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.ArgumentInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/_scripts/commands/pkg.html#install_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.install_package"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.install_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Installs Python package into Saturnin virtual environment via ‘pip’.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This command is used also to upgrade installed packages using ‘-U’ or ‘–upgrade’ option.</p>
+</div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>package</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><em>Path</em></a>) – </p></li>
-<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.uninstall">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">uninstall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.ArgumentInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.uninstall"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.uninstall" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uninstallation of Saturnin components.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>component</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg._list">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg._list"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg._list" title="Permalink to this definition">¶</a></dt>
-<dd><p>List installed Saturnin components.</p>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.pip">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">pip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.ArgumentInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.pip"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.pip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run pip from Saturnin virtual environment.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.copy_tree">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">copy_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/zipfile.html#zipfile.Path" title="(in Python v3.11)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.copy_tree"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.copy_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy package tree.</p>
+<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.uninstall_package">
+<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">uninstall_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.ArgumentInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/_scripts/commands/pkg.html#uninstall_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.uninstall_package"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.uninstall_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uninstalls Python package from Saturnin virtual environment via <a class="reference internal" href="#saturnin._scripts.commands.pkg.pip" title="saturnin._scripts.commands.pkg.pip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pip</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>package</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><em>Path</em></a>) – </p></li>
-<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/zipfile.html#zipfile.Path" title="(in Python v3.11)"><em>Path</em></a>) – </p></li>
-<li><p><strong>skip_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em><em>]</em>) – </p></li>
-</ul>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.remove_dir">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">remove_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.remove_dir"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.remove_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>revove directory incl. sub-dirs and files contained within.</p>
+<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.pip">
+<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">pip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.ArgumentInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/_scripts/commands/pkg.html#pip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.pip"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.pip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs ‘pip’ package manager in Saturnin virtual environment.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><em>Path</em></a>) – </p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – </p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.install_package">
-<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">install_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">zfile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/zipfile.html#zipfile.ZipFile" title="(in Python v3.11)"><span class="pre">ZipFile</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/zipfile.html#zipfile.Path" title="(in Python v3.11)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.install_package"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.install_package" title="Permalink to this definition">¶</a></dt>
-<dd><p>Install single package from zip file.</p>
+<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.list_services">
+<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">list_services</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">with_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/_scripts/commands/pkg.html#list_services"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.list_services"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.list_services" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists installed Saturnin services.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><em>List</em></a>) – </p></li>
-<li><p><strong>zfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/zipfile.html#zipfile.ZipFile" title="(in Python v3.11)"><em>ZipFile</em></a>) – </p></li>
-<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/zipfile.html#zipfile.Path" title="(in Python v3.11)"><em>Path</em></a>) – </p></li>
-</ul>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>with_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p>
 </dd>
 </dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.show_service">
+<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">show_service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_id:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.ArgumentInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/_scripts/commands/pkg.html#show_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.show_service"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.show_service" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show information about installed service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>service_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.list_applications">
+<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">list_applications</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">with_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/_scripts/commands/pkg.html#list_applications"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.list_applications"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.list_applications" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists installed Saturnin applications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>with_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.show_application">
+<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">show_application</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_id:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.ArgumentInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/_scripts/commands/pkg.html#show_application"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.show_application"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.show_application" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show information about installed application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>app_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.list_packages">
+<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">list_packages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/_scripts/commands/pkg.html#list_packages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.list_packages"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.list_packages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists installed distribution packages with Saturnin components.</p>
+<p>This command does not list ALL packages installed in Saturnin virtual environment, but
+only those that contain registered Saturnin components. To list all installed packages,
+use: <strong>pip list</strong>.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="saturnin._scripts.commands.pkg.update_registry">
+<span class="sig-prename descclassname"><span class="pre">saturnin._scripts.commands.pkg.</span></span><span class="sig-name descname"><span class="pre">update_registry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/saturnin/_scripts/commands/pkg.html#update_registry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin._scripts.commands.pkg.update_registry"></a><a class="headerlink" href="#saturnin._scripts.commands.pkg.update_registry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates registry of installed Saturnin components.</p>
+<p>The registry is updated automatically when Saturnin packages are manipulated with
+built-in <strong>install</strong>, <strong>uninstall</strong> or <strong>pip</strong> commands. Manual update is required only
+when packages are added/updated/removed in differet way.</p>
 </dd></dl>
 </section>
 </section>
@@ -413,8 +431,8 @@
 <a href="#">Back to top</a>
 </p>
 <p>
-        © Copyright 2019-2022, The Firebird Project.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+        © Copyright 2019-2023, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
 </p>
 </div>
 </footer>

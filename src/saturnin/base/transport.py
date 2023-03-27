@@ -1141,5 +1141,3 @@ class RouterChannel(Channel):
     def _configure(self):
         super()._configure()
         self.socket.router_mandatory = 1
-
-

@@ -3,14 +3,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.17: http://docutils.sourceforge.net/" name="generator"/>
-<title>saturnin.base — saturnin 0.7.1 documentation</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
+<title>saturnin.base — saturnin 0.8.0 documentation</title>
 <link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
 <link href="_static/bootstrap-sphinx.css" rel="stylesheet" type="text/css"/>
 <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-<script src="_static/jquery.js"></script>
-<script src="_static/underscore.js"></script>
-<script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
 <script src="_static/doctools.js"></script>
 <script src="_static/sphinx_highlight.js"></script>
 <link href="genindex.html" rel="index" title="Index"/>
@@ -37,7 +34,7 @@
 </button>
 <a class="brand" href="index.html">
           saturnin</a>
-<span class="navbar-text pull-left"><b>0.7.1</b></span>
+<span class="navbar-text pull-left"><b>0.8.0</b></span>
 <div class="nav-collapse">
 <ul class="nav">
 <li class="divider-vertical"></li>
@@ -49,10 +46,22 @@
 <ul aria-labelledby="dLabelGlobalToc" class="dropdown-menu globaltoc" role="menu"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="getting-started.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#quick-start-guide">Quick-start Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#saturnin-console">Saturnin console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#installing-services">Installing services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#using-firebird-services">Using Firebird services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#saturnin-recipes">Saturnin recipes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-guide.html">Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage-guide.html#basic-architecture">Basic Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#butler-services">Butler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#service-containers">Service containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage-guide.html#saturnin-console">Saturnin console</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="reference.html">Saturnin Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">saturnin.base</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#constants">Constants</a></li>
@@ -74,10 +83,11 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-base-types.html#dataclasses">Dataclasses</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-site.html">saturnin.base.site</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-site.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-base-config.html">saturnin.base.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-config.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-transport.html">saturnin.base.transport</a><ul>
@@ -89,15 +99,13 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-base-component.html">saturnin.base.component</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-base-component.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-base-recipe.html">saturnin.base.recipe</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-base-recipe.html#classes">Classes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#service-registration">Service registration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-micro.html">saturnin.component.micro</a><ul>
@@ -110,30 +118,56 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-component-service.html#classes">Classes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-component-controller.html">saturnin.component.controller</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#constants-and-variables">Constants and variables</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-component-controller.html#classes">Classes</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="ref-component-client.html">saturnin.component.client</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-component-client.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-single.html">saturnin.component.single</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-single.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-bundle.html">saturnin.component.bundle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-bundle.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-registry.html">saturnin.component.registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-registry.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-apps.html">saturnin.component.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-apps.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-component-recipe.html">saturnin.component.recipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-component-recipe.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-console.html">saturnin.lib.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#constants">Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-console.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-daemon.html">saturnin.lib.daemon</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-daemon.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-lib-pyproject.html">saturnin.lib.pyproject</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#functions">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-lib-pyproject.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-lib-metadata.html">saturnin.lib.metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-metadata.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-onepipe.html">saturnin.lib.data.onepipe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-onepipe.html#classes">Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-lib-data-filter.html">saturnin.lib.data.filter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-lib-data-filter.html#classes">Classes</a></li>
 </ul>
 </li>
@@ -156,13 +190,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-svcrun.html">saturnin._scripts.svcrun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-svcrun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-daemon.html">saturnin._scripts.daemon</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#globals">Globals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-daemon.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-cli.html">saturnin._scripts.cli</a><ul>
@@ -170,21 +206,42 @@
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-cli.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-bundlerun.html">saturnin._scripts.bundlerun</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-bundlerun.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-repl.html">saturnin._scripts.repl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-repl.html#functions">Functions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#constants">Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#classes">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-completers.html">saturnin._scripts.completers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-completers.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-site.html">saturnin._scripts.commands.site</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#enums">Enums</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#command-functions">Command functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-site.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-pkg.html">saturnin._scripts.commands.pkg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-pkg.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-recipes.html">saturnin._scripts.commands.recipes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-recipes.html#command-functions">Command functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-daemons.html">saturnin._scripts.commands.daemons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#command-functions">Command functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-daemons.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ref-scripts-commands-oids.html">saturnin._scripts.commands.oids</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#globals">Globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ref-scripts-commands-oids.html#command-functions">Command functions</a></li>
 </ul>
 </li>
 </ul>
@@ -209,7 +266,7 @@
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#globals">Globals</a></li>
 <li><a class="reference internal" href="#functions">Functions</a><ul>
-<li><a class="reference internal" href="#saturnin.base.pkg_name"><code class="docutils literal notranslate"><span class="pre">pkg_name()</span></code></a></li>
+<li><a class="reference internal" href="#saturnin.base.VERSION"><code class="docutils literal notranslate"><span class="pre">VERSION</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -238,53 +295,48 @@
 <p>The <a class="reference internal" href="#module-saturnin.base" title="saturnin.base: Saturnin base types, clasess and modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">saturnin.base</span></code></a> module provides next objects imported from other sub-modules:</p>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Constants"></a><section id="constants">
 <h2>Constants<a class="headerlink" href="#constants" title="Permalink to this heading">¶</a></h2>
-<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">VERSION</span></code>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PLATFORM_OID" title="saturnin.base.types.PLATFORM_OID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLATFORM_OID</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PLATFORM_UID" title="saturnin.base.types.PLATFORM_UID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLATFORM_UID</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PLATFORM_VERSION" title="saturnin.base.types.PLATFORM_VERSION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLATFORM_VERSION</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.VENDOR_OID" title="saturnin.base.types.VENDOR_OID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VENDOR_OID</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.VENDOR_UID" title="saturnin.base.types.VENDOR_UID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VENDOR_UID</span></code></a>,
-<a class="reference internal" href="ref-base-types.html#saturnin.base.types.INVALID" title="saturnin.base.types.INVALID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INVALID</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.TIMEOUT" title="saturnin.base.types.TIMEOUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TIMEOUT</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">MIME</span></code>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.MIME_TYPE_PROTO" title="saturnin.base.types.MIME_TYPE_PROTO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIME_TYPE_PROTO</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.MIME_TYPE_TEXT" title="saturnin.base.types.MIME_TYPE_TEXT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIME_TYPE_TEXT</span></code></a>,
-<a class="reference internal" href="ref-base-types.html#saturnin.base.types.PROTO_PEER" title="saturnin.base.types.PROTO_PEER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROTO_PEER</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.INTERNAL_ROUTE" title="saturnin.base.transport.INTERNAL_ROUTE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INTERNAL_ROUTE</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">UNDEFINED</span></code>,
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">ANY</span></code>.</p>
+<p><a class="reference internal" href="#saturnin.base.VERSION" title="saturnin.base.VERSION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VERSION</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PLATFORM_OID" title="saturnin.base.types.PLATFORM_OID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLATFORM_OID</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PLATFORM_UID" title="saturnin.base.types.PLATFORM_UID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLATFORM_UID</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PLATFORM_VERSION" title="saturnin.base.types.PLATFORM_VERSION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLATFORM_VERSION</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.VENDOR_OID" title="saturnin.base.types.VENDOR_OID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VENDOR_OID</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.VENDOR_UID" title="saturnin.base.types.VENDOR_UID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VENDOR_UID</span></code></a>,
+<a class="reference internal" href="ref-base-types.html#saturnin.base.types.INVALID" title="saturnin.base.types.INVALID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INVALID</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.TIMEOUT" title="saturnin.base.types.TIMEOUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TIMEOUT</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.RESTART" title="saturnin.base.types.RESTART"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RESTART</span></code></a>, <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.MIME" title="(in Firebird-base v1.6.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIME</span></code></a>,
+<a class="reference internal" href="ref-base-types.html#saturnin.base.types.MIME_TYPE_PROTO" title="saturnin.base.types.MIME_TYPE_PROTO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIME_TYPE_PROTO</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.MIME_TYPE_TEXT" title="saturnin.base.types.MIME_TYPE_TEXT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIME_TYPE_TEXT</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.SECTION_LOCAL_ADDRESS" title="saturnin.base.types.SECTION_LOCAL_ADDRESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SECTION_LOCAL_ADDRESS</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.SECTION_NET_ADDRESS" title="saturnin.base.types.SECTION_NET_ADDRESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SECTION_NET_ADDRESS</span></code></a>,
+<a class="reference internal" href="ref-base-types.html#saturnin.base.types.SECTION_NODE_ADDRESS" title="saturnin.base.types.SECTION_NODE_ADDRESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SECTION_NODE_ADDRESS</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.SECTION_PEER_UID" title="saturnin.base.types.SECTION_PEER_UID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SECTION_PEER_UID</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.SECTION_SERVICE_UID" title="saturnin.base.types.SECTION_SERVICE_UID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SECTION_SERVICE_UID</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.SECTION_BUNDLE" title="saturnin.base.types.SECTION_BUNDLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SECTION_BUNDLE</span></code></a>,
+<a class="reference internal" href="ref-base-types.html#saturnin.base.types.SECTION_SERVICE" title="saturnin.base.types.SECTION_SERVICE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SECTION_SERVICE</span></code></a>, <a class="reference internal" href="ref-base-config.html#saturnin.base.config.CONFIG_HDR" title="saturnin.base.config.CONFIG_HDR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CONFIG_HDR</span></code></a>,
+<a class="reference internal" href="ref-base-types.html#saturnin.base.types.PROTO_PEER" title="saturnin.base.types.PROTO_PEER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROTO_PEER</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.INTERNAL_ROUTE" title="saturnin.base.transport.INTERNAL_ROUTE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INTERNAL_ROUTE</span></code></a>, <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.DEFAULT" title="(in Firebird-base v1.6.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT</span></code></a>, <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.UNDEFINED" title="(in Firebird-base v1.6.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UNDEFINED</span></code></a>,
+<a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.ANY" title="(in Firebird-base v1.6.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANY</span></code></a>.</p>
 </section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Types"></a><section id="types">
 <h2>Types<a class="headerlink" href="#types" title="Permalink to this heading">¶</a></h2>
-<p><code class="xref py py-class docutils literal notranslate"><span class="pre">ZMQAddress</span></code>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.RoutingID" title="saturnin.base.types.RoutingID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RoutingID</span></code></a>,
+<p><a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.ZMQAddress" title="(in Firebird-base v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ZMQAddress</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.RoutingID" title="saturnin.base.types.RoutingID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RoutingID</span></code></a>,
 <a class="reference internal" href="ref-base-types.html#saturnin.base.types.Token" title="saturnin.base.types.Token"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Token</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.TSupplement" title="saturnin.base.types.TSupplement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TSupplement</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.Origin" title="saturnin.base.types.Origin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Origin</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.SocketMode" title="saturnin.base.types.SocketMode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SocketMode</span></code></a>,
 <a class="reference internal" href="ref-base-types.html#saturnin.base.types.Direction" title="saturnin.base.types.Direction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Direction</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.SocketType" title="saturnin.base.types.SocketType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SocketType</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.State" title="saturnin.base.types.State"><code class="xref py py-obj docutils literal notranslate"><span class="pre">State</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PipeSocket" title="saturnin.base.types.PipeSocket"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PipeSocket</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.FileOpenMode" title="saturnin.base.types.FileOpenMode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FileOpenMode</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.Outcome" title="saturnin.base.types.Outcome"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Outcome</span></code></a>,
 <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ButlerInterface" title="saturnin.base.types.ButlerInterface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ButlerInterface</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.TZMQMessage" title="saturnin.base.transport.TZMQMessage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TZMQMessage</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.TMessageHandler" title="saturnin.base.transport.TMessageHandler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TMessageHandler</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.TSocketOptions" title="saturnin.base.transport.TSocketOptions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TSocketOptions</span></code></a>.</p>
 </section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Exceptions"></a><section id="exceptions">
 <h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this heading">¶</a></h2>
-<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Error</span></code>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.InvalidMessageError" title="saturnin.base.types.InvalidMessageError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InvalidMessageError</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ChannelError" title="saturnin.base.types.ChannelError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChannelError</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceError" title="saturnin.base.types.ServiceError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceError</span></code></a>,
-<a class="reference internal" href="ref-base-types.html#saturnin.base.types.ClientError" title="saturnin.base.types.ClientError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClientError</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.StopError" title="saturnin.base.types.StopError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code></a>.</p>
+<p><a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.Error" title="(in Firebird-base v1.6.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Error</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.InvalidMessageError" title="saturnin.base.types.InvalidMessageError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InvalidMessageError</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ChannelError" title="saturnin.base.types.ChannelError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChannelError</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceError" title="saturnin.base.types.ServiceError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceError</span></code></a>,
+<a class="reference internal" href="ref-base-types.html#saturnin.base.types.ClientError" title="saturnin.base.types.ClientError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClientError</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.StopError" title="saturnin.base.types.StopError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StopError</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">RestartError</span></code>.</p>
 </section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Dataclasses"></a><section id="dataclasses">
 <h2>Dataclasses<a class="headerlink" href="#dataclasses" title="Permalink to this heading">¶</a></h2>
-<p><a class="reference internal" href="ref-base-types.html#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AgentDescriptor</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PeerDescriptor</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceDescriptor</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PrioritizedItem" title="saturnin.base.types.PrioritizedItem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PrioritizedItem</span></code></a>.</p>
+<p><a class="reference internal" href="ref-base-types.html#saturnin.base.types.AgentDescriptor" title="saturnin.base.types.AgentDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AgentDescriptor</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PeerDescriptor" title="saturnin.base.types.PeerDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PeerDescriptor</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ServiceDescriptor" title="saturnin.base.types.ServiceDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ServiceDescriptor</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.ApplicationDescriptor" title="saturnin.base.types.ApplicationDescriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ApplicationDescriptor</span></code></a>, <a class="reference internal" href="ref-base-types.html#saturnin.base.types.PrioritizedItem" title="saturnin.base.types.PrioritizedItem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PrioritizedItem</span></code></a>.</p>
 </section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Classes"></a><section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
 <p><a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.ChannelManager" title="saturnin.base.transport.ChannelManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChannelManager</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Channel" title="saturnin.base.transport.Channel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Channel</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Message" title="saturnin.base.transport.Message"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Message</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.SimpleMessage" title="saturnin.base.transport.SimpleMessage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimpleMessage</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Protocol" title="saturnin.base.transport.Protocol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.Session" title="saturnin.base.transport.Session"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Session</span></code></a>,
 <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.DealerChannel" title="saturnin.base.transport.DealerChannel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DealerChannel</span></code></a>,  <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.RouterChannel" title="saturnin.base.transport.RouterChannel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RouterChannel</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.PushChannel" title="saturnin.base.transport.PushChannel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PushChannel</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.PullChannel" title="saturnin.base.transport.PullChannel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PullChannel</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.PubChannel" title="saturnin.base.transport.PubChannel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PubChannel</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.SubChannel" title="saturnin.base.transport.SubChannel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubChannel</span></code></a>,
 <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.XPubChannel" title="saturnin.base.transport.XPubChannel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">XPubChannel</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.XSubChannel" title="saturnin.base.transport.XSubChannel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">XSubChannel</span></code></a>, <a class="reference internal" href="ref-base-transport.html#saturnin.base.transport.PairChannel" title="saturnin.base.transport.PairChannel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PairChannel</span></code></a>, <a class="reference internal" href="ref-base-component.html#saturnin.base.component.Component" title="saturnin.base.component.Component"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Component</span></code></a>, <a class="reference internal" href="ref-base-component.html#saturnin.base.component.ComponentConfig" title="saturnin.base.component.ComponentConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ComponentConfig</span></code></a>,
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">Config</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfigProto</span></code>.</p>
+<a class="reference internal" href="ref-base-config.html#saturnin.base.config.SaturninConfig" title="saturnin.base.config.SaturninConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturninConfig</span></code></a>, <a class="reference internal" href="ref-base-config.html#saturnin.base.config.SaturninScheme" title="saturnin.base.config.SaturninScheme"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturninScheme</span></code></a>, <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/config.html#firebird.base.config.Config" title="(in Firebird-base v1.6.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Config</span></code></a> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfigProto</span></code>.</p>
 </section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Globals"></a><section id="globals">
 <h2>Globals<a class="headerlink" href="#globals" title="Permalink to this heading">¶</a></h2>
-<p><a class="reference internal" href="ref-base-site.html#module-saturnin.base.site" title="saturnin.base.site: Saturnin site"><code class="xref py py-obj docutils literal notranslate"><span class="pre">site</span></code></a>.</p>
+<p><a class="reference internal" href="ref-base-config.html#saturnin.base.config.directory_scheme" title="saturnin.base.config.directory_scheme"><code class="xref py py-obj docutils literal notranslate"><span class="pre">directory_scheme</span></code></a>, <a class="reference internal" href="ref-base-config.html#saturnin.base.config.saturnin_config" title="saturnin.base.config.saturnin_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">saturnin_config</span></code></a>.</p>
 </section>
 <a class="dashAnchor" name="//apple_ref/cpp/Section/Functions"></a><section id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
-<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code>.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="saturnin.base.pkg_name">
-<span class="sig-prename descclassname"><span class="pre">saturnin.base.</span></span><span class="sig-name descname"><span class="pre">pkg_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></span><a class="dashAnchor" name="//apple_ref/cpp/Function/saturnin.base.pkg_name"></a><a class="headerlink" href="#saturnin.base.pkg_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns name of the package to which the <code class="xref py py-obj docutils literal notranslate"><span class="pre">file</span></code> belongs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
-</dd>
-</dl>
+<p><a class="reference internal" href="ref-base-component.html#saturnin.base.component.create_config" title="saturnin.base.component.create_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_config</span></code></a>, <a class="reference external" href="https://firebird-base.readthedocs.io/en/latest/types.html#firebird.base.types.load" title="(in Firebird-base v1.6.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>, <a class="reference internal" href="ref-base-config.html#saturnin.base.config.is_virtual" title="saturnin.base.config.is_virtual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_virtual</span></code></a>, <a class="reference internal" href="ref-base-config.html#saturnin.base.config.venv" title="saturnin.base.config.venv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">venv</span></code></a>.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="saturnin.base.VERSION">
+<span class="sig-prename descclassname"><span class="pre">saturnin.base.</span></span><span class="sig-name descname"><span class="pre">VERSION</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'0.8.0'</span></em><a class="dashAnchor" name="//apple_ref/cpp/Value/saturnin.base.VERSION"></a><a class="headerlink" href="#saturnin.base.VERSION" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saturnin version</p>
 </dd></dl>
 </section>
 </section>
@@ -297,8 +349,8 @@
 <a href="#">Back to top</a>
 </p>
 <p>
-        © Copyright 2019-2022, The Firebird Project.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+        © Copyright 2019-2023, The Firebird Project.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.<br/>
 </p>
 </div>
 </footer>

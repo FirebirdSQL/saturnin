@@ -191,7 +191,7 @@ def list_configs() -> None:
     add_path(tbl, 'User configuration', directory_scheme.user_conf)
     add_path(tbl, 'Console theme', directory_scheme.theme_file)
     add_path(tbl, 'Firebird configuration', directory_scheme.firebird_conf)
-    add_path(tbl, 'Logging configuration', directory_scheme.recipes)
+    add_path(tbl, 'Logging configuration', directory_scheme.logging_conf)
     console.print(Panel(tbl, title='[title]Configuration files', title_align='left',
                         box=box.ROUNDED))
 
@@ -234,7 +234,7 @@ class _Configs(Enum):
 
 @app.command()
 def show_config(config_file: _Configs = typer.Argument(..., help="Configuration file")):
-    """Show content of configuration files.
+    """Show content of configuration file.
     """
     lexer = config_file.path.suffix[1:]
     if lexer == 'conf':
@@ -258,7 +258,7 @@ def create_config(config_file: _Configs= \
                   new_config: bool= \
                     typer.Option(False, '--new-config',
                                  help="Create configuration file even if it already exist.")):
-    """Create configuration file with default content.
+    """Creates configuration file with default content.
     """
     config: str = None
     if config_file in (_Configs.MAIN, _Configs.USER):
