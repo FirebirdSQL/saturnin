@@ -108,8 +108,8 @@ provided by installed Saturnin application) must be installed with the `install 
 Created or installed recipes can be run with the `run recipe-name` command. You can get
 a list of recipes that can be started with the `list recipes` command.
 
-For more information, see the `Usage Guide <usage-guide>`_.
+For more information, see the `Usage Guide`_.
 
 .. _pip: https://pypi.org/project/pip/
 .. _pipx: https://pypa.github.io/pipx/
-.. _usage-guide: https://saturnin.readthedocs.io/en/latest/usage-guide.html
+.. _Usage Guide: https://saturnin.readthedocs.io/en/latest/usage-guide.html
