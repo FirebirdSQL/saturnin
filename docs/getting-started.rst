@@ -3,6 +3,12 @@
 Getting Started
 ###############
 
+.. important::
+
+   For best experience with Saturnin console and other tools, we recommend to use terminal
+   with good support for ANSI escape sequences. On Windows platform, we recommend to use
+   `Windows Terminal`_.
+
 Installation
 ************
 
@@ -114,3 +120,4 @@ a list of recipes that can be started with the `list recipes` command.
 .. _PYPI: https://pypi.org/
 .. _pip: https://pypi.org/project/pip/
 .. _pipx: https://pypa.github.io/pipx/
+.. _Windows Terminal: https://aka.ms/terminal

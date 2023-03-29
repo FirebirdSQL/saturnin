@@ -4,6 +4,12 @@ Saturnin
 
 Saturnin is an implementation of Firebird Butler platform for Python.
 
+.. important::
+
+   For best experience with Saturnin console and other tools, we recommend to use terminal
+   with good support for ANSI escape sequences. On Windows platform, we recommend to use
+   `Windows Terminal`_.
+
 Installation
 ************
 
@@ -113,3 +119,4 @@ For more information, see the `Usage Guide`_.
 .. _pip: https://pypi.org/project/pip/
 .. _pipx: https://pypa.github.io/pipx/
 .. _Usage Guide: https://saturnin.readthedocs.io/en/latest/usage-guide.html
+.. _Windows Terminal: https://aka.ms/terminal
