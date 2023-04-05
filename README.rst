@@ -2,7 +2,7 @@
 Saturnin
 ========
 
-Saturnin is an implementation of Firebird Butler platform for Python.
+Saturnin is an implementation of `Firebird Butler`_ platform for Python.
 
 .. important::
 
@@ -116,7 +116,20 @@ a list of recipes that can be started with the `list recipes` command.
 
 For more information, see the `Usage Guide`_.
 
+Documentation related to Saturnin
+*********************************
+
+- `Firebird Butler`_
+- Saturnin_
+- `Saturnin CORE`_ services
+- `Saturnin SDK`_
+
 .. _pip: https://pypi.org/project/pip/
 .. _pipx: https://pypa.github.io/pipx/
 .. _Usage Guide: https://saturnin.readthedocs.io/en/latest/usage-guide.html
 .. _Windows Terminal: https://aka.ms/terminal
+
+.. _Firebird Butler: https://firebird-butler.rtfd.io/
+.. _Saturnin: https://saturnin.rtfd.io/
+.. _Saturnin CORE: https://saturnin-core.rtfd.io/
+.. _Saturnin SDK: https://saturnin-sdk.rtfd.io/
