@@ -12,11 +12,8 @@ the standard Python DB API, this driver also exposes the new (interface-based)
 client API introduced in Firebird 3, and number of additional extensions and
 enhancements for convenient use of Firebird RDBMS.
 
-:::tip
-
-   For best experience with Saturnin console and other tools, we recommend to use terminal
-   with good support for ANSI escape sequences. On Windows platform, we recommend to use
-   [Windows Terminal](https://aka.ms/terminal).
+> **Note**
+For best experience with Saturnin console and other tools, we recommend to use terminal with good support for ANSI escape sequences. On Windows platform, we recommend to use [Windows Terminal](https://aka.ms/terminal).
 
 -----
 
@@ -63,16 +60,14 @@ scheme can be changed by using the `SATURNIN_HOME` environment variable, which s
 of the other directory locations. Alternatively, you can create a `"home"` subdirectory in
 the root directory of the virtual environment in which Saturnin is isolated.
 
-:::caution
+> **Warning**
+Because on Linux or MacOS the default location of some directories may require higher than
+normal access rights, we recommend that you always use the home directory setting on these
+platforms.
 
-   Because on Linux or MacOS the default location of some directories may require higher
-   than normal access rights, we recommend that you always use the home directory setting
-   on these platforms.
-
-:::tip
-
-   To set the home directory in the virtual environment (recommended when installing with
-   pipx), use the command:
+> **Note**
+To set the home directory in the virtual environment (recommended when installing with pipx),
+use the command:
 
    ```console
    saturnin create home
@@ -96,11 +91,10 @@ in two modes:
   The interactive console offers an enhanced command line with persistent command history,
   command and parameter completion, and interactive help.
 
-:::note
-
-   The command set available in console mode differs from command set available in direct mode,
-   as some commands (typically those required to run only once or not very often like initialize
-   or create home) are available only in direct mode.
+> **Note**
+The command set available in console mode differs from command set available in direct mode,
+as some commands (typically those required to run only once or not very often like initialize
+or create home) are available only in direct mode.
 
 For normal work, we recommend using the interactive console mode. In the following sections,
 all the commands described are entered in the interactive console.
@@ -115,9 +109,8 @@ the standard pip utility, we recommend that you use saturnin's `install package`
 as these commands also update the necessary registries that Saturnin uses to work with
 Butler services and Saturnin applications.
 
-:::note
-
-   If necessary, the command: `update registry` can be used to update the registries.
+> **Note**
+If necessary, the command: `update registry` can be used to update the registries.
 
 To install package with Saturnin core services, use command:
 
@@ -133,7 +126,7 @@ a configuration file for the firebird driver using the commands:
 
    ```console
    create config firebird
-   v
+   edit config firebird
    ```
 
 ## Saturnin recipes
