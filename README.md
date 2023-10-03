@@ -6,11 +6,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/saturnin.svg)](https://pypi.org/project/saturnin)
 [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch)
 
-This package provides official Python Database API 2.0-compliant driver for the open
-source relational database Firebird®. In addition to the minimal feature set of
-the standard Python DB API, this driver also exposes the new (interface-based)
-client API introduced in Firebird 3, and number of additional extensions and
-enhancements for convenient use of Firebird RDBMS.
+Saturnin is an implementation of Firebird Butler platform for Python.
 
 > **Note**
 For best experience with Saturnin console and other tools, we recommend to use terminal with good support for ANSI escape sequences. On Windows platform, we recommend to use [Windows Terminal](https://aka.ms/terminal).
@@ -93,8 +89,8 @@ in two modes:
 
 > **Note**
 The command set available in console mode differs from command set available in direct mode,
-as some commands (typically those required to run only once or not very often like initialize
-or create home) are available only in direct mode.
+as some commands (typically those required to run only once or not very often like `initialize`
+or `create home`) are available only in direct mode.
 
 For normal work, we recommend using the interactive console mode. In the following sections,
 all the commands described are entered in the interactive console.
@@ -132,7 +128,7 @@ a configuration file for the firebird driver using the commands:
 ## Saturnin recipes
 
 Recipes are Saturnin-specific configuration files with instructions for running Butler
-services built for Saturnin. Recipes can be created with the create recipe command, which
+services built for Saturnin. Recipes can be created with the `create recipe` command, which
 creates a recipe template that typically needs to be modified further (because it only
 contains default values). Recipes created independently (e.g. by a solution supplier or
 provided by installed Saturnin application) must be installed with the `install recipe` command.
