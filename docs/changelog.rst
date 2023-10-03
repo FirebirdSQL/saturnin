@@ -2,6 +2,14 @@
 Changelog
 #########
 
+Version 0.9.0 [Unreleased]
+==========================
+
+* Build system changed from setuptools to hatch
+* Update dependencies to protobuf >=4.24.3, firebird-butler-protobuf>=1.0.0,
+  firebird-base>=1.7.0, firebird-uuid>=0.3.0, typer>=0.9.0, rich>=13.6, pyzmq>=25.1.1,
+  firebird-driver>=1.10 and firebird-lib>=1.5
+
 Version 0.8.0
 =============
 
