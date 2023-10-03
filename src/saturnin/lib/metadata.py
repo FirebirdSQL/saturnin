@@ -1,7 +1,9 @@
-#coding:utf-8
+# SPDX-FileCopyrightText: 2023-present The Firebird Projects <www.firebirdsql.org>
+#
+# SPDX-License-Identifier: MIT
 #
 # PROGRAM/MODULE: saturnin
-# FILE:           saturnin/lib/metadata.py
+# FILE:           saturnin/lib/data/metadata.py
 # DESCRIPTION:    Module for work with importlib metadata
 # CREATED:        23.2.2023
 #
@@ -25,7 +27,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-# Copyright (c) 2020 Firebird Project (www.firebirdsql.org)
+# Copyright (c) 2023 Firebird Project (www.firebirdsql.org)
 # All Rights Reserved.
 #
 # Contributor(s): Pavel Císař (original code)

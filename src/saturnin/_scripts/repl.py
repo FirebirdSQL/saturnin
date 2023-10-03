@@ -1,4 +1,6 @@
-#coding:utf-8
+# SPDX-FileCopyrightText: 2022-present The Firebird Projects <www.firebirdsql.org>
+#
+# SPDX-License-Identifier: MIT
 #
 #   PROGRAM/MODULE: saturnin
 #   FILE:           saturnin/_scripts/repl.py
@@ -25,8 +27,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-# Based on code from https://github.com/click-contrib/click-repl
- # pylint: disable=W0212
+# Initial code is based on https://github.com/click-contrib/click-repl
+#
+# Contributor(s): Pavel Císař (initial code)
+#                 ______________________________________
+# pylint: disable=W0212
 
 """REPL for Typer application
 """

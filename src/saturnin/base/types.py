@@ -1,7 +1,9 @@
-#coding:utf-8
+# SPDX-FileCopyrightText: 2019-present The Firebird Projects <www.firebirdsql.org>
 #
-# PROGRAM/MODULE: saturnin-core
-# FILE:           saturnin/core/types.py
+# SPDX-License-Identifier: MIT
+#
+# PROGRAM/MODULE: saturnin
+# FILE:           saturnin/base/types.py
 # DESCRIPTION:    Saturnin type definitions and constants
 # CREATED:        22.4.2019
 #

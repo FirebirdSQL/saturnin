@@ -1,4 +1,6 @@
-#coding:utf-8
+# SPDX-FileCopyrightText: 2022-present The Firebird Projects <www.firebirdsql.org>
+#
+# SPDX-License-Identifier: MIT
 #
 # PROGRAM/MODULE: saturnin
 # FILE:           saturnin/_scripts/commands/recipes.py
@@ -25,7 +27,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-# Copyright (c) 2021 Firebird Project (www.firebirdsql.org)
+# Copyright (c) 2023 Firebird Project (www.firebirdsql.org)
 # All Rights Reserved.
 #
 # Contributor(s): Pavel Císař (original code)
@@ -153,8 +155,8 @@ def show_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
                 section: str=typer.Option(None, help="Configuration section name"),
                 raw: bool=typer.Option(False, '--raw',
                                        help="Print recipe file content instead normal output")):
-    """It analyzes the content of the recipe and displays its structure and configuration according to the default 
-   sections of the container configuration. If the recipe contains several variants, it is necessary to enter 
+    """It analyzes the content of the recipe and displays its structure and configuration according to the default
+   sections of the container configuration. If the recipe contains several variants, it is necessary to enter
    the name of the specific section for the configuration of the container to display them.
 
    Alternatively, it is possible to display the entire recipe in text form (with syntax highlighting).

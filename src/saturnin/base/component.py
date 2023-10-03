@@ -1,7 +1,9 @@
-#coding:utf-8
+# SPDX-FileCopyrightText: 2020-present The Firebird Projects <www.firebirdsql.org>
+#
+# SPDX-License-Identifier: MIT
 #
 # PROGRAM/MODULE: saturnin
-# FILE:           saturnin/component/base.py
+# FILE:           saturnin/base/component.py
 # DESCRIPTION:    Abstract base class for Saturnin Components
 # CREATED:        3.12.2020
 #

@@ -1,8 +1,10 @@
-#coding:utf-8
+# SPDX-FileCopyrightText: 2019-present The Firebird Projects <www.firebirdsql.org>
 #
-# PROGRAM/MODULE: saturnin-core
-# FILE:           saturnin/core/__init__.py
-# DESCRIPTION:    Saturnin (Firebird Butler Development Platform) core package
+# SPDX-License-Identifier: MIT
+#
+# PROGRAM/MODULE: saturnin
+# FILE:           saturnin/base/__init__.py
+# DESCRIPTION:    Saturnin (Firebird Butler Development Platform) base package
 # CREATED:        21.2.2019
 #
 # The contents of this file are subject to the MIT License
@@ -54,4 +56,4 @@ from .config import (SaturninConfig, SaturninScheme, CONFIG_HDR,
                      directory_scheme, saturnin_config, venv, is_virtual)
 
 #: Saturnin version
-VERSION: str = '0.8.0'
+VERSION = '0.9.0b0'

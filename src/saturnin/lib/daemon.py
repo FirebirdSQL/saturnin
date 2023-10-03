@@ -1,7 +1,9 @@
-#coding:utf-8
+# SPDX-FileCopyrightText: 2020-present The Firebird Projects <www.firebirdsql.org>
+#
+# SPDX-License-Identifier: MIT
 #
 # PROGRAM/MODULE: saturnin
-# FILE:           saturnin/lib/daemon.py
+# FILE:           saturnin/lib/data/daemon.py
 # DESCRIPTION:    Daemon process management
 # CREATED:        6.11.2020
 #

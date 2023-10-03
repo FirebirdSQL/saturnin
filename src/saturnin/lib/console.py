@@ -1,7 +1,9 @@
-#coding:utf-8
+# SPDX-FileCopyrightText: 2020-present The Firebird Projects <www.firebirdsql.org>
+#
+# SPDX-License-Identifier: MIT
 #
 # PROGRAM/MODULE: saturnin
-# FILE:           saturnin/lib/console.py
+# FILE:           saturnin/lib/data/console.py
 # DESCRIPTION:    Saturnin console manager
 # CREATED:        7.12.2020
 #

@@ -1,7 +1,9 @@
-#coding:utf-8
+# SPDX-FileCopyrightText: 2019-present The Firebird Projects <www.firebirdsql.org>
+#
+# SPDX-License-Identifier: MIT
 #
 # PROGRAM/MODULE: saturnin
-# FILE:           saturnin/transport.py
+# FILE:           saturnin/base/transport.py
 # DESCRIPTION:    ZeroMQ messaging - base classes and other definitions
 # CREATED:        28.2.2019
 #
