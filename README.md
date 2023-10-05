@@ -30,8 +30,6 @@ For best experience with Saturnin console and other tools, we recommend to use t
 
 ## Installation
 
-Requires: Firebird 3.8+
-
 For regular deployments, we recommend installing using the [pipx](https://pypa.github.io/pipx/)
 tool, which installs into a separate virtual Python environment and exposes all executable
 commands in the search path.
