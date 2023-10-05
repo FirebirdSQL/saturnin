@@ -56,4 +56,4 @@ from .config import (SaturninConfig, SaturninScheme, CONFIG_HDR,
                      directory_scheme, saturnin_config, venv, is_virtual)
 
 #: Saturnin version
-VERSION = '0.9.0b0'
+VERSION = '0.9.0'
