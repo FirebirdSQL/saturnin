@@ -32,48 +32,64 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
-# pylint: disable=R0902, R1702
 
 """Saturnin base module for implementation of Firebird Butler Microservices.
 """
 
 from __future__ import annotations
-from typing import Union, Dict, List, Optional, Callable, cast, Final
+
 import os
 import platform
 import threading
 import uuid
+from collections.abc import Callable
 from contextlib import suppress
-from weakref import proxy
+from heapq import heappop, heappush
 from time import monotonic_ns
-from heapq import heappush, heappop
+from typing import Final, cast
+from weakref import proxy
+
 import zmq
-from firebird.base.types import Conjunctive
-from firebird.base.trace import TracedMixin
-from saturnin.base import (ZMQAddress, Component, PeerDescriptor, ServiceDescriptor,
-     ServiceError, Direction, State, Outcome, ChannelManager, Channel, PairChannel,
-     ComponentConfig, ConfigProto, PrioritizedItem)
+from saturnin.base import (
+    Channel,
+    ChannelManager,
+    Component,
+    ComponentConfig,
+    ConfigProto,
+    Direction,
+    Outcome,
+    PairChannel,
+    PeerDescriptor,
+    PrioritizedItem,
+    ServiceDescriptor,
+    ServiceError,
+    State,
+    ZMQAddress,
+)
 from saturnin.protocol.iccp import ICCPComponent
+
+from firebird.base.trace import TracedMixin
+from firebird.base.types import conjunctive
 
 #: Service control channel name
 SVC_CTRL: Final[str] = 'iccp'
 
-class MicroService(Component, TracedMixin, metaclass=Conjunctive): # pylint: disable=E1139
+class MicroService(Component, TracedMixin, metaclass=conjunctive):
     """Saturnin Component for Firebird Burler Microservices.
     """
     def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
-                 peer_uid: uuid.UUID=None):
+                 peer_uid: uuid.UUID | None=None):
         """
         Arguments:
             zmq_context: ZeroMQ Context.
             descriptor: Service descriptor.
             peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
         """
-        self._heap: List = []
+        self._heap: list = []
         #: Service execution outcome
         self.outcome: Outcome = Outcome.UNKNOWN
         #: Service execution outcome details
-        self.details: Union[Exception, List[str]] = None
+        self.details: Exception | list[str] = None
         #: Service internal state
         self.state: State = State.UNKNOWN_STATE
         #: Event to stop the component
@@ -84,7 +100,7 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive): # pylint: dis
         #: Dictionary with endpoints to which the component binds.
         #: Key is channel name, value is list of ZMQAddress instances.
         #: Initially empty.
-        self.endpoints: Dict[str, List[ZMQAddress]] = {}
+        self.endpoints: dict[str, list[ZMQAddress]] = {}
         #: Service desriptor.
         self.descriptor: ServiceDescriptor = descriptor
         #: Peer descriptor for this component.
@@ -93,7 +109,7 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive): # pylint: dis
     def __str__(self):
         return self.logging_id
     __repr__ = __str__
-    def handle_stop_component(self, exc: Exception=None) -> None:
+    def handle_stop_component(self, exc: Exception | None=None) -> None:
         """ICCP event handler. Called when commponent should stop its operation.
         It stops the component by setting the `~Component.stop` event.
 
@@ -164,7 +180,7 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive): # pylint: dis
         """
         config.validate() # Fail early!
         if config.logging_id.value is not None:
-            self._logging_id_ = config.logging_id.value # pylint: disable=W0201
+            self._logging_id_ = config.logging_id.value
     def bind_endpoints(self) -> None:
         """Bind endpoints used by component.
         """
@@ -189,7 +205,7 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive): # pylint: dis
     def stop_activities(self) -> None:
         """Stop component activities.
         """
-    def warm_up(self, ctrl_addr: Optional[ZMQAddress]) -> None:
+    def warm_up(self, ctrl_addr: ZMQAddress | None) -> None:
         """Initializes the `.ChannelManager` and connects component to control channel.
         """
         if ctrl_addr is not None:
@@ -257,7 +273,7 @@ class MicroService(Component, TracedMixin, metaclass=Conjunctive): # pylint: dis
                           ctrl_chn.session)
             self.mngr.shutdown()
             self.state = State.FINISHED
-        except Exception as exc: # pylint: disable=W0703
+        except Exception as exc:
             self.state = State.ABORTED
             with suppress(Exception):
                 # try send report to controller

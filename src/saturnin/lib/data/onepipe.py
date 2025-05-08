@@ -1,4 +1,3 @@
-#coding:utf-8
 #
 # PROGRAM/MODULE: saturnin
 # FILE:           saturnin/lib/data/onepipe.py
@@ -30,7 +29,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=R0903, R0902
 
 """Saturnin base classes for data provider and consumer microservices
 
@@ -38,18 +36,32 @@ This is extended description.
 """
 
 from __future__ import annotations
-from typing import cast, Union, Final
-from functools import partial
+
 import uuid
+from functools import partial
+from typing import Final, cast
+
 import zmq
-from firebird.base.config import (StrOption, EnumOption, IntOption, BoolOption,
-    ZMQAddressOption, MIMEOption)
-from saturnin.base import (Error, StopError, Direction, SocketMode, PipeSocket, Outcome,
-     ZMQAddress, MIME, ComponentConfig, Channel, Session, Message, DealerChannel,
-     ServiceDescriptor)
+from saturnin.base import (
+    MIME,
+    Channel,
+    ComponentConfig,
+    DealerChannel,
+    Direction,
+    Error,
+    Message,
+    Outcome,
+    PipeSocket,
+    ServiceDescriptor,
+    Session,
+    SocketMode,
+    StopError,
+    ZMQAddress,
+)
 from saturnin.component.micro import MicroService
-from saturnin.protocol.fbdp import (ErrorCode, FBDPServer, FBDPClient, FBDPSession,
-    FBDPMessage)
+from saturnin.protocol.fbdp import ErrorCode, FBDPClient, FBDPMessage, FBDPServer, FBDPSession
+
+from firebird.base.config import BoolOption, EnumOption, IntOption, MIMEOption, StrOption, ZMQAddressOption
 
 #: Channel & endpoint name
 PIPE_CHN: Final[str] = 'pipe'
@@ -111,7 +123,7 @@ class BaseDataPipeMicro(MicroService):
     - `handle_pipe_closed` to release resource assiciated with pipe.
     """
     def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
-                 peer_uid: uuid.UUID=None):
+                 peer_uid: uuid.UUID | None=None):
         """
         Arguments:
             zmq_context: ZeroMQ Context.
@@ -124,7 +136,7 @@ class BaseDataPipeMicro(MicroService):
         #: For PROVIDER it's `.PipeSocket.OUTPUT`, for CONSUMER it's `.PipeSocket.INPUT`
         self.server_socket: PipeSocket = None
         #: FDBP protocol handler (server or client)
-        self.protocol: Union[FBDPServer, FBDPClient] = None
+        self.protocol: FBDPServer | FBDPClient = None
         # Next members are set in initialize()
         #: [Configuration] Whether service should stop when pipe is closed
         self.stop_on_close: bool = None
@@ -200,7 +212,7 @@ class BaseDataPipeMicro(MicroService):
             # We have to report error here, because normal is to close pipes before
             # shutdown is commenced. Mind that service shutdown could be also caused by error!
             cast(FBDPServer, chn.protocol).send_close(chn, session, ErrorCode.ERROR)
-    def handle_exception(self, channel: Channel, session: Session, msg: Message, # pylint: disable=W0613
+    def handle_exception(self, channel: Channel, session: Session, msg: Message,
                          exc: Exception) -> None:
         """Event handler called by `.handle_msg()` on exception in message handler.
 
@@ -215,7 +227,7 @@ class BaseDataPipeMicro(MicroService):
         self.outcome = Outcome.ERROR
         self.details = exc
     # FBDP server only
-    def handle_accept_client(self, channel: Channel, session: FBDPSession) -> None: # pylint: disable=W0613
+    def handle_accept_client(self, channel: Channel, session: FBDPSession) -> None:
         """Event handler executed when client connects to the data pipe via OPEN message.
 
         Arguments:
@@ -314,8 +326,8 @@ class BaseDataPipeMicro(MicroService):
             so the descendant class must override this method without `super` call.
         """
         raise StopError('OK', code=ErrorCode.OK)
-    def handle_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage, # pylint: disable=W0613
-                           exc: Exception=None) -> None:
+    def handle_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage,
+                           exc: Exception | None=None) -> None:
         """Event handler executed when CLOSE message is received or sent, to release any
         resources associated with current transmission.
 

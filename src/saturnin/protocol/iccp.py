@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
- # pylint: disable=W0201. W0613
 
 """Saturnin Internal Component Control Protocol
 
@@ -40,18 +39,33 @@
 """
 
 from __future__ import annotations
-from typing import Dict, List, Union, Type, Iterable, Final
-import uuid
+
 import traceback
+import uuid
+from collections.abc import Iterable
+from enum import Enum, IntEnum
 from struct import pack, unpack
-from enum import IntEnum, Enum
-from firebird.base.types import ANY
-from firebird.base.signal import eventsocket
+from typing import Final
+
+from saturnin.base import (
+    PROTO_PEER,
+    Channel,
+    InvalidMessageError,
+    Message,
+    Outcome,
+    PeerDescriptor,
+    Protocol,
+    RoutingID,
+    Session,
+    StopError,
+    TZMQMessage,
+)
+
 from firebird.base import protobuf
-from firebird.base.config import ZMQAddress, Config, ConfigProto, PROTO_CONFIG
-from saturnin.base import (InvalidMessageError, StopError, PROTO_PEER, PeerDescriptor,
-                           Channel, Protocol, Message, Session, RoutingID, TZMQMessage,
-                           Outcome)
+from firebird.base.config import PROTO_CONFIG, Config, ConfigProto, ZMQAddress
+from firebird.base.signal import eventsocket
+from firebird.base.types import ANY
+
 
 class MsgType(IntEnum):
     """Control message type.
@@ -68,7 +82,7 @@ class Request(Enum):
     """
     CONFIGURE = b'CONF'
 
-class ICCPMessage(Message): # pylint: disable=R0902
+class ICCPMessage(Message):
     """Service Control Message.
     """
     def __init__(self):
@@ -124,7 +138,7 @@ class ICCPMessage(Message): # pylint: disable=R0902
             elif self.msg_type is MsgType.REQUEST:
                 if self.request is Request.CONFIGURE:
                     zmsg.append(self.config.SerializeToString())
-        except Exception: # pylint: disable=W0703
+        except Exception:
             traceback.print_exc()
         return zmsg
     def clear(self) -> None:
@@ -166,7 +180,7 @@ class _ICCP(Protocol):
     # iso.org.dod.internet.private.enterprise.firebird.butler.platform.saturnin.protocol.iscp
     #: UUID instance that identifies the protocol.
     UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, OID)
-    def __init__(self, *, session_type: Type[Session] = Session):
+    def __init__(self, *, session_type: type[Session] = Session):
         """
         Arguments:
             session_type: Class for session objects.
@@ -230,7 +244,7 @@ class ICCPComponent(_ICCP):
 
     Used by Saturnin internally for component/controller transmissions.
     """
-    def __init__(self, *, session_type: Type[Session] = Session, with_traceback: bool=False):
+    def __init__(self, *, session_type: type[Session] = Session, with_traceback: bool=False):
         """
         Arguments:
             session_type: Class for session objects.
@@ -322,14 +336,14 @@ class ICCPComponent(_ICCP):
         """
         result = self.ok_msg()
         try:
-            if msg.data is Request.CONFIGURE:
+            if msg.msg_type is Request.CONFIGURE:
                 self.on_config_request(msg.config)
-        except Exception as exc: # pylint: disable=W0703
+        except Exception as exc:
             result = self.error_msg(exc)
         if not (err_code := channel.send(result, session)):
             raise StopError("Send to controller failed", err_code=err_code)
     def ready_msg(self, peer: PeerDescriptor,
-                  endpoints: Dict[str, List[ZMQAddress]]) -> ICCPMessage:
+                  endpoints: dict[str, list[ZMQAddress]]) -> ICCPMessage:
         """Returns `READY` control message.
 
         Arguments:
@@ -361,7 +375,7 @@ class ICCPComponent(_ICCP):
             msg.error = str(exc)
         return msg
     def finished_msg(self, outcome: Outcome,
-                     details: Union[None, Exception, List[str]]) -> ICCPMessage:
+                     details: None | Exception | list[str]) -> ICCPMessage:
         """Returns `FINISHED` control message.
 
         Arguments:
@@ -383,7 +397,7 @@ class ICCPComponent(_ICCP):
             msg.details = details.copy()
         return msg
     @eventsocket
-    def on_stop_component(self, exc: Exception=None) -> None:
+    def on_stop_component(self, exc: Exception | None=None) -> None:
         """`~firebird.base.signal.eventsocket` called when commponent should stop its operation.
 
         Arguments:
@@ -406,7 +420,7 @@ class ICCPController(_ICCP):
 
     Used by Saturnin internally for component/controller transmissions.
     """
-    def __init__(self, *, session_type: Type[Session] = Session):
+    def __init__(self, *, session_type: type[Session] = Session):
         """
         Arguments:
             session_type: Class for session objects.

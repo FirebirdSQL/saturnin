@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=R0913
 
 """Saturnin recipes
 
@@ -40,16 +39,20 @@
 """
 
 from __future__ import annotations
-from typing import Hashable
-from uuid import UUID
+
+from collections.abc import Hashable
+from configparser import ConfigParser, ExtendedInterpolation
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from dataclasses import dataclass
-from configparser import ConfigParser, ExtendedInterpolation
-from firebird.base.config import Config, EnumOption, StrOption, UUIDOption, PathOption
-from firebird.base.types import Distinct, Error
-from firebird.base.collections import Registry
+from uuid import UUID
+
 from saturnin.base.config import directory_scheme
+
+from firebird.base.collections import Registry
+from firebird.base.config import Config, EnumOption, PathOption, StrOption, UUIDOption
+from firebird.base.types import Distinct, Error
+
 
 class RecipeType(Enum):
     """Recipe type.
@@ -85,7 +88,7 @@ class SaturninRecipe(Config):
             StrOption('description', "Recipe description", default="Not provided")
 
 @dataclass(eq=True, order=False, frozen=True)
-class RecipeInfo(Distinct): # pylint: disable=R0903
+class RecipeInfo(Distinct):
     """Dataclass recipe information record stored in recipe registry.
 
     Arguments:

@@ -40,13 +40,15 @@ executed on Saturnin platform, typically under supervision of Controller(s).
 """
 
 from __future__ import annotations
-from typing import Optional
-from uuid import UUID
-from abc import ABC, abstractmethod
-from firebird.base.types import ZMQAddress
-from firebird.base.config import Config, StrOption, UUIDOption
 
-def create_config(_cls: Type[ComponentConfig], agent: UUID, name: str) -> ComponentConfig: # pragma: no cover
+from abc import ABC, abstractmethod
+from uuid import UUID
+
+from firebird.base.config import Config, StrOption, UUIDOption
+from firebird.base.types import ZMQAddress
+
+
+def create_config(_cls: type[ComponentConfig], agent: UUID, name: str) -> ComponentConfig:
     """Returns newly created `ComponentConfig` instance.
 
     Intended to be used with `functools.partial` in `.ServiceDescriptor.config` definitions.
@@ -86,7 +88,7 @@ class Component(ABC):
            config: Component configuration.
         """
     @abstractmethod
-    def warm_up(self, ctrl_addr: Optional[ZMQAddress]) -> None:
+    def warm_up(self, ctrl_addr: ZMQAddress | None) -> None:
         """Must initialize the `.ChannelManager` and connect component to control channel
         at provided address.
 

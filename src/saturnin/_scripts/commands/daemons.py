@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=R0912, R0913, R0914, R0915
 
 """Saturnin daemon commands
 
@@ -40,17 +39,19 @@
 """
 
 from __future__ import annotations
-from typing import Dict, List
+
 import datetime
+from typing import Annotated
+
 import psutil
 import typer
+from rich import box
 from rich.table import Table
 from rich.text import Text
-from rich import box
 from saturnin.base import directory_scheme
 from saturnin.component.recipe import RecipeInfo, recipe_registry
-from saturnin.lib.console import console
 from saturnin.lib import daemon
+from saturnin.lib.console import console
 
 #: Typer command group for daemon management commands
 app = typer.Typer(rich_markup_mode="rich", help="Saturnin daemons.")
@@ -60,7 +61,7 @@ def get_first_line(text: str) -> str:
     """
     return text.strip().split('\n')[0]
 
-def get_running_daemons() -> Dict[int, str]:
+def get_running_daemons() -> dict[int, str]:
     """Returns dictionary with running daemons: key=pid, value=recipe_name
     """
     result = {}
@@ -73,13 +74,13 @@ def get_running_daemons() -> Dict[int, str]:
             pid_file.unlink()
     return result
 
-def pid_completer(ctx, args, incomplete) -> List:
+def pid_completer(ctx, args, incomplete) -> list[tuple[str, str]]: #noqa: ARG001
     """Click completer for PIDs of running Saturnin daemons.
     """
     return [(str(pid), recipe.name if recipe else "")
             for pid, recipe in get_running_daemons().items()]
 
-def format_size(size: int, decimals: int=2, binary_system: bool=True) -> str:
+def format_size(size: int, decimals: int=2, *, binary_system: bool=True) -> str:
     """Returns "humanized" size.
     """
     if binary_system:
@@ -124,7 +125,9 @@ def list_daemons() -> None:
 
 
 @app.command()
-def show_daemon(pid: int=typer.Argument(..., metavar='PID', autocompletion=pid_completer)) -> None:
+def show_daemon(
+    pid: Annotated[int, typer.Argument(metavar='PID', autocompletion=pid_completer)]
+    ) -> None:
     """Show information about running Saturnin daemon.
     """
     if not psutil.pid_exists(pid):
@@ -182,7 +185,9 @@ def show_daemon(pid: int=typer.Argument(..., metavar='PID', autocompletion=pid_c
     console.print(table)
 
 @app.command()
-def stop_daemon(pid: int=typer.Argument(..., metavar='PID', autocompletion=pid_completer)) -> None:
+def stop_daemon(
+    pid: Annotated[int, typer.Argument(metavar='PID', autocompletion=pid_completer)]
+    ) -> None:
     """Stop running Saturnin daemon.
     """
     if not psutil.pid_exists(pid):

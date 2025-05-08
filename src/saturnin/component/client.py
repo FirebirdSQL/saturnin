@@ -39,16 +39,17 @@
 """
 
 from __future__ import annotations
+
 import os
 import platform
 from struct import pack
 from uuid import UUID
-from saturnin.base import (Error, ZMQAddress, Channel, TIMEOUT, INVALID, AgentDescriptor,
-     PeerDescriptor)
-from saturnin.protocol.fbsp import (FBSPClient, FBSPSession, FBSPMessage,
-     WelcomeMessage, ErrorMessage, MsgType)
 
-class Token():
+from saturnin.base import INVALID, TIMEOUT, AgentDescriptor, Channel, Error, PeerDescriptor, ZMQAddress
+from saturnin.protocol.fbsp import ErrorMessage, FBSPClient, FBSPMessage, FBSPSession, MsgType, WelcomeMessage
+
+
+class Token:
     """FBSP message token generator.
     """
     def __init__(self, value: int=0):
@@ -83,7 +84,6 @@ class ServiceClient:
             agent: Client agent identification.
             peer_uid: Client peer ID.
         """
-        assert isinstance(channel.protocol, FBSPClient)
         self.channel = channel
         self.session = channel.connect(address)
         self.protocol = channel.protocol

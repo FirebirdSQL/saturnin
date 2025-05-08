@@ -32,20 +32,22 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
-# pylint: disable=R0903
 
 """Saturnin base module for implementation of Firebird Butler Services
 """
 
 from __future__ import annotations
-from typing import cast, Final
-from abc import abstractmethod
+
 import uuid
+from abc import abstractmethod
+from typing import Final, cast
+
 import zmq
-from firebird.base.config import ListOption
-from saturnin.base import ZMQAddress, RouterChannel, ComponentConfig, ServiceDescriptor
+from saturnin.base import ComponentConfig, RouterChannel, ServiceDescriptor, ZMQAddress
 from saturnin.component.micro import MicroService
 from saturnin.protocol.fbsp import FBSPService
+
+from firebird.base.config import ListOption
 
 #: Channel name
 SVC_CHN: Final[str] = 'service'
@@ -66,7 +68,7 @@ class Service(MicroService):
     """Base Firebird Butler Service.
     """
     def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
-                 peer_uid: uuid.UUID=None):
+                 peer_uid: uuid.UUID | None=None):
         """
         Arguments:
             zmq_context: ZeroMQ Context.

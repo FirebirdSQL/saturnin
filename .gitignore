@@ -132,5 +132,17 @@ dmypy.json
 *.wpr
 *.wpu
 
+# Personal
+notes/
+store/
+work/
+nuitka/
+backup/
+big-dist/
+
+# Local
+home*/
+
 # Sphinx build
 docs/_build
+docs/saturnin.docset

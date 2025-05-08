@@ -31,7 +31,6 @@
 #
 # Contributor(s): Pavel Císař (initial code)
 #                 ______________________________________
-# pylint: disable=W0613
 
 """CLI command completers.
 
@@ -39,46 +38,49 @@ For use with Typer/Click arguments and options (parameter `autocompletion`).
 """
 
 from __future__ import annotations
-from typing import List
+
 from pathlib import Path
-from firebird.uuid import oid_registry
+
+from saturnin.component.apps import application_registry
 from saturnin.component.recipe import recipe_registry
 from saturnin.component.registry import service_registry
-from saturnin.component.apps import application_registry
+
+from firebird.uuid import oid_registry
+
 
 def get_first_line(text: str) -> str:
     """Returns first non-empty line from argument.
     """
     return text.strip().split('\n')[0]
 
-def oid_completer(ctx, args, incomplete) -> List:
+def oid_completer(ctx, args, incomplete) -> list:
     """Click completer for OIDs. Returns both, UUID and OID names.
     """
     result = [(str(oid.uid)) for oid in oid_registry.values()]
     result.extend(oid.full_name for oid in oid_registry.values())
     return result
 
-def service_completer(ctx, args, incomplete) -> List:
+def service_completer(ctx, args, incomplete) -> list:
     """Click completer for Saturnin services.
     """
     result = [(str(svc.uid)) for svc in service_registry.values()]
     result.extend(svc.name for svc in service_registry.values())
     return result
 
-def application_completer(ctx, args, incomplete) -> List:
+def application_completer(ctx, args, incomplete) -> list:
     """Click completer for Saturnin applications.
     """
     result = [(str(app.uid)) for app in application_registry.values()]
     result.extend(app.name for app in application_registry.values())
     return result
 
-def recipe_completer(ctx, args, incomplete) -> List:
+def recipe_completer(ctx, args, incomplete) -> list:
     """Click completer for Saturnin recipes.
     """
     return [(recipe.name, get_first_line(recipe.description))
             for recipe in recipe_registry.values()]
 
-def path_completer(ctx, args, incomplete) -> List:
+def path_completer(ctx, args, incomplete) -> list:
     """Click completer for Path values.
     """
     base_path = Path(incomplete)

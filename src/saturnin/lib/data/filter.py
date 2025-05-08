@@ -1,4 +1,3 @@
-#coding:utf-8
 #
 # PROGRAM/MODULE: saturnin
 # FILE:           saturnin/lib/data/filter.py
@@ -30,25 +29,43 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=R0903, R0902, R0915, C0301
 
 """Saturnin base class for data filter microservices
 """
 
 from __future__ import annotations
-from typing import Any, List, Union, cast, Final
-from functools import partial
-from collections import deque
+
 import uuid
+from collections import deque
+from functools import partial
+from typing import Any, Final, cast
+
 import zmq
-from firebird.base.config import (StrOption, EnumOption, IntOption, BoolOption,
-    ZMQAddressOption, MIMEOption)
-from saturnin.base import (Error, StopError, Direction, SocketMode, PipeSocket, Outcome,
-     ZMQAddress, MIME, ComponentConfig, Message, SimpleMessage, Session, Protocol, Channel,
-     DealerChannel, PushChannel, PullChannel, ANY, ServiceDescriptor)
+from saturnin.base import (
+    ANY,
+    MIME,
+    Channel,
+    ComponentConfig,
+    DealerChannel,
+    Direction,
+    Error,
+    Message,
+    Outcome,
+    PipeSocket,
+    Protocol,
+    PullChannel,
+    PushChannel,
+    ServiceDescriptor,
+    Session,
+    SimpleMessage,
+    SocketMode,
+    StopError,
+    ZMQAddress,
+)
 from saturnin.component.micro import MicroService
-from saturnin.protocol.fbdp import (ErrorCode, FBDPServer, FBDPClient, FBDPSession,
-    FBDPMessage)
+from saturnin.protocol.fbdp import ErrorCode, FBDPClient, FBDPMessage, FBDPServer, FBDPSession
+
+from firebird.base.config import BoolOption, EnumOption, IntOption, MIMEOption, StrOption, ZMQAddressOption
 
 #: Pipe INPUT channel & endpoint name
 INPUT_PIPE_CHN: Final[str] = 'input-pipe'
@@ -140,7 +157,7 @@ class DataFilterMicro(MicroService):
     - `.handle_output_pipe_closed` to release resource assiciated with output pipe.
     """
     def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
-                 peer_uid: uuid.UUID=None):
+                 peer_uid: uuid.UUID | None=None):
         """
         Arguments:
             zmq_context: ZeroMQ Context.
@@ -170,7 +187,7 @@ class DataFilterMicro(MicroService):
         #: [Configuration] pipe READY message schedule interval in milliseconds
         self.input_ready_schedule_interval: int = None
         #: FDBP protocol handler (server or client) for input pipe
-        self.input_protocol: Union[FBDPServer, FBDPClient] = None
+        self.input_protocol: FBDPServer | FBDPClient = None
         #: Input pipe channel
         self.pipe_in_chn: Channel = None
         #: [Configuration] Data Pipe Identification
@@ -186,7 +203,7 @@ class DataFilterMicro(MicroService):
         #: [Configuration] pipe READY message schedule interval in milliseconds
         self.output_ready_schedule_interval: int = None
         #: FDBP protocol handler (server or client) for output pipe
-        self.output_protocol: Union[FBDPServer, FBDPClient] = None
+        self.output_protocol: FBDPServer | FBDPClient = None
         #: Output pipe channel
         self.pipe_out_chn: Channel = None
         #: Internal AWAKE address
@@ -338,7 +355,7 @@ class DataFilterMicro(MicroService):
         msg = SimpleMessage()
         msg.data.append(b'wake')
         self.wake_out_chn.send(msg, self.wake_out_chn.session)
-    def store_batch_output(self, batch: List) -> None:
+    def store_batch_output(self, batch: list) -> None:
         """Store batch of data to output queue and send wake notification.
 
         Arguments:
@@ -364,7 +381,7 @@ class DataFilterMicro(MicroService):
         Note:
             The default implementation does nothing.
         """
-    def handle_wake_msg(self, channel: Channel, session: Session, msg: Message) -> None: # pylint: disable=W0613
+    def handle_wake_msg(self, channel: Channel, session: Session, msg: Message) -> None:
         """Handler for "data available" pings sent via wake channels.
 
         Arguments:
@@ -387,7 +404,7 @@ class DataFilterMicro(MicroService):
             # can send READY immediately
             cast(FBDPServer, self.pipe_out_chn.protocol)._init_new_batch(self.pipe_out_chn,
                                                                          session)
-    def handle_exception(self, channel: Channel, session: Session, msg: Message, # pylint: disable=W0613
+    def handle_exception(self, channel: Channel, session: Session, msg: Message,
                          exc: Exception) -> None:
         """Event handler called by `.handle_msg()` on exception in message handler.
 
@@ -404,7 +421,7 @@ class DataFilterMicro(MicroService):
                 return
         self.outcome = Outcome.ERROR
         self.details = exc
-    def handle_input_get_data(self, channel: Channel, session: FBDPSession) -> bool: # pylint: disable=W0613
+    def handle_input_get_data(self, channel: Channel, session: FBDPSession) -> bool:
         """Event handler executed to query the service whether is ready to accept input data.
 
         Arguments:
@@ -414,7 +431,7 @@ class DataFilterMicro(MicroService):
         Returns True if output pipe is open, otherwise false.
         """
         return bool(self.pipe_in_chn.sessions)
-    def handle_output_get_data(self, channel: Channel, session: FBDPSession) -> bool: # pylint: disable=W0613
+    def handle_output_get_data(self, channel: Channel, session: FBDPSession) -> bool:
         """Event handler executed to query the data source for data availability.
 
         Arguments:
@@ -431,7 +448,7 @@ class DataFilterMicro(MicroService):
             raise StopError("EOF", code=ErrorCode.OK)
         return have_data
     # FBDP server only
-    def handle_input_accept_client(self, channel: Channel, session: FBDPSession) -> None: # pylint: disable=W0613
+    def handle_input_accept_client(self, channel: Channel, session: FBDPSession) -> None:
         """Event handler executed when client connects to INPUT data pipe via OPEN message.
 
         Arguments:
@@ -462,7 +479,7 @@ class DataFilterMicro(MicroService):
                             code = ErrorCode.PIPE_ENDPOINT_UNAVAILABLE)
         # We work with MIME formats, so we'll convert the format specification to MIME
         session.data_format = MIME(session.data_format)
-    def handle_output_accept_client(self, channel: Channel, session: FBDPSession) -> None: # pylint: disable=W0613
+    def handle_output_accept_client(self, channel: Channel, session: FBDPSession) -> None:
         """Event handler executed when client connects to OUTPUT data pipe via OPEN message.
 
         Arguments:
@@ -580,7 +597,7 @@ class DataFilterMicro(MicroService):
         """
         raise StopError('OK', code=ErrorCode.OK)
     def handle_input_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage,
-                                 exc: Exception=None) -> None:
+                                 exc: Exception | None=None) -> None:
         """Event handler executed when CLOSE message is received or sent, to release any
         resources associated with current transmission.
 
@@ -621,8 +638,8 @@ class DataFilterMicro(MicroService):
             # Request service to stop
             self.stop.set()
         self.closing = False
-    def handle_output_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage, # pylint: disable=W0613
-                                  exc: Exception=None) -> None:
+    def handle_output_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage,
+                                  exc: Exception | None=None) -> None:
         """Event handler executed when CLOSE message is received or sent, to release any
         resources associated with current transmission.
 

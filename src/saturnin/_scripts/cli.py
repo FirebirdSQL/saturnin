@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=W0212, C0301, W0703, W0622
 
 """Saturnin CLI manager.
 
@@ -62,20 +61,24 @@ or *create home*) are available only in this **direct** mode.
 # UPDATE - Update items (components, OIDs etc.)
 
 from __future__ import annotations
-from typing import Callable, List, Tuple, Optional
+
 import sys
-from typer import Typer, Context
+from collections.abc import Callable
+
 from rich.align import Align
-from rich.padding import Padding
 from rich.markdown import Markdown
-from saturnin.component.recipe import recipe_registry
-from saturnin.component.apps import application_registry
+from rich.padding import Padding
+from saturnin.component.apps import ApplicationInfo, application_registry
+from saturnin.component.recipe import RecipeInfo, recipe_registry
 from saturnin.component.registry import iter_entry_points
 from saturnin.lib.console import console
-# from saturnin.lib import wingdbstub
-from .repl import repl, IOManager
+from typer import Context, Typer
+
 from .commands.recipes import run_recipe
 from .completers import get_first_line
+
+# from saturnin.lib import wingdbstub
+from .repl import IOManager, repl
 
 #: REPL introductory markdown text
 REPL_INTRO = Markdown("""
@@ -100,7 +103,7 @@ Use 'Ctrl+Space' to activate command completion.
 
 #: Standard command groups
 #: List of (command name, short help) tuples
-command_groups: List[Tuple[str,str]] = [
+command_groups: list[tuple[str,str]] = [
     ('list', "Print list of items (services, nodes, packages etc.)"),
     ('show', "Print details about particular item (service, node, package etc.)"),
     ('edit', "Edit item (configuration, recipe etc.)"),
@@ -127,8 +130,8 @@ def find_group(in_app: Typer, name: str) -> Typer:
             return grp.typer_instance
     return None
 
-def add_command(app: Typer, name: str, cmd: Callable, *, help: Optional[str]=None,
-                panel: Optional[str]=None) -> None: # pylint: disable=W0622
+def add_command(app: Typer, name: str, cmd: Callable, *, help: str | None=None,
+                panel: str | None=None) -> None:
     """Add command into main Typer application.
 
     Arguments:
@@ -138,7 +141,7 @@ def add_command(app: Typer, name: str, cmd: Callable, *, help: Optional[str]=Non
        help:  Optional help for command.
        pabel: Rich panel where command should be listed in help.
     """
-    names: List[str] = name.split('.')
+    names: list[str] = name.split('.')
     group: Typer = app
     for group_name in names[:-1]:
         sub_group = find_group(group, group_name)
@@ -203,6 +206,7 @@ def cli_loop(*, restart: bool) -> bool:
             except Exception as exc:
                 console.print_error(f"Cannot install command '{entry.name}'\n{exc!s}")
     # Install registered recipes
+    recipe: RecipeInfo
     for recipe in recipe_registry.values():
         if recipe.application is None:
             try:
@@ -211,7 +215,7 @@ def cli_loop(*, restart: bool) -> bool:
             except Exception as exc:
                 console.print_error(f"Cannot install command '{recipe.name}'\n{exc!s}")
         else:
-            application = application_registry.get(recipe.application)
+            application: ApplicationInfo = application_registry.get(recipe.application)
             if application is None:
                 console.print_error(f"Cannot install recipe {recipe.name} due to missing application.")
                 continue

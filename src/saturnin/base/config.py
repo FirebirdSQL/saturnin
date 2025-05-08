@@ -38,13 +38,15 @@
 """
 
 from __future__ import annotations
-from typing import Optional, List, Final
-import sys
+
 import os
+import sys
 import sysconfig
-from pathlib import Path
 from configparser import ConfigParser, ExtendedInterpolation
-from firebird.base.config import DirectoryScheme, get_directory_scheme, Config, StrOption
+from pathlib import Path
+from typing import Final
+
+from firebird.base.config import Config, DirectoryScheme, StrOption, get_directory_scheme
 
 #: filename for Saturnin configuration file
 SATURNIN_CFG: Final[str] = 'saturnin.conf'
@@ -89,8 +91,8 @@ class SaturninScheme(DirectoryScheme):
             if home_dir.is_dir():
                 os.environ['SATURNIN_HOME'] = str(home_dir)
         self.dir_map.update(get_directory_scheme('saturnin').dir_map)
-        self.__pip_path: Path = 'pip'
-        self.__pip_cmd: List[str] = ['pip']
+        self.__pip_path: Path | None = Path('pip')
+        self.__pip_cmd: list[str] = ['pip']
         if is_virtual():
             root = venv()
             if WINDOWS:
@@ -107,7 +109,7 @@ class SaturninScheme(DirectoryScheme):
                 # No pip shortcut in venv, we must relly on python -m to run it, typical for pipx
                 self.__pip_path = None
                 self.__pip_cmd = [str(python_path), '-m', 'pip']
-    def get_pip_cmd(self, *args) -> List[str]:
+    def get_pip_cmd(self, *args) -> list[str]:
         """Returns list with command to run pip.
 
         Arguments:
@@ -197,7 +199,7 @@ def is_virtual() -> bool:
     # Check supports venv && virtualenv >= 20.0.0
     return getattr(sys, 'base_prefix', sys.prefix) != sys.prefix
 
-def venv() -> Optional[Path]:
+def venv() -> Path | None:
     """Path to Saturnin virtual environment.
     """
     return Path(sys.prefix) if is_virtual() else None

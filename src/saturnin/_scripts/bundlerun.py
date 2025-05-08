@@ -39,15 +39,18 @@
 """
 
 from __future__ import annotations
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, Action
-from configparser import ConfigParser, ExtendedInterpolation
+
 import logging
+from argparse import Action, ArgumentDefaultsHelpFormatter, ArgumentParser
+from configparser import ConfigParser, ExtendedInterpolation
 from logging.config import fileConfig
-from firebird.base.logging import get_logger, Logger, ANY, bind_logger
-from firebird.base.trace import trace_manager
-from saturnin.base import directory_scheme, SECTION_BUNDLE
-from saturnin.component.controller import Outcome
+
+from saturnin.base import SECTION_BUNDLE, directory_scheme
 from saturnin.component.bundle import BundleExecutor
+from saturnin.component.controller import Outcome
+
+from firebird.base.logging import get_logger
+from firebird.base.trace import trace_manager
 
 LOG_FORMAT = '%(levelname)s [%(processName)s/%(threadName)s] %(message)s'
 
@@ -57,7 +60,7 @@ class UpperAction(Action):
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values.upper())
 
-def main(description: str=None, bundle_config: str=None):
+def main(description: str | None=None, bundle_config: str | None=None):
     """Saturnin script to run bundle of services.
 
     Arguments:
@@ -122,8 +125,7 @@ def main(description: str=None, bundle_config: str=None):
         fileConfig(main_config)
     else:
         logging.basicConfig(format=LOG_FORMAT)
-    bind_logger(ANY, ANY, 'saturnin')
-    log: Logger = get_logger('saturnin')
+    log: logging.Logger = get_logger('saturnin')
     if args.log_level is not None:
         log.setLevel(args.log_level)
     # trace configuration
@@ -141,7 +143,7 @@ def main(description: str=None, bundle_config: str=None):
                         if details:
                             for line in details:
                                 print(f' {line}')
-    except Exception as exc: # pylint: disable=W0703
+    except Exception as exc:
         log.exception("Service execution failed")
         parser.exit(1, f'{exc!s}\n')
     finally:

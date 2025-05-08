@@ -42,16 +42,22 @@ The entry point group for service registration is `saturnin.application`.
 """
 
 from __future__ import annotations
-from typing import Dict, Hashable, Optional, Any
-from uuid import UUID
-from contextlib import suppress
-from toml import dumps, loads
-from firebird.base.types import Distinct, load
-from firebird.base.collections import Registry
-from saturnin.base import directory_scheme, ApplicationDescriptor, Error
-from saturnin.lib.metadata import get_entry_point_distribution, iter_entry_points
 
-class ApplicationInfo(Distinct): # pylint: disable=R0902
+from collections.abc import Hashable
+from contextlib import suppress
+from tomllib import loads
+from typing import Any
+from uuid import UUID
+
+from saturnin.base import ApplicationDescriptor, Error, directory_scheme
+from saturnin.lib.metadata import get_entry_point_distribution, iter_entry_points
+from tomli_w import dumps
+
+from firebird.base.collections import Registry
+from firebird.base.types import Distinct, load
+
+
+class ApplicationInfo(Distinct):
     """Information about application stored in  `.ApplicationRegistry`.
 
     Arguments:
@@ -95,7 +101,7 @@ class ApplicationInfo(Distinct): # pylint: disable=R0902
     def get_key(self) -> Hashable:
         "Returns service UID"
         return self.uid
-    def as_toml_dict(self) -> Dict:
+    def as_toml_dict(self) -> dict:
         """Returns dictionary with instance data suitable for storage in TOML format
         (values that are not of basic type are converted to string).
         """
@@ -124,7 +130,7 @@ class ApplicationInfo(Distinct): # pylint: disable=R0902
             self.__desc_obj = load(self.descriptor)
         return self.__desc_obj
     @descriptor_obj.setter
-    def set_descriptor_obj(self, value: Optional[ApplicationDescriptor]) -> None:
+    def set_descriptor_obj(self, value: ApplicationDescriptor | None) -> None:
         "Property setter"
         self.__desc_obj = value
     @property
@@ -136,7 +142,7 @@ class ApplicationInfo(Distinct): # pylint: disable=R0902
             self.__fact_obj = load(self.factory)
         return self.__fact_obj
     @factory_obj.setter
-    def set_factory_obj(self, value: Optional[Any]) -> None:
+    def set_factory_obj(self, value: Any | None) -> None:
         "Property setter"
         self.__fact_obj = value
     @property
@@ -148,7 +154,7 @@ class ApplicationInfo(Distinct): # pylint: disable=R0902
             self.__conf_obj = load(self.config)
         return self.__conf_obj
     @factory_obj.setter
-    def set_config_obj(self, value: Optional[Any]) -> None:
+    def set_config_obj(self, value: Any | None) -> None:
         "Property setter"
         self.__conf_obj = value
 
@@ -185,7 +191,7 @@ class ApplicationRegistry(Registry):
         kwargs['description'] = descriptor.description
         kwargs['factory'] = descriptor.factory
         kwargs['config'] = descriptor.config
-        app_info = ApplicationInfo(**kwargs) # pylint: disable=E1125
+        app_info = ApplicationInfo(**kwargs)
         app_info.descriptor_obj = descriptor
         app_info.factory_obj = factory
         self.store(app_info)
@@ -216,7 +222,7 @@ class ApplicationRegistry(Registry):
             kwargs['factory'] = desc.factory
             kwargs['config'] = desc.config
             try:
-                app_info = ApplicationInfo(**kwargs) # pylint: disable=E1125
+                app_info = ApplicationInfo(**kwargs)
             except Exception as exc:
                 if ignore_errors:
                     continue

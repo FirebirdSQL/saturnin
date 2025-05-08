@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=W0611
 
 """Module for work with importlib metadata
 
@@ -40,11 +39,12 @@
 """
 
 from __future__ import annotations
-from typing import Generator, Optional
-from importlib.metadata import (entry_points, EntryPoint, Distribution, distributions,
-                                distribution)
 
-def iter_entry_points(group: str, name: str=None) -> Generator[EntryPoint, None, None]:
+from collections.abc import Generator
+from importlib.metadata import Distribution, EntryPoint, distribution, distributions, entry_points  # noqa:F401
+
+
+def iter_entry_points(group: str, name: str | None=None) -> Generator[EntryPoint, None, None]:
     """Replacement for pkg_resources.iter_entry_points.
 
     Arguments:
@@ -58,7 +58,7 @@ def iter_entry_points(group: str, name: str=None) -> Generator[EntryPoint, None,
         if name is None or item.name == name:
             yield item
 
-def get_entry_point_distribution(entry_point: EntryPoint) -> Optional[Distribution]:
+def get_entry_point_distribution(entry_point: EntryPoint) -> Distribution | None:
     """Returns distribution that registered specified entry point, or None if distribution
     is not found. This function searches through all distributions, not only those that
     registered Saturnin components.

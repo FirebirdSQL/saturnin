@@ -32,30 +32,45 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
-# pylint: disable=R0912, R0902, R0903
 
 """Saturnin service controllers.
 """
 
 from __future__ import annotations
-from typing import Dict, List, cast, Final
-import uuid
-import signal
-import warnings
+
 import ctypes
-import weakref
 import platform
-from contextlib import suppress
-from time import monotonic
-from threading import Thread
+import signal
+import uuid
+import warnings
+import weakref
 from configparser import ConfigParser
+from contextlib import suppress
+from threading import Thread
+from time import monotonic
+from typing import Final, cast
+
 import zmq
+from saturnin.base import (
+    INVALID,
+    ChannelManager,
+    Component,
+    Config,
+    Direction,
+    Error,
+    Outcome,
+    PairChannel,
+    PeerDescriptor,
+    ServiceDescriptor,
+    ServiceError,
+    ZMQAddress,
+    directory_scheme,
+)
+from saturnin.protocol.iccp import ICCPComponent, ICCPController, ICCPMessage, MsgType
+
 from firebird.base.config import UUIDOption
 from firebird.base.trace import TracedMixin
-from saturnin.base import (ZMQAddress, Error, ServiceError, PeerDescriptor, Outcome,
-     ServiceDescriptor, Direction, ChannelManager, PairChannel, INVALID, Component, Config,
-     directory_scheme)
-from saturnin.protocol.iccp import ICCPComponent, ICCPController, ICCPMessage, MsgType
+
 from .registry import ServiceInfo
 
 #: Service control channel name
@@ -75,8 +90,8 @@ class ServiceExecConfig(Config):
 class ServiceController(TracedMixin):
     """Base service controller.
     """
-    def __init__(self, service: ServiceInfo, *, name: str=None,
-                 peer_uid: uuid.UUID=None, manager: ChannelManager=None):
+    def __init__(self, service: ServiceInfo, *, name: str | None=None,
+                 peer_uid: uuid.UUID | None=None, manager: ChannelManager | None=None):
         """
         Arguments:
             service: Service to start.
@@ -85,20 +100,20 @@ class ServiceController(TracedMixin):
             manager: ChannelManager to be used.
         """
         self.outcome: Outcome = Outcome.UNKNOWN
-        self.details: List[str] = []
+        self.details: list[str] = []
         self.log_context = None
         self.name: str = service.name if name is None else name
         self.peer_uid: uuid.UUID = peer_uid
         self.service: ServiceInfo = service
         self.peer: PeerDescriptor = None
-        self.endpoints: Dict[str, List[ZMQAddress]] = {}
+        self.endpoints: dict[str, list[ZMQAddress]] = {}
         self.config: Config = service.descriptor_obj.config()
         self.ctrl_addr: ZMQAddress = ZMQAddress(f'inproc://{uuid.uuid1().hex}')
         self.mngr: ChannelManager = manager
         self._ext_mngr: bool = manager is not None
     def __str__(self):
         return self.logging_id
-    def configure(self, config: ConfigParser, section: str=None) -> None:
+    def configure(self, config: ConfigParser, section: str | None=None) -> None:
         """Loads and validates service configuration, and ensures that Saturnin facilities
         required by service are available and properly configured.
 
@@ -113,7 +128,7 @@ class ServiceController(TracedMixin):
         for facility in self.service.facilities:
             if facility.lower() == 'firebird':
                 try:
-                    from firebird.driver import driver_config # pylint: disable=C0415
+                    from firebird.driver import driver_config
                 except ImportError as exc:
                     raise Error("Firebird driver not installed.") from exc
                 driver_config.read(directory_scheme.firebird_conf, encoding='utf8')
@@ -131,7 +146,7 @@ class DirectController(ServiceController):
     Important:
         The service could be stopped only via automatically installed SIGINT handler.
     """
-    def stop_signal_handler(self, signum: int, param) -> None: # pylint: disable=W0613
+    def stop_signal_handler(self, signum: int, param) -> None:
         """The `signal.signal` SIGINT handler that sends ICCP STOP message to the service.
         """
         chn: PairChannel = self.mngr.channels[SVC_CTRL]
@@ -143,7 +158,7 @@ class DirectController(ServiceController):
            exc: Exception that describes the reason why component should stop.
         """
         raise ServiceError("Internal controller error") from exc
-    def start(self, *, timeout: int=10000) -> None: # pylint: disable=W0613
+    def start(self, *, timeout: int=10000) -> None:
         """Start the service.
 
         Arguments:
@@ -209,7 +224,7 @@ class DirectController(ServiceController):
                 self.mngr.shutdown(forced=True)
 
 def service_thread(service: ServiceInfo, config: Config, ctrl_addr: ZMQAddress,
-                   peer_uid: uuid.UUID=None):
+                   peer_uid: uuid.UUID | None=None):
     """Thread target code to run the service.
 
     Arguments:
@@ -243,8 +258,8 @@ def service_thread(service: ServiceInfo, config: Config, ctrl_addr: ZMQAddress,
 class ThreadController(ServiceController):
     """Service controller that starts the service in separate thread.
     """
-    def __init__(self, service: ServiceDescriptor, *, name: str=None,
-                 peer_uid: uuid.UUID=None, manager: ChannelManager=None):
+    def __init__(self, service: ServiceDescriptor, *, name: str | None=None,
+                 peer_uid: uuid.UUID | None=None, manager: ChannelManager | None=None):
         """
         Arguments:
             service: Service to start.

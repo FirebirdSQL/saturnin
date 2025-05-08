@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
-# pylint: disable=C0302, C0301, R0904, R0902, R0913
 
 """Saturnin ZeroMQ messaging - base classes and other definitions.
 
@@ -47,35 +46,38 @@ The messaging framework consists from:
 """
 
 from __future__ import annotations
-from typing import  Union, Dict, List, Iterable, Callable, Optional, Type, Any, Final
-from abc import ABC, abstractmethod
-from weakref import proxy
-from contextlib import suppress
+
 import uuid
 import warnings
+from abc import ABC, abstractmethod
+from collections.abc import Callable, Iterable
+from contextlib import suppress
+from typing import Any, Final, TypeAlias
+from weakref import proxy
+
 import zmq
-from zmq import Frame, ZMQError, Again, POLLIN, POLLOUT
-from firebird.base.types import ZMQAddress, DEFAULT, UNDEFINED, ANY
+from zmq import POLLIN, POLLOUT, Again, Frame, ZMQError
+
 from firebird.base.signal import eventsocket
-from firebird.base.logging import LoggingIdMixin
 from firebird.base.trace import TracedMixin
-from .types import (RoutingID, SocketMode, SocketType, Direction, InvalidMessageError,
-    ChannelError, INVALID, TIMEOUT)
+from firebird.base.types import ANY, DEFAULT, UNDEFINED, ZMQAddress
+
+from .types import INVALID, TIMEOUT, ChannelError, Direction, InvalidMessageError, RoutingID, SocketMode, SocketType
 
 # Types
-TZMQMessage = List[Union[bytes, Frame]]
+TZMQMessage: TypeAlias = list[bytes| Frame]
 "ZMQ multipart message"
-TMessageFactory = Callable[[Optional['TZMQMessage']], 'Message']
+TMessageFactory: TypeAlias = Callable[[TZMQMessage | None], 'Message']
 "Message factory callable"
-TSocketOptions = Dict[str, Any]
+TSocketOptions: TypeAlias = dict[str, Any]
 "ZMQ socket options"
-TMessageHandler = Callable[['Channel', 'Session', 'Message'], None]
+TMessageHandler: TypeAlias = Callable[['Channel', 'Session', 'Message'], None]
 "Message handler"
 
 #: Internal routing ID
 INTERNAL_ROUTE: Final[RoutingID] = b'INTERNAL'
 
-class ChannelManager(LoggingIdMixin, TracedMixin):
+class ChannelManager(TracedMixin):
     """Manager of ZeroMQ communication channels.
     """
     def __init__(self, context: zmq.Context):
@@ -86,17 +88,17 @@ class ChannelManager(LoggingIdMixin, TracedMixin):
         #: ZMQ Context instance.
         self.ctx: zmq.Context = context
         #: Dictionary with managed channels. Key is `Channel.name`, value is the `Channel`.
-        self.channels: Dict[str, Channel] = {}
+        self.channels: dict[str, Channel] = {}
         #: Logging context
         self.log_context: Any = UNDEFINED
-        self._poller: zmq.Poller = None
-        self._chmap: Dict[zmq.Socket, Channel] = {}
+        self._poller: zmq.Poller | None = None
+        self._chmap: dict[zmq.Socket, Channel] = {}
         self._pollout: bool = False
-    def create_channel(self, cls: Type[Channel], name: str, protocol: Protocol, *,
-                       routing_id: RoutingID=DEFAULT, session_type: Type[Session]=DEFAULT,
+    def create_channel(self, cls: type[Channel], name: str, protocol: Protocol, *,
+                       routing_id: RoutingID | DEFAULT=DEFAULT, session_type: type[Session] | DEFAULT=DEFAULT,
                        wait_for: Direction=Direction.NONE,
                        snd_timeout: int=100, rcv_timeout: int=100,
-                       linger: int=5000, sock_opts: TSocketOptions=None) -> Channel:
+                       linger: int=5000, sock_opts: TSocketOptions | None=None) -> Channel:
         """Creates new channel.
 
         Arguments:
@@ -111,7 +113,6 @@ class ChannelManager(LoggingIdMixin, TracedMixin):
             linger: ZMQ socket linger period.
             sock_opts: Dictionary with socket additional options.
         """
-        assert name not in self.channels, "Duplicate channel name"
         chn: Channel = cls(self, name, protocol, routing_id, session_type, wait_for,
                            snd_timeout, rcv_timeout, linger, sock_opts)
         self.channels[chn.name] = chn
@@ -128,7 +129,7 @@ class ChannelManager(LoggingIdMixin, TracedMixin):
         """Returns True if :meth:`wait` will check for POLLOUT event on any channel.
         """
         return self._pollout
-    def wait(self, timeout: int=None) -> Dict[Channel, Direction]:
+    def wait(self, timeout: int | None=None) -> dict[Channel, Direction]:
         """Wait for I/O events on channnels.
 
         Arguments:
@@ -218,7 +219,7 @@ class SimpleMessage(Message):
     """
     def __init__(self):
         #: Sequence of data frames
-        self.data: List[bytes] = []
+        self.data: list[bytes] = []
     def from_zmsg(self, zmsg: TZMQMessage) -> None:
         """Populate message data from sequence of ZMQ data frames.
 
@@ -265,19 +266,11 @@ class Session:
     """
     def __init__(self):
         #: Channel routing ID for connected peer
-        self.routing_id: RoutingID = None
+        self.routing_id: RoutingID | None= None
         #: Connected endpoint address, if any
-        self.endpoint: Optional[ZMQAddress] = None
+        self.endpoint: ZMQAddress | None = None
         #: Flag indicating that session is waiting for send
         self.send_pending: bool = False
-    def __str__(self):
-        return self.logging_id
-    __repr__ = __str__
-    @property
-    def logging_id(self) -> str:
-        """Returns `_logging_id_` or `<class_name>[<routing_id>::<endpoint>]`"""
-        return getattr(self, '_logging_id_',
-                       f'{self.__class__.__name__}[{self.routing_id}:{self.endpoint}]')
 
 class Protocol(TracedMixin):
     """Base class for protocol.
@@ -294,21 +287,18 @@ class Protocol(TracedMixin):
     UID: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_OID, OID)
     #: Protocol revision (default 1)
     REVISION: int = 1
-    def __init__(self, *, session_type: Type[Session]=Session):
+    def __init__(self, *, session_type: type[Session]=Session):
         """
         Arguments:
             session_type: Class for session objects.
         """
-        self._session_type: Type[Session] = session_type
-        self.message_factory = self.__message_factory
+        self._session_type: type[Session] = session_type
+        self.message_factory: TMessageFactory = self.__message_factory
         #: Message handlers
-        self.handlers: Dict[Any, TMessageHandler] = {}
-    def __message_factory(self, zmsg: TZMQMessage=None) -> Message: # pylint: disable=W0613
+        self.handlers: dict[Any, TMessageHandler] = {}
+    def __message_factory(self, zmsg: TZMQMessage | None=None) -> Message:
         "Internal message factory"
         return SimpleMessage()
-    def __str__(self):
-        return self.logging_id
-    __repr__ = __str__
     def is_valid(self, zmsg: TZMQMessage) -> bool:
         """Return True if ZMQ message is a valid protocol message, otherwise returns False.
 
@@ -354,7 +344,7 @@ class Protocol(TracedMixin):
         msg = self.message_factory(zmsg)
         msg.from_zmsg(zmsg)
         return msg
-    def accept_new_session(self, channel: Channel, routing_id: RoutingID, msg: Message) -> bool: # pylint: disable=W0613
+    def accept_new_session(self, channel: Channel, routing_id: RoutingID, msg: Message) -> bool:
         """Validates incoming message that initiated new session/transmission.
 
         Important:
@@ -406,12 +396,11 @@ class Protocol(TracedMixin):
             if handler := self.handlers.get(key):
                 break
         try:
-            assert handler, "Message without handler"
             return handler(channel, session, msg)
-        except Exception as exc: # pylint: disable=W0703
+        except Exception as exc:
             try:
                 self.handle_exception(channel, session, msg, exc)
-            except Exception: # pylint: disable=W0703
+            except Exception:
                 warnings.warn('Exception raised in exception handler', RuntimeWarning)
         return INVALID
     def handle_invalid_msg(self, channel: Channel, session: Session, exc: InvalidMessageError) -> None:
@@ -448,7 +437,7 @@ class Protocol(TracedMixin):
         """
         self.on_exception(channel, session, msg, exc)
     @eventsocket
-    def message_factory(self, zmsg: TZMQMessage=None) -> Message:
+    def message_factory(self, zmsg: TZMQMessage | None=None) -> Message:
         """`~firebird.base.signal.eventsocket` for message factory that must return protocol
         message instance. The default factory produces new `SimpleMessage` instance on each
         call.
@@ -495,20 +484,17 @@ class Protocol(TracedMixin):
             to the upper layers (usually an I/O loop).
         """
     @property
-    def session_type(self) -> Type[Session]:
+    def session_type(self) -> type[Session]:
         "Class for session objects."
         return self._session_type
-    @property
-    def logging_id(self) -> str:
-        "Returns _logging_id_ or <class_name>[<uid>/<revision>]"
-        return getattr(self, '_logging_id_', f'{self.__class__.__name__}[{self.UID.hex}/{self.REVISION}]')
 
 class Channel(TracedMixin):
     """Base Class for ZMQ communication channel (socket).
     """
     def __init__(self, mngr: ChannelManager, name: str, protocol: Protocol,
-                 routing_id: RoutingID, session_type: Type[Session], wait_for: Direction,
-                 snd_timeout: int, rcv_timeout: int, linger: int, sock_opts: TSocketOptions):
+                 routing_id: RoutingID | DEFAULT, session_type: type[Session] | DEFAULT,
+                 wait_for: Direction, snd_timeout: int, rcv_timeout: int, linger: int,
+                 sock_opts: TSocketOptions | None):
         """
         Arguments:
             mngr: Channel manager.
@@ -524,11 +510,11 @@ class Channel(TracedMixin):
             sock_opts: Dictionary with socket options that should be set after socket creation.
         """
         self._mngr: ChannelManager = proxy(mngr)
-        self._name = name
+        self._name: str = name
         self._routing_id: RoutingID = \
             uuid.uuid1().hex.encode() if routing_id is DEFAULT else routing_id
         self._protocol: Protocol = protocol
-        self._session_type: Type[Session] = \
+        self._session_type: type[Session] = \
             protocol.session_type if session_type is DEFAULT else session_type
         self._snd_timeout: int = snd_timeout
         self._rcv_timeout: int = rcv_timeout
@@ -544,14 +530,11 @@ class Channel(TracedMixin):
         #: True if channel uses internal routing
         self.routed: bool = False
         #: List of binded/connected endpoints
-        self.endpoints: List[ZMQAddress] = []
+        self.endpoints: list[ZMQAddress] = []
         #: Dictionary of active sessions, key=routing_id
-        self.sessions: Dict[RoutingID, Session] = {}
+        self.sessions: dict[RoutingID, Session] = {}
         self._adjust()
-    def __str__(self):
-        return self.logging_id
-    __repr__ = __str__
-    def _adjust(self):
+    def _adjust(self) -> None:
         """Called by `__init__()` to configure the channel parameters.
         """
     def set_socket(self, socket: zmq.Socket) -> None:
@@ -560,7 +543,6 @@ class Channel(TracedMixin):
         Arguments:
            socket: 0MQ socket to be used by channel
         """
-        assert self.socket is None, "Channel socket is already set"
         self.socket = socket
         if self._routing_id:
             self.socket.routing_id = self._routing_id
@@ -581,7 +563,7 @@ class Channel(TracedMixin):
         Note:
             This will not change the linger value for socket, so underlying socket may not
             close if there are undelivered messages. The socket is actually closed only
-            after all messages are delivered or discarded by reaching the socket’s LINGER
+            after all messages are delivered or discarded by reaching the socket's LINGER
             timeout.
         """
         if self.socket and not self.socket.closed:
@@ -621,7 +603,6 @@ class Channel(TracedMixin):
         Arguments:
             session: The Session to be discarded.
         """
-        assert session.routing_id in self.sessions
         if session.endpoint:
             self.disconnect(session.endpoint)
         del self.sessions[session.routing_id]
@@ -642,8 +623,6 @@ class Channel(TracedMixin):
             The returned address MAY differ from original address
             when wildcard specification is used.
         """
-        assert self.socket is not None
-        assert self.mode != SocketMode.CONNECT
         if (self.socket.socket_type == SocketType.PAIR) and self.endpoints:
             raise ChannelError("Cannot open multiple endpoints for PAIR socket")
         if endpoint in self.endpoints:
@@ -653,7 +632,7 @@ class Channel(TracedMixin):
         self._mode = SocketMode.BIND
         self.endpoints.append(endpoint)
         return endpoint
-    def unbind(self, endpoint: ZMQAddress=None) -> None:
+    def unbind(self, endpoint: ZMQAddress | None=None) -> None:
         """Unbind from an address (undoes a call to `bind()`).
 
         Arguments:
@@ -663,8 +642,6 @@ class Channel(TracedMixin):
         Raises:
             ChannelError: If channel is not binded to specified `endpoint`.
         """
-        assert self.socket is not None
-        assert self.mode == SocketMode.BIND
         if endpoint and endpoint not in self.endpoints:
             raise ChannelError(f"Endpoint '{endpoint}' not binded")
         addrs = [endpoint] if endpoint else list(self.endpoints)
@@ -673,7 +650,7 @@ class Channel(TracedMixin):
             self.endpoints.remove(addr)
         if not self.endpoints:
             self._mode = SocketMode.UNKNOWN
-    def connect(self, endpoint: ZMQAddress, *, routing_id: RoutingID=None) -> Optional[Session]:
+    def connect(self, endpoint: ZMQAddress, *, routing_id: RoutingID=None) -> Session | None:
         """Connect to a remote channel.
 
         Arguments:
@@ -687,16 +664,11 @@ class Channel(TracedMixin):
             ChannelError: On attempt to a) connect another endpoint for PAIR socket, or
                 b) connect to already connected endpoint.
         """
-        assert self.socket is not None
-        assert self.mode != SocketMode.BIND
         if (self.socket.socket_type == SocketType.PAIR) and self.endpoints:
             raise ChannelError("Cannot connect multiple endpoints for PAIR socket")
         if endpoint in self.endpoints:
             raise ChannelError(f"Endpoint '{endpoint}' already connected")
-        if self.routed:
-            assert routing_id
-        else:
-            routing_id = INTERNAL_ROUTE
+        routing_id = INTERNAL_ROUTE
         session = None
         if self.protocol.connect_with_session(self):
             session = self.create_session(routing_id)
@@ -722,8 +694,6 @@ class Channel(TracedMixin):
         Raises:
             ChannelError: If channel is not connected to specified `endpoint`.
         """
-        assert self.socket is not None
-        assert self.mode == SocketMode.CONNECT
         if endpoint and endpoint not in self.endpoints:
             raise ChannelError(f"Endpoint '{endpoint}' not openned")
         addrs = [endpoint] if endpoint else list(self.endpoints)
@@ -769,12 +739,12 @@ class Channel(TracedMixin):
         try:
             self.send_zmsg(zmsg)
         except Again as exc:
-            if self.on_send_later.is_set() and self.on_send_later(self, session, msg): # pylint: disable=E1101
+            if self.on_send_later.is_set() and self.on_send_later(self, session, msg):
                 result = 0
             else:
                 result = exc.errno
         except ZMQError as exc:
-            if self.on_send_failed.is_set() and self.on_send_failed(self, session, msg, exc.errno): # pylint: disable=E1101
+            if self.on_send_failed.is_set() and self.on_send_failed(self, session, msg, exc.errno):
                 result = 0
             else:
                 result = exc.errno
@@ -785,10 +755,8 @@ class Channel(TracedMixin):
         Important:
             Does not handle any ZMQError exception.
         """
-        assert self.socket is not None
-        assert Direction.OUT in self.direction, "Call to send() on RECEIVE-only channel"
         self.socket.send_multipart(zmsg)
-    def receive(self, timeout: int=None) -> Any:
+    def receive(self, timeout: int | None=None) -> Any:
         """Receive and process protocol message with assigned protocol.
 
         If protocol raises `InvalidMessageError` on message conversion, it calls
@@ -814,11 +782,11 @@ class Channel(TracedMixin):
         try:
             zmsg = self.receive_zmsg()
         except Again:
-            if not (self.on_receive_later.is_set() and self.on_receive_later(self)): # pylint: disable=E1101
+            if not (self.on_receive_later.is_set() and self.on_receive_later(self)):
                 raise
             return INVALID
         except ZMQError as exc:
-            if not (self.on_receive_failed.is_set() and self.on_receive_failed(self, exc.errno)): # pylint: disable=E1101
+            if not (self.on_receive_failed.is_set() and self.on_receive_failed(self, exc.errno)):
                 raise
             return INVALID
         routing_id: RoutingID = zmsg.pop(0) if self.routed else INTERNAL_ROUTE
@@ -829,7 +797,7 @@ class Channel(TracedMixin):
         except InvalidMessageError as exc:
             try:
                 self._protocol.handle_invalid_msg(self, session, exc)
-            except Exception: # pylint: disable=W0703
+            except Exception:
                 warnings.warn('Exception raised in invalid message handler', RuntimeWarning)
             return INVALID
         #
@@ -843,14 +811,12 @@ class Channel(TracedMixin):
     def receive_zmsg(self) -> TZMQMessage:
         """Receive ZMQ multipart message.
         """
-        assert self.socket is not None
-        assert Direction.IN in self.direction, "Call to receive() on SEND-only channel"
         return self.socket.recv_multipart()
     def is_active(self) -> bool:
         """Returns True if channel is active (binded or connected).
         """
         return bool(self.endpoints)
-    def set_wait_in(self, value: bool) -> None:
+    def set_wait_in(self, value: bool) -> None: # noqa: FBT001
         """Enable/disable receiving messages. It sets/clear `Direction.IN` in `.wait_for`
 
         Arguments:
@@ -860,7 +826,7 @@ class Channel(TracedMixin):
             self.wait_for |= Direction.IN
         else:
             self.wait_for = (self.wait_for | Direction.IN) ^ Direction.IN
-    def set_wait_out(self, value: bool, session: Session=None) -> None:
+    def set_wait_out(self, value: bool, session: Session | None=None) -> None: # noqa: FBT001
         """Enable/disable sending messages. It sets/clear `Direction.OUT` in `.wait_for`.
 
         Arguments:
@@ -883,14 +849,13 @@ class Channel(TracedMixin):
             self.wait_for = (self.wait_for | Direction.OUT) ^ Direction.OUT
         if session is not None:
             session.send_pending = value
-    def wait(self, timeout: int=None) -> Direction:
+    def wait(self, timeout: int | None=None) -> Direction:
         """Wait for socket events specified by :attr:`wait_for`.
 
         Arguments:
             timeout: The timeout (in milliseconds) to wait for an event. If unspecified,
                      will wait forever for an event.
         """
-        assert self.socket is not None
         return Direction(self.socket.poll(timeout, self._wait_for.value))
     @property
     def name(self) -> str:
@@ -934,7 +899,6 @@ class Channel(TracedMixin):
 
         Important: Valid *only* when channel has exactly one associated session.
         """
-        assert len(self.sessions) == 1
         return self.sessions[INTERNAL_ROUTE]
     @property
     def snd_timeout(self) -> int:
@@ -964,19 +928,11 @@ class Channel(TracedMixin):
         return self._wait_for
     @wait_for.setter
     def wait_for(self, value: Direction) -> None:
-        if not value in self.direction:
+        if value not in self.direction:
             raise ChannelError("Cannot wait for events in direction not supported "
                                "by channel for transmission.")
         self._wait_for = value
         self._mngr.update_poller(self, value)
-    @property
-    def logging_id(self) -> str:
-        "Returns _logging_id_ or <class_name>[<name>]"
-        return getattr(self, '_logging_id_', f'{self.__class__.__name__}[{self.name}]')
-    @property
-    def log_context(self) -> Any:
-        "Logging context. Returns `log_context` from ChannelManager."
-        return self._mngr.log_context
     @eventsocket
     def on_output_ready(self, channel: Channel) -> None:
         """`~firebird.base.signal.eventsocket`  called when channel is ready to accept at
@@ -986,7 +942,7 @@ class Channel(TracedMixin):
             channel: Channel ready for sending a message.
         """
     @eventsocket
-    def on_shutdown(self, channel: Channel, forced: bool) -> None:
+    def on_shutdown(self, channel: Channel, *, forced: bool) -> None:
         """`~firebird.base.signal.eventsocket`  called by :meth:`ChannelManager.shutdown`
         before the channel is shut down.
 
@@ -1052,44 +1008,44 @@ class Channel(TracedMixin):
 class DealerChannel(Channel):
     """Communication channel over DEALER socket.
     """
-    def _adjust(self):
+    def _adjust(self) -> None:
         self._socket_type = SocketType.DEALER
 
 class PushChannel(Channel):
     """Communication channel over PUSH socket.
     """
-    def _adjust(self):
+    def _adjust(self) -> None:
         self._socket_type = SocketType.PUSH
         self._direction = Direction.OUT
 
 class PullChannel(Channel):
     """Communication channel over PULL socket.
     """
-    def _adjust(self):
+    def _adjust(self) -> None:
         self._socket_type = SocketType.PULL
         self._direction = Direction.IN
 
 class PubChannel(Channel):
     """Communication channel over PUB socket.
     """
-    def _adjust(self):
+    def _adjust(self) -> None:
         self._socket_type = SocketType.PUB
         self._direction = Direction.OUT
 
 class SubChannel(Channel):
     """Communication channel over SUB socket.
     """
-    def _adjust(self):
+    def _adjust(self) -> None:
         self._socket_type = SocketType.SUB
         self._direction = Direction.IN
-    def subscribe(self, topic: bytes):
+    def subscribe(self, topic: bytes) -> None:
         """Subscribe to topic.
 
         Arguments:
             topic: ZMQ topic.
         """
         self.socket.subscribe = topic
-    def unsubscribe(self, topic: bytes):
+    def unsubscribe(self, topic: bytes) -> None:
         """Unsubscribe from topic.
 
         Arguments:
@@ -1100,9 +1056,9 @@ class SubChannel(Channel):
 class XPubChannel(Channel):
     """Communication channel over XPUB socket.
     """
-    def _adjust(self):
+    def _adjust(self) -> None:
         self._socket_type = SocketType.XPUB
-    def _configure(self):
+    def _configure(self) -> None:
         "Create XPUB socket for this channel."
         super()._configure()
         self.socket.xpub_verboser = 1 # pass subscribe and unsubscribe messages on XPUB socket
@@ -1110,17 +1066,17 @@ class XPubChannel(Channel):
 class XSubChannel(Channel):
     """Communication channel over XSUB socket.
     """
-    def _adjust(self):
+    def _adjust(self) -> None:
         self._socket_type = SocketType.XSUB
         self._direction = Direction.IN
-    def subscribe(self, topic: bytes):
+    def subscribe(self, topic: bytes) -> None:
         """Subscribe to topic.
 
         Arguments:
             topic: ZMQ topic.
         """
         self.socket.send_multipart(b'\x01', topic)
-    def unsubscribe(self, topic: bytes):
+    def unsubscribe(self, topic: bytes) -> None:
         """Unsubscribe to topic.
 
         Arguments:
@@ -1131,15 +1087,15 @@ class XSubChannel(Channel):
 class PairChannel(Channel):
     """Communication channel over PAIR socket.
     """
-    def _adjust(self):
+    def _adjust(self) -> None:
         self._socket_type = SocketType.PAIR
 
 class RouterChannel(Channel):
     """Communication channel over ROUTER socket.
     """
-    def _adjust(self):
+    def _adjust(self) -> None:
         self._socket_type = SocketType.ROUTER
         self.routed = True
-    def _configure(self):
+    def _configure(self) -> None:
         super()._configure()
         self.socket.router_mandatory = 1

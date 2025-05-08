@@ -33,7 +33,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
-# pylint: disable=R0902, R0903, R0912, R0913, C0301, W0702, W0703
 
 """Saturnin reference implementation of Firebird Butler Data Pipe Protocol
 
@@ -41,15 +40,33 @@ See https://firebird-butler.readthedocs.io/en/latest/rfc/9/FBDP.html
 """
 
 from __future__ import annotations
-from typing import Type, Dict, Any, Union, Iterable, Final
+
 import uuid
 import warnings
-from struct import pack, unpack
+from collections.abc import Iterable
 from enum import IntEnum, IntFlag
-from firebird.base.signal import eventsocket
+from struct import pack, unpack
+from typing import TYPE_CHECKING, Any, Final
+
+from saturnin.base import (
+    ANY,
+    Channel,
+    InvalidMessageError,
+    Message,
+    PipeSocket,
+    Protocol,
+    RoutingID,
+    Session,
+    StopError,
+    TZMQMessage,
+)
+
 from firebird.base.protobuf import ProtoMessage, create_message, dict2struct, struct2dict
-from saturnin.base import (InvalidMessageError, StopError, RoutingID, TZMQMessage,
-     PipeSocket, Channel, Protocol, Message, Session, ANY)
+from firebird.base.signal import eventsocket
+
+if TYPE_CHECKING:
+    from firebird.butler.fbdp_pb2 import FBDPOpenDataframe
+    from firebird.butler.fbsd_pb2 import ErrorDescription
 
 #: Protobuf message for FBDP OPEN message
 PROTO_OPEN: Final[str] = 'firebird.butler.FBDPOpenDataframe'
@@ -112,7 +129,7 @@ class FBDPMessage(Message):
         #: Data associated with message
         self.type_data: int = 0
         #: Data frame associated with message type (or None)
-        self.data_frame: Union[ProtoMessage, Any] = None
+        self.data_frame: ProtoMessage | Any = None
     def __str__(self):
         return f"{self.__class__.__qualname__}[{self.msg_type.name}]"
     __repr__ = __str__
@@ -217,10 +234,9 @@ class FBDPMessage(Message):
         Arguments:
           exc: Exception to be stored
         """
-        assert self.msg_type is MsgType.CLOSE
-        errdesc = create_message(PROTO_ERROR)
+        errdesc: ErrorDescription = create_message(PROTO_ERROR)
         if hasattr(exc, 'code'):
-            errdesc.code = getattr(exc, 'code')
+            errdesc.code = exc.code
         errdesc.description = str(exc)
         self.data_frame.append(errdesc)
 
@@ -236,7 +252,7 @@ class FBDPSession(Session):
         #: Specification of format for user data transmitted in DATA messages.
         self.data_format: str = None
         #: Data Pipe parameters.
-        self.params: Dict = {}
+        self.params: dict = {}
         #: Number of DATA messages that remain to be transmitted since last READY message.
         self.transmit: int = None
         #: Indicator that server sent READY and waits from READY response from client
@@ -250,7 +266,7 @@ class _FBDP(Protocol):
     # iso.org.dod.internet.private.enterprise.firebird.butler.protocol.fbdp
     #: UUID instance that identifies the protocol.
     UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, OID)
-    def __init__(self, *, session_type: Type[FBDPSession] = FBDPSession):
+    def __init__(self, *, session_type: type[FBDPSession] = FBDPSession):
         """
         Arguments:
             session_type: Class for session objects.
@@ -275,7 +291,7 @@ class _FBDP(Protocol):
                               MsgType.DATA: self.handle_data_msg,
                               MsgType.CLOSE: self.handle_close_msg,
                               })
-    def __message_factory(self, zmsg: TZMQMessage=None) -> Message: # pylint: disable=W0613
+    def __message_factory(self, zmsg: TZMQMessage=None) -> Message:
         "Internal message factory"
         self._msg.clear()
         return self._msg
@@ -336,7 +352,7 @@ class _FBDP(Protocol):
                 except Exception as exc:
                     try:
                         self.handle_exception(channel, session, msg, exc)
-                    except:
+                    except Exception:
                         warnings.warn('Exception raised in exception handler', RuntimeWarning)
     def validate(self, zmsg: TZMQMessage) -> None:
         """Verifies that sequence of ZMQ data frames is a valid protocol message.
@@ -353,7 +369,7 @@ class _FBDP(Protocol):
         if not zmsg:
             raise InvalidMessageError("Empty message")
         fbdp_header = zmsg[0]
-        if len(fbdp_header) != 8:
+        if len(fbdp_header) != 8: # noqa: PLR2004
             raise InvalidMessageError("Message header must be 8 bytes long")
         try:
             fourcc, control_byte, flags, _ = unpack(HEADER_FMT_FULL, fbdp_header)
@@ -363,17 +379,17 @@ class _FBDP(Protocol):
             raise InvalidMessageError("Invalid FourCC")
         if (control_byte & VERSION_MASK) != self.REVISION:
             raise InvalidMessageError("Invalid protocol version")
-        if (flags | 3) > 3:
+        if (flags | 3) > 3: # noqa: PLR2004
             raise InvalidMessageError("Invalid flags")
         try:
             message_type = MsgType(control_byte >> 3)
         except ValueError as exc:
             raise InvalidMessageError(f"Illegal message type {control_byte >> 3}") from exc
         if message_type is MsgType.OPEN:
-            if len(zmsg) != 2:
+            if len(zmsg) != 2: # noqa: PLR2004
                 raise InvalidMessageError("OPEN message must have a dataframe")
             try:
-                fpb = create_message(PROTO_OPEN)
+                fpb: FBDPOpenDataframe = create_message(PROTO_OPEN)
                 fpb.ParseFromString(zmsg[1])
                 if not fpb.data_pipe:
                     raise ValueError("Missing 'data_pipe' specification")
@@ -385,12 +401,12 @@ class _FBDP(Protocol):
             except Exception as exc:
                 raise InvalidMessageError("Invalid data frame for OPEN message") from exc
         elif (message_type is MsgType.CLOSE and len(zmsg) > 1):
-            fpb = create_message(PROTO_ERROR)
+            fpb: ErrorDescription = create_message(PROTO_ERROR)
             for frame in zmsg[1:]:
                 fpb.ParseFromString(frame)
                 if not fpb.description:
                     raise InvalidMessageError("Missing error description")
-        elif (message_type is MsgType.DATA and len(zmsg) > 2):
+        elif (message_type is MsgType.DATA and len(zmsg) > 2): # noqa: PLR2004
             raise InvalidMessageError("DATA message may have only one data frame")
         elif (message_type in (MsgType.READY, MsgType.NOOP) and len(zmsg) > 1):
             raise InvalidMessageError("Data frames not allowed for READY and NOOP messages")
@@ -487,20 +503,18 @@ class _FBDP(Protocol):
             session.transmit -= 1
             if session.transmit == 0:
                 self._init_new_batch(channel, session)
+        elif msg.has_ack_reply():
+            if (session.transmit > 0) and self.send_after_confirmed:
+                # Re-Initiate transfer to output (via I/O loop) if data are available
+                if not self.on_get_data.is_set() or self.on_get_data(channel, session):
+                    channel.set_wait_out(True, session)
+            self.on_data_confirmed(channel, session, msg.type_data)
         else:
-            # DATA flow from us (OUTPUT for server context, INPUT for client context)
-            if msg.has_ack_reply():
-                if (session.transmit > 0) and self.send_after_confirmed:
-                    # Re-Initiate transfer to output (via I/O loop) if data are available
-                    if not self.on_get_data.is_set() or self.on_get_data(channel, session):
-                        channel.set_wait_out(True, session)
-                self.on_data_confirmed(channel, session, msg.type_data)
-            else:
-                # Only client attached to PIPE_INPUT can send DATA messages
-                socket: PipeSocket = PipeSocket.OUTPUT \
+            # Only client attached to PIPE_INPUT can send DATA messages
+            socket: PipeSocket = PipeSocket.OUTPUT \
                     if self._flow_in_socket is PipeSocket.INPUT else PipeSocket.INPUT
-                raise StopError(f"DATA message sent to {socket.name} socket",
-                                code=ErrorCode.PROTOCOL_VIOLATION)
+            raise StopError(f"DATA message sent to {socket.name} socket",
+                            code=ErrorCode.PROTOCOL_VIOLATION)
     def handle_close_msg(self, channel: Channel, session: FBDPSession, msg: FBDPMessage) -> None:
         """Process `CLOSE` message received from client.
 
@@ -513,7 +527,7 @@ class _FBDP(Protocol):
         """
         try:
             self.on_pipe_closed(channel, session, msg)
-        except:
+        except Exception:
             # We don't want to handle this via `handle_exception` and we're closing
             # the pipe anyway
             pass
@@ -562,7 +576,7 @@ class _FBDP(Protocol):
         if channel.send(msg, session) != 0:
             raise StopError("Broken pipe, can't send READY message", code=ErrorCode.ERROR)
     def send_close(self, channel: Channel, session: FBDPSession, error_code: ErrorCode,
-                   exc: Exception=None) -> None:
+                   exc: Exception | None=None) -> None:
         """Sends `CLOSE` message, calls `on_pipe_closed` and then discards the session.
 
         Arguments:
@@ -581,7 +595,7 @@ class _FBDP(Protocol):
             channel.discard_session(session)
     @eventsocket
     def on_pipe_closed(self, channel: Channel, session: FBDPSession, msg: FBDPMessage,
-                       exc: Exception=None) -> None:
+                       exc: Exception | None=None) -> None:
         """`~firebird.base.signal.eventsocket` called when `CLOSE` message is received or sent,
         to release any resources associated with current transmission.
 
@@ -673,7 +687,7 @@ class _FBDP(Protocol):
 class FBDPServer(_FBDP):
     """9/FBDP - Firebird Butler Data Pipe Protocol - Server side.
     """
-    def __init__(self, *, session_type: Type[FBDPSession] = FBDPSession):
+    def __init__(self, *, session_type: type[FBDPSession] = FBDPSession):
         """
         Arguments:
             session_type: Class for session objects.
@@ -756,7 +770,7 @@ class FBDPServer(_FBDP):
             except Exception as exc:
                 try:
                     self.handle_exception(channel, session, FBDPMessage(), exc)
-                except:
+                except Exception:
                     warnings.warn('Exception raised in exception handler', RuntimeWarning)
         #else:
             #if session.routing_id not in channel.sessions:
@@ -864,7 +878,7 @@ class FBDPServer(_FBDP):
 class FBDPClient(_FBDP):
     """9/FBDP - Firebird Butler Data Pipe Protocol - Client side.
     """
-    def __init__(self, *, session_type: Type[FBDPSession] = FBDPSession):
+    def __init__(self, *, session_type: type[FBDPSession] = FBDPSession):
         """
         Arguments:
             session_type: Class for session objects.
@@ -878,7 +892,7 @@ class FBDPClient(_FBDP):
         self.handlers.update({MsgType.OPEN: self.handle_open_msg,
                               MsgType.READY: self.handle_ready_msg,
                               })
-    def handle_server_ready(self, channel: Channel, session: FBDPSession, batch_size: int) -> int: # pylint: disable=W0613
+    def handle_server_ready(self, channel: Channel, session: FBDPSession, batch_size: int) -> int:
         """Default event handler that returns -1, unless `.on_get_data` event handler is
         assigned and it returns False - then it returns 0.
 
@@ -898,7 +912,7 @@ class FBDPClient(_FBDP):
           session: Session associated with server.
         """
         session.transmit = None
-    def accept_new_session(self, channel: Channel, routing_id: RoutingID, msg: FBDPMessage) -> bool: # pylint: disable=W0613
+    def accept_new_session(self, channel: Channel, routing_id: RoutingID, msg: FBDPMessage) -> bool:
         """Validates incoming message that initiated new session/transmission.
 
         Arguments:
@@ -910,7 +924,7 @@ class FBDPClient(_FBDP):
             Always False (transmission must be initiated by Client).
         """
         return False
-    def connect_with_session(self, channel: Channel) -> bool: # pylint: disable=W0613
+    def connect_with_session(self, channel: Channel) -> bool:
         """Called by `.Channel.connect` to determine whether new session should be
         associated with connected peer.
 
@@ -964,7 +978,7 @@ class FBDPClient(_FBDP):
             # Server is not ready, but we must send READY(0) back to confirm we've got it!
             self.send_ready(channel, session, 0)
     def send_open(self, channel: Channel, session: FBDPSession, data_pipe: str,
-                  pipe_socket: PipeSocket, data_format: str, parameters: Dict=None) -> None:
+                  pipe_socket: PipeSocket, data_format: str, parameters: dict | None=None) -> None:
         """Sends `OPEN` message.
 
         Arguments:

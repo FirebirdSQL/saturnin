@@ -54,18 +54,24 @@ Custom iterators must be registered as entry points in `saturnin.service.iterato
 """
 
 from __future__ import annotations
-from typing import List, Dict, Hashable, Optional, Any
+
+from collections.abc import Hashable
+from contextlib import suppress
 from functools import partial
 from itertools import chain
-from contextlib import suppress
+from tomllib import loads
+from typing import Any
 from uuid import UUID
-from toml import dumps, loads
-from firebird.base.types import Distinct, load
-from firebird.base.collections import Registry
-from saturnin.base import directory_scheme, ServiceDescriptor, Error
-from saturnin.lib.metadata import iter_entry_points, get_entry_point_distribution
 
-class ServiceInfo(Distinct): # pylint: disable=R0902
+from saturnin.base import Error, ServiceDescriptor, directory_scheme
+from saturnin.lib.metadata import get_entry_point_distribution, iter_entry_points
+from tomli_w import dumps
+
+from firebird.base.collections import Registry
+from firebird.base.types import Distinct, load
+
+
+class ServiceInfo(Distinct):
     """Information about service stored in  `.ServiceRegistry`.
 
     Arguments:
@@ -82,8 +88,8 @@ class ServiceInfo(Distinct): # pylint: disable=R0902
         distribution: Installed distribution package that contains this service
     """
     def __init__(self, *, uid: UUID, name: str, version: str, vendor: UUID,
-                 classification: str, description: str, facilities: List[str],
-                 api: List[UUID], factory: str, descriptor: str, distribution: str):
+                 classification: str, description: str, facilities: list[str],
+                 api: list[UUID], factory: str, descriptor: str, distribution: str):
         self.__desc_obj: Any = None
         self.__fact_obj: Any = None
         #: Service UID
@@ -99,9 +105,9 @@ class ServiceInfo(Distinct): # pylint: disable=R0902
         #: Service description
         self.description: str = description
         #: List of service facilities
-        self.facilities: List[str] = facilities
+        self.facilities: list[str] = facilities
         #: List of interfaces provided by service
-        self.api: List[UUID] = api
+        self.api: list[UUID] = api
         #: Service factory specification (entry point)
         self.factory: str = factory
         #: Service descriptor specification (entry point)
@@ -111,7 +117,7 @@ class ServiceInfo(Distinct): # pylint: disable=R0902
     def get_key(self) -> Hashable:
         "Returns service UID"
         return self.uid
-    def as_toml_dict(self) -> Dict:
+    def as_toml_dict(self) -> dict:
         """Returns dictionary with instance data suitable for storage in TOML format
         (values that are not of basic type are converted to string).
         """
@@ -134,7 +140,7 @@ class ServiceInfo(Distinct): # pylint: disable=R0902
         if self.__desc_obj is None:
             self.__desc_obj = load(self.descriptor)
         return self.__desc_obj
-    def __set_descriptor_obj(self, value: Optional[ServiceDescriptor]) -> None:
+    def __set_descriptor_obj(self, value: ServiceDescriptor | None) -> None:
         "Property setter"
         self.__desc_obj = value
     descriptor_obj = property(__get_descriptor_obj, __set_descriptor_obj, None,
@@ -146,7 +152,7 @@ class ServiceInfo(Distinct): # pylint: disable=R0902
         if self.__fact_obj is None:
             self.__fact_obj = load(self.factory)
         return self.__fact_obj
-    def __set_factory_obj(self, value: Optional[Any]) -> None:
+    def __set_factory_obj(self, value: Any | None) -> None:
         "Property setter"
         self.__fact_obj = value
     factory_obj = property(__get_factory_obj, __set_factory_obj, None, __get_factory_obj.__doc__)
@@ -185,7 +191,7 @@ class ServiceRegistry(Registry):
         kwargs['facilities'] = descriptor.facilities
         kwargs['api'] = [x.get_uid() for x in descriptor.api]
         kwargs['factory'] = descriptor.factory
-        svc_info = ServiceInfo(**kwargs) # pylint: disable=E1125
+        svc_info = ServiceInfo(**kwargs)
         svc_info.descriptor_obj = descriptor
         svc_info.factory_obj = factory
         self.store(svc_info)
@@ -217,7 +223,7 @@ class ServiceRegistry(Registry):
             kwargs['api'] = [x.get_uid() for x in desc.api]
             kwargs['factory'] = desc.factory
             try:
-                svc_info = ServiceInfo(**kwargs) # pylint: disable=E1125
+                svc_info = ServiceInfo(**kwargs)
             except Exception as exc:
                 if ignore_errors:
                     continue

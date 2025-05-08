@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=R0903
 
 """Saturnin service budle controller and executor.
 
@@ -40,21 +39,33 @@
 """
 
 from __future__ import annotations
-from typing import List, Tuple, Any
+
 import uuid
-import weakref
 import warnings
+import weakref
+from configparser import DEFAULTSECT, ConfigParser, ExtendedInterpolation
 from pathlib import Path
-from configparser import ConfigParser, ExtendedInterpolation, DEFAULTSECT
+from typing import Any
+
 import zmq
-from firebird.base.types import ZMQDomain
+from saturnin.base import (
+    SECTION_BUNDLE,
+    SECTION_LOCAL_ADDRESS,
+    SECTION_NET_ADDRESS,
+    SECTION_NODE_ADDRESS,
+    SECTION_PEER_UID,
+    SECTION_SERVICE_UID,
+    ChannelManager,
+    Config,
+    Error,
+)
+
 from firebird.base.config import ConfigListOption
-from firebird.base.logging import LoggingIdMixin, get_logger
+from firebird.base.logging import get_logger
 from firebird.base.trace import TracedMixin
-from saturnin.base import (Error, Config, ChannelManager, SECTION_LOCAL_ADDRESS,
-                           SECTION_NET_ADDRESS, SECTION_NODE_ADDRESS, SECTION_PEER_UID,
-                           SECTION_SERVICE_UID, SECTION_BUNDLE)
-from .controller import ThreadController, ServiceExecConfig, Outcome
+from firebird.base.types import ZMQDomain
+
+from .controller import Outcome, ServiceExecConfig, ThreadController
 from .registry import service_registry
 
 
@@ -70,10 +81,10 @@ class ServiceBundleConfig(Config):
         self.agents: ConfigListOption = ConfigListOption('agents', "Agent UIDs",
                                                          ServiceExecConfig, required=True)
 
-class BundleThreadController(LoggingIdMixin, TracedMixin):
+class BundleThreadController(TracedMixin):
     """Service controller that manages collection of services executed in separate threads.
     """
-    def __init__(self, *, parser: ConfigParser=None, manager: ChannelManager=None):
+    def __init__(self, *, parser: ConfigParser | None=None, manager: ChannelManager | None=None):
         """
         Arguments:
             parser: ConfigParser instance to be used for bundle configuration.
@@ -90,7 +101,7 @@ class BundleThreadController(LoggingIdMixin, TracedMixin):
         self.config: ConfigParser = \
             ConfigParser(interpolation=ExtendedInterpolation()) if parser is None else parser
         #: List with ThreadControllers for all service instances in bundle
-        self.services: List[ThreadController] = []
+        self.services: list[ThreadController] = []
         #: Registry with ServiceDescriptors for services that could be run
         #
         self.config[SECTION_LOCAL_ADDRESS] = {}
@@ -143,7 +154,7 @@ class BundleThreadController(LoggingIdMixin, TracedMixin):
             ServiceError: On error in communication with service.
             TimeoutError: When service does not start in time.
         """
-        for controller in self.services: # pylint: disable=R1702
+        for controller in self.services:
             try:
                 controller.configure(self.config, controller.name)
                 controller.log_context = self.log_context
@@ -178,8 +189,8 @@ class BundleThreadController(LoggingIdMixin, TracedMixin):
         for controller in reversed(self.services):
             try:
                 controller.stop(timeout=timeout)
-            except Exception as exc: # pylint: disable=W0703
-                get_logger(self).error("Error while stopping the service: {args[0]}", exc) # pylint: disable=E0602
+            except Exception as exc:
+                get_logger(self).error("Error while stopping the service: {args[0]}", exc)
                 if controller.is_running():
                     warnings.warn(f"Stopping service {controller.name} failed, "
                                   f"service thread terminated", RuntimeWarning)
@@ -194,7 +205,7 @@ class BundleThreadController(LoggingIdMixin, TracedMixin):
         for svc in self.services:
             svc.join(timeout)
 
-class BundleExecutor():
+class BundleExecutor:
     """Service bundle executor context manager.
 
     Arguments:
@@ -212,7 +223,7 @@ class BundleExecutor():
         if self.mngr is not None:
             self.mngr.shutdown(forced=True)
         zmq.Context.instance().term()
-    def configure(self, cfg_files: List[str], *, section: str=SECTION_BUNDLE) -> None:
+    def configure(self, cfg_files: list[str], *, section: str=SECTION_BUNDLE) -> None:
         """Executor configuration.
 
         Arguments:
@@ -225,7 +236,7 @@ class BundleExecutor():
         self.controller.log_context = self.log_context
         self.controller.config.read(cfg_files)
         self.controller.configure(section=section)
-    def run(self) -> List[Tuple[str, Outcome, List[str]]]:
+    def run(self) -> list[tuple[str, Outcome, list[str]]]:
         """Runs services in bundle.
 
         Returns:

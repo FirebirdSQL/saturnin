@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=R0903
 
 """Single service controller and executor.
 
@@ -40,25 +39,37 @@
 """
 
 from __future__ import annotations
-from typing import List, Union, Tuple, Any
+
 import uuid
-import weakref
 import warnings
+import weakref
+from configparser import DEFAULTSECT, ConfigParser, ExtendedInterpolation
 from pathlib import Path
-from configparser import ConfigParser, ExtendedInterpolation, DEFAULTSECT
+from typing import Any
+
 import zmq
-from firebird.base.logging import LoggingIdMixin, get_logger
+from saturnin.base import (
+    SECTION_LOCAL_ADDRESS,
+    SECTION_NET_ADDRESS,
+    SECTION_NODE_ADDRESS,
+    SECTION_PEER_UID,
+    SECTION_SERVICE,
+    SECTION_SERVICE_UID,
+    ChannelManager,
+    Error,
+)
+
+from firebird.base.logging import get_logger
 from firebird.base.trace import TracedMixin
-from saturnin.base import (Error, ChannelManager, SECTION_LOCAL_ADDRESS,
-                           SECTION_NET_ADDRESS, SECTION_NODE_ADDRESS, SECTION_PEER_UID,
-                           SECTION_SERVICE_UID, SECTION_SERVICE)
-from .controller import ThreadController, DirectController, ServiceExecConfig, Outcome
+
+from .controller import DirectController, Outcome, ServiceExecConfig, ThreadController
 from .registry import service_registry
 
-class SingleController(LoggingIdMixin, TracedMixin):
+
+class SingleController(TracedMixin):
     """Service controller that manages service executed directly or in separate thread.
     """
-    def __init__(self, *, parser: ConfigParser=None, manager: ChannelManager=None,
+    def __init__(self, *, parser: ConfigParser=None, manager: ChannelManager | None=None,
                  direct: bool=False):
         """
         Arguments:
@@ -80,7 +91,7 @@ class SingleController(LoggingIdMixin, TracedMixin):
         self.config: ConfigParser = \
             ConfigParser(interpolation=ExtendedInterpolation()) if parser is None else parser
         #: Service controller
-        self.controller: Union[ThreadController, DirectController] = None
+        self.controller: ThreadController | DirectController = None
         #: Registry with ServiceDescriptors for services that could be run
         #
         self.config[SECTION_LOCAL_ADDRESS] = {}
@@ -148,7 +159,7 @@ class SingleController(LoggingIdMixin, TracedMixin):
         if not self.direct:
             try:
                 self.controller.stop(timeout=timeout)
-            except Exception as exc: # pylint: disable=W0703
+            except Exception as exc:
                 get_logger(self).error("Error while stopping the service: {args[0]}", exc)
                 if self.controller.is_running():
                     warnings.warn(f"Stopping service {self.controller.name} failed, "
@@ -163,7 +174,7 @@ class SingleController(LoggingIdMixin, TracedMixin):
         """
         self.controller.join(timeout)
 
-class SingleExecutor():
+class SingleExecutor:
     """Single service executor context manager.
     """
     def __init__(self, log_context: Any, *, direct: bool = False):
@@ -185,7 +196,7 @@ class SingleExecutor():
         if self.mngr is not None:
             self.mngr.shutdown(forced=True)
         zmq.Context.instance().term()
-    def configure(self, cfg_files: List[str], *, section: str=SECTION_SERVICE) -> None:
+    def configure(self, cfg_files: list[str], *, section: str=SECTION_SERVICE) -> None:
         """Executor configuration.
 
         Arguments:
@@ -199,7 +210,7 @@ class SingleExecutor():
         self.controller.log_context = self.log_context
         self.controller.config.read(cfg_files)
         self.controller.configure(section=section)
-    def run(self) -> List[Tuple[str, Outcome, List[str]]]:
+    def run(self) -> list[tuple[str, Outcome, list[str]]]:
         """Runs the service in main or separate thread.
 
         Returns:

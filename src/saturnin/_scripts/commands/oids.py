@@ -38,25 +38,29 @@
 """
 
 from __future__ import annotations
-#from typing import List
+
+from typing import Annotated
 from uuid import UUID
+
 import typer
+from rich import box
 from rich.table import Table
 from rich.text import Text
-from rich import box
-from firebird.uuid import (oid_registry, ROOT_SPEC, get_specifications, parse_specifications,
-                           Node)
-from saturnin.base import directory_scheme
-from saturnin.lib.console import console, _h, RICH_OK, RICH_ERROR
 from saturnin._scripts.completers import oid_completer
+from saturnin.base import directory_scheme
+from saturnin.lib.console import RICH_ERROR, RICH_OK, _h, console
+
+from firebird.uuid import ROOT_SPEC, OIDNode, get_specifications, oid_registry, parse_specifications
 
 #: Typer command group for OID management commands
 app = typer.Typer(rich_markup_mode="rich", help="Saturnin OID management.")
 
 @app.command()
-def list_oids(with_name: str=typer.Option('', help="List only OIDs with this string in name"),
-              show_oids: bool = typer.Option(False, '--show-oids',
-                                             help="Should OIDs instead UUIDs")) -> None:
+def list_oids(
+    with_name: Annotated[str, typer.Option(help="List only OIDs with this string in name")]='',
+    *,
+    show_oids: Annotated[bool, typer.Option('--show-oids', help="Should OIDs instead UUIDs")]=False
+    ) -> None:
     """List registered OIDs.
     """
     table = Table(title='Registered OIDs' if not with_name
@@ -65,6 +69,7 @@ def list_oids(with_name: str=typer.Option('', help="List only OIDs with this str
     table.add_column('OID Name', style='green')
     table.add_column('OID' if show_oids else 'UUID')
     if oid_registry:
+        node: OIDNode
         for node in oid_registry.values():
             if with_name in node.full_name:
                 if show_oids:
@@ -76,8 +81,9 @@ def list_oids(with_name: str=typer.Option('', help="List only OIDs with this str
         console.print("No OIDs are registered.")
 
 @app.command()
-def update_oids(url: str=typer.Argument(ROOT_SPEC, help="URL to OID node specification",
-                                        metavar='URL')):
+def update_oids(
+    url: Annotated[str, typer.Argument(help="URL to OID node specification", metavar='URL')]=ROOT_SPEC
+    ):
     """Update OID registry from specification(s).
     """
     console.print("Downloading OID specifications ... ", end='')
@@ -104,23 +110,24 @@ def update_oids(url: str=typer.Argument(ROOT_SPEC, help="URL to OID node specifi
     console.print("Updating OID registry ... ", end='')
     try:
         oid_registry.update_from_specifications(specifications)
-    except Exception as exc: # pylint: disable=W0703
+    except Exception as exc:
         console.print(RICH_ERROR)
         console.print_error(exc)
     console.print(RICH_OK)
     directory_scheme.site_oids_toml.write_text(oid_registry.as_toml())
 
 @app.command()
-def show_oid(oid: str=typer.Argument('', help="OID name or GUID",
-                                     autocompletion=oid_completer)) -> None:
+def show_oid(
+    oid: Annotated[str, typer.Argument(help="OID name or GUID", autocompletion=oid_completer)]
+    ) -> None:
     """Show information about OID.
     """
     uid: UUID = None
     name: str = None
-    node: Node = None
+    node: OIDNode = None
     try:
         uid = UUID(oid)
-    except Exception: # pylint: disable=W0703
+    except Exception:
         name = oid
 
     if uid is not None:

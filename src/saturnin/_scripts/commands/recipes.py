@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=R0912, R0913, R0914, R0915
 
 """Saturnin recipe commands
 
@@ -40,48 +39,55 @@
 """
 
 from __future__ import annotations
-from typing import List, Tuple
+
+import subprocess
+from configparser import ConfigParser, ExtendedInterpolation
+from datetime import datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from configparser import ConfigParser, ExtendedInterpolation
+from typing import Annotated
 from uuid import UUID
-from datetime import datetime
-import subprocess
+
 import typer
-from rich.table import Table
-from rich.text import Text
+from rich import box
 from rich.markdown import Markdown
 from rich.syntax import Syntax
-from rich import box
-from firebird.uuid import oid_registry, Node
-from firebird.base.config import Config
-from saturnin.base import (saturnin_config, SECTION_BUNDLE, SECTION_SERVICE,
-                           directory_scheme, RESTART)
-from saturnin.component.recipe import (recipe_registry, RecipeInfo, SaturninRecipe,
-                                       RecipeType, RecipeExecutionMode)
-from saturnin.component.registry import service_registry, ServiceInfo
-from saturnin.lib.console import console, _h, RICH_YES, RICH_NO
-from saturnin.component.apps import application_registry, ApplicationInfo
+from rich.table import Table
+from rich.text import Text
+from saturnin._scripts.completers import (
+    application_completer,
+    get_first_line,
+    path_completer,
+    recipe_completer,
+    service_completer,
+)
+from saturnin.base import RESTART, SECTION_BUNDLE, SECTION_SERVICE, directory_scheme, saturnin_config
+from saturnin.component.apps import ApplicationInfo, application_registry
 from saturnin.component.bundle import ServiceBundleConfig
 from saturnin.component.controller import ServiceExecConfig
-from saturnin._scripts.completers import (recipe_completer, service_completer,
-                                          path_completer, application_completer,
-                                          get_first_line)
+from saturnin.component.recipe import RecipeExecutionMode, RecipeInfo, RecipeType, SaturninRecipe, recipe_registry
+from saturnin.component.registry import ServiceInfo, service_registry
+from saturnin.lib.console import RICH_NO, RICH_YES, _h, console
+
+from firebird.base.config import Config
+from firebird.uuid import OIDNode, oid_registry
 
 #: Typer command group for recipe management commands
 app = typer.Typer(rich_markup_mode="markdown", help="Saturnin recipes.")
 
-def run_recipe(ctx: typer.Context,
-               section: str=typer.Option(None, help="Main recipe section name"),
-               print_outcome: bool=typer.Option(False, '--print-outcome',
-                                                help="Print service execution outcome"),
-               config: List[str]=typer.Option(None,
-                                              help="Path to additional configuration file "
-                                              "(could be specified multiple times)"),
-               quiet: bool=typer.Option(False, '--quiet', help="Suppress console output"),
-               main_thread: bool=typer.Option(False, '--main-thread',
+def run_recipe(
+    ctx: typer.Context,
+    section: Annotated[str | None, typer.Option(help="Main recipe section name")]=None,
+    config: Annotated[list[str] | None, typer.Option(help="Path to additional configuration file "
+                                               "(could be specified multiple times)")]=None,
+    *,
+    print_outcome: Annotated[bool, typer.Option(False, '--print-outcome',
+                                                help="Print service execution outcome")]=False,
+    quiet: Annotated[bool, typer.Option('--quiet', help="Suppress console output")]=False,
+    main_thread: Annotated[bool, typer.Option('--main-thread',
                                               help="Start the service in main thread. "
-                                              "Ignored for bundles.")) -> None:
+                                              "Ignored for bundles.")]=False
+    ) -> None:
     """Runs Saturnin recipe.
     """
     recipe_name = ctx.command.name
@@ -101,8 +107,9 @@ def run_recipe(ctx: typer.Context,
         cmd.append('--quiet')
     if print_outcome:
         cmd.append('--outcome')
-    for cfg in config:
-        cmd.extend(['-c', str(cfg)])
+    if config:
+        for cfg in config:
+            cmd.extend(['-c', str(cfg)])
     cmd.append(str(recipe.filename))
     # Daemonize
     pid_file: Path = None
@@ -115,7 +122,7 @@ def run_recipe(ctx: typer.Context,
             cmd.insert(0, 'start')
             cmd.insert(0, 'saturnin-daemon')
         start = datetime.now()
-        result = subprocess.run(cmd) # pylint: disable=W1510
+        result = subprocess.run(cmd, check=False)
         console.print(f'Execution time: {datetime.now() - start}')
         if pid_file:
             if pid_file.exists():
@@ -150,11 +157,14 @@ def list_recipes() -> None:
         console.print("There are no Saturnin recipes installed.")
 
 @app.command()
-def show_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
-                                                autocompletion=recipe_completer),
-                section: str=typer.Option(None, help="Configuration section name"),
-                raw: bool=typer.Option(False, '--raw',
-                                       help="Print recipe file content instead normal output")):
+def show_recipe(
+    recipe_name: Annotated[str, typer.Argument(help="Recipe name",
+                                               autocompletion=recipe_completer)],
+    section: Annotated[str | None, typer.Option(help="Configuration section name")]=None,
+    *,
+    raw: Annotated[bool, typer.Option('--raw',
+                                      help="Print recipe file content instead normal output")]=False
+    ):
     """It analyzes the content of the recipe and displays its structure and configuration according to the default
    sections of the container configuration. If the recipe contains several variants, it is necessary to enter
    the name of the specific section for the configuration of the container to display them.
@@ -176,7 +186,7 @@ def show_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
         recipe_config.validate()
         #
         title = "default section" if section is None else f'section "[section]{section}[/]"'
-        services: List[Tuple[str, ServiceInfo]] = []
+        services: list[tuple[str, ServiceInfo]] = []
         if section is None:
             section = SECTION_BUNDLE if recipe_config.recipe_type.value is RecipeType.BUNDLE \
                 else SECTION_SERVICE
@@ -233,8 +243,10 @@ def show_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
                 console.print()
 
 @app.command()
-def edit_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
-                                                autocompletion=recipe_completer)):
+def edit_recipe(
+    recipe_name: Annotated[str, typer.Argument(help="Recipe name",
+                                               autocompletion=recipe_completer)]
+    ):
     """Edit recipe.
     """
     recipe: RecipeInfo = recipe_registry.get(recipe_name)
@@ -251,13 +263,16 @@ def edit_recipe(recipe_name: str=typer.Argument(..., help="Recipe name",
     return RESTART
 
 @app.command()
-def install_recipe(recipe_name: str= \
-                     typer.Option(None, help="Recipe name (default is recipe file name / application name)"),
-                   recipe_file: Path= \
-                     typer.Option(None, help="Recipe file. Mutually exclusive with ",
-                                  dir_okay=False, autocompletion=path_completer),
-                   app_id: str=typer.Option(None, help="Application UID or name",
-                                            autocompletion=application_completer)):
+def install_recipe(
+    recipe_name: Annotated[str | None,
+                           typer.Option(help="Recipe name (default is recipe file name / application name)")]=None,
+    recipe_file: Annotated[Path | None,
+                           typer.Option(help="Recipe file. Mutually exclusive with ",
+                                        dir_okay=False, autocompletion=path_completer)]=None,
+    app_id: Annotated[str | None,
+                      typer.Option(help="Application UID or name",
+                                   autocompletion=application_completer)]=None
+    ):
     """Installs a new recipe from an external recipe file or from an installed application.
     Once installed, recipe can be executed immediately with the `run <recipe-name>` command.
     """
@@ -271,7 +286,7 @@ def install_recipe(recipe_name: str= \
     if app_id is not None:
         try:
             app = application_registry.get(UUID(app_id))
-        except Exception: # pylint: disable=W0703
+        except Exception:
             app = application_registry.get_by_name(app_id)
         if app is None:
             console.print_error('Application not registered!')
@@ -303,12 +318,12 @@ def install_recipe(recipe_name: str= \
     # Check whether all required components are installed
     application = recipe_config.application.value
     if (application and application not in application_registry):
-        node: Node = oid_registry.get(application)
+        node: OIDNode = oid_registry.get(application)
         console.print_error(f"Required application '{node.name if node else application}' not installed")
         return None
     section = SECTION_BUNDLE if recipe_config.recipe_type.value is RecipeType.BUNDLE \
         else SECTION_SERVICE
-    services: List[UUID] = []
+    services: list[UUID] = []
     if config.has_section(section):
         if recipe_config.recipe_type.value is RecipeType.BUNDLE:
             bundle_cfg: ServiceBundleConfig = ServiceBundleConfig(section)
@@ -322,7 +337,7 @@ def install_recipe(recipe_name: str= \
         stop = False
         for svc_uid in services:
             if svc_uid not in service_registry:
-                node: Node = oid_registry.get(svc_uid)
+                node: OIDNode = oid_registry.get(svc_uid)
                 console.print_error(f"Required service '{node.name if node else svc_uid}' not installed")
                 stop = True
         if stop:
@@ -338,10 +353,14 @@ def install_recipe(recipe_name: str= \
     return RESTART
 
 @app.command()
-def uninstall_recipe(recipe_name: str=typer.Argument(None, autocompletion=recipe_completer,
-                                                     help="The name of the recipe to be uninstalled"),
-                     save_to: Path=typer.Option(None, dir_okay=False, writable=True,
-                                                help="File where recipe should be saved before it's removed")):
+def uninstall_recipe(
+    recipe_name: Annotated[str | None,
+                           typer.Argument(autocompletion=recipe_completer,
+                                          help="The name of the recipe to be uninstalled")]=None,
+    save_to: Annotated[Path | None,
+                       typer.Option(dir_okay=False, writable=True,
+                                    help="File where recipe should be saved before it's removed")]=None
+    ):
     """Uninstall recipe. Can optionally save the recipe file
     """
     recipe: RecipeInfo = recipe_registry.get(recipe_name)
@@ -357,10 +376,13 @@ def uninstall_recipe(recipe_name: str=typer.Argument(None, autocompletion=recipe
     return RESTART
 
 @app.command()
-def create_recipe(plain: bool=typer.Option(False, '--plain', help="Create recipe without comments"),
-                  recipe_name: str=typer.Argument(..., help="Recipe name", metavar='NAME'),
-                  components: List[str]=typer.Argument(..., help="Recipe components",
-                                                       autocompletion=service_completer)):
+def create_recipe(
+    recipe_name: Annotated[str, typer.Argument(help="Recipe name", metavar='NAME')],
+    components: Annotated[list[str], typer.Argument(help="Recipe components",
+                                                    autocompletion=service_completer)],
+    *,
+    plain: Annotated[bool, typer.Option('--plain', help="Create recipe without comments")]=False,
+    ):
     """Creates a recipe template that uses the specified Butler services. Such a template
     contains only default settings and usually needs to be modified to achieve the desired
     results.
@@ -380,7 +402,7 @@ def create_recipe(plain: bool=typer.Option(False, '--plain', help="Create recipe
         svc: ServiceInfo = None
         try:
             svc = service_registry.get(UUID(component))
-        except Exception: # pylint: disable=W0703
+        except Exception:
             svc = service_registry.get_by_name(component)
         if svc is None:
             console.print_error('Service not registered!')

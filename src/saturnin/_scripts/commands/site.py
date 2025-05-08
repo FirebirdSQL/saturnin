@@ -39,17 +39,20 @@
 """
 
 from __future__ import annotations
-from pathlib import Path
+
 from enum import Enum
+from pathlib import Path
+from typing import Annotated
+
 import typer
-from rich.panel import Panel
-from rich.table import Table
 from rich import box
+from rich.panel import Panel
 from rich.prompt import Confirm
 from rich.syntax import Syntax
-from saturnin.base import CONFIG_HDR, directory_scheme, saturnin_config, venv
-from saturnin.lib.console import console, DEFAULT_THEME, RICH_YES, RICH_NO, RICH_OK
+from rich.table import Table
 from saturnin._scripts.completers import path_completer
+from saturnin.base import CONFIG_HDR, directory_scheme, saturnin_config, venv
+from saturnin.lib.console import DEFAULT_THEME, RICH_NO, RICH_OK, RICH_YES, console
 
 #: Typer command group for site management commands
 app = typer.Typer(rich_markup_mode="rich", help="Saturnin site management.")
@@ -66,7 +69,7 @@ def ensure_dir(description: str, path: Path):
         path.mkdir(parents=True)
     console.print(RICH_OK)
 
-def ensure_config(path: Path, content: str, new_config: bool):
+def ensure_config(path: Path, content: str, *, new_config: bool):
     """Create configuration file if it does not exists.
 
     Arguments:
@@ -108,12 +111,12 @@ def create_home() -> None:
     ensure_dir('Saturnin HOME', venv() / 'home')
 
 @app.command()
-def initialize(new_config: bool= \
-                 typer.Option(False, '--new-config',
-                              help="Create configuration files even if they already exist."),
-               yes: bool= \
-                 typer.Option(False, '--yes',
-                              help="Don’t ask for confirmation of site initialization.")) -> None:
+def initialize(*,
+    new_config: Annotated[bool,
+       typer.Option('--new-config', help="Create configuration files even if they already exist.")]=False,
+    yes: Annotated[bool,
+       typer.Option('--yes', help="Don't ask for confirmation of site initialization.")]=False
+    ) -> None:
     """Initialize Saturnin environment/installation.
 
     ---
@@ -235,7 +238,7 @@ class _Configs(Enum):
 
 
 @app.command()
-def show_config(config_file: _Configs = typer.Argument(..., help="Configuration file")):
+def show_config(config_file: Annotated[_Configs, typer.Argument(help="Configuration file")]):
     """Show content of configuration file.
     """
     lexer = config_file.path.suffix[1:]
@@ -244,8 +247,10 @@ def show_config(config_file: _Configs = typer.Argument(..., help="Configuration 
     console.print(Syntax(config_file.path.read_text(), lexer))
 
 @app.command()
-def edit_config(config_file: _Configs = typer.Argument(..., help="Configuration file",
-                                                   autocompletion=path_completer)):
+def edit_config(
+    config_file: Annotated[_Configs, typer.Argument(help="Configuration file",
+                                                    autocompletion=path_completer)]
+    ):
     """Edit configuration file.
     """
     edited = typer.edit(config_file.path.read_text(), saturnin_config.editor.value,
@@ -255,11 +260,12 @@ def edit_config(config_file: _Configs = typer.Argument(..., help="Configuration 
         console.print("Configuration updated.")
 
 @app.command()
-def create_config(config_file: _Configs= \
-                    typer.Argument(..., help="Configuration file to be created"),
-                  new_config: bool= \
-                    typer.Option(False, '--new-config',
-                                 help="Create configuration file even if it already exist.")):
+def create_config(
+    config_file: Annotated[_Configs, typer.Argument(help="Configuration file to be created")],
+    *,
+    new_config: Annotated[bool, typer.Option('--new-config',
+                                             help="Create configuration file even if it already exist.")]=False
+    ):
     """Creates configuration file with default content.
     """
     config: str = None
@@ -269,7 +275,7 @@ def create_config(config_file: _Configs= \
         config = DEFAULT_THEME.config
     elif config_file is _Configs.FIREBIRD:
         try:
-            from firebird.driver import driver_config # pylint: disable=C0415
+            from firebird.driver import driver_config
             srv_cfg = """[local]
 host = localhost
 user = SYSDBA
@@ -277,7 +283,7 @@ password = masterkey
 """
             driver_config.register_server('local', srv_cfg)
             config = driver_config.get_config()
-        except Exception: # pylint: disable=W0703
+        except Exception:
             console.print_error("Firebird driver not installed.")
             return None
     elif config_file is _Configs.LOGGING:
@@ -335,5 +341,5 @@ format = %(asctime)s %(levelname)s [%(process)s/%(thread)s] %(message)s
 [formatter_context]
 format = %(asctime)s %(levelname)s [%(processName)s/%(threadName)s] [%(agent)s:%(context)s] %(message)s
 """
-    ensure_config(config_file.path, config, new_config)
+    ensure_config(config_file.path, config, new_config=new_config)
     return None

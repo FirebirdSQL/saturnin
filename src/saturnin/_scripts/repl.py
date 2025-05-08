@@ -31,28 +31,32 @@
 #
 # Contributor(s): Pavel Císař (initial code)
 #                 ______________________________________
-# pylint: disable=W0212
 
 """REPL for Typer application
 """
 
 from __future__ import annotations
-from typing import Dict, Any, List, TextIO, Callable, Optional
-from pathlib import Path
-from operator import attrgetter
+
 import shlex
 import sys
+from collections.abc import Callable
 from io import StringIO
+from operator import attrgetter
+from pathlib import Path
+from typing import Any, TextIO
+
+import click
+from click.exceptions import Abort as ClickAbort
+from click.exceptions import Exit as ClickExit
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.completion import Completer, Completion
 from prompt_toolkit.history import FileHistory
-from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-import click
-from click.exceptions import Exit as ClickExit, Abort as ClickAbort
+from prompt_toolkit.shortcuts import prompt
 from rich.console import Console
-from saturnin.base import RestartError, RESTART, directory_scheme
-from saturnin.lib.console import console as cm, FORCE_TERMINAL
+from saturnin.base import RESTART, RestartError, directory_scheme
+from saturnin.lib.console import FORCE_TERMINAL
+from saturnin.lib.console import console as cm
 
 EchoCallback = Callable[[str], None]
 
@@ -80,7 +84,7 @@ class CustomClickCompleter(Completer):
     def __init__(self, cli):
         self.cli = cli
 
-    def get_completions(self, document, complete_event=None):
+    def get_completions(self, document, complete_event=None): # noqa: ARG002
         """Yields completion choices.
         """
         # Code analogous to click._bashcomplete.do_complete
@@ -183,7 +187,7 @@ class CustomClickCompleter(Completer):
             if item.text.startswith(incomplete):
                 yield item
 
-class IOManager: # pylint: disable=R0902
+class IOManager:
     """REPL I/O manager.
 
     Handles command prompt, stdin/stdout redirection etc.
@@ -194,19 +198,19 @@ class IOManager: # pylint: disable=R0902
       console: Costom Rich console for output. If not provided, Saturnin standard console
                is used.
     """
-    def __init__(self, context, *, echo: Optional[EchoCallback]=None, console: Console=None):
+    def __init__(self, context, *, echo: EchoCallback | None=None, console: Console=None):
         self.console: Console = cm.std_console if console is None else console
         self.html_output: bool = False
         self.output_file: TextIO = None
         self.output_filename: Path = None
-        self.echo: Optional[EchoCallback] = echo
-        self.run_commands: List[str] = []
+        self.echo: EchoCallback | None = echo
+        self.run_commands: list[str] = []
         self.isatty: bool = sys.stdin.isatty()
         self.saved_stdin = sys.stdin
         self.saved_stdout = sys.stdout
         self.pipe_in = StringIO()
         self.pipe_out = StringIO()
-        self.prompt_kwargs: Dict[str, Any] = {}
+        self.prompt_kwargs: dict[str, Any] = {}
         group_ctx = context.parent or context
         defaults = {
             'history': FileHistory(str(directory_scheme.history_file)),
@@ -296,7 +300,7 @@ class IOManager: # pylint: disable=R0902
                 self.console.save_html(self.output_filename)
         self.console = cm.std_console
 
-def repl(context, ioman: IOManager) -> bool: # pylint: disable=R0912
+def repl(context, ioman: IOManager) -> bool:
     """
     Start an interactive shell. All subcommands are available in it.
 
@@ -354,16 +358,16 @@ def repl(context, ioman: IOManager) -> bool: # pylint: disable=R0912
         except click.ClickException as exc:
             exc.show()
             ioman.reset_queue()
-        except ClickExit as exc:
+        except ClickExit:
             pass
             #sys.exit(exc.exit_code)
-        except ClickAbort as exc:
+        except ClickAbort:
             cm.print_error("Aborted!")
             sys.exit(1)
         except SystemExit:
             pass
         except RestartError:
             return True
-        except Exception as exc: # pylint: disable=W0703
+        except Exception as exc:
             cm.print_error(f"{exc.__class__.__name__}:{exc!s}")
     return False

@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
- # pylint: disable=W1510
 
 """Saturnin package manager commands
 
@@ -40,31 +39,35 @@
 """
 
 from __future__ import annotations
-from typing import List
+
 import subprocess
-from uuid import UUID
-from re import sub
 from operator import attrgetter
+from re import sub
+from typing import Annotated
+from uuid import UUID
+
+import typer
+from rich import box
+from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
-from rich.progress import Progress, SpinnerColumn, TextColumn
-from rich import box
-import typer
-from firebird.uuid import oid_registry
-from saturnin.base import directory_scheme, RESTART
+from saturnin._scripts.completers import application_completer, get_first_line, service_completer
+from saturnin.base import RESTART, directory_scheme
+from saturnin.component.apps import ApplicationInfo, application_registry
 from saturnin.component.recipe import recipe_registry
-from saturnin.component.registry import service_registry, ServiceInfo
-from saturnin.component.apps import application_registry, ApplicationInfo
-from saturnin.lib.console import console, _h, RICH_YES, RICH_NO
+from saturnin.component.registry import ServiceInfo, service_registry
+from saturnin.lib.console import RICH_NO, RICH_YES, _h, console
 from saturnin.lib.metadata import distribution
-from saturnin._scripts.completers import service_completer, application_completer, get_first_line
+
+from firebird.uuid import OIDNode, oid_registry
 
 #: Typer command group for package management commands
 app = typer.Typer(rich_markup_mode="rich", help="Package management.")
 
 @app.command()
-def list_services(with_name: str= \
-                    typer.Option('',help="List only services with this string in name")):
+def list_services(
+    with_name: Annotated[str, typer.Option(help="List only services with this string in name")]=''
+    ):
     "Lists installed Saturnin services."
     services = list(service_registry.filter(lambda x: with_name in x.name))
     services.sort(key=attrgetter('name'))
@@ -82,13 +85,15 @@ def list_services(with_name: str= \
         console.print("There are no Saturnin services registered.")
 
 @app.command()
-def show_service(service_id: str=typer.Argument('', help="Service UID or name",
-                                                autocompletion=service_completer)):
+def show_service(
+    service_id: Annotated[str, typer.Argument(help="Service UID or name",
+                                              autocompletion=service_completer)]=''
+    ):
     "Show information about installed service."
     svc: ServiceInfo = None
     try:
         svc = service_registry.get(UUID(service_id))
-    except Exception: # pylint: disable=W0703
+    except Exception:
         svc = service_registry.get_by_name(service_id)
     if svc is None:
         console.print_error('Service not registered!')
@@ -99,8 +104,8 @@ def show_service(service_id: str=typer.Argument('', help="Service UID or name",
         inf: ServiceInfo = oid_registry.get(uid)
         api.append(str(uid) if inf is None else inf.name)
 
-    vendor = oid_registry.get(svc.vendor)
-    vendor = Text(str(svc.vendor), style='yellow') if vendor is None else Text(vendor.description)
+    vendor: OIDNode = oid_registry.get(svc.vendor)
+    vendor: Text = Text(str(svc.vendor), style='yellow') if vendor is None else Text(vendor.description)
 
     table = Table.grid()
     table.add_column(style='green')
@@ -117,8 +122,9 @@ def show_service(service_id: str=typer.Argument('', help="Service UID or name",
     console.print(table)
 
 @app.command()
-def list_applications(with_name: str= \
-                      typer.Option('',help="List only applications with this string in name")):
+def list_applications(
+    with_name: Annotated[str, typer.Option(help="List only applications with this string in name")]=''
+    ):
     "Lists installed Saturnin applications."
     apps = list(application_registry.filter(lambda x: with_name in x.name))
     apps.sort(key=attrgetter('name'))
@@ -130,6 +136,7 @@ def list_applications(with_name: str= \
         table.add_column('Version', style='number')
         table.add_column('Used', width=9, justify='center')
         table.add_column('Description')
+        #app: ApplicationInfo
         for app in apps:
             table.add_row(app.name, app.version, RICH_YES if
                           recipe_registry.any(lambda x: x.application is not None
@@ -140,19 +147,21 @@ def list_applications(with_name: str= \
         console.print("There are no Saturnin applications registered.")
 
 @app.command()
-def show_application(app_id: str=typer.Argument('', help="Application UID or name",
-                                                    autocompletion=application_completer)):
+def show_application(
+    app_id: Annotated[str, typer.Argument(help="Application UID or name",
+                                          autocompletion=application_completer)]=''
+    ):
     "Show information about installed application."
     app: ApplicationInfo = None
     try:
         app = application_registry.get(UUID(app_id))
-    except Exception: # pylint: disable=W0703
+    except Exception:
         app = application_registry.get_by_name(app_id)
     if app is None:
         console.print_error('Application not registered!')
         return
 
-    vendor = oid_registry.get(app.vendor)
+    vendor: OIDNode = oid_registry.get(app.vendor)
     vendor = _h(Text(str(app.vendor) if vendor is None else vendor.description))
 
     table = Table.grid()
@@ -201,7 +210,7 @@ def update_registry():
         service_registry.load_from_installed()
         service_registry.save()
         console.print('[ok]OK')
-    except Exception: # pylint: disable=W0703
+    except Exception:
         console.print('[warning]ERROR')
         console.print_exception()
     console.print('Updating Saturnin application registry ... ', end='')
@@ -210,28 +219,28 @@ def update_registry():
         application_registry.load_from_installed()
         application_registry.save()
         console.print('[ok]OK')
-    except Exception: # pylint: disable=W0703
+    except Exception:
         console.print('[warning]ERROR')
         console.print_exception()
 
 @app.command()
-def pip(args: List[str]=typer.Argument(None, help="Arguments for pip.")):
+def pip(args: Annotated[list[str] | None, typer.Argument(help="Arguments for pip.")]=None):
     """Runs 'pip' package manager in Saturnin virtual environment.
     """
     pip_cmd = directory_scheme.get_pip_cmd()
     pip_cmd.extend(args)
     if '--help' in args:
-        result = subprocess.run(pip_cmd, capture_output=True, text=True) # pylint: disable=W1510
+        result = subprocess.run(pip_cmd, capture_output=True, text=True, check=False)
         console.print(_h(Text(pip.__doc__ + result.stdout)))
     else:
-        result = subprocess.run(pip_cmd) # pylint: disable=W1510
+        result = subprocess.run(pip_cmd, check=False)
     if result.returncode != 0:
         console.err_console.print(result.stderr)
     elif '--help' not in args and ('install' in args or 'uninstall' in args):
         update_registry()
 
 @app.command()
-def install_package(args: List[str]=typer.Argument(..., help="Arguments for pip install.")):
+def install_package(args: Annotated[list[str], typer.Argument(help="Arguments for pip install.")]):
     """Installs Python package into Saturnin virtual environment via 'pip'.
 
 Note:
@@ -240,7 +249,7 @@ Note:
     pip_cmd = directory_scheme.get_pip_cmd('install')
     pip_cmd.extend(args)
     if '--help' in args:
-        result = subprocess.run(pip_cmd, capture_output=True, text=True) # pylint: disable=W1510
+        result = subprocess.run(pip_cmd, capture_output=True, text=True, check=False)
         text = install_package.__doc__ + sub(r'(\bpip install\b)', 'install package',
                                              result.stdout)
         text = sub(r'(?s)\b(?:Description:).+(?:Install Options:)', "Install Options:",
@@ -251,21 +260,21 @@ Note:
     with Progress(SpinnerColumn(), TextColumn("{task.description}")) as progress:
         progress.add_task("Installing...", total=1)
         result = subprocess.run(pip_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                text=True)
+                                text=True, check=False)
     if result.returncode != 0:
         console.err_console.print(result.stdout)
     update_registry()
     return RESTART
 
 @app.command()
-def uninstall_package(args: List[str]=typer.Argument(..., help="Arguments for pip uninstall.")):
+def uninstall_package(args: Annotated[list[str], typer.Argument(help="Arguments for pip uninstall.")]):
     """Uninstalls Python package from Saturnin virtual environment via `pip`.
     """
     pip_cmd = directory_scheme.get_pip_cmd('uninstall')
     pip_cmd.append('--yes')
     pip_cmd.extend(args)
     if '--help' in args:
-        result = subprocess.run(pip_cmd, capture_output=True, text=True)
+        result = subprocess.run(pip_cmd, capture_output=True, text=True, check=False)
         text = uninstall_package.__doc__ + sub(r'(\bpip uninstall\b)', 'uninstall package',
                                                result.stdout)
         text = sub(r'(?s)\b(?:Description:).+(?:Uninstall Options:)', "Uninstall Options:",
@@ -276,7 +285,7 @@ def uninstall_package(args: List[str]=typer.Argument(..., help="Arguments for pi
     with Progress(SpinnerColumn(), TextColumn("{task.description}")) as progress:
         progress.add_task("Uninstalling...", total=1)
         result = subprocess.run(pip_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                text=True)
+                                text=True, check=False)
     if result.returncode != 0:
         console.err_console.print(result.stdout)
     update_registry()

@@ -32,19 +32,21 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
-# pylint: disable=C0301
 
 """Saturnin console manager for terminal configuration and output.
 
 """
 
 from __future__ import annotations
-import sys
+
 import os
+import sys
+from typing import ClassVar
+
 from rich.console import Console
-from rich.theme import Theme
-from rich.text import Text
 from rich.highlighter import RegexHighlighter
+from rich.text import Text
+from rich.theme import Theme
 from saturnin.base import directory_scheme
 
 #: Default console theme
@@ -120,10 +122,10 @@ def _combine_regex(*regexes: str) -> str:
     """
     return "|".join(regexes)
 
-class SaturninHighlighter(RegexHighlighter): # pylint: disable=R0903
+class SaturninHighlighter(RegexHighlighter):
     """Highlights our special options."""
     #: Regular expressions used by `.highlight`.
-    highlights = [
+    highlights: ClassVar[list[str]] = [
         r"(^|\W)(?P<switch>\-\w+)(?![a-zA-Z0-9])",
         r"(^|\W)(?P<option>\-\-[\w\-]+)(?![a-zA-Z0-9])",
         r"(?P<metavar>\<[^\>]+\>)",
@@ -214,7 +216,7 @@ highlighter: SaturninHighlighter = SaturninHighlighter()
 #: Shortcut to `highlighter.highlight`
 _h = highlighter.highlight
 
-class ConsoleManager():
+class ConsoleManager:
     """Saturnin site manager.
     """
     def __init__(self):

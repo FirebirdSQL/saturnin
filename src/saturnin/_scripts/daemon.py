@@ -32,7 +32,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
- # pylint: disable=C0415,W1514
 
 """Saturnin script to start/stop the daemon process.
 
@@ -40,10 +39,13 @@
 """
 
 from __future__ import annotations
-import platform
+
 import argparse
+import platform
 from pathlib import Path
+
 from saturnin.lib.daemon import start_daemon
+
 
 def main():
     """Saturnin script to start or stop the daemon process.
@@ -108,7 +110,7 @@ def main():
             if pid_file:
                 pid_file.write_text(str(pid))
             else:
-                print('Daemon PID:', pid)
+                print('Daemon PID:', pid) # noqa: T201
         else: # stop
             try:
                 pid = int(args.pid)
@@ -125,7 +127,7 @@ def main():
                 import os
                 import signal
                 os.kill(pid, signal.SIGINT)
-    except Exception: # pylint: disable=W0703
+    except Exception:
         parser.exit(1)
 
 if __name__ == '__main__':

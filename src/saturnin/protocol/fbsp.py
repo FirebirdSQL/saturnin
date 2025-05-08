@@ -33,7 +33,6 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
-# pylint: disable=R0902, R0903, R0904, R0913, R0915, C0302, C0301, W0707,W0613
 
 """Saturnin reference implementation of Firebird Butler Service Protocol.
 
@@ -41,18 +40,47 @@ See https://firebird-butler.readthedocs.io/en/latest/rfc/4/FBSP.html
 """
 
 from __future__ import annotations
-from typing import Type, Any, List, Dict, Callable, Iterable, Union, Final
+
 import uuid
-from struct import pack, unpack
-from enum import IntEnum, IntFlag
-from traceback import format_exception
+from collections.abc import Callable, Iterable
 from contextlib import suppress
+from enum import IntEnum, IntFlag
+from struct import pack, unpack
+from traceback import format_exception
+from typing import TYPE_CHECKING, Any, ClassVar, Final
+
 import zmq
-from firebird.base.signal import eventsocket
+from saturnin.base import (
+    ANY,
+    INVALID,
+    AgentDescriptor,
+    ButlerInterface,
+    Channel,
+    InvalidMessageError,
+    Message,
+    PeerDescriptor,
+    Protocol,
+    RoutingID,
+    ServiceDescriptor,
+    ServiceError,
+    Session,
+    State,
+    StopError,
+    Token,
+    TZMQMessage,
+)
+
 from firebird.base.protobuf import ProtoMessage, create_message
-from saturnin.base import (Token, RoutingID, State, ButlerInterface,  Channel, Protocol,
-     Message, Session, ANY, INVALID,  ServiceDescriptor, AgentDescriptor, PeerDescriptor,
-     StopError, ServiceError, InvalidMessageError, TZMQMessage)
+from firebird.base.signal import eventsocket
+
+if TYPE_CHECKING:
+    from firebird.butler.fbsd_pb2 import ErrorDescription
+    from firebird.butler.fbsp_pb2 import (
+        FBSPCancelRequests,
+        FBSPHelloDataframe,
+        FBSPStateInformation,
+        FBSPWelcomeDataframe,
+    )
 
 # Message header
 #: FBSP protocol control frame :mod:`struct` format
@@ -131,7 +159,7 @@ def bb2h(value_hi: int, value_lo: int) -> int:
     """
     return unpack('!H', pack('!BB', value_hi, value_lo))[0]
 
-def msg_bytes(msg: Union[bytes, bytearray, zmq.Frame]) -> Union[bytes, bytearray]:
+def msg_bytes(msg: bytes | bytearray | zmq.Frame) -> bytes | bytearray:
     """Return message frame as bytes.
     """
     return msg.bytes if isinstance(msg, zmq.Frame) else msg
@@ -151,12 +179,12 @@ class FBSPMessage(Message):
     def __str__(self):
         return f"{self.__class__.__qualname__}[{self.msg_type.name}]"
     __repr__ = __str__
-    def _unpack_data(self, data: List) -> None:
+    def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
 
         Default implementation does nothing.
         """
-    def _pack_data(self) -> List:
+    def _pack_data(self) -> list:
         """Called when serialization is requested.
 
         Default implementation returns empty list.
@@ -245,11 +273,11 @@ class HandshakeMessage(FBSPMessage):
         super().__init__()
         #: Parsed protobuf message with peer information
         self.data: ProtoMessage = None
-    def _unpack_data(self, data: List) -> None:
+    def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
         """
         self.data.ParseFromString(data.pop(0))
-    def _pack_data(self) -> List:
+    def _pack_data(self) -> list:
         """Called when serialization is requested.
         """
         return [self.data.SerializeToString()]
@@ -267,7 +295,7 @@ class HelloMessage(HandshakeMessage):
     def __init__(self):
         super().__init__()
         #:`FBSPHelloDataframe` protobuf message with peer information
-        self.data = create_message(PROTO_HELLO)
+        self.data: FBSPHelloDataframe = create_message(PROTO_HELLO)
 
 class WelcomeMessage(HandshakeMessage):
     """The `WELCOME` message is the response of the Service to the `HELLO` message sent by
@@ -277,7 +305,7 @@ class WelcomeMessage(HandshakeMessage):
     def __init__(self):
         super().__init__()
         #: `FBSPWelcomeDataframe` protobuf message with peer information
-        self.data = create_message(PROTO_WELCOME)
+        self.data: FBSPWelcomeDataframe = create_message(PROTO_WELCOME)
 
 class APIMessage(FBSPMessage):
     """Base FBSP client/service API message (`REQUEST`, `REPLY`, `STATE`).
@@ -285,12 +313,12 @@ class APIMessage(FBSPMessage):
     """
     def __init__(self):
         super().__init__()
-        self.data: List = []
-    def _unpack_data(self, data: List) -> None:
+        self.data: list = []
+    def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
         """
         self.data.extend(i.bytes if isinstance(i, zmq.Frame) else i for i in data)
-    def _pack_data(self) -> List:
+    def _pack_data(self) -> list:
         """Called when serialization is requested.
         """
         return self.data
@@ -324,13 +352,13 @@ class StateMessage(APIMessage):
     def __init__(self):
         super().__init__()
         #: `FBSPStateInformation` protobuf message with state information
-        self.state_info: ProtoMessage = create_message(PROTO_STATE_INFO)
-    def _unpack_data(self, data: List) -> None:
+        self.state_info: FBSPStateInformation = create_message(PROTO_STATE_INFO)
+    def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
         """
         self.state_info.ParseFromString(data.pop(0))
         super()._unpack_data(data)
-    def _pack_data(self) -> List:
+    def _pack_data(self) -> list:
         """Called when serialization is requested.
         """
         return [self.state_info.SerializeToString()]
@@ -352,12 +380,12 @@ class DataMessage(FBSPMessage):
     def __init__(self):
         super().__init__()
         #: Data payload
-        self.data: List[bytes] = []
-    def _unpack_data(self, data: List) -> None:
+        self.data: list[bytes] = []
+    def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
         """
         self.data.extend(i.bytes if isinstance(i, zmq.Frame) else i for i in data)
-    def _pack_data(self) -> List:
+    def _pack_data(self) -> list:
         """Called when serialization is requested.
         """
         return self.data
@@ -374,12 +402,12 @@ class CancelMessage(FBSPMessage):
     def __init__(self):
         super().__init__()
         #: `.FBSPCancelRequests` protobuf message
-        self.reqest: ProtoMessage = create_message(PROTO_CANCEL_REQ)
-    def _unpack_data(self, data: List) -> None:
+        self.reqest: FBSPCancelRequests = create_message(PROTO_CANCEL_REQ)
+    def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
         """
         self.reqest.ParseFromString(data.pop(0))
-    def _pack_data(self) -> List:
+    def _pack_data(self) -> list:
         """Called when serialization is requested.
         """
         return [self.reqest.SerializeToString()]
@@ -395,15 +423,15 @@ class ErrorMessage(FBSPMessage):
     def __init__(self):
         super().__init__()
         #: List of `.ErrorDescription` protobuf messages with error information
-        self.errors: List[ProtoMessage] = []
-    def _unpack_data(self, data: List) -> None:
+        self.errors: list[ErrorDescription] = []
+    def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
         """
         while data:
             err = create_message(PROTO_ERROR)
             err.ParseFromString(msg_bytes(data.pop(0)))
             self.errors.append(err)
-    def _pack_data(self) -> List:
+    def _pack_data(self) -> list:
         """Called when serialization is requested.
         """
         return [err.SerializeToString() for err in self.errors]
@@ -412,7 +440,7 @@ class ErrorMessage(FBSPMessage):
         """
         super().clear()
         self.errors.clear()
-    def add_error(self) -> ProtoMessage:
+    def add_error(self) -> ErrorDescription:
         """Return newly created `ErrorDescription` associated with message."""
         err = create_message(PROTO_ERROR)
         self.errors.append(err)
@@ -424,7 +452,7 @@ class ErrorMessage(FBSPMessage):
         while to_note:
             errdesc = self.add_error()
             if hasattr(to_note, 'code'):
-                errdesc.code = getattr(to_note, 'code')
+                errdesc.code = to_note.code
             errdesc.description = str(to_note)
             if not isinstance(to_note, StopError):
                 errdesc.annotation['traceback'] = \
@@ -456,31 +484,30 @@ class _FBSP(Protocol):
     #: UUID instance that identifies the protocol.
     UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, OID)
     #: Mapping from message type to specific Message class
-    MESSAGE_MAP: Dict[MsgType, FBSPMessage] = \
-        {MsgType.HELLO: HelloMessage,
-         MsgType.WELCOME: WelcomeMessage,
-         MsgType.NOOP: FBSPMessage,
-         MsgType.REQUEST: APIMessage,
-         MsgType.REPLY: APIMessage,
-         MsgType.DATA: DataMessage,
-         MsgType.CANCEL: CancelMessage,
-         MsgType.STATE: StateMessage,
-         MsgType.CLOSE: FBSPMessage,
-         MsgType.ERROR: ErrorMessage,
-         }
-    def __init__(self, *, session_type: Type[Session]):
+    MESSAGE_MAP: ClassVar[dict[MsgType, FBSPMessage]] = {
+        MsgType.HELLO: HelloMessage,
+        MsgType.WELCOME: WelcomeMessage,
+        MsgType.NOOP: FBSPMessage,
+        MsgType.REQUEST: APIMessage,
+        MsgType.REPLY: APIMessage,
+        MsgType.DATA: DataMessage,
+        MsgType.CANCEL: CancelMessage,
+        MsgType.STATE: StateMessage,
+        MsgType.CLOSE: FBSPMessage,
+        MsgType.ERROR: ErrorMessage,
+    }
+    def __init__(self, *, session_type: type[Session]):
         """
         Arguments:
             session_type: Class for session objects.
         """
         super().__init__(session_type=session_type)
         self.message_factory = self.__message_factory
-    def __message_factory(self, zmsg: TZMQMessage=None) -> Message:
+    def __message_factory(self, zmsg: TZMQMessage | None=None) -> Message:
         """Internal message factory.
         """
-        assert zmsg is not None and len(zmsg) >= 1, "ZMQ message header is required to create correct message instance"
         msg = self.MESSAGE_MAP[MsgType(int.from_bytes(zmsg[0][4:5], 'big') >> 3)]()
-        msg._set_hdr(zmsg[0]) # pylint: disable=W0212
+        msg._set_hdr(zmsg[0])
         return msg
     def validate(self, zmsg: TZMQMessage) -> None:
         """Verifies that sequence of ZMQ data frames is a valid FBSP protocol message.
@@ -497,7 +524,7 @@ class _FBSP(Protocol):
         if not zmsg:
             raise InvalidMessageError("Empty message")
         fbsp_header = zmsg[0]
-        if len(fbsp_header) != 16:
+        if len(fbsp_header) != 16: # noqa: PLR2004
             raise InvalidMessageError("Message header must be 16 bytes long")
         try:
             fourcc, control_byte, flags, type_data, _ = unpack(HEADER_FMT_FULL, fbsp_header)
@@ -507,15 +534,15 @@ class _FBSP(Protocol):
             raise InvalidMessageError("Invalid FourCC")
         if (control_byte & VERSION_MASK) != self.REVISION:
             raise InvalidMessageError("Invalid protocol version")
-        if (flags | 7) > 7:
+        if (flags | 7) > 7: # noqa: PLR2004
             raise InvalidMessageError("Invalid flags")
         msg_type = control_byte >> 3
         try:
             if msg_type == 0:
                 raise ValueError()
             message_type = MsgType(msg_type)
-        except ValueError:
-            raise InvalidMessageError(f"Illegal message type {msg_type}")
+        except ValueError as exc:
+            raise InvalidMessageError(f"Illegal message type {msg_type}") from exc
         #
         if message_type in (MsgType.REQUEST, MsgType.REPLY, MsgType.STATE):
             # Check request_code validity
@@ -523,8 +550,8 @@ class _FBSP(Protocol):
         if message_type is MsgType.ERROR:
             try:
                 ErrorCode(type_data >> 5)
-            except ValueError:
-                raise InvalidMessageError(f"Unknown ERROR code: {type_data >> 5}")
+            except ValueError as exc:
+                raise InvalidMessageError(f"Unknown ERROR code: {type_data >> 5}") from exc
             if MsgType(type_data & ERROR_TYPE_MASK) not in (MsgType.UNKNOWN, MsgType.HELLO,
                                                             MsgType.REQUEST, MsgType.DATA,
                                                             MsgType.CANCEL):
@@ -551,14 +578,14 @@ class _FBSP(Protocol):
             if len(zmsg) > 1:
                 raise InvalidMessageError("Data frames not allowed for NOOP message")
         elif message_type is MsgType.CANCEL:
-            if len(zmsg) > 2:
+            if len(zmsg) > 2: # noqa: PLR2004
                 raise InvalidMessageError("CANCEL message must have exactly one data frame")
             try:
                 create_message(PROTO_CANCEL_REQ).ParseFromString(msg_bytes(zmsg[2]))
             except Exception as exc:
                 raise InvalidMessageError("Invalid CANCEL message data frame") from exc
         elif message_type is MsgType.STATE:
-            if len(zmsg) > 2:
+            if len(zmsg) > 2:  # noqa: PLR2004
                 raise InvalidMessageError("STATE message must have exactly one data frame")
             try:
                 create_message(PROTO_STATE_INFO).ParseFromString(msg_bytes(zmsg[2]))
@@ -610,7 +637,7 @@ class FBSPSession(Session):
 class FBSPService(_FBSP):
     """4/FBSP - Firebird Butler Service Protocol - Service side.
     """
-    def __init__(self, *, session_type: Type[FBSPSession]=FBSPSession,
+    def __init__(self, *, session_type: type[FBSPSession]=FBSPSession,
                  service: ServiceDescriptor, peer: PeerDescriptor):
         """
         Arguments:
@@ -629,10 +656,10 @@ class FBSPService(_FBSP):
                               MsgType.STATE: self.handle_ack_reply,
                               MsgType.WELCOME: self.handle_unexpected_msg,
                               })
-        self.api_handlers: Dict[Any, Callable] = {}
-        self._apis: List[ButlerInterface] = []
+        self.api_handlers: dict[Any, Callable] = {}
+        self._apis: list[ButlerInterface] = []
         self._apis.extend(service.api)
-        self.welcome_df = create_message(PROTO_WELCOME)
+        self.welcome_df: FBSPWelcomeDataframe = create_message(PROTO_WELCOME)
         self.welcome_df.instance.uid = peer.uid.bytes
         self.welcome_df.instance.pid = peer.pid
         self.welcome_df.instance.host = peer.host
@@ -666,7 +693,7 @@ class FBSPService(_FBSP):
             self.on_accept_client(channel, msg)
         except StopError as exc:
             err_code = getattr(exc, 'code', ErrorCode.ERROR)
-        except Exception as exc: # pylint: disable=W0703
+        except Exception as exc:
             err_code = getattr(exc, 'code', ErrorCode.INTERNAL_ERROR)
             err = exc
         if err_code is not None:
@@ -777,7 +804,7 @@ class FBSPService(_FBSP):
         Important:
             The event handler must send the ACK-REPLY message if requested. According to
             FBSP specification, the request must be acknowledged at the time the Service
-            has positively decided to accept the client’s request and before commencing
+            has positively decided to accept the client's request and before commencing
             the fulfillment of the request. It may also send the ERROR instead the ACK-REPLY.
 
         Arguments:
@@ -873,7 +900,7 @@ class FBSPService(_FBSP):
         """
         try:
             self.on_session_closed(channel, session, msg)
-        except Exception: # pylint: disable=W0703
+        except Exception:
             # We don't want to handle this via `handle_exception` and we're closing
             # the session anyway
             pass
@@ -899,7 +926,7 @@ class FBSPService(_FBSP):
             raise StopError(f"Client can send {msg.msg_type.name} messages only as ACK-REPLY",
                             code=ErrorCode.PROTOCOL_VIOLATION)
     def send_error(self, channel: Channel, session: FBSPSession, relates_to: FBSPMessage,
-                   error_code: ErrorCode, exc: Exception=None) -> None:
+                   error_code: ErrorCode, exc: Exception | None=None) -> None:
         """Sends `ERROR` message to the client associated with session.
 
         Arguments:
@@ -1001,7 +1028,7 @@ class FBSPService(_FBSP):
         """
     @eventsocket
     def on_session_closed(self, channel: Channel, session: FBSPSession, msg: FBSPMessage,
-                          exc: Exception=None) -> None:
+                          exc: Exception | None=None) -> None:
         """`~firebird.base.signal.eventsocket` called when CLOSE message is received or
         sent, to release any resources associated with current transmission.
 
@@ -1039,7 +1066,7 @@ class FBSPClient(_FBSP):
     - Returns INVALID sentinel for received HELLO and CANCEL messages.
     - Closes the session when CLOSE message is received.
     """
-    def __init__(self, *, session_type: Type[FBSPSession]=FBSPSession):
+    def __init__(self, *, session_type: type[FBSPSession]=FBSPSession):
         """
         Arguments:
             session_type: Class for session objects.
@@ -1056,7 +1083,7 @@ class FBSPClient(_FBSP):
                               MsgType.HELLO: self.handle_unexpected_msg,
                               MsgType.CANCEL: self.handle_unexpected_msg,
                               })
-        self._apis: Dict[ButlerInterface, int] = {}
+        self._apis: dict[ButlerInterface, int] = {}
     def handle_welcome_msg(self, channel: Channel, session: FBSPSession, msg: WelcomeMessage) -> WelcomeMessage:
         """Process `WELCOME` message received from service.
 
@@ -1123,7 +1150,7 @@ class FBSPClient(_FBSP):
         """
         channel.discard_session(session)
         return msg
-    def has_api(self, api: Type[ButlerInterface]) -> bool:
+    def has_api(self, api: type[ButlerInterface]) -> bool:
         """Returns True if attached service supports specified interface.
 
         Arguments:
@@ -1191,13 +1218,13 @@ class FBSPEventClient(FBSPClient):
     that process incomming messages in uniform way, and actual processing is done via event
     handlers.
     """
-    def __init__(self, *, session_type: Type[FBSPSession]=FBSPSession):
+    def __init__(self, *, session_type: type[FBSPSession]=FBSPSession):
         """
         Arguments:
             session_type: Class for session objects.
         """
         super().__init__(session_type=session_type)
-        self.api_handlers: Dict[Any, Callable] = {}
+        self.api_handlers: dict[Any, Callable] = {}
         self.handlers.update({MsgType.WELCOME: self.handle_welcome_msg,
                               MsgType.ERROR: self.handle_error_msg,
                               MsgType.REPLY: self.handle_reply_msg,
@@ -1281,7 +1308,6 @@ class FBSPEventClient(FBSPClient):
             All exceptions are handled by `~saturnin.base.transport.Protocol.handle_exception`.
         """
         handler = self.api_handlers.get(msg.type_data)
-        assert handler, "API REPLY without handler"
         handler(channel, session, msg, self)
     def handle_state_msg(self, channel: Channel, session: FBSPSession, msg: StateMessage) -> None:
         """Process `STATE` message received from service.
@@ -1353,7 +1379,7 @@ class FBSPEventClient(FBSPClient):
         """
         try:
             self.on_session_closed(channel, session, msg)
-        except Exception: # pylint: disable=W0703
+        except Exception:
             # We don't want to handle this via `handle_exception` and we're closing
             # the session anyway
             pass
@@ -1442,7 +1468,7 @@ class FBSPEventClient(FBSPClient):
         """
     @eventsocket
     def on_session_closed(self, channel: Channel, session: FBSPSession, msg: FBSPMessage,
-                          exc: Exception=None) -> None:
+                          exc: Exception | None=None) -> None:
         """`~firebird.base.signal.eventsocket` called when `CLOSE` message is received or
         sent, to release any resources associated with current transmission.
 

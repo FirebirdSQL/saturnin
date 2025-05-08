@@ -39,13 +39,15 @@
 """
 
 from __future__ import annotations
-from typing import Union, List, Optional
+
 import platform
 import subprocess
 from pathlib import Path
+
 from saturnin.base import Error
 
-def start_daemon(args: List[str]) -> Optional[int]:
+
+def start_daemon(args: list[str]) -> int | None:
     """Starts daemon process.
 
     Arguments:
@@ -61,13 +63,13 @@ def start_daemon(args: List[str]) -> Optional[int]:
     """
     kwargs = {}
     if platform.system() == 'Windows':
-        kwargs.update(shell=True, creationflags=subprocess.CREATE_NEW_CONSOLE)
+        kwargs.update(shell=True, creationflags=subprocess.CREATE_NEW_CONSOLE) # noqa: S604
     else:  # Unix
         kwargs.update(start_new_session=True)
-    proc = subprocess.Popen(args, **kwargs) # pylint: disable=R1732
+    proc = subprocess.Popen(args, **kwargs) # noqa: S603
     return proc.pid if proc.poll() is None else None
 
-def stop_daemon(pid: Union[int, str, Path]) -> None:
+def stop_daemon(pid: int | str | Path) -> None:
     """Stops the daemon process by invoking `saturnin-daemon` script.
 
     Arguments:
@@ -88,6 +90,6 @@ def stop_daemon(pid: Union[int, str, Path]) -> None:
         if daemon was started by :func:`start_daemon` or `saturnin-daemon` script.
     """
     try:
-        subprocess.run(['saturnin-daemon', 'stop', str(pid)], check=True, timeout=10)
+        subprocess.run(['saturnin-daemon', 'stop', str(pid)], check=True, timeout=10) # noqa: S603, S607
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         raise Error("Daemon stop operation failed") from exc

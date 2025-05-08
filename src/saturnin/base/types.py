@@ -32,11 +32,8 @@
 #
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________.
-# pylint: disable=R0902
 
-"""
-Saturnin common type definitions and constants
-==============================================
+"""Saturnin common type definitions and constants
 
 This module contains:
 
@@ -49,18 +46,22 @@ This module contains:
 """
 
 from __future__ import annotations
-from typing import List, Dict, Optional, Callable, Any, NewType, ByteString, Final
-from enum import IntEnum, IntFlag, Enum, auto
+
 import uuid
-from dataclasses import dataclass, field, replace as _dcls_replace
+from collections.abc import ByteString, Callable
+from dataclasses import dataclass, field
+from dataclasses import replace as _dcls_replace
+from enum import Enum, IntEnum, IntFlag, auto
+from typing import Any, Final, NewType, TypeAlias
+
 import zmq
-from firebird.base.types import Error, Distinct, MIME, Sentinel
+
 from firebird.base.config import Config
-from firebird.base.protobuf import PROTO_STRUCT, load_registered, create_message, \
-     struct2dict, dict2struct
+from firebird.base.protobuf import PROTO_STRUCT, create_message, dict2struct, load_registered, struct2dict
+from firebird.base.types import MIME, Distinct, Error, Sentinel
 
 # Type annotation types
-TSupplement = Optional[Dict[str, Any]]
+TSupplement: TypeAlias = dict[str, Any] | None
 """name/value dictionary"""
 Token = NewType('Token', ByteString)
 """Message token"""
@@ -250,7 +251,7 @@ class AgentDescriptor(Distinct):
     platform_uid: uuid.UUID = PLATFORM_UID
     platform_version: str = PLATFORM_VERSION
     supplement: TSupplement = None
-    def get_key(self) -> Any:
+    def get_key(self) -> uuid.UUID:
         """Returns `uid` (instance key). Used for instance hash computation."""
         return self.uid
     def copy(self) -> AgentDescriptor:
@@ -276,7 +277,7 @@ class PeerDescriptor(Distinct):
     pid: int
     host: str
     supplement: TSupplement = None
-    def get_key(self) -> Any:
+    def get_key(self) -> uuid.UUID:
         """Returns `uid` (instance key). Used for instance hash computation."""
         return self.uid
     def as_proto(self) -> Any:
@@ -329,12 +330,12 @@ class ServiceDescriptor(Distinct):
        config: Service configuration factory
     """
     agent: AgentDescriptor
-    api: List[ButlerInterface]
+    api: list[ButlerInterface]
     description: str
-    facilities: List[str]
+    facilities: list[str]
     factory: str
     config: Callable[[], Config]
-    def get_key(self) -> Any:
+    def get_key(self) -> uuid.UUID:
         """Returns `agent.uid` (instance key). Used for instance hash computation."""
         return self.agent.uid
 
@@ -360,7 +361,7 @@ class ApplicationDescriptor(Distinct):
     description: str
     factory: str
     config: str
-    def get_key(self) -> Any:
+    def get_key(self) -> uuid.UUID:
         """Returns `uid` (instance key). Used for instance hash computation."""
         return self.uid
 
