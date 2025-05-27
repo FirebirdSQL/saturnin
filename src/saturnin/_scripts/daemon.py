@@ -33,9 +33,27 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin script to start/stop the daemon process.
+"""Saturnin script for managing daemon processes (start/stop).
 
+This script provides command-line utilities to:
 
+1.  **Start** a specified daemon executable. It utilizes
+    `saturnin.lib.daemon.start_daemon` for process creation, which handles
+    platform-specific requirements for backgrounding and console creation
+    (especially on Windows for graceful shutdown). It can optionally write
+    the daemon's PID to a specified file.
+2.  **Stop** a running daemon process identified by its PID (or a file
+    containing the PID). This action is the core implementation for stopping
+    daemons:
+
+    *   On Unix-like systems, it sends a SIGINT signal directly to the process.
+    *   On Windows, it detaches from the current console (if any), attaches
+        to the daemon's console, and sends a CTRL_C_EVENT. This requires
+        the daemon to have been started with its own console.
+
+The `saturnin.lib.daemon.stop_daemon` function is a higher-level wrapper
+that invokes this script (i.e., `saturnin-daemon stop <pid>`) to perform
+the actual stop operation.
 """
 
 from __future__ import annotations
@@ -54,36 +72,36 @@ def main():
 
       saturnin-daemon [-h] {start,stop} ...
 
-    optional arguments:
-      -h, --help    show this help message and exit
+      optional arguments:
+        -h, --help    show this help message and exit
 
-    Commands:
-      {start,stop}
-        start       Starts daemon process
-        stop        Stops daemon process
+      Commands:
+        {start,stop}
+          start       Starts daemon process
+          stop        Stops daemon process
 
-    start comand::
+    start command::
 
       saturnin-daemon start [-h] [-p PID_FILE] daemon ...
 
-    positional arguments:
-      daemon                Path to daemon
-      arguments             Daemon arguments
+      positional arguments:
+        daemon                Path to daemon
+        arguments             Daemon arguments
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -p PID_FILE, --pid-file PID_FILE
-                            Path to PID file
+      optional arguments:
+        -h, --help            show this help message and exit
+        -p PID_FILE, --pid-file PID_FILE
+                              Path to PID file
 
     stop command::
 
       saturnin-daemon stop [-h] pid
 
-    positional arguments:
-      pid         Daemon PID or path to PID file
+      positional arguments:
+        pid         Daemon PID or path to PID file
 
-    optional arguments:
-      -h, --help  show this help message and exit
+      optional arguments:
+        -h, --help  show this help message and exit
     """
     parser = argparse.ArgumentParser(description="Starts or stops the daemon process.")
     subs = parser.add_subparsers(title="Commands", dest='action', required=True)

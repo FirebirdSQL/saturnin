@@ -33,19 +33,22 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Single service controller and executor.
+"""Simplified controller and executor for running a single Saturnin service.
 
-
+This module provides `.SingleController` and `.SingleExecutor` classes to
+streamline the process of configuring, starting, and managing a single
+Saturnin service instance. It acts as a higher-level abstraction over
+the more detailed `.DirectController` and `.ThreadController` implementations,
+allowing for easier integration or standalone execution of services.
 """
 
 from __future__ import annotations
 
 import uuid
 import warnings
-import weakref
 from configparser import DEFAULTSECT, ConfigParser, ExtendedInterpolation
 from pathlib import Path
-from typing import Any
+from typing import Self
 
 import zmq
 from saturnin.base import (
@@ -59,6 +62,7 @@ from saturnin.base import (
     Error,
 )
 
+from firebird.base.logging import FStrMessage as _m
 from firebird.base.logging import get_logger
 from firebird.base.trace import TracedMixin
 
@@ -67,26 +71,31 @@ from .registry import service_registry
 
 
 class SingleController(TracedMixin):
-    """Service controller that manages service executed directly or in separate thread.
+    """A controller that manages a single service, allowing it to be executed
+    either directly in the current thread (using `.DirectController`) or in a
+    separate thread (using `.ThreadController`).
+
+    This class simplifies the setup by managing the underlying controller type
+    based on the `direct` flag.
+
+    Arguments:
+        parser: Optional `.ConfigParser` instance to be used for service
+                configuration. If `None`, a new one is created.
+        manager: Optional `.ChannelManager` to use. If `None`, a new one is
+                 created and managed internally.
+        direct: If `True`, the service will be run using an internal
+                `.DirectController`. If `False` (default), a .`ThreadController`
+                is used.
     """
-    def __init__(self, *, parser: ConfigParser=None, manager: ChannelManager | None=None,
+    def __init__(self, *, parser: ConfigParser | None=None, manager: ChannelManager | None=None,
                  direct: bool=False):
-        """
-        Arguments:
-            controller_class: Inner controller class.
-            parser: ConfigParser instance to be used for service configuration.
-            manager: ChannelManager to be used.
-            direct: Use DirectController or ThreadController.
-        """
         #: Use DirectController instead ThreadController
         self.direct: bool = direct
-        self.log_context = None
         #: Channel manager
         self.mngr: ChannelManager = manager
         self._ext_mngr: bool = manager is not None
         if manager is None:
             self.mngr = ChannelManager(zmq.Context.instance())
-            self.mngr.log_context = weakref.proxy(self)
         #: ConfigParser with service configuration
         self.config: ConfigParser = \
             ConfigParser(interpolation=ExtendedInterpolation()) if parser is None else parser
@@ -106,9 +115,17 @@ class SingleController(TracedMixin):
                                                 in service_registry)
         #
     def configure(self, *, section: str=SECTION_SERVICE) -> None:
-        """
+        """Configures the service to be run.
+
+        This method loads the service configuration from the `.config`
+        (`.ConfigParser` instance), validates it, and instantiates the
+        appropriate inner controller (`.DirectController` or `.ThreadController`)
+        for the specified service.
+
         Arguments:
-            section: Configuration section with service specification.
+            section: Configuration section name in `.config` that contains
+                     the service specification (e.g., its agent UID).
+                     Defaults to `SECTION_SERVICE`.
         """
         svc_cfg: ServiceExecConfig = ServiceExecConfig(section)
         svc_cfg.load_config(self.config)
@@ -139,7 +156,6 @@ class SingleController(TracedMixin):
         """
         try:
             self.controller.configure(self.config, self.controller.name)
-            self.controller.log_context = self.log_context
             self.controller.start(timeout=timeout)
         except:
             self.stop()
@@ -160,7 +176,7 @@ class SingleController(TracedMixin):
             try:
                 self.controller.stop(timeout=timeout)
             except Exception as exc:
-                get_logger(self).error("Error while stopping the service: {args[0]}", exc)
+                get_logger(self).error(_m("Error while stopping the service: {args[0]}", args=exc.args))
                 if self.controller.is_running():
                     warnings.warn(f"Stopping service {self.controller.name} failed, "
                                   f"service thread terminated", RuntimeWarning)
@@ -175,49 +191,64 @@ class SingleController(TracedMixin):
         self.controller.join(timeout)
 
 class SingleExecutor:
-    """Single service executor context manager.
+    """A context manager for executing a single Saturnin service.
+
+    This class simplifies the lifecycle management of a `SingleController`,
+    ensuring proper initialization and cleanup (like ZMQ context termination)
+    when used in a `with` statement.
+
+    Arguments:
+        direct: If `True`, the underlying `.SingleController` will be configured
+                to run the service directly in the current thread. If `False`
+                (default), the service runs in a separate thread.
     """
-    def __init__(self, log_context: Any, *, direct: bool = False):
-        """
-        Arguments:
-            log_context: Log context for this executor.
-            direct: Use `.DirectController` (True) or `.ThreadController`.
-        """
+    def __init__(self, *, direct: bool = False):
         #: Use DirectController instead ThreadController
         self.direct: bool = direct
-        self.log_context = log_context
         #: Channel manager
         self.mngr: ChannelManager = None
         #: Controller
         self.controller: SingleController = None
-    def __enter__(self) -> SingleExecutor:
+    def __enter__(self) -> Self:
         return self
     def __exit__(self, exc_type, exc_value, traceback) -> None:
         if self.mngr is not None:
             self.mngr.shutdown(forced=True)
         zmq.Context.instance().term()
     def configure(self, cfg_files: list[str], *, section: str=SECTION_SERVICE) -> None:
-        """Executor configuration.
+        """Initializes and configures the internal `SingleController`.
+
+        This involves creating a `.ChannelManager`, instantiating a `.SingleController`
+        with the specified `direct` mode, reading configuration files into the
+        controller's `.ConfigParser`, and then calling the controller's `configure`
+        method.
 
         Arguments:
-          cfg_files: List of configuration files.
-          section:   Configuration section name with service specification.
+          cfg_files: A list of paths to configuration files to be read.
+          section:   The name of the configuration section that specifies the
+                     service to be run. Defaults to `SECTION_SERVICE`.
         """
         self.mngr = ChannelManager(zmq.Context.instance())
-        self.mngr.log_context = self.log_context
         self.controller: SingleController = SingleController(manager=self.mngr,
                                                              direct=self.direct)
-        self.controller.log_context = self.log_context
         self.controller.config.read(cfg_files)
         self.controller.configure(section=section)
-    def run(self) -> list[tuple[str, Outcome, list[str]]]:
-        """Runs the service in main or separate thread.
+    def run(self) -> tuple[Outcome, list[str]] | None:
+        """Runs the configured service.
+
+        If the executor is configured for non-direct (threaded) execution, this
+        method starts the service, waits for it to join (handling KeyboardInterrupt
+        for graceful shutdown), and then returns the execution outcome.
+
+        If configured for direct execution, this method starts the service, which
+        will block until it finishes or is interrupted. In direct mode, this
+        method returns `None` as the outcome is managed within the blocking call.
 
         Returns:
-          Tuple with (service_name, outcome, details).
-
-        outcome: `.Outcome` of service execution.
-        details: List of strings with additional outcome information (typically error text)
+            tuple[Outcome, list[str]] | None:
+                - If not in `direct` mode: A tuple containing the service's
+                  execution `Outcome` and a list of strings with details (e.g., error messages).
+                - If in `direct` mode: `None`.
         """
         self.controller.start()
         result = None

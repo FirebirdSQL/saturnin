@@ -34,7 +34,9 @@
 
 """CLI command completers.
 
-For use with Typer/Click arguments and options (parameter `autocompletion`).
+These functions are designed for use with Typer/Click arguments and options
+via the `autocompletion` parameter. They provide context-aware suggestions
+to enhance the command-line user experience.
 """
 
 from __future__ import annotations
@@ -49,12 +51,19 @@ from firebird.uuid import oid_registry
 
 
 def get_first_line(text: str) -> str:
-    """Returns first non-empty line from argument.
+    """Returns the first non-empty line from the input string.
     """
     return text.strip().split('\n')[0]
 
 def oid_completer(ctx, args, incomplete) -> list:
-    """Click completer for OIDs. Returns both, UUID and OID names.
+    """Click completer for OIDs.
+
+    Provides completion suggestions based on registered OID UUIDs and their
+    full names from the `.oid_registry`.
+
+    Returns:
+        A list of strings, where each string is either an OID's UUID
+        or its full name.
     """
     result = [(str(oid.uid)) for oid in oid_registry.values()]
     result.extend(oid.full_name for oid in oid_registry.values())
@@ -62,6 +71,13 @@ def oid_completer(ctx, args, incomplete) -> list:
 
 def service_completer(ctx, args, incomplete) -> list:
     """Click completer for Saturnin services.
+
+    Provides completion suggestions based on registered service UIDs and names
+    from the `.service_registry`.
+
+    Returns:
+        A list of strings, where each string is either a service's UID
+        or its name.
     """
     result = [(str(svc.uid)) for svc in service_registry.values()]
     result.extend(svc.name for svc in service_registry.values())
@@ -69,19 +85,40 @@ def service_completer(ctx, args, incomplete) -> list:
 
 def application_completer(ctx, args, incomplete) -> list:
     """Click completer for Saturnin applications.
+
+    Provides completion suggestions based on registered application UIDs and names
+    from the `.application_registry`.
+
+    Returns:
+        A list of strings, where each string is either an application's UID
+        or its name.
     """
     result = [(str(app.uid)) for app in application_registry.values()]
     result.extend(app.name for app in application_registry.values())
     return result
 
-def recipe_completer(ctx, args, incomplete) -> list:
+def recipe_completer(ctx, args, incomplete) -> list[tuple[str, str]]:
     """Click completer for Saturnin recipes.
+
+    Provides completion suggestions based on installed recipe names from the
+    `.recipe_registry`, along with their descriptions.
+
+    Returns:
+        A list of (value, help_text) tuples, where `value` is the recipe name
+        and `help_text` is the first line of its description.
     """
     return [(recipe.name, get_first_line(recipe.description))
             for recipe in recipe_registry.values()]
 
 def path_completer(ctx, args, incomplete) -> list:
-    """Click completer for Path values.
+    """Click completer for filesystem Path values.
+
+    Provides completion suggestions by globbing for files and directories
+    based on the `incomplete` path string. It navigates up to the nearest
+    existing parent directory if the `incomplete` path itself doesn't exist.
+
+    Returns:
+        A list of strings, where each string is a potential path completion.
     """
     base_path = Path(incomplete)
     while not base_path.exists():

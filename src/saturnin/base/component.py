@@ -49,14 +49,18 @@ from firebird.base.types import ZMQAddress
 
 
 def create_config(_cls: type[ComponentConfig], agent: UUID, name: str) -> ComponentConfig:
-    """Returns newly created `ComponentConfig` instance.
+    """Returns a newly created `ComponentConfig` instance (or a subclass instance).
 
-    Intended to be used with `functools.partial` in `.ServiceDescriptor.config` definitions.
+    This function is primarily intended to be used with `functools.partial`
+    when defining the `config` factory in `ServiceDescriptor` instances.
 
     Arguments:
-      _cls:  Class for component configuration.
-      agent: Component identification.
-      name:  Name to be used by configuration class.
+        _cls: The `ComponentConfig` class (or a subclass of it) to instantiate.
+        agent: The UUID for component identification, to be set in the config.
+        name: The name to be used by the configuration class (often for section naming).
+
+    Returns:
+        An initialized instance of the provided `_cls`.
     """
     result: ComponentConfig = _cls(name)
     result.agent.value = agent
@@ -72,13 +76,14 @@ class ComponentConfig(Config):
         super().__init__(name)
         #: Agent identification
         self.agent: UUIDOption = \
-            UUIDOption('agent', "Agent identification. Do NOT change!")
+            UUIDOption('agent', "Unique agent identification. Do NOT change!")
         #: Logging ID for this component instance
         self.logging_id: StrOption = \
-            StrOption('logging_id', "Logging ID for this component instance")
+            StrOption('logging_id', "Logging ID (custom agent name) for this component instance (set in agent's `_agent_name_` attribute)")
 
 class Component(ABC):
-    """Abstract base class for Saturnin Components.
+    """Abstract base class for Saturnin Components, which represent executable units like
+    microservices or services managed by the platform.
     """
     @abstractmethod
     def initialize(self, config: ComponentConfig) -> None:
@@ -89,12 +94,18 @@ class Component(ABC):
         """
     @abstractmethod
     def warm_up(self, ctrl_addr: ZMQAddress | None) -> None:
-        """Must initialize the `.ChannelManager` and connect component to control channel
-        at provided address.
+        """Initializes essential communication infrastructure for the component.
 
-        Arguments:
-            ctrl_addr: Controller's address for ICCP communication with component.
-        """
+    Implementations must initialize their `ChannelManager` and establish a
+    connection to the control channel at the provided `ctrl_addr`. This
+    connection is typically used for Inter-Component Communication Protocol (ICCP)
+    with a controller.
+
+    Arguments:
+        ctrl_addr: The ZMQ address of the controller's control channel.
+                   If `None`, the component might operate in a standalone mode
+                   or a specific behavior should be defined by the implementer.
+    """
     @abstractmethod
     def run(self) -> None:
         """Component execution (main loop).

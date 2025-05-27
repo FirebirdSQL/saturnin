@@ -33,9 +33,11 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Module for work with importlib metadata
+"""Utility functions for interacting with Python's importlib.metadata.
 
-
+This module provides helper functions to simplify common tasks related to
+discovering and inspecting package distributions and their registered entry points,
+acting as a focused interface to `importlib.metadata` functionalities.
 """
 
 from __future__ import annotations
@@ -45,26 +47,38 @@ from importlib.metadata import Distribution, EntryPoint, distribution, distribut
 
 
 def iter_entry_points(group: str, name: str | None=None) -> Generator[EntryPoint, None, None]:
-    """Replacement for pkg_resources.iter_entry_points.
+    """Provides an iterator for entry points, similar to `pkg_resources.iter_entry_points`.
+
+    This function leverages `importlib.metadata.entry_points()` to find and
+    yield `EntryPoint` objects.
 
     Arguments:
-        group: Entrypoint group name
-        name:  Etrypoint name.
+        group: The name of the entry point group to iterate over (e.g., 'console_scripts').
+        name: Optional. The specific name of the entry point to retrieve.
+              If `None`, all entry points within the specified group are yielded.
 
-    When `name` is specified, returns only EntryPoint with such name. When `name` is not
-    specified, returns all entry points in group.
+    Yields:
+        EntryPoint: An `EntryPoint` object for each matching entry point found.
     """
     for item in entry_points().get(group, []):
         if name is None or item.name == name:
             yield item
 
 def get_entry_point_distribution(entry_point: EntryPoint) -> Distribution | None:
-    """Returns distribution that registered specified entry point, or None if distribution
-    is not found. This function searches through all distributions, not only those that
-    registered Saturnin components.
+    """Finds the distribution package that registered a given entry point.
+
+    This function iterates through all available distributions to find the one
+    containing the specified `entry_point`. It is not limited to distributions
+    that might have registered specific Saturnin components but searches globally.
 
     Arguments:
-      entry_point: Entry point for which the distribution is to be found.
+        entry_point: The `EntryPoint` object for which the parent distribution
+                     is to be located.
+
+    Returns:
+        Distribution | None: The `Distribution` object that registered the
+                             `entry_point`, or `None` if no such distribution
+                             can be found.
     """
     for dis in (d for d in distributions() if d.entry_points):
         for entry in dis.entry_points:

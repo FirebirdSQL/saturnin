@@ -33,15 +33,17 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin daemon commands
+"""Typer commands for managing Saturnin daemon processes.
 
-
+This module provides CLI commands to list currently running Saturnin daemons,
+show detailed information about a specific daemon process, and stop a running
+daemon. Daemons are typically Saturnin recipes executed in `DAEMON` mode.
 """
 
 from __future__ import annotations
 
 import datetime
-from typing import Annotated
+from typing import Annotated, Final
 
 import psutil
 import typer
@@ -56,13 +58,34 @@ from saturnin.lib.console import console
 #: Typer command group for daemon management commands
 app = typer.Typer(rich_markup_mode="rich", help="Saturnin daemons.")
 
+NOT_AVAILABLE: Final[str] = '[dim]N/A[/dim]'
+
 def get_first_line(text: str) -> str:
-    """Returns first non-empty line from argument.
+    """Returns the first non-empty line from the input string.
+
+    Args:
+        text: The string from which to extract the first line.
+
+    Returns:
+        The first line of the string, stripped of leading/trailing whitespace.
+        Returns an empty string if the input is empty or only whitespace.
     """
-    return text.strip().split('\n')[0]
+    if not text:
+        return ""
+    return text.strip().split('\n', 1)[0]
 
 def get_running_daemons() -> dict[int, str]:
-    """Returns dictionary with running daemons: key=pid, value=recipe_name
+    """Scans Saturnin's PID directory to identify running daemon processes.
+
+    It checks each `.pid` file, reads the associated recipe name, and verifies
+    if the process with that PID is still running using `psutil`. If a PID file
+    points to a non-existent process, the stale PID file is removed.
+
+    Returns:
+        A dictionary where keys are process IDs (int) of running daemons,
+        and values are the corresponding `RecipeInfo` objects. If a recipe
+        associated with a running daemon is no longer installed, the value
+        will be `None`.
     """
     result = {}
     for pid_file in directory_scheme.pids.glob('*.pid'):
@@ -71,17 +94,38 @@ def get_running_daemons() -> dict[int, str]:
         if psutil.pid_exists(pid):
             result[pid] = recipe_registry.get(recipe_name)
         else:
-            pid_file.unlink()
+            pid_file.unlink() # Stale PID file
     return result
 
 def pid_completer(ctx, args, incomplete) -> list[tuple[str, str]]: #noqa: ARG001
-    """Click completer for PIDs of running Saturnin daemons.
+    """Click/Typer autocompletion function for running Saturnin daemon PIDs.
+
+    Provides a list of (PID, recipe_name) tuples for autocompletion suggestions.
+
+    Args:
+        ctx: The Click/Typer context.
+        args: The current command arguments.
+        incomplete: The partially typed PID.
+
+    Returns:
+        A list of tuples, where each tuple contains the PID as a string
+        and the associated recipe name (or an empty string if the recipe
+        is unknown).
     """
     return [(str(pid), recipe.name if recipe else "")
             for pid, recipe in get_running_daemons().items()]
 
 def format_size(size: int, decimals: int=2, *, binary_system: bool=True) -> str:
-    """Returns "humanized" size.
+    """Formats a size in bytes into a human-readable string (e.g., KiB, MB, GB).
+
+    Args:
+        size: The size in bytes.
+        decimals: The number of decimal places for the formatted size.
+        binary_system: If True (default), uses binary prefixes (KiB, MiB).
+                       If False, uses decimal prefixes (kB, MB).
+
+    Returns:
+        A string representing the human-readable size.
     """
     if binary_system:
         units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB']
@@ -101,96 +145,187 @@ def format_size(size: int, decimals: int=2, *, binary_system: bool=True) -> str:
 
 @app.command()
 def list_daemons() -> None:
-    """List running Saturnin daemons.
+    """Lists all currently running Saturnin daemon processes.
+
+    Displays a table with the PID, status, associated recipe name,
+    and a brief description of the recipe for each running daemon.
+    If a daemon's recipe has been uninstalled, it's marked accordingly.
     """
     daemons = get_running_daemons()
     #
     if daemons:
-        table = Table(title='Running daemons', box=box.ROUNDED)
+        table = Table(title='Running Saturnin Daemons', box=box.ROUNDED)
         table.add_column('PID', style='cyan')
         table.add_column('Status', style='bold yellow')
-        table.add_column('Recipe', style='green')
-        table.add_column('Description', style='white')
-        recipe: RecipeInfo = None
-        for pid, recipe in daemons.items():
+        table.add_column('Recipe', style='green', overflow="fold")
+        table.add_column('Description', style='white', overflow="fold")
+        # Sort by PID for consistent listing
+        sorted_daemons = sorted(daemons.items(), key=lambda item: item[0])
+        recipe: RecipeInfo
+        for pid, recipe in sorted_daemons:
+            try:
+                proc_status = psutil.Process(pid).status()
+            except psutil.NoSuchProcess:
+                proc_status = "Exited" # Should have been caught by get_running_daemons
+            except psutil.AccessDenied:
+                proc_status = "Access Denied"
+
             if recipe is None:
-                table.add_row(str(pid), psutil.Process(pid).status(), 'UNKNOWN',
-                              "[warning]Recipe used by daemon was uninstalled")
+                table.add_row(str(pid), proc_status, '[warning]UNKNOWN RECIPE[/warning]',
+                              "Recipe used by this daemon was uninstalled or is missing.")
             else:
-                table.add_row(str(pid), psutil.Process(pid).status(), recipe.name,
+                table.add_row(str(pid), proc_status, recipe.name,
                               get_first_line(recipe.description))
         console.print(table)
     else:
-        console.print("There are no Saturnin demons running.")
-
+        console.print("No Saturnin daemons are currently running (or tracked by PID files).")
 
 @app.command()
 def show_daemon(
-    pid: Annotated[int, typer.Argument(metavar='PID', autocompletion=pid_completer)]
+    pid: Annotated[int, typer.Argument(metavar='PID', autocompletion=pid_completer,
+                                       help="The Process ID of the daemon to inspect")]
     ) -> None:
-    """Show information about running Saturnin daemon.
+    """Displays detailed information about a running Saturnin daemon process.
+
+    Information includes process status, creation time, resource usage (CPU, memory, I/O),
+    command line, and associated user.
     """
-    if not psutil.pid_exists(pid):
-        console.print_error("Process not found")
+    try:
+        if not psutil.pid_exists(pid):
+            console.print_error(f"Process with PID [item]{pid}[/] not found.")
+            return
+        proc = psutil.Process(pid)
+        # Check if it's a Saturnin daemon (optional, but good for context)
+        recipe_name = "Unknown"
+        pid_file_path = directory_scheme.pids / f"{pid}.pid"
+        if pid_file_path.exists():
+            recipe_name = pid_file_path.read_text().strip()
+
+        data = proc.as_dict(ad_value='N/A') # Use ad_value for graceful missing attrs
+    except psutil.NoSuchProcess:
+        console.print_error(f"Process with PID [item]{pid}[/] disappeared before details could be fetched.")
         return
-    proc = psutil.Process(pid)
-    data = proc.as_dict(ad_value='[important]N/A[/]')
+    except psutil.AccessDenied:
+        console.print_error(f"Access denied when trying to get details for PID [item]{pid}[/]. "
+                            "Try running with higher privileges.")
+        return
+    except Exception as e:
+        console.print_error(f"An error occurred while fetching details for PID [item]{pid}[/]: {e}")
+        return
+
     created = datetime.datetime.fromtimestamp(data['create_time'])
     run_time = datetime.datetime.now() - created
-    table = Table(title=f"  Process [important]{pid}", box=box.ROUNDED, show_header=False,
+
+    panel_title = f"  Details for Daemon PID [important]{pid}[/important]"
+    if recipe_name != "Unknown":
+        panel_title += f" (Recipe: [green]{recipe_name}[/green])"
+
+    table = Table(title=panel_title, box=box.ROUNDED, show_header=False,
                   title_justify='left')
-    table.add_column('', style='green')
-    table.add_column('')
+    table.add_column('', style='green', overflow='fold')
+    table.add_column('', overflow='fold')
     #
-    table.add_row('Status:', Text(data['status'], style='important'))
-    table.add_row('Created:', Text(created.strftime("%Y-%m-%d %H:%M:%S")))
-    table.add_row('Run time:', Text(str(run_time)), end_section=True)
+    table.add_row('Status:', Text(str(data.get('status', NOT_AVAILABLE)), style='important'))
+    table.add_row('Created:', created.strftime("%Y-%m-%d %H:%M:%S"))
+    table.add_row('Run Time:', str(run_time).split('.')[0]) # Remove microseconds for brevity
+    table.add_row('Name:', str(data.get('name', NOT_AVAILABLE)))
+    table.add_row('Executable:', str(data.get('exe', NOT_AVAILABLE)))
+    cmdline_str = ' '.join(data.get('cmdline', [])) if data.get('cmdline') else NOT_AVAILABLE
+    table.add_row('Cmd. Line:', cmdline_str)
+    table.add_row('CWD:', str(data.get('cwd', NOT_AVAILABLE)))
+    table.add_row('User:', str(data.get('username', NOT_AVAILABLE)))
 
-    table.add_row('# threads:', Text(str(data['num_threads'])))
-    if 'num_handles' in data:
-        table.add_row('# handles:', Text(str(data['num_handles'])))
-    if 'num_fds' in data:
-        table.add_row('# files:', Text(str(data['num_fds'])))
-    children = proc.children()
-    if children:
-        parts = []
-        line_sep = Text('\n')
-        for child in children:
-            parts.append(Text.assemble((str(child.pid), 'number'), ':', child.name(), ' - ', (child.status(), 'important')))
-        table.add_row('Children:', line_sep.join(parts))
-    table.add_row('# INET con.:', Text(str(len(data['connections']))), end_section=True)
+    table.add_row('# Threads:', str(data.get('num_threads', NOT_AVAILABLE)))
+    if 'num_handles' in data: # Windows-specific
+        table.add_row('# Handles:', str(data.get('num_handles', NOT_AVAILABLE)))
+    if 'num_fds' in data: # POSIX-specific
+        table.add_row('# File Descriptors:', str(data.get('num_fds', NOT_AVAILABLE)))
 
-    table.add_row('Name:', Text(data['name'], style='cyan'))
-    table.add_row('Executable:', Text(data['exe']))
-    table.add_row('Cmd. line:', Text(', '.join(data['cmdline'])))
-    table.add_row('CWD:', Text(data['cwd']))
-    table.add_row('User:', Text(data['username']), end_section=True)
+    children = data.get('children', [])
+    if children: # psutil.Process.children() needs to be called explicitly usually
+        child_procs = proc.children()
+        if child_procs:
+            parts = []
+            line_sep = Text('\n')
+            for child in child_procs:
+                try:
+                    parts.append(Text.assemble((str(child.pid), 'number'), ':', child.name(),
+                                                ' - ', (child.status(), 'important')))
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    parts.append(Text.assemble((str(child.pid), 'number'), ': N/A (No access or exited)'))
+            table.add_row('Children:', line_sep.join(parts))
 
-    has_iowait = hasattr(data['cpu_times'], 'iowait')
-    table.add_row('CPU user:', Text(str(data['cpu_times'].user)))
-    table.add_row('CPU system:', Text(str(data['cpu_times'].system)),
-                  end_section=not has_iowait)
-    if has_iowait:
-        table.add_row('CPU I/O wait:', Text(str(data['cpu_times'].iowait)), end_section=True)
+    connections = data.get('net_connections')
+    if connections is not None: # Check if connections info was obtainable
+        table.add_row('# INET Con.:', Text(str(len(connections))), end_section=True)
+    else:
+        table.add_row('# INET Con.:', NOT_AVAILABLE)
 
-    table.add_row('RSS (bytes):', Text(format_size(data['memory_info'].rss)))
-    table.add_row('VMS (bytes):', Text(format_size(data['memory_info'].vms)), end_section=True)
 
-    table.add_row('Read count:', Text(str(data['io_counters'].read_count)))
-    table.add_row('Write count:', Text(str(data['io_counters'].write_count)))
-    table.add_row('Bytes read:', Text(str(data['io_counters'].read_bytes)))
-    table.add_row('Bytes written: ', Text(str(data['io_counters'].write_bytes)),
-                  end_section=True)
+    cpu_times = data.get('cpu_times')
+    if cpu_times:
+        table.add_row('CPU User Time:', Text(f"{cpu_times.user:.2f}s"))
+        table.add_row('CPU System Time:', Text(f"{cpu_times.system:.2f}s"))
+        has_iowait = hasattr(cpu_times, 'iowait') and cpu_times.iowait is not None
+        if has_iowait:
+            table.add_row('CPU I/O Wait:', Text(f"{cpu_times.iowait:.2f}s"), end_section=True)
+        else:
+            table.add_row('', '', end_section=True) # Just to close the section visually
+    else:
+        table.add_row('CPU Times:', NOT_AVAILABLE)
+
+
+    memory_info = data.get('memory_info')
+    if memory_info:
+        table.add_row('Memory RSS:', Text(format_size(memory_info.rss)))
+        table.add_row('Memory VMS:', Text(format_size(memory_info.vms)), end_section=True)
+    else:
+        table.add_row('Memory Info:', NOT_AVAILABLE)
+
+    io_counters = data.get('io_counters')
+    if io_counters:
+        table.add_row('I/O Read Count:', Text(f"{io_counters.read_count:,}"))
+        table.add_row('I/O Write Count:', Text(f"{io_counters.write_count:,}"))
+        table.add_row('I/O Bytes Read:', Text(format_size(io_counters.read_bytes)))
+        table.add_row('I/O Bytes Written: ', Text(format_size(io_counters.write_bytes)),
+                    end_section=True)
+    else:
+        table.add_row('I/O Counters:', NOT_AVAILABLE)
 
     console.print(table)
 
 @app.command()
 def stop_daemon(
-    pid: Annotated[int, typer.Argument(metavar='PID', autocompletion=pid_completer)]
+    pid: Annotated[int, typer.Argument(metavar='PID', autocompletion=pid_completer,
+                                       help="The Process ID of the daemon to stop")]
     ) -> None:
-    """Stop running Saturnin daemon.
+    """Stops a running Saturnin daemon process.
+
+    This command attempts a graceful shutdown by sending the appropriate
+    signal (SIGINT on Unix, CTRL_C_EVENT on Windows) to the daemon.
     """
-    if not psutil.pid_exists(pid):
-        console.print_error("Process not found")
+    #if not psutil.pid_exists(pid):
+        #console.print_error("Process not found")
+        #return
+    #daemon.stop_daemon(pid)
+    try:
+        if not psutil.pid_exists(pid):
+            console.print_error(f"Process with PID [item]{pid}[/] not found.")
+            return
+        psutil.Process(pid) # To confirm it's a real process
+    except psutil.NoSuchProcess:
+        console.print_error(f"Process with PID [item]{pid}[/] not found (or exited just now).")
         return
-    daemon.stop_daemon(pid)
+    except psutil.AccessDenied:
+        console.print_error(f"Access denied when checking PID [item]{pid}[/]. Cannot proceed to stop.")
+        return
+
+    console.print(f"Attempting to stop daemon with PID [item]{pid}[/]... ", end="")
+    try:
+        daemon.stop_daemon(pid) # This calls `saturnin-daemon stop <pid>`
+        # `stop_daemon` will raise an error if `saturnin-daemon stop` fails or times out.
+    except Exception:
+        console.print('[warning]ERROR')
+        console.print_exception(show_locals=False) # Show traceback for the error from stop_daemon
+    else:
+        console.print('[ok]OK')

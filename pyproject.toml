@@ -18,10 +18,10 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: System Administrators",
     "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: POSIX :: Linux",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: MacOS",
@@ -35,17 +35,18 @@ classifiers = [
     "Topic :: Database"
     ]
 dependencies = [
-    "tomli-w~=1.2",
-    "pyzmq~=26.4",
-    "protobuf~=5.29",
     "firebird-butler-protobuf~=2.0",
     "firebird-base~=2.0",
     "firebird-uuid>=0.4.0",
-    "typer~=0.15",
-    "rich~=14.0",
+    "packaging~=25.0",
+    "pyzmq~=26.4",
     "prompt-toolkit~=3.0",
-    "psutil~=7.0"
-    ]
+    "protobuf~=5.29",
+    "psutil~=7.0",
+    "rich~=14.0",
+    "tomli-w~=1.2",
+    "typer~=0.15",
+]
 
 [project.optional-dependencies]
 firebird = ["firebird-driver~=2.0", "firebird-lib~=2.0"]
@@ -63,6 +64,11 @@ saturnin-daemon = "saturnin._scripts.daemon:main"
 saturnin-service = "saturnin._scripts.svcrun:main"
 saturnin-bundle = "saturnin._scripts.bundlerun:main"
 
+[project.entry-points."saturnin.repl_only_commands"]
+"pip" = "saturnin._scripts.commands.pkg:pip"
+"install.package" = "saturnin._scripts.commands.pkg:install_package"
+"uninstall.package" = "saturnin._scripts.commands.pkg:uninstall_package"
+
 [project.entry-points."saturnin.no_repl_commands"]
 "initialize" = "saturnin._scripts.commands.site:initialize"
 "create.home" = "saturnin._scripts.commands.site:create_home"
@@ -79,7 +85,6 @@ saturnin-bundle = "saturnin._scripts.bundlerun:main"
 "list.oids" = "saturnin._scripts.commands.oids:list_oids"
 "update.oids" = "saturnin._scripts.commands.oids:update_oids"
 "update.registry" = "saturnin._scripts.commands.pkg:update_registry"
-"pip" = "saturnin._scripts.commands.pkg:pip"
 "show.config" = "saturnin._scripts.commands.site:show_config"
 "show.recipe" = "saturnin._scripts.commands.recipes:show_recipe"
 "show.oid" = "saturnin._scripts.commands.oids:show_oid"
@@ -90,9 +95,7 @@ saturnin-bundle = "saturnin._scripts.bundlerun:main"
 "edit.recipe" = "saturnin._scripts.commands.recipes:edit_recipe"
 "create.config" = "saturnin._scripts.commands.site:create_config"
 "stop.daemon" = "saturnin._scripts.commands.daemons:stop_daemon"
-"install.package" = "saturnin._scripts.commands.pkg:install_package"
 "install.recipe" = "saturnin._scripts.commands.recipes:install_recipe"
-"uninstall.package" = "saturnin._scripts.commands.pkg:uninstall_package"
 "uninstall.recipe" = "saturnin._scripts.commands.recipes:uninstall_recipe"
 "create.recipe" = "saturnin._scripts.commands.recipes:create_recipe"
 
@@ -112,6 +115,11 @@ allow-direct-references = true
 dependencies = [
 ]
 
+[tool.hatch.envs.hatch-test]
+extra-dependencies = [
+  "pip",
+]
+
 [[tool.hatch.envs.hatch-test.matrix]]
 python = ["3.11", "3.12", "3.13"]
 
@@ -127,8 +135,8 @@ dependencies = [
 [tool.hatch.envs.doc.scripts]
 build = "cd docs ; make html"
 docset = [
-  "cd docs ; doc2dash -u https://firebird-driver.readthedocs.io/en/latest/ -f -i ./_static/fb-favicon.png -n firebird-driver ./_build/html/",
-  "cd docs; VERSION=`hatch version` ; tar --exclude='.DS_Store' -cvzf ../dist/firebird-driver-$VERSION-docset.tgz firebird-driver.docset",
+  "cd docs ; doc2dash -u https://saturnin.readthedocs.io/en/latest/ -f -i ./_static/fb-favicon.png -n saturnin ./_build/html/",
+  "cd docs; VERSION=`hatch version` ; tar --exclude='.DS_Store' -cvzf ../dist/saturnin-$VERSION-docset.tgz saturnin.docset",
 ]
 
 [tool.ruff]
@@ -178,6 +186,7 @@ ban-relative-imports = "all"
 
 [tool.ruff.lint.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
+"test_*" = ["PLR2004", "S101", "TID252"]
 "transport.py" = ["ARG002"]
 "controller.py" = ["ARG002"]
 "onepipe.py" = ["ARG002"]

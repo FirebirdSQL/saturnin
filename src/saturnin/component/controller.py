@@ -34,6 +34,13 @@
 #                 ______________________________________.
 
 """Saturnin service controllers.
+
+This module provides classes for managing the lifecycle of Saturnin services.
+Controllers are responsible for starting, stopping, and configuring services,
+as well as handling communication with them using the Internal Component
+Control Protocol (ICCP). It offers different controller implementations,
+such as `.DirectController` (for in-process execution) and `.ThreadController`
+(for execution in a separate thread).
 """
 
 from __future__ import annotations
@@ -43,7 +50,6 @@ import platform
 import signal
 import uuid
 import warnings
-import weakref
 from configparser import ConfigParser
 from contextlib import suppress
 from threading import Thread
@@ -88,20 +94,24 @@ class ServiceExecConfig(Config):
         self.agent: UUIDOption = UUIDOption('agent', "Agent UID", required=True)
 
 class ServiceController(TracedMixin):
-    """Base service controller.
+    """Base class for service controllers.
+
+    This class provides common functionality for managing a service's lifecycle,
+    including configuration loading and basic state tracking. It's intended
+    to be subclassed by controllers that implement specific execution
+    strategies (e.g., in-process, separate thread, separate process).
+
+    Arguments:
+        service: The `ServiceInfo` object for the service to be controlled.
+        name:  Optional name for this controller instance (defaults to the service name).
+        peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
+        manager: Optional `ChannelManager` to use for ICCP communication. If None, a
+                 new one is created when needed.
     """
     def __init__(self, service: ServiceInfo, *, name: str | None=None,
                  peer_uid: uuid.UUID | None=None, manager: ChannelManager | None=None):
-        """
-        Arguments:
-            service: Service to start.
-            name:  Container name.
-            peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
-            manager: ChannelManager to be used.
-        """
         self.outcome: Outcome = Outcome.UNKNOWN
         self.details: list[str] = []
-        self.log_context = None
         self.name: str = service.name if name is None else name
         self.peer_uid: uuid.UUID = peer_uid
         self.service: ServiceInfo = service
@@ -111,8 +121,6 @@ class ServiceController(TracedMixin):
         self.ctrl_addr: ZMQAddress = ZMQAddress(f'inproc://{uuid.uuid1().hex}')
         self.mngr: ChannelManager = manager
         self._ext_mngr: bool = manager is not None
-    def __str__(self):
-        return self.logging_id
     def configure(self, config: ConfigParser, section: str | None=None) -> None:
         """Loads and validates service configuration, and ensures that Saturnin facilities
         required by service are available and properly configured.
@@ -132,16 +140,16 @@ class ServiceController(TracedMixin):
                 except ImportError as exc:
                     raise Error("Firebird driver not installed.") from exc
                 driver_config.read(directory_scheme.firebird_conf, encoding='utf8')
-    @property
-    def logging_id(self) -> str:
-        "Returns qualified class name and agent name."
-        return f'{self.__class__.__qualname__}[{self.service.name}]'
 
 class DirectController(ServiceController):
-    """Service controller that starts the service in current thread.
+    """Service controller that starts and runs the service in the current thread.
 
-    Although ICCP is used to start/stop the service, it's not possible to perform any ICCP
-    interactions with the service while it's running.
+    This controller is suitable for scenarios where the service is expected to run
+    directly within the calling process. The `start` method will block until the
+    service terminates. It includes a SIGINT handler to allow graceful shutdown
+    of the service when run interactively. ICCP communication is primarily used
+    for the initial handshake and final status reporting, as ongoing interaction
+    is limited by the single-threaded execution.
 
     Important:
         The service could be stopped only via automatically installed SIGINT handler.
@@ -162,23 +170,24 @@ class DirectController(ServiceController):
         """Start the service.
 
         Arguments:
-            timeout: Only for compatibility with ThreadController. The value is ignored.
-
+            timeout: Timeout in milliseconds to wait for the initial READY message from
+                     the service. Defaults to 1000ms.
         Important:
             Will not return until service is stopped via SIGINT, or exception is raised.
 
         Raises:
-            ServiceError: On error in communication with service.
+            ServiceError: If there's an ICCP protocol error, an invalid response
+                          from the service, or the service reports an error during startup.
+            TimeoutError: If the service does not send a READY message within the
+                          specified `timeout`.
         """
         if not self._ext_mngr:
             self.mngr = ChannelManager(zmq.Context.instance())
-            self.mngr.log_context = weakref.proxy(self)
         iccp = ICCPController()
         iccp.on_stop_controller = self.handle_stop_controller
         chn: PairChannel = self.mngr.create_channel(PairChannel, SVC_CTRL, iccp,
                                                     wait_for=Direction.IN,
                                                     sock_opts={'rcvhwm': 5, 'sndhwm': 5,})
-        chn.protocol.log_context = self.log_context
         #
         svc: Component = self.service.factory_obj(zmq.Context.instance(),
                                                   self.service.descriptor_obj)
@@ -225,13 +234,17 @@ class DirectController(ServiceController):
 
 def service_thread(service: ServiceInfo, config: Config, ctrl_addr: ZMQAddress,
                    peer_uid: uuid.UUID | None=None):
-    """Thread target code to run the service.
+    """Target function for running a service within a separate thread.
+
+    This function handles the instantiation, initialization, warm-up, and execution
+    of a service. It also manages basic ICCP communication for reporting startup
+    errors back to the controller via a direct ZMQ DEALER socket connection.
 
     Arguments:
-        svc_descriptor: Service descriptor.
-        config:         Service configuration.
-        ctrl_addr:      Address for control ZMQ socket.
-        peer_uid:       Peer ID.
+        service: The `.ServiceInfo` object describing the service to run.
+        config: The `.Config` object for the service.
+        ctrl_addr: The ZMQ address of the controller's ICCP channel.
+        peer_uid: The peer UID to be used by the service instance.
     """
     with suppress(Exception):
         ctx = zmq.Context.instance()
@@ -256,16 +269,20 @@ def service_thread(service: ServiceInfo, config: Config, ctrl_addr: ZMQAddress,
         svc.run()
 
 class ThreadController(ServiceController):
-    """Service controller that starts the service in separate thread.
+    """Service controller that starts and runs the service in a separate thread.
+
+    This controller allows the main application to continue execution while the
+    service runs in the background. It uses ICCP for the full lifecycle
+    management of the service, including starting, stopping, and receiving
+    status updates.
+
+    Arguments:
+        service: The `.ServiceInfo` object for the service to be controlled.
+        name:  Container name.
+        peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
     """
     def __init__(self, service: ServiceDescriptor, *, name: str | None=None,
                  peer_uid: uuid.UUID | None=None, manager: ChannelManager | None=None):
-        """
-        Arguments:
-            service: Service to start.
-            name:  Container name.
-            peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
-        """
         super().__init__(service, name=name, peer_uid=peer_uid, manager=manager)
         self.runtime: Thread = None
     def handle_stop_controller(self, exc: Exception) -> None:
@@ -292,18 +309,19 @@ class ThreadController(ServiceController):
             timeout: Timeout (in milliseconds) to wait for service to report it's ready.
 
         Raises:
-            ServiceError: On error in communication with service.
-            TimeoutError: When timeout expires.
+            ServiceError: If there's an ICCP protocol error, an invalid response
+                          from the service, the service reports an error during startup,
+                          or the service thread fails to start.
+            TimeoutError: If the service does not send a READY message within the
+                          specified `timeout`.
         """
         if not self._ext_mngr:
             self.mngr = ChannelManager(zmq.Context.instance())
-            self.mngr.log_context = weakref.proxy(self)
         iccp = ICCPController()
         iccp.on_stop_controller = self.handle_stop_controller
         chn: PairChannel = self.mngr.create_channel(PairChannel, f'{self.name}.{SVC_CTRL}',
                                                     iccp, wait_for=Direction.IN,
                                                     sock_opts={'rcvhwm': 5, 'sndhwm': 5,})
-        chn.protocol.log_context = self.log_context
         self.mngr.warm_up()
         chn.bind(self.ctrl_addr)
         #

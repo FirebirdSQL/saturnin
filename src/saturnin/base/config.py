@@ -35,6 +35,8 @@
 
 """Code for configuration of Saturnin installation.
 
+Handles Saturnin platform configuration, including directory schemes, configuration file
+loading, and environment detection (e.g., virtual environments).
 """
 
 from __future__ import annotations
@@ -110,10 +112,14 @@ class SaturninScheme(DirectoryScheme):
                 self.__pip_path = None
                 self.__pip_cmd = [str(python_path), '-m', 'pip']
     def get_pip_cmd(self, *args) -> list[str]:
-        """Returns list with command to run pip.
+        """Returns a list representing the command to run pip, including any provided arguments.
+
+        For example, `get_pip_cmd('install', 'requests')` might return
+        `['/path/to/venv/bin/pip', 'install', 'requests']` or
+        `['/path/to/venv/bin/python', '-m', 'pip', 'install', 'requests']`.
 
         Arguments:
-           args: Arguments for pip
+           args: Additional arguments to be passed to the pip command.
         """
         result = self.__pip_cmd.copy()
         result.extend(args)
@@ -194,13 +200,13 @@ class SaturninConfig(Config):
                                            default=os.getenv('EDITOR'))
 
 def is_virtual() -> bool:
-    """Returns True if Saturnin runs in a virtual environtment.
+    """Returns True if Saturnin runs in a virtual environment.
     """
     # Check supports venv && virtualenv >= 20.0.0
     return getattr(sys, 'base_prefix', sys.prefix) != sys.prefix
 
 def venv() -> Path | None:
-    """Path to Saturnin virtual environment.
+    """Returns the Path to the Saturnin virtual environment, orNone if not running in one.
     """
     return Path(sys.prefix) if is_virtual() else None
 

@@ -33,9 +33,14 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin recipes
+"""Saturnin recipe definitions and management.
 
-
+This module defines the structure and types associated with Saturnin recipes.
+Recipes are configuration files that describe how to run services or bundles,
+including their type, execution mode, executor, and associated application.
+It provides enums for recipe types and execution modes, a configuration
+class (`SaturninRecipe`) for parsing recipe files, a dataclass (`RecipeInfo`)
+for representing loaded recipes, and a `RecipeRegistry` to manage them.
 """
 
 from __future__ import annotations
@@ -45,12 +50,12 @@ from configparser import ConfigParser, ExtendedInterpolation
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from uuid import UUID
 
 from saturnin.base.config import directory_scheme
+from saturnin.base.types import ComponentSpecification
 
 from firebird.base.collections import Registry
-from firebird.base.config import Config, EnumOption, PathOption, StrOption, UUIDOption
+from firebird.base.config import Config, EnumOption, PathOption, StrOption, DataclassOption
 from firebird.base.types import Distinct, Error
 
 
@@ -80,9 +85,9 @@ class SaturninRecipe(Config):
                        default=RecipeExecutionMode.NORMAL)
         #: Recipe executor (container). If not provided, the default executor according to recipe type is used.
         self.executor: PathOption = PathOption('executor', "Recipe executor.")
-        #: Application (if any)
-        self.application: UUIDOption = \
-            UUIDOption('application', "Application UID")
+        #: Application specification (if any) associated with this recipe.
+        self.application: DataclassOption = \
+            DataclassOption('application', ComponentSpecification, "Application specification")
         #: Description
         self.description: StrOption = \
             StrOption('description', "Recipe description", default="Not provided")
@@ -109,13 +114,13 @@ class RecipeInfo(Distinct):
     #: Recipe executor
     executor: Path
     #: Application to be used
-    application: UUID
+    application: ComponentSpecification
     #: Recipe description
     description: str
     #: Path to recipe file
     filename: Path
     def get_key(self) -> Hashable:
-        "Returns service UID"
+        "Returns the recipe name, which serves as its unique key in the registry."
         return self.name
 
 class RecipeRegistry(Registry):
@@ -155,7 +160,8 @@ class RecipeRegistry(Registry):
                                   recipe_cfg.description.value,
                                   filename))
 
-#: Saturnin recipe registry
+#: Global RecipeRegistryinstance, automatically populated from the `.directory_scheme.recipes`
+#: directory upon module import if it exists.
 recipe_registry: RecipeRegistry = RecipeRegistry()
 if directory_scheme.recipes.is_dir():
     recipe_registry.clear()

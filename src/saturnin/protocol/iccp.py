@@ -33,9 +33,11 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin Internal Component Control Protocol
+"""Saturnin Internal Component Control Protocol (ICCP).
 
-
+This protocol defines the messages and rules for communication between Saturnin
+components (like services or microservices) and their controllers. It handles
+lifecycle events (ready, stop, finished), configuration requests, and error reporting.
 """
 
 from __future__ import annotations
@@ -78,7 +80,7 @@ class MsgType(IntEnum):
     FINISHED = 6
 
 class Request(Enum):
-    """Service Controller Request Codes.
+    """Controller Request Codes for ICCP.
     """
     CONFIGURE = b'CONF'
 
@@ -95,7 +97,9 @@ class ICCPMessage(Message):
         """Populate message data from sequence of ZMQ data frames.
 
         Arguments:
-            zmsg: Sequence of frames that should be deserialized.
+            zmsg: Sequence of ZMQ frames to be deserialized. The first frame is
+            always the packed `MsgType`. Subsequent frames depend on the
+            message type (e.g., peer info for `READY`, error string for `ERROR`).
 
         Raises:
             InvalidMessageError: If message is not a valid protocol message.
@@ -124,6 +128,11 @@ class ICCPMessage(Message):
             raise InvalidMessageError("Invalid message") from exc
     def as_zmsg(self) -> TZMQMessage:
         """Returns message as sequence of ZMQ data frames.
+
+        Returns:
+            A list of ZMQ frames representing the message. The first frame is
+            the packed `MsgType`. Subsequent frames are added based on the
+            message type and its attributes.
         """
         try:
             zmsg = [pack('!H', self.msg_type)]
@@ -150,6 +159,11 @@ class ICCPMessage(Message):
                 delattr(self, attr)
     def copy(self) -> Message:
         """Returns copy of the message.
+
+        Returns:
+            A new `ICCPMessage` instance with a deep copy of relevant
+            attributes (like `peer`, `endpoints`, `config`) based on the
+            original message's `msg_type`.
         """
         msg = self.__class__()
         msg.msg_type = self.msg_type
@@ -188,7 +202,7 @@ class _ICCP(Protocol):
         super().__init__(session_type=session_type)
         self._msg: ICCPMessage = ICCPMessage()
         self.message_factory = self.__message_factory
-    def __message_factory(self, zmsg: TZMQMessage = None) -> Message:
+    def __message_factory(self, zmsg: TZMQMessage | None=None) -> Message:
         "Internal message factory"
         self._msg.clear()
         return self._msg
@@ -199,7 +213,8 @@ class _ICCP(Protocol):
         must be successful as well.
 
         Arguments:
-            zmsg:   ZeroMQ multipart message.
+            zmsg:   ZeroMQ multipart message. Expects the first frame to be the
+                    packed `MsgType`, followed by type-specific frames.
 
         Raises:
             InvalidMessageError: If ZMQ message is not a valid protocol message.
@@ -234,10 +249,6 @@ class _ICCP(Protocol):
                     protobuf.create_message(PROTO_CONFIG, zmsg[2])
                 except Exception as exc:
                     raise InvalidMessageError("Invalid data: config") from exc
-    @property
-    def logging_id(self) -> str:
-        "Returns _logging_id_ or <class_name>"
-        return getattr(self, '_logging_id_', self.__class__.__name__)
 
 class ICCPComponent(_ICCP):
     """Internal Component Control Protocol (ICCP) - Component (client) side.
@@ -329,15 +340,23 @@ class ICCPComponent(_ICCP):
     def handle_request(self, channel: Channel, session: Session, msg: ICCPMessage) -> None:
         """Process `REQUEST` message received from controller.
 
+        Currently handles `Request.CONFIGURE` by invoking the `on_config_request`
+        event with the provided configuration. Sends an `OK` message back to the
+        controller upon successful processing, or an `ERROR` message if an
+        exception occurs during the `on_config_request` handling.
+
         Arguments:
-            channel: Channel that received the message.
-            session: Session instance.
-            msg:     Received message.
+            channel: The channel connected to the controller.
+            session: The session instance for this communication.
+            msg: The received `ICCPMessage` containing the request.
+
+        Raises:
+            StopError: If sending the response (OK/ERROR) to the controller fails.
         """
         result = self.ok_msg()
         try:
-            if msg.msg_type is Request.CONFIGURE:
-                self.on_config_request(msg.config)
+            # Right now we have only one type of Request - CONFIGURE
+            self.on_config_request(msg.config)
         except Exception as exc:
             result = self.error_msg(exc)
         if not (err_code := channel.send(result, session)):
@@ -380,7 +399,10 @@ class ICCPComponent(_ICCP):
 
         Arguments:
           outcome: Outcome of componentn run.
-          details: Additional information.
+          details: Additional information about the outcome.
+                   If an `Exception`, its traceback (if `with_traceback` is True)
+                   or string, string representation is used. If a `list[str]`, it's used
+                   directly. If `None`, no details are included.
         """
         msg: ICCPMessage = self.message_factory()
         msg.msg_type = MsgType.FINISHED
@@ -406,13 +428,15 @@ class ICCPComponent(_ICCP):
         """
     @eventsocket
     def on_config_request(self, config: ConfigProto) -> None:
-        """`~firebird.base.signal.eventsocket` called when controller requested reconfiguration.
+        """`~firebird.base.signal.eventsocket` called when the controller requests reconfiguration.
 
-        Any exception raised by event handler is returned back to controller via ERROR
-        message.
+        The handler should apply the new configuration. Any exception raised by
+        this event handler will be caught and sent back to the controller as an
+        `ERROR` message.
 
         Arguments:
-           config: New configuration provided by controller.
+           config: The new configuration (`~firebird.base.config.ConfigProto`)
+                   provided by the controller.
         """
 
 class ICCPController(_ICCP):
@@ -468,18 +492,24 @@ class ICCPController(_ICCP):
         self.on_stop_controller(exc)
         super().handle_exception(channel, session, msg, exc)
     def handle_ready(self, channel: Channel, session: Session, msg: ICCPMessage) -> ICCPMessage:
-        """Process `READY` message received from component.
+        """Processes a `READY` message received from a component.
+
+        If this is the first `READY` message for the session (indicated by
+        `session.ready` not being set), it marks the session as ready and
+        returns the received message. This typically signals that the component
+        is initialized and has provided its peer information and endpoints.
 
         Arguments:
-          channel: Channel associated with component.
-          session: Session associated with component.
-          msg:     Message sent by component.
+            channel: Channel associated with the component.
+            session: Session associated with the component.
+            msg: The `READY` message sent by the component.
 
         Returns:
-            Received READY message if it's the first one from component.
+            The received `ICCPMessage` if it's the first `READY` for this session.
 
         Raises:
-            StopError: If it's NOT first READY received from component.
+            StopError: If a `READY` message is received for a session already marked as ready,
+                       as this indicates an unexpected state.
         """
         if hasattr(session, 'ready'):
             raise StopError("Unexpected READY message from component")
@@ -503,11 +533,13 @@ class ICCPController(_ICCP):
         msg: ICCPMessage = self.message_factory()
         msg.msg_type = MsgType.STOP
         return msg
-    def request_config_msg(self, config: Config=None) -> ICCPMessage:
+    def request_config_msg(self, config: Config | None=None) -> ICCPMessage:
         """Returns `REQUEST.CONFIG` control message.
 
         Arguments:
-          config: Configuration for component.
+          config: Optional `firebird.base.config.Config` instance containing the
+                  configuration for the component. If `None`, an empty configuration
+                  request is created.
         """
         msg: ICCPMessage = self.message_factory()
         msg.msg_type = MsgType.REQUEST

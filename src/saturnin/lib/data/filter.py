@@ -30,7 +30,13 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin base class for data filter microservices
+"""Saturnin base class for data filter microservices.
+
+This module provides `DataFilterMicro` and its configuration `DataFilterConfig`,
+designed for microservices that read data from an input FBDP data pipe,
+process or transform it, and then write the results to an output FBDP
+data pipe. It manages the complexities of handling two concurrent pipe
+connections and synchronizing data flow between them.
 """
 
 from __future__ import annotations
@@ -77,10 +83,13 @@ WAKE_PUSH_CHN: Final[str] = 'wake-push'
 WAKE_PULL_CHN: Final[str] = 'wake-pull'
 
 class DataFilterConfig(ComponentConfig):
-    """Base data provider microservice configuration.
+    """Configuration for data filter microservices.
+
+    This class defines settings specific to microservices that operate as data filters,
+    managing an input pipe and an output pipe.
 
     Arguments:
-      name: Conf. section name.
+       name: Configuration section name for this component.
     """
     def __init__(self, name: str):
         super().__init__(name)
@@ -134,7 +143,10 @@ class DataFilterConfig(ComponentConfig):
     def validate(self) -> None:
         """Extended validation.
 
-        - `pipe_format` is required for CONNECT `pipe_mode`.
+        Ensures that:
+
+        - `input_pipe_format` is specified if `input_pipe_mode` is `CONNECT`.
+        - `output_pipe_format` is specified if `output_pipe_mode` is `CONNECT`.
         """
         super().validate()
         if self.input_pipe_mode.value is SocketMode.CONNECT and self.input_pipe_format.value is None:
@@ -143,31 +155,36 @@ class DataFilterConfig(ComponentConfig):
             raise Error("'output_pipe_format' required for CONNECT pipe mode.")
 
 class DataFilterMicro(MicroService):
-    """Base data provider microservice.
+    """"Base class for data filter microservices.
+
+    This microservice reads data from an input pipe, processes it, and writes
+    the results to an output pipe. It manages two FBDP connections and uses
+    an internal "wake" mechanism to signal data availability for the output pipe.
 
     Descendant classes should override:
 
-    - `.handle_input_accept_client` to validate client request and aquire resources
-      associated with input pipe.
-    - `.handle_output_accept_client` to validate client request and aquire resources
-      associated with output pipe.
-    - `.handle_output_produce_data` to produce data for outgoing DATA message.
-    - `.handle_input_accept_data` to process received data.
-    - `.handle_input_pipe_closed` to release resource assiciated with input pipe.
-    - `.handle_output_pipe_closed` to release resource assiciated with output pipe.
+    - `.handle_input_accept_client` to validate client requests and acquire resources
+      associated with the input pipe.
+    - `.handle_output_accept_client` to validate client requests and acquire resources
+      associated with the output pipe.
+    - `.handle_output_produce_data` to provide the processed data for outgoing `DATA`
+      messages on the output pipe.
+    - `.handle_input_accept_data` to process data received from the input pipe.
+    - `.handle_input_pipe_closed` to release resources associated with the input pipe.
+    - `.handle_output_pipe_closed` to release resources associated with the output pipe.
+
+    Arguments:
+        zmq_context: ZeroMQ Context.
+        descriptor: Service descriptor.
+        peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
     """
     def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
                  peer_uid: uuid.UUID | None=None):
-        """
-        Arguments:
-            zmq_context: ZeroMQ Context.
-            descriptor: Service descriptor.
-            peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
-        """
         super().__init__(zmq_context, descriptor, peer_uid=peer_uid)
         self.outcome = Outcome.UNKNOWN
         self.details = None
-        #: Data to be sent to output.
+        #: Internal deque to buffer data processed from the input pipe, pending transmission
+        #: on the output pipe.
         self.output: deque = deque()
         # Next members are set in initialize()
         #: Closing flag
@@ -250,7 +267,6 @@ class DataFilterMicro(MicroService):
         self.pipe_in_chn = self.mngr.create_channel(DealerChannel, INPUT_PIPE_CHN,
                                                     self.input_protocol,
                                                     wait_for=Direction.IN)
-        self.pipe_in_chn.protocol.log_context = self.logging_id
         # OUTPUT pipe
         self.output_pipe = config.output_pipe.value
         self.output_pipe_mode = config.output_pipe_mode.value
@@ -279,7 +295,6 @@ class DataFilterMicro(MicroService):
         self.pipe_out_chn = self.mngr.create_channel(DealerChannel, OUTPUT_PIPE_CHN,
                                                               self.output_protocol,
                                                               wait_for=Direction.IN)
-        self.pipe_out_chn.protocol.log_context = self.logging_id
         # Awake channels
         self.wake_address = ZMQAddress(f'inproc://{self.peer.uid.hex}-wake')
         wake_protocol = Protocol()
@@ -287,19 +302,22 @@ class DataFilterMicro(MicroService):
         # PUSH wake
         self.wake_out_chn = self.mngr.create_channel(PushChannel, WAKE_PUSH_CHN,
                                                               wake_protocol)
-        self.wake_out_chn.protocol.log_context = self.logging_id
         # PULL wake
         self.wake_in_chn = self.mngr.create_channel(PullChannel, WAKE_PULL_CHN,
                                                              wake_protocol,
                                                              wait_for=Direction.IN)
-        self.wake_in_chn.protocol.log_context = self.logging_id
         # We have an endpoint to bind
         self.endpoints[WAKE_PULL_CHN] = [self.wake_address]
     def aquire_resources(self) -> None:
-        """Aquire resources required by component:
+        """Acquire resources required by the component.
 
-        1. Connect wake PUSH channel
-        2. Connects to input and output data pipes (if necessary).
+        This involves:
+
+        1. Connecting the internal "wake" PUSH channel to its PULL counterpart.
+        2. If `input_pipe_mode` is `CONNECT`, establishes a connection to the
+           input data pipe and initiates the FBDP `OPEN` handshake.
+        3. If `output_pipe_mode` is `CONNECT`, establishes a connection to the
+           output data pipe and initiates the FBDP `OPEN` handshake.
         """
         # Connect wake PUSH
         self.wake_out_chn.connect(self.wake_address)
@@ -323,11 +341,15 @@ class DataFilterMicro(MicroService):
                                                                    PipeSocket.INPUT,
                                                                    self.output_pipe_format)
     def release_resources(self) -> None:
-        """Release resources aquired by component:
+        """Release resources acquired by the component.
 
-        1. Disconnect the wake PUSH channel
-        2. Close all active data input sessions
-        3. Close all active data output sessions
+        This involves:
+
+        1. Discarding the session for the internal "wake" PUSH channel.
+        2. Sending an FBDP `CLOSE` message (indicating an error) to all active
+           sessions on the input data pipe.
+        3. Sending an FBDP `CLOSE` message (indicating an error) to all active
+           sessions on the output data pipe.
         """
         # Disonnect wake PUSH
         for session in list(self.wake_out_chn.sessions.values()):

@@ -33,19 +33,22 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin service budle controller and executor.
+"""Saturnin service bundle controller and executor.
 
-
+This module provides `.BundleThreadController` and `.BundleExecutor` classes
+to streamline the process of configuring, starting, and managing a collection
+of Saturnin services as a single unit (a "bundle"). It acts as a
+higher-level abstraction, coordinating multiple internal `.ThreadController`
+instances, one for each service in the bundle.
 """
 
 from __future__ import annotations
 
 import uuid
 import warnings
-import weakref
 from configparser import DEFAULTSECT, ConfigParser, ExtendedInterpolation
 from pathlib import Path
-from typing import Any
+from typing import Self
 
 import zmq
 from saturnin.base import (
@@ -61,6 +64,7 @@ from saturnin.base import (
 )
 
 from firebird.base.config import ConfigListOption
+from firebird.base.logging import FStrMessage as _m
 from firebird.base.logging import get_logger
 from firebird.base.trace import TracedMixin
 from firebird.base.types import ZMQDomain
@@ -78,25 +82,23 @@ class ServiceBundleConfig(Config):
     def __init__(self, name: str):
         super().__init__(name)
         #: Agents (services) in bundle
-        self.agents: ConfigListOption = ConfigListOption('agents', "Agent UIDs",
-                                                         ServiceExecConfig, required=True)
+        self.agents: ConfigListOption = ConfigListOption('agents', ServiceExecConfig,
+           "A list of service configurations (ServiceExecConfig instances or their section names)\ndefining the services included in this bundle.",
+           required=True)
 
 class BundleThreadController(TracedMixin):
     """Service controller that manages collection of services executed in separate threads.
+
+    Arguments:
+        parser: ConfigParser instance to be used for bundle configuration.
+        manager: ChannelManager to be used. If None, a new one is created.
     """
     def __init__(self, *, parser: ConfigParser | None=None, manager: ChannelManager | None=None):
-        """
-        Arguments:
-            parser: ConfigParser instance to be used for bundle configuration.
-            manager: ChannelManager to be used.
-        """
-        self.log_context = None
         #: Channel manager
         self.mngr: ChannelManager = manager
         self._ext_mngr: bool = manager is not None
         if manager is None:
             self.mngr = ChannelManager(zmq.Context.instance())
-            self.mngr.log_context = weakref.proxy(self)
         #: ConfigParser with service bundle configuration
         self.config: ConfigParser = \
             ConfigParser(interpolation=ExtendedInterpolation()) if parser is None else parser
@@ -115,9 +117,16 @@ class BundleThreadController(TracedMixin):
         self.config[SECTION_SERVICE_UID].update((sd.name, sd.uid.hex) for sd
                                                 in service_registry)
     def configure(self, *, section: str=SECTION_BUNDLE) -> None:
-        """
+        """Configures the service bundle and all its constituent services.
+
+        This method loads the main bundle configuration to identify the services
+        it contains. Then, for each service in the bundle, it instantiates
+        and configures an internal `.ThreadController`.
+
         Arguments:
-            section: Configuration section with bundle definition.
+            section: The name of the configuration section that defines the
+                     service bundle (listing its member services). Defaults
+                     to `SECTION_BUNDLE`.
         """
         svc_cfg: ServiceExecConfig = ServiceExecConfig(section)
         bundle_cfg: ServiceBundleConfig = ServiceBundleConfig(section)
@@ -157,7 +166,6 @@ class BundleThreadController(TracedMixin):
         for controller in self.services:
             try:
                 controller.configure(self.config, controller.name)
-                controller.log_context = self.log_context
                 controller.start(timeout=timeout)
                 if controller.endpoints:
                     # Update addresses for binded endpoints
@@ -190,7 +198,7 @@ class BundleThreadController(TracedMixin):
             try:
                 controller.stop(timeout=timeout)
             except Exception as exc:
-                get_logger(self).error("Error while stopping the service: {args[0]}", exc)
+                get_logger(self).error(_m("Error while stopping the service: {args[0]}", args=exc.args))
                 if controller.is_running():
                     warnings.warn(f"Stopping service {controller.name} failed, "
                                   f"service thread terminated", RuntimeWarning)
@@ -206,34 +214,38 @@ class BundleThreadController(TracedMixin):
             svc.join(timeout)
 
 class BundleExecutor:
-    """Service bundle executor context manager.
+    """A context manager for executing a bundle of Saturnin services.
 
-    Arguments:
-        log_context: Logging context for this instance.
+    This class simplifies the lifecycle management of a `.BundleThreadController`,
+    ensuring proper initialization and cleanup (like ZMQ context termination)
+    when used in a `with` statement.
     """
-    def __init__(self, log_context: Any):
-        self.log_context = log_context
+    def __init__(self):
         #: Channel manager
         self.mngr: ChannelManager = None
         #: Controller
         self.controller: BundleThreadController = None
-    def __enter__(self) -> BundleExecutor:
+    def __enter__(self) -> Self:
         return self
     def __exit__(self, exc_type, exc_value, traceback) -> None:
         if self.mngr is not None:
             self.mngr.shutdown(forced=True)
         zmq.Context.instance().term()
     def configure(self, cfg_files: list[str], *, section: str=SECTION_BUNDLE) -> None:
-        """Executor configuration.
+        """Initializes and configures the internal `BundleThreadController`.
+
+        This involves creating a `.ChannelManager`, instantiating a
+        `.BundleThreadController`, reading configuration files into the
+        controller's `.ConfigParser`, and then calling the controller's
+        `configure` method to set up all services in the bundle.
 
         Arguments:
-          cfg_files: List of configuration files.
-          section:   Configuration section name with list of services in bundle.
+          cfg_files: A list of paths to configuration files to be read.
+          section:   The name of the configuration section that defines the
+                     service bundle. Defaults to `SECTION_BUNDLE`.
         """
         self.mngr = ChannelManager(zmq.Context.instance())
-        self.mngr.log_context = self.log_context
         self.controller: BundleThreadController = BundleThreadController(manager=self.mngr)
-        self.controller.log_context = self.log_context
         self.controller.config.read(cfg_files)
         self.controller.configure(section=section)
     def run(self) -> list[tuple[str, Outcome, list[str]]]:

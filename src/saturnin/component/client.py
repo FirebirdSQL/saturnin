@@ -63,12 +63,11 @@ class Token:
 
 class ServiceClient:
     """Base class for Firebird Butler Service clients.
+
+    Arguments:
+        timeout: The timeout (in milliseconds) to wait for message.
     """
     def __init__(self, timeout: int=1000):
-        """
-        Arguments:
-            timeout: The timeout (in milliseconds) to wait for message.
-        """
         self.token: Token = Token()
         self.timeout: int = timeout
         self.channel: Channel = None

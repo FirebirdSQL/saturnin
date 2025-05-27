@@ -35,7 +35,9 @@
 
 """Saturnin daemon process management.
 
-
+This module provides functions for starting and stopping Saturnin daemon
+processes, handling platform-specific behaviors for process creation
+and signal delivery (e.g., SIGINT on Unix, CTRL_C_EVENT on Windows).
 """
 
 from __future__ import annotations
@@ -57,9 +59,10 @@ def start_daemon(args: list[str]) -> int | None:
         PID for started daemon, or None if start failed.
 
     Note:
-        Gracefull shutdown on Windows is tricky. To allow shutdown of daemon process via
-        SIGINT signal handler (note that SIGINT is not available on Windows, you have to
-        send CTRL_C_EVENT), it's necessry to start new shell with new console in background.
+        Graceful shutdown on Windows is tricky. To allow shutdown of the daemon process
+        via a SIGINT-like mechanism (specifically, by sending a CTRL_C_EVENT, as SIGINT is
+        not directly available), it is necessary to start a new shell with a new console in
+        the background for the daemon process.
     """
     kwargs = {}
     if platform.system() == 'Windows':
@@ -76,8 +79,9 @@ def stop_daemon(pid: int | str | Path) -> None:
         pid: PID or text file name/Path where PID is stored.
 
     Raises:
-        subprocess.CalledProcessError: When execution of `saturnin-daemon` failed.
-        subprocess.TimeoutExpired: When `saturnin-daemon` does not finish in 5 seconds.
+        Error: If the `saturnin-daemon stop` command fails or times out. The original
+               `subprocess.CalledProcessError` or `subprocess.TimeoutExpired` (if timeout
+               of 10 seconds is reached) will be set as the `__cause__` of this `Error`.
 
     Important:
         On Linux/Unix: Sends SIGINT signal to the daemon process.
@@ -85,9 +89,10 @@ def stop_daemon(pid: int | str | Path) -> None:
         control-C event to it.
 
     Note:
-        Gracefull shutdown on Windows is tricky. It requires that the daemon process has
-        a console, otherwise the CTRL_C_EVENT couldn't be delivered. This condition is met
-        if daemon was started by :func:`start_daemon` or `saturnin-daemon` script.
+        Graceful shutdown on Windows is tricky. It requires that the daemon process
+        has a console; otherwise, the CTRL_C_EVENT cannot be delivered. This
+        condition is met if the daemon was started by :func:`start_daemon` or
+        the `saturnin-daemon` script directly.
     """
     try:
         subprocess.run(['saturnin-daemon', 'stop', str(pid)], check=True, timeout=10) # noqa: S603, S607

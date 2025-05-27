@@ -35,8 +35,8 @@
 
 """Saturnin component registration and discovery.
 
-Services are registered as entry points for their `.ServiceDescriptor` - i.e. the instance
-of `.ServiceDescriptor` for installed service is returned by `EntryPoint.load()`.
+Services are registered as entry points where `EntryPoint.load()` is expected to return an
+instance of .ServiceDescriptor.
 
 The default group for service registration is `saturnin.service`, but it's possible to
 install additional service discovery iterators.
@@ -164,20 +164,20 @@ class ServiceRegistry(Registry):
 
     It is used in two modes:
 
-    1. In full saturnin deployment, the information about services is loaded from TOML file.
-       Service descriptors and factories are loaded on demand.
-    2. In standalone service/bundle mode, service information including service desciptors
-       and factories is stored directly by executor script, so there is no dynamic discovery
-       and the whole could be compiled with Nutika.
+    1. In a full Saturnin deployment, information about services is loaded from a TOML file.
+       Service descriptors and factories are then loaded on demand.
+    2. In standalone service/bundle mode, service information, including service descriptors
+       and factories, is stored directly by the executor script. This allows for scenarios
+       where dynamic discovery is not used, and the application can be compiled (e.g., with Nuitka).
     """
     def add(self, descriptor: ServiceDescriptor, factory: Any, distribution: str) -> None:
-        """Direct service registration. Used by systems that does not allow dynamic discovery,
-        for example programs compiled by Nuitka.
+        """Registers a service directly, typically used in environments that do not
+        support or use dynamic entry point discovery (e.g., applications compiled with Nuitka).
 
         Arguments:
-            descriptor: Service descriptor
-            factory: Service factory
-            distribution: Distribution package name with service
+            descriptor: The `.ServiceDescriptor` instance for the service.
+            factory: The factory object or callable for creating the service instance.
+            distribution: The name of the distribution package that provides this service.
         """
         kwargs = {}
         kwargs['distribution'] = distribution
@@ -258,11 +258,15 @@ class ServiceRegistry(Registry):
         nodes = {str(node.uid): node.as_toml_dict() for node in self._reg.values()}
         return dumps(nodes)
     def load(self) -> None:
-        "Read information about installed services from previously saved TOML file."
+        """Reads information about installed services from a previously saved TOML file,
+        located at `.directory_scheme.site_services_toml`, if it exists.
+        """
         if directory_scheme.site_services_toml.is_file():
             service_registry.load_from_toml(directory_scheme.site_services_toml.read_text())
     def save(self) -> None:
-        "Save information about installed services to TOML file."
+        """Saves the current information about installed services to a TOML file located
+        at `.directory_scheme.site_services_toml`.
+        """
         directory_scheme.site_services_toml.write_text(service_registry.as_toml())
     def get_by_name(self, name: str, default: Any=None) -> Distinct:
         """Get service by its name.
@@ -280,6 +284,6 @@ _iterators = [partial(iter_entry_points, 'saturnin.service')]
 for i in iter_entry_points('saturnin.service.iterator'):
     _iterators.append(i.load())
 
-#: Saturnin service registry
+#: Global `ServiceRegistry` instance, automatically populated by load() upon module import.
 service_registry: ServiceRegistry = ServiceRegistry()
 service_registry.load()

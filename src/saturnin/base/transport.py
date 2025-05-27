@@ -90,7 +90,6 @@ class ChannelManager(TracedMixin):
         #: Dictionary with managed channels. Key is `Channel.name`, value is the `Channel`.
         self.channels: dict[str, Channel] = {}
         #: Logging context
-        self.log_context: Any = UNDEFINED
         self._poller: zmq.Poller | None = None
         self._chmap: dict[zmq.Socket, Channel] = {}
         self._pollout: bool = False
@@ -106,7 +105,7 @@ class ChannelManager(TracedMixin):
             name: Channel name.
             routing_id: Channel socket identity (routing ID for peers).
             protocol: Protocol for serializing/deserializing messages.
-            session_type: Session type. DEFAULT session type is obtained from MessageHandler.
+            session_type: Session type. DEFAULT session type is obtained from Protocol.
             wait_for: Direction(s) of transmission events for this channel processed by `.wait()`.
             snd_timeout: Timeout for send operation in milliseconds, None means infinite.
             rcv_timeout: Timeout for receive operation in milliseconds, None means infinite.
@@ -130,7 +129,7 @@ class ChannelManager(TracedMixin):
         """
         return self._pollout
     def wait(self, timeout: int | None=None) -> dict[Channel, Direction]:
-        """Wait for I/O events on channnels.
+        """Wait for I/O events on channels.
 
         Arguments:
             timeout: The timeout in milliseconds. `None` value means `infinite`.
@@ -146,7 +145,7 @@ class ChannelManager(TracedMixin):
                 self._poller.modify(chn.socket, chn.wait_for.value)
         return {self._chmap[socket]: Direction(e) for socket, e in self._poller.poll(timeout)}
     def warm_up(self) -> None:
-        """Create and set up ZMQ sockets for all registered channels that does not have socket.
+        """Create and set up ZMQ sockets for all registered channels that do not have socket.
         """
         for chn in self.channels.values():
             if chn.socket is None:
@@ -266,7 +265,7 @@ class Session:
     """
     def __init__(self):
         #: Channel routing ID for connected peer
-        self.routing_id: RoutingID | None= None
+        self.routing_id: RoutingID | None = None
         #: Connected endpoint address, if any
         self.endpoint: ZMQAddress | None = None
         #: Flag indicating that session is waiting for send
@@ -328,7 +327,7 @@ class Protocol(TracedMixin):
         Raises:
             InvalidMessageError: If ZMQ message is not a valid protocol message.
         """
-    def convert_msg(self, zmsg: TZMQMessage) -> Message:
+    def convert_msg(self, zmsg: TZMQMessage) -> SimpleMessage:
         """Converts ZMQ message into protocol message.
 
         Arguments:
@@ -650,12 +649,14 @@ class Channel(TracedMixin):
             self.endpoints.remove(addr)
         if not self.endpoints:
             self._mode = SocketMode.UNKNOWN
-    def connect(self, endpoint: ZMQAddress, *, routing_id: RoutingID=None) -> Session | None:
+    def connect(self, endpoint: ZMQAddress, *, routing_id: RoutingID | None=None) -> Session | None:
         """Connect to a remote channel.
 
         Arguments:
             endpoint:   Endpoint address for connected peer.
-            routing_id: Channel routing ID (required for routed channels).
+            routing_id: Optional routing ID of the peer to connect to, particularly relevant
+                        for routed channels. If `None` (the default), the session's `routing_id`
+                        will be set to `INTERNAL_ROUTE`.
 
         Returns:
             Session associated with connected peer, or None if no session was created.
@@ -895,9 +896,13 @@ class Channel(TracedMixin):
         return self._protocol
     @property
     def session(self) -> Session:
-        """Session associated with channel.
+        """Session associated with channel, keyed by `INTERNAL_ROUTE`.
 
-        Important: Valid *only* when channel has exactly one associated session.
+        Important:
+            This property is valid *only* when the channel has exactly one
+            associated session (i.e., for non-routed channels or specific
+            scenarios where `INTERNAL_ROUTE` is the sole session key).
+            Accessing it otherwise might lead to a `KeyError`.
         """
         return self.sessions[INTERNAL_ROUTE]
     @property
@@ -1059,7 +1064,8 @@ class XPubChannel(Channel):
     def _adjust(self) -> None:
         self._socket_type = SocketType.XPUB
     def _configure(self) -> None:
-        "Create XPUB socket for this channel."
+        """Configure XPUB socket-specific options, such as enabling verbose subscription
+        messages via `xpub_verboser`."""
         super()._configure()
         self.socket.xpub_verboser = 1 # pass subscribe and unsubscribe messages on XPUB socket
 
@@ -1097,5 +1103,9 @@ class RouterChannel(Channel):
         self._socket_type = SocketType.ROUTER
         self.routed = True
     def _configure(self) -> None:
+        """Configure ROUTER socket-specific options.
+
+        Sets `router_mandatory = 1` to ensure an error is raised for unroutable messages.
+        """
         super()._configure()
         self.socket.router_mandatory = 1

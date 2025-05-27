@@ -34,6 +34,10 @@
 #                 ______________________________________.
 
 """Saturnin base module for implementation of Firebird Butler Microservices.
+
+This module provides the `MicroService` base class, which handles common
+microservice lifecycle management, communication with a controller via ICCP,
+and a basic event loop for handling ZMQ messages and scheduled tasks.
 """
 
 from __future__ import annotations
@@ -75,16 +79,15 @@ from firebird.base.types import conjunctive
 SVC_CTRL: Final[str] = 'iccp'
 
 class MicroService(Component, TracedMixin, metaclass=conjunctive):
-    """Saturnin Component for Firebird Burler Microservices.
+    """Saturnin Component for Firebird Butler Microservices.
+
+    Arguments:
+        zmq_context: ZeroMQ Context.
+        descriptor: Service descriptor.
+        peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
     """
     def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
                  peer_uid: uuid.UUID | None=None):
-        """
-        Arguments:
-            zmq_context: ZeroMQ Context.
-            descriptor: Service descriptor.
-            peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
-        """
         self._heap: list = []
         #: Service execution outcome
         self.outcome: Outcome = Outcome.UNKNOWN
@@ -96,7 +99,6 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
         self.stop: threading.Event = threading.Event()
         #: ChannelManager instance.
         self.mngr: ChannelManager = ChannelManager(zmq_context)
-        self.mngr.log_context = proxy(self)
         #: Dictionary with endpoints to which the component binds.
         #: Key is channel name, value is list of ZMQAddress instances.
         #: Initially empty.
@@ -106,9 +108,6 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
         #: Peer descriptor for this component.
         self.peer: PeerDescriptor = PeerDescriptor(uuid.uuid1() if peer_uid is None else peer_uid,
                                                    os.getpid(), platform.node())
-    def __str__(self):
-        return self.logging_id
-    __repr__ = __str__
     def handle_stop_component(self, exc: Exception | None=None) -> None:
         """ICCP event handler. Called when commponent should stop its operation.
         It stops the component by setting the `~Component.stop` event.
@@ -148,7 +147,9 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
         """
         heappush(self._heap, PrioritizedItem(monotonic_ns() + (after * 1000000), action))
     def get_timeout(self) -> int:
-        """Returns timeout to next scheduled action.
+        """Returns the timeout in milliseconds until the next scheduled action.
+        If no actions are scheduled, it returns 1000ms (1 second) as a default polling
+        interval.
         """
         if not self._heap:
             return 1000
@@ -163,7 +164,8 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
             heappush(self._heap, value)
         return max(int((item.priority - now) / 1000000), 0)
     def run_scheduled(self) -> None:
-        """Run scheduled actions.
+        """Executes any scheduled actions whose execution time (priority) is at or before
+        the current monotonic time.
         """
         while self._heap:
             item = heappop(self._heap)
@@ -180,9 +182,10 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
         """
         config.validate() # Fail early!
         if config.logging_id.value is not None:
-            self._logging_id_ = config.logging_id.value
+            self._agent_name_ = config.logging_id.value
     def bind_endpoints(self) -> None:
-        """Bind endpoints used by component.
+        """Binds all ZMQ endpoints defined in `.endpoints` using the respective channels
+        from `.mngr`.
         """
         for name, addr_list in self.endpoints.items():
             chn: Channel = self.mngr.channels.get(name)
@@ -190,12 +193,15 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
                 #self.endpoints[name][i] = chn.bind(addr)
                 addr_list[i] = chn.bind(addr)
     def aquire_resources(self) -> None:
-        """Aquire resources required by component (open files, connect to other services etc.).
+        """Acquire resources required by component (e.g., open files, connect to other services).
 
-        Must raise an exception when resource aquisition fails.
+        This method is called during the warm-up phase after basic initialization.
+        Implementations should raise an exception if resource acquisition fails.
         """
     def release_resources(self) -> None:
-        """Release resources aquired by component (close files, disconnect from other services etc.)
+        """Release resources acquired by the component (e.g., close files, disconnect from other services).
+
+        This method is called during the graceful shutdown phase.
         """
     def start_activities(self) -> None:
         """Start normal component activities.
@@ -206,7 +212,22 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
         """Stop component activities.
         """
     def warm_up(self, ctrl_addr: ZMQAddress | None) -> None:
-        """Initializes the `.ChannelManager` and connects component to control channel.
+        """Performs the warm-up sequence for the microservice.
+
+        This includes:
+
+        - Setting up the ICCP control channel if `ctrl_addr` is provided.
+        - Warming up the `.ChannelManager` to create ZMQ sockets.
+        - Connecting to the controller via ICCP.
+        - Binding all service-defined endpoints via `.bind_endpoints()`.
+        - Acquiring necessary resources via `aquire_resources()`.
+        - Starting normal component activities via `.start_activities()`.
+        - Sending a `READY` message to the controller upon success, or an `ERROR`
+          message if any warm-up step fails.
+
+        Arguments:
+            ctrl_addr: The ZMQ address of the controller's control channel. If `None`,
+                       the component runs without ICCP communication (e.g., standalone).
         """
         if ctrl_addr is not None:
             # Service control channel
@@ -217,7 +238,6 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
                                                         wait_for=Direction.IN,
                                                         sock_opts={'rcvhwm': 5,
                                                                    'sndhwm': 5,})
-            chn.protocol.log_context = self.logging_id
         self.mngr.warm_up()
         if ctrl_addr is not None:
             chn.connect(ctrl_addr)
@@ -238,7 +258,21 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
                          chn.session)
             self.state = State.READY
     def run(self) -> None:
-        """Component execution (main loop).
+        """The main execution loop for the microservice.
+
+        This loop continuously waits for I/O events on managed channels and
+        processes them in a prioritized order:
+
+        1. Messages on the ICCP control channel (if connected).
+        2. Output-ready events on other channels.
+        3. Input-ready events on other channels.
+
+        After processing I/O, it executes any due scheduled actions via `.run_scheduled()`.
+
+        The loop terminates when `.stop` event is set. Upon termination,
+        it performs a graceful shutdown sequence: `.stop_activities()`,
+        `.release_resources()`, sends a `FINISHED` (or `ERROR`) message to the
+        controller, and shuts down the `.ChannelManager`.
         """
         self.state = State.RUNNING
         ctrl_chn: PairChannel = self.mngr.channels.get(SVC_CTRL)
@@ -281,7 +315,3 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
                               ctrl_chn.session)
             with suppress(Exception):
                 self.mngr.shutdown(forced=True)
-    @property
-    def logging_id(self) -> str:
-        "Returns _logging_id_ or <agent_name>[<peer.uid.hex>]"
-        return getattr(self, '_logging_id_', f'{self.descriptor.agent.name}[{self.peer.uid.hex}]')

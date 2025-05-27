@@ -35,27 +35,32 @@
 
 """Saturnin application registration and discovery.
 
-Applications are registered as entry points for their `.ApplicationDescriptor` - i.e.
-the instance of `.ApplicationDescriptor` for installed service is returned by `.EntryPoint.load()`.
+This module handles the registration and discovery of Saturnin applications.
+Applications are registered as entry points where `.EntryPoint.load()` is
+expected to return an instance of `.ApplicationDescriptor`. The default
+entry point group for application registration is `saturnin.application`.
 
-The entry point group for service registration is `saturnin.application`.
+It provides `.ApplicationInfo` to represent application metadata and
+`.ApplicationRegistry` to manage these applications.
 """
 
 from __future__ import annotations
 
-from collections.abc import Hashable
+from collections.abc import Callable, Hashable
 from contextlib import suppress
 from tomllib import loads
-from typing import Any
+from typing import Any, TypeAlias
 from uuid import UUID
 
 from saturnin.base import ApplicationDescriptor, Error, directory_scheme
+from saturnin.base.types import GenericCallable
 from saturnin.lib.metadata import get_entry_point_distribution, iter_entry_points
 from tomli_w import dumps
 
 from firebird.base.collections import Registry
 from firebird.base.types import Distinct, load
 
+TAppRecipeFactory: TypeAlias = Callable[[], str]
 
 class ApplicationInfo(Distinct):
     """Information about application stored in  `.ApplicationRegistry`.
@@ -67,17 +72,17 @@ class ApplicationInfo(Distinct):
         vendor: Application vendor UID
         classification: Application classification
         description: Application description
-        factory: Application factory specification (entry point)
-        config: Application configuration factory (entry point)
+        cli_command: Application factory specification (entry point)
+        recipe_factory: Application configuration factory (entry point)
         descriptor: Application descriptor specification (entry point)
         distribution: Installed distribution package that contains this application
     """
     def __init__(self, *, uid: UUID, name: str, version: str, vendor: UUID,
-                 classification: str, description: str, factory: str, config: str,
-                 descriptor: str, distribution: str):
-        self.__desc_obj: Any = None
-        self.__fact_obj: Any = None
-        self.__conf_obj: Any = None
+                 classification: str, description: str, descriptor: str, distribution: str,
+                 cli_command: str | None = None, recipe_factory: str | None = None):
+        self.__descriptor: Any = None
+        self.__cli_command: Any = None
+        self.__recipe_factory: Any = None
         #: Application UID
         self.uid: UUID = uid
         #: Application name
@@ -90,32 +95,32 @@ class ApplicationInfo(Distinct):
         self.classification: str = classification
         #: Application description
         self.description: str = description
-        #: Application command factory specification (entry point)
-        self.factory: str = factory
-        #: Application configuration factory (entry point)
-        self.config: str = config
+        #: Application command specification (entry point)
+        self.cli_command: str | None = cli_command
+        #: Application recipe factory (entry point)
+        self.recipe_factory: str | None = recipe_factory
         #: Application descriptor specification (entry point)
         self.descriptor: str = descriptor
         #: Installed distribution package that contains this application
         self.distribution: str = distribution
     def get_key(self) -> Hashable:
-        "Returns service UID"
+        "Returns the application UID, which serves as its unique key."
         return self.uid
     def as_toml_dict(self) -> dict:
         """Returns dictionary with instance data suitable for storage in TOML format
         (values that are not of basic type are converted to string).
         """
-        return {'uid': str(self.uid),
+        return {k: v for k, v in {'uid': str(self.uid),
                 'name': self.name,
                 'version': self.version,
                 'vendor': str(self.vendor),
                 'classification': self.classification,
                 'description': self.description,
-                'factory': self.factory,
-                'config': self.config,
+                'cli_command': self.cli_command,
+                'recipe_factory': self.recipe_factory,
                 'descriptor': self.descriptor,
                 'distribution': self.distribution,
-                }
+                }.items() if v is not None}
     def get_recipe_name(self) -> str:
         """Returns default recipe name for this application. If application name contains
         dots, only part after last dot is returned. Otherwise it returns the application name.
@@ -126,37 +131,40 @@ class ApplicationInfo(Distinct):
         """Application descriptor object. If it's not assigned directly, then it's loaded
         using `.descriptor` on first access.
         """
-        if self.__desc_obj is None:
-            self.__desc_obj = load(self.descriptor)
-        return self.__desc_obj
+        if self.__descriptor is None:
+            self.__descriptor = load(self.descriptor)
+        return self.__descriptor
     @descriptor_obj.setter
     def set_descriptor_obj(self, value: ApplicationDescriptor | None) -> None:
-        "Property setter"
-        self.__desc_obj = value
+        """Sets the application descriptor object directly, bypassing lazy loading for
+        subsequent accesses of descriptor_obj."""
+        self.__descriptor = value
     @property
-    def factory_obj(self) -> Any:
+    def cli_command_obj(self) -> GenericCallable:
         """Application command factory object. If it's not assigned directly, then it's loaded
         using `.factory` on first access.
         """
-        if self.__fact_obj is None:
-            self.__fact_obj = load(self.factory)
-        return self.__fact_obj
-    @factory_obj.setter
-    def set_factory_obj(self, value: Any | None) -> None:
-        "Property setter"
-        self.__fact_obj = value
+        if self.__cli_command is None:
+            self.__cli_command = load(self.cli_command)
+        return self.__cli_command
+    @cli_command_obj.setter
+    def set_cli_command_obj(self, value: GenericCallable | None) -> None:
+        """Sets the application factory object directly, bypassing lazy loading for
+        subsequent accesses of factory_obj."""
+        self.__cli_command = value
     @property
-    def config_obj(self) -> Any:
+    def recipe_factory_obj(self) -> TAppRecipeFactory:
         """Application configuration factory object. If it's not assigned directly, then it's loaded
         using `.config` on first access.
         """
-        if self.__conf_obj is None:
-            self.__conf_obj = load(self.config)
-        return self.__conf_obj
-    @factory_obj.setter
-    def set_config_obj(self, value: Any | None) -> None:
-        "Property setter"
-        self.__conf_obj = value
+        if self.__recipe_factory is None:
+            self.__recipe_factory = load(self.recipe_factory)
+        return self.__recipe_factory
+    @recipe_factory_obj.setter
+    def set_recipe_factory_obj(self, value: TAppRecipeFactory) -> None:
+        """Sets the application config object directly, bypassing lazy loading for
+        subsequent accesses of config_obj."""
+        self.__recipe_factory = value
 
 class ApplicationRegistry(Registry):
     """Saturnin application registry.
@@ -165,14 +173,14 @@ class ApplicationRegistry(Registry):
 
     It is used in two modes:
 
-    1. In full saturnin deployment, the information about applications is loaded from TOML file.
-       Application descriptors and factories are loaded on demand.
-    2. In standalone service/bundle mode, application information including app. desciptors
-       and factories is stored directly by executor script, so there is no dynamic discovery
-       and the whole could be compiled with Nutika.
+    1. In a full Saturnin deployment, information about applications is loaded from a TOML file.
+       Application descriptors and factories are then loaded on demand.
+    2. In standalone service/bundle mode, application information, including application descriptors
+       and factories, is stored directly by the executor script. This allows for scenarios
+       where dynamic discovery is not used, and the application can be compiled (e.g., with Nuitka).
     """
     def add(self, descriptor: ApplicationDescriptor, factory: Any, distribution: str) -> None:
-        """Direct application registration. Used by systems that does not allow dynamic discovery,
+        """Direct application registration. Used by systems that do not allow dynamic discovery,
         for example programs compiled by Nuitka.
 
         Arguments:
@@ -189,11 +197,11 @@ class ApplicationRegistry(Registry):
         kwargs['vendor'] = descriptor.vendor_uid
         kwargs['classification'] = descriptor.classification
         kwargs['description'] = descriptor.description
-        kwargs['factory'] = descriptor.factory
-        kwargs['config'] = descriptor.config
+        kwargs['factory'] = descriptor.cli_command
+        kwargs['config'] = descriptor.recipe_factory
         app_info = ApplicationInfo(**kwargs)
         app_info.descriptor_obj = descriptor
-        app_info.factory_obj = factory
+        app_info.cli_command_obj = factory
         self.store(app_info)
     def load_from_installed(self, *, ignore_errors: bool=False) -> None:
         """Populate registry from descriptors of installed applications.
@@ -219,8 +227,8 @@ class ApplicationRegistry(Registry):
             kwargs['vendor'] = desc.vendor_uid
             kwargs['classification'] = desc.classification
             kwargs['description'] = desc.description
-            kwargs['factory'] = desc.factory
-            kwargs['config'] = desc.config
+            kwargs['cli_command'] = desc.cli_command
+            kwargs['recipe_factory'] = desc.recipe_factory
             try:
                 app_info = ApplicationInfo(**kwargs)
             except Exception as exc:
@@ -256,11 +264,15 @@ class ApplicationRegistry(Registry):
         nodes = {str(node.uid): node.as_toml_dict() for node in self._reg.values()}
         return dumps(nodes)
     def load(self) -> None:
-        "Read information about installed applications from previously saved TOML file."
+        """Reads information about installed applications from a previously saved TOML file,
+        located at `.directory_scheme.site_apps_toml`, if it exists.
+        """
         if directory_scheme.site_apps_toml.is_file():
             application_registry.load_from_toml(directory_scheme.site_apps_toml.read_text())
     def save(self) -> None:
-        "Save information about installed applications to TOML file."
+        """Saves the current information about installed applications to a TOML file located
+        at `.directory_scheme.site_apps_toml`.
+        """
         directory_scheme.site_apps_toml.write_text(application_registry.as_toml())
     def get_by_name(self, name: str, default: Any=None) -> Distinct:
         """Get application by its name.
@@ -271,6 +283,6 @@ class ApplicationRegistry(Registry):
         """
         return self.find(lambda x: x.name == name, default=default)
 
-#: Saturnin application registry
+#: Global `ApplicationRegistry` instance, automatically populated by load() upon module import.
 application_registry: ApplicationRegistry = ApplicationRegistry()
 application_registry.load()

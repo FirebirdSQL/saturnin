@@ -30,9 +30,15 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin base classes for data provider and consumer microservices
+"""Saturnin base classes for data provider and consumer microservices using the FBDP protocol.
 
-This is extended description.
+This module provides abstract base classes (`BaseDataPipeMicro`, `DataProviderMicro`,
+`DataConsumerMicro`) and their associated configurations (`BaseDataPipeConfig`,
+`DataProviderConfig`, `DataConsumerConfig`) to simplify the creation of
+microservices that act as either producers or consumers of data over a
+Saturnin data pipe. These classes handle much of the common boilerplate
+for FBDP communication, allowing developers to focus on the specific
+data handling logic.
 """
 
 from __future__ import annotations
@@ -114,28 +120,30 @@ class DataConsumerConfig(BaseDataPipeConfig):
 class BaseDataPipeMicro(MicroService):
     """Base data provider/consumer microservice.
 
+    Abstract base class for both providers and consumers. It handles the common FBDP logic.
+
     Descendant classes should override:
 
-    - `handle_accept_client` to validate client request and aquire resources associated
-      with pipe.
-    - `handle_produce_data` to produce data for outgoing DATA message. PRODUCER only.
-    - `handle_accept_data` to process received data. CONSUMER only.
-    - `handle_pipe_closed` to release resource assiciated with pipe.
+    - `handle_accept_client` to validate client request and acquire resources associated
+      with the pipe.
+    - `handle_produce_data` to produce data for outgoing DATA message (PRODUCER only).
+    - `handle_accept_data` to process received data (CONSUMER only).
+    - `handle_pipe_closed` to release resources associated with the pipe.
+
+    Arguments:
+        zmq_context: ZeroMQ Context.
+        descriptor: Service descriptor.
+        peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
     """
     def __init__(self, zmq_context: zmq.Context, descriptor: ServiceDescriptor, *,
                  peer_uid: uuid.UUID | None=None):
-        """
-        Arguments:
-            zmq_context: ZeroMQ Context.
-            descriptor: Service descriptor.
-            peer_uid: Peer ID, `None` means that newly generated UUID type 1 should be used.
-        """
         super().__init__(zmq_context, descriptor, peer_uid=peer_uid)
         #: Pipe socket this service handles if operated as server (bind). Must be set
         #: in descendant class.
         #: For PROVIDER it's `.PipeSocket.OUTPUT`, for CONSUMER it's `.PipeSocket.INPUT`
         self.server_socket: PipeSocket = None
         #: FDBP protocol handler (server or client)
+        #: This object manages the FBDP state machine and message handling.
         self.protocol: FBDPServer | FBDPClient = None
         # Next members are set in initialize()
         #: [Configuration] Whether service should stop when pipe is closed
@@ -154,6 +162,13 @@ class BaseDataPipeMicro(MicroService):
         self.ready_schedule_interval: int = None
     def initialize(self, config: BaseDataPipeConfig) -> None:
         """Verify configuration and assemble component structural parts.
+
+        - Sets up the service based on the provided configuration.
+        - Creates the appropriate FBDP protocol handler (`FBDPServer` for `BIND`,
+          `FBDPClient` for `CONNECT`).
+        - Registers default event handlers for various FBDP events (e.g., `on_accept_client`,
+          `on_pipe_closed`, `on_produce_data`, `on_accept_data`).
+        - Creates a `DealerChannel` for communication over the pipe.
         """
         super().initialize(config)
         # Configuration
@@ -161,7 +176,7 @@ class BaseDataPipeMicro(MicroService):
         self.pipe: str = config.pipe.value
         self.pipe_mode: SocketMode = config.pipe_mode.value
         self.pipe_address: ZMQAddress = config.pipe_address.value
-        self.pipe_format: MIME = config.pipe_format.value
+        self.pipe_format: MIME | None = config.pipe_format.value
         self.batch_size: int = config.batch_size.value
         self.ready_schedule_interval: int = config.ready_schedule_interval.value
         # Set up FBDP protocol
@@ -177,7 +192,6 @@ class BaseDataPipeMicro(MicroService):
             # client
             self.protocol = FBDPClient()
         # common parts
-        self.protocol.log_context = self.logging_id
         self.protocol.batch_size = self.batch_size
         self.protocol.on_pipe_closed = self.handle_pipe_closed
         self.protocol.on_produce_data = self.handle_produce_data
@@ -185,10 +199,13 @@ class BaseDataPipeMicro(MicroService):
         # Create pipe channel
         self.mngr.create_channel(DealerChannel, PIPE_CHN, self.protocol, wait_for=Direction.IN)
     def aquire_resources(self) -> None:
-        """Aquire resources required by component:
+        """Acquire resources required by the component.
 
-        1. If `.pipe_mode` is `~SocketMode.CONNECT`, it will connect to the end of the pipe
-           that is the inverse of `.server_socket`.
+        Specifically:
+
+           If `.pipe_mode` is `~SocketMode.CONNECT`, it connects to the data pipe
+           endpoint and initiates the FBDP `OPEN` handshake. The client socket type
+           (INPUT/OUTPUT) is determined as the inverse of `.server_socket`.
         """
         # Connect to the data pipe
         if self.pipe_mode == SocketMode.CONNECT:
@@ -203,7 +220,9 @@ class BaseDataPipeMicro(MicroService):
     def release_resources(self) -> None:
         """Release resources aquired by component:
 
-        1. CLOSE all active pipe sessions.
+        Specifically:
+
+           Sends an FBDP `CLOSE` message (indicating an error) to all active pipe sessions.
         """
         # CLOSE all active data pipe sessions
         chn: Channel = self.mngr.channels[PIPE_CHN]
@@ -251,7 +270,7 @@ class BaseDataPipeMicro(MicroService):
         """
 
         if session.pipe != self.pipe:
-            raise StopError(f"Unknown data pipe '{session.data_pipe}'",
+            raise StopError(f"Unknown data pipe '{session.pipe}'",
                             code = ErrorCode.PIPE_ENDPOINT_UNAVAILABLE)
         # We're server, so clients can only attach to our server_socket
         if session.socket is not self.server_socket:
@@ -296,7 +315,6 @@ class BaseDataPipeMicro(MicroService):
         Note:
             To indicate end of data, raise StopError with ErrorCode.OK code.
 
-        Note:
             Exceptions are handled by protocol, but only StopError is checked for protocol
             ErrorCode. As we want to report INVALID_DATA properly, we have to convert
             UnicodeError into StopError.
@@ -356,16 +374,19 @@ class BaseDataPipeMicro(MicroService):
         if self.stop_on_close:
             self.stop.set()
 
-
 class DataProviderMicro(BaseDataPipeMicro):
-    """Base data provider microservice.
+    """Base data provider microservice (PRODUCER).
+
+    This class specializes `BaseDataPipeMicro` for services that produce data
+    and send it over an FBDP pipe.
 
     Descendant classes should override:
 
-    - `~.BaseDataPipeMicro.handle_accept_client` to validate client request and aquire
-      resources associated with pipe.
-    - `~.BaseDataPipeMicro.handle_produce_data` to produce data for outgoing DATA message.
-    - `~.BaseDataPipeMicro.handle_pipe_closed` to release resource assiciated with pipe.
+    - `~.BaseDataPipeMicro.handle_accept_client` to validate client requests and acquire
+      resources associated with the pipe.
+    - `~.BaseDataPipeMicro.handle_produce_data` to generate and provide the data for
+      outgoing `DATA` messages.
+    - `~.BaseDataPipeMicro.handle_pipe_closed` to release resources associated with the pipe.
     """
     def initialize(self, config: DataProviderConfig) -> None:
         """Verify configuration and assemble component structural parts.

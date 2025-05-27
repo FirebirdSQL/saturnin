@@ -155,7 +155,8 @@ class ErrorCode(IntEnum):
     FBSP_VERSION_NOT_SUPPORTED = 2001
 
 def bb2h(value_hi: int, value_lo: int) -> int:
-    """Compose two bytes into word value.
+    """Compose two bytes (high byte, low byte) into a 16-bit unsigned word (short) value
+    using network byte order (big-endian).
     """
     return unpack('!H', pack('!BB', value_hi, value_lo))[0]
 
@@ -182,12 +183,19 @@ class FBSPMessage(Message):
     def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
 
-        Default implementation does nothing.
+        Note: Default implementation does nothing.
+
+        Arguments:
+            data: A list of remaining ZMQ frames after the header, to be deserialized into
+                  message-specific attributes.
         """
     def _pack_data(self) -> list:
         """Called when serialization is requested.
 
-        Default implementation returns empty list.
+        Note: Default implementation returns empty list.
+
+        Returns:
+            A list of ZMQ-compatible frames (bytes or zmq.Frame) representing the message-specific payload.
         """
         return []
     def _set_hdr(self, header: bytes) -> None:
@@ -200,7 +208,9 @@ class FBSPMessage(Message):
         """Populate message data from sequence of ZMQ data frames.
 
         Arguments:
-            zmsg: Sequence of frames that should be deserialized.
+            zmsg: Sequence of ZMQ frames. The first frame (header) is assumed to
+                  have been pre-processed by the message factory to set initial
+                  attributes like `msg_type`. This method processes subsequent frames.
 
         Raises:
             InvalidMessageError: If message is not a valid protocol message.
@@ -271,7 +281,7 @@ class HandshakeMessage(FBSPMessage):
     """
     def __init__(self):
         super().__init__()
-        #: Parsed protobuf message with peer information
+        #: Protobuf message instance holding peer information.
         self.data: ProtoMessage = None
     def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
@@ -313,6 +323,7 @@ class APIMessage(FBSPMessage):
     """
     def __init__(self):
         super().__init__()
+        #: List of bytes, typically representing data frames of the API message payload.
         self.data: list = []
     def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
@@ -355,11 +366,17 @@ class StateMessage(APIMessage):
         self.state_info: FBSPStateInformation = create_message(PROTO_STATE_INFO)
     def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
+
+        Arguments:
+            data: A list containing the serialized `FBSPStateInformation` protobuf message.
         """
         self.state_info.ParseFromString(data.pop(0))
         super()._unpack_data(data)
     def _pack_data(self) -> list:
         """Called when serialization is requested.
+
+        Returns:
+            A list containing the serialized `FBSPStateInformation` protobuf message.
         """
         return [self.state_info.SerializeToString()]
     def clear(self) -> None:
@@ -383,10 +400,16 @@ class DataMessage(FBSPMessage):
         self.data: list[bytes] = []
     def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
+
+        Arguments:
+            data: A list containing `bytes` or `zmq.Frame` data payload.
         """
         self.data.extend(i.bytes if isinstance(i, zmq.Frame) else i for i in data)
     def _pack_data(self) -> list:
         """Called when serialization is requested.
+
+        Returns:
+            A list of `bytes` containing the message `data`.
         """
         return self.data
     def clear(self) -> None:
@@ -402,20 +425,26 @@ class CancelMessage(FBSPMessage):
     def __init__(self):
         super().__init__()
         #: `.FBSPCancelRequests` protobuf message
-        self.reqest: FBSPCancelRequests = create_message(PROTO_CANCEL_REQ)
+        self.request: FBSPCancelRequests = create_message(PROTO_CANCEL_REQ)
     def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
+
+        Arguments:
+            data: A list containing the serialized `FBSPCancelRequests` protobuf message.
         """
-        self.reqest.ParseFromString(data.pop(0))
+        self.request.ParseFromString(data.pop(0))
     def _pack_data(self) -> list:
         """Called when serialization is requested.
+
+        Returns:
+            A list containing the serialized `FBSPCancelRequests` protobuf message.
         """
-        return [self.reqest.SerializeToString()]
+        return [self.request.SerializeToString()]
     def clear(self) -> None:
         """Clears message attributes.
         """
         super().clear()
-        self.reqest.Clear()
+        self.request.Clear()
 
 class ErrorMessage(FBSPMessage):
     """The `ERROR` message notifies the Client about error condition detected by Service.
@@ -426,6 +455,9 @@ class ErrorMessage(FBSPMessage):
         self.errors: list[ErrorDescription] = []
     def _unpack_data(self, data: list) -> None:
         """Called when all fields of the message are set. Usefull for data deserialization.
+
+        Arguments:
+            data: A list containing the serialized `ErrorDescription` protobuf messages.
         """
         while data:
             err = create_message(PROTO_ERROR)
@@ -433,6 +465,9 @@ class ErrorMessage(FBSPMessage):
             self.errors.append(err)
     def _pack_data(self) -> list:
         """Called when serialization is requested.
+
+        Returns:
+            A list containing the serialized `ErrorDescription` protobuf messages.
         """
         return [err.SerializeToString() for err in self.errors]
     def clear(self) -> None:
@@ -447,6 +482,10 @@ class ErrorMessage(FBSPMessage):
         return err
     def note_exception(self, exc: Exception) -> None:
         """Store information from exception into `.ErrorMessage`.
+
+        Arguments:
+            exc: The Exceptioninstance to be recorded in the error message. Handles chained
+                 exceptions viacause `cause` attribute.
         """
         to_note = exc
         while to_note:
@@ -505,6 +544,10 @@ class _FBSP(Protocol):
         self.message_factory = self.__message_factory
     def __message_factory(self, zmsg: TZMQMessage | None=None) -> Message:
         """Internal message factory.
+
+        Arguments:
+            zmsg: The raw ZMQ message list, used here to extract the header for determining
+                  message type and initializing the correct `.FBSPMessage` subclass.
         """
         msg = self.MESSAGE_MAP[MsgType(int.from_bytes(zmsg[0][4:5], 'big') >> 3)]()
         msg._set_hdr(zmsg[0])
@@ -516,7 +559,8 @@ class _FBSP(Protocol):
         message must be successful as well.
 
         Arguments:
-            zmsg:   ZeroMQ multipart message.
+            zmsg: ZeroMQ multipart message to be validated against FBSP rules (FourCC,
+                  version, header structure, type-specific frames).
 
         Raises:
             InvalidMessageError: If ZMQ message is not a valid FBSP message.
@@ -602,7 +646,7 @@ class _FBSP(Protocol):
             flags:        Flags
 
         Returns:
-            New `.FBDPMessage` instance.
+            New `.FBSPMessage` subclass instance, initialized with the provided header details.
         """
         return self.message_factory([pack(HEADER_FMT_FULL, FOURCC, (message_type << 3) | 1,
                                           flags, type_data, token)])
@@ -629,7 +673,8 @@ class FBSPSession(Session):
     """
     def __init__(self):
         super().__init__()
-        #: `.HelloMessage` or `.WelcomeMessage` received from peer.
+        #: `.HelloMessage` (for service sessions) or `.WelcomeMessage` (for client sessions)
+        #: received from peer during handshake.
         self.greeting: HelloMessage = None
         #: Client peer ID for service, Service agent ID for client
         self.partner_uid: uuid.UUID = None
@@ -707,7 +752,8 @@ class FBSPService(_FBSP):
 
         Arguments:
             api_code: API code.
-            handler:  Callable that handles the API code.
+            handler:  A callable that handles the API code matching the signature
+                      (channel: Channel, session: FBSPSession, msg: APIMessage) -> None
         """
         # Validate handler via eventsocket
         _hndcheck.service_handler = handler
@@ -790,6 +836,9 @@ class FBSPService(_FBSP):
 
         Note:
             The HELLO message was preprocessed and approved by `.accept_new_session()`.
+
+        Note:
+            All exceptions raised in handler are handled by `handle_exception`.
         """
         session.greeting = msg
         session.partner_uid = uuid.UUID(bytes=msg.data.instance.uid)
@@ -802,10 +851,11 @@ class FBSPService(_FBSP):
         Calls the appropriate API handler set via `.register_api_handler()`.
 
         Important:
-            The event handler must send the ACK-REPLY message if requested. According to
-            FBSP specification, the request must be acknowledged at the time the Service
-            has positively decided to accept the client's request and before commencing
-            the fulfillment of the request. It may also send the ERROR instead the ACK-REPLY.
+            The registered API handler is responsible for sending the `ACK-REPLY`
+            message if the incoming request `msg` has the `ACK_REQ` flag set.
+            According to FBSP specification, the request should be acknowledged
+            once the Service has decided to accept it and before starting fulfillment.
+            The handler may also send an `ERROR` message instead of an `ACK-REPLY`.
 
         Arguments:
             channel: Channel that received the message.
@@ -813,7 +863,7 @@ class FBSPService(_FBSP):
             msg:     Received message.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions raised in handler are handled by `handle_exception`.
         """
         handler = self.api_handlers.get(msg.type_data)
         if handler is None:
@@ -837,7 +887,7 @@ class FBSPService(_FBSP):
             StopError: With error code `4 - Not Implemented` if event handler is not defined.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions raised in handler are handled by `handle_exception`.
         """
         self.on_cancel(channel, session, msg)
         if not self.on_cancel.is_set():
@@ -854,7 +904,7 @@ class FBSPService(_FBSP):
             msg:     Received message.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions raised in handler are handled by `handle_exception`.
         """
         if msg.has_ack_reply():
             self.on_ack_received(channel, session, msg)
@@ -877,7 +927,7 @@ class FBSPService(_FBSP):
             msg:     Received message.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions raised in handler are handled by `handle_exception`.
         """
         if msg.has_ack_reply():
             self.on_ack_received(channel, session, msg)
@@ -918,7 +968,7 @@ class FBSPService(_FBSP):
             msg:     Received message.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions raised in handler are handled by `handle_exception`.
         """
         if msg.has_ack_reply():
             self.on_ack_received(channel, session, msg)
@@ -1008,6 +1058,9 @@ class FBSPService(_FBSP):
         Arguments:
             channel: Channel associated with data pipe.
             session: Session associated with peer.
+
+        Note:
+            All exceptions raised in handler are handled by `handle_exception`.
         """
     @eventsocket
     def on_data(self, channel: Channel, session: FBSPSession, msg: DataMessage) -> None:
@@ -1024,7 +1077,7 @@ class FBSPService(_FBSP):
             msg:     Received message.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions raised in handler are handled by `handle_exception`.
         """
     @eventsocket
     def on_session_closed(self, channel: Channel, session: FBSPSession, msg: FBSPMessage,
@@ -1037,6 +1090,9 @@ class FBSPService(_FBSP):
             session: Session associated with peer.
             msg: Received/sent CLOSE message.
             exc: Exception that caused the error.
+
+        Note:
+            All exceptions raised in handler are handled by `handle_exception`.
         """
     @eventsocket
     def on_ack_received(self, channel: Channel, session: FBSPSession, msg: DataMessage) -> None:
@@ -1049,7 +1105,7 @@ class FBSPService(_FBSP):
             msg:     Received ACK-REPLY message.
 
         Note:
-            All exceptions are handled by `handle_exception`.
+            All exceptions raised by handler are handled by `handle_exception`.
         """
 
 class FBSPClient(_FBSP):
@@ -1109,7 +1165,7 @@ class FBSPClient(_FBSP):
             msg:     Received message.
 
         Note:
-            All exceptions are handled by `~saturnin.base.transport.Protocol.handle_exception`.
+            All exceptions raised in handler are handled by `handle_exception`.
         """
         if (msg.msg_type is MsgType.STATE) and msg.has_ack_req():
             channel.send(self.create_ack_reply(msg), session)
@@ -1169,7 +1225,8 @@ class FBSPClient(_FBSP):
                                        bb2h(self._apis[api_code.__class__.get_uid()],
                                             api_code.value))
     def exception_for(self, msg: ErrorMessage) -> ServiceError:
-        """Returns `.ServiceError` exception from `ERROR` message.
+        """Returns a .ServiceError exception populated with details from the provided ERROR
+        message.
 
         Arguments:
           msg: ERROR message received
@@ -1241,7 +1298,8 @@ class FBSPEventClient(FBSPClient):
 
         Arguments:
             api_code: API code.
-            handler:  Callable that handles the API code.
+            handler:  Callable that handles the API code matching the signature
+                      (channel: Channel, session: FBSPSession, msg: FBSPMessage) -> None.
         """
         # Validate handler via eventsocket
         _hndcheck.client_handler = handler
@@ -1293,10 +1351,10 @@ class FBSPEventClient(FBSPClient):
         Calls the appropriate API handler set via `.register_api_handler()`.
 
         Important:
-            The event handler must send the ACK-REPLY message if requested. According to
-            FBSP specification, the reply must be acknowledged without any delay, unless
-            a previous agreement between the Client and the Service exists to handle it
-            differently (for example when Client is prepared to accept subsequent DATA or
+            The registered API handler must send the `ACK-REPLY` message if requested.
+            According to FBSP specification, the reply must be acknowledged without any delay,
+            unless a previous agreement between the Client and the Service exists to handle
+            it differently (for example when Client is prepared to accept subsequent `DATA` or
             other messages from Service).
 
         Arguments:
@@ -1408,11 +1466,13 @@ class FBSPEventClient(FBSPClient):
         from service.
 
         Arguments:
-            channel: Channel that received the message.
-            session: Session instance.
-            msg:     Received message.
+            channel:  Channel that received the message.
+            session:  Session instance.
+            msg:      Received message.
+            protocol: This FBSPEventClient instance, passed to allow the handler to make
+                      further protocol calls if needed.
 
-        The event handler should register all service API handlers for REPLY messages
+        The event handler should register all service API handlers for `REPLY` messages
         (see `FBSPEventClient.register_api_handler()`).
         """
 
@@ -1497,10 +1557,10 @@ class _APIHandlerChecker:
     @eventsocket
     def service_handler(self, channel: Channel, session: FBSPSession, msg: FBSPMessage,
                         protocol: FBSPService) -> None:
-        "Service API handler"
+        "Signature definition for FBSP Service API handlers."
     @eventsocket
     def client_handler(self, channel: Channel, session: FBSPSession, msg: FBSPMessage,
                        protocol: FBSPEventClient) -> None:
-        "Client API handler"
+        "Signature definition for FBSP Event Client API handlers."
 
 _hndcheck: _APIHandlerChecker = _APIHandlerChecker()

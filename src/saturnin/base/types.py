@@ -52,13 +52,18 @@ from collections.abc import ByteString, Callable
 from dataclasses import dataclass, field
 from dataclasses import replace as _dcls_replace
 from enum import Enum, IntEnum, IntFlag, auto
-from typing import Any, Final, NewType, TypeAlias
+from typing import TYPE_CHECKING, Any, Final, NewType, TypeAlias, Self
 
 import zmq
 
 from firebird.base.config import Config
 from firebird.base.protobuf import PROTO_STRUCT, create_message, dict2struct, load_registered, struct2dict
+from firebird.base.strconv import register_convertor
 from firebird.base.types import MIME, Distinct, Error, Sentinel
+from packaging.specifiers import SpecifierSet
+
+if TYPE_CHECKING:
+    from firebird.butler.fbsd_pb2 import PeerIdentification
 
 # Type annotation types
 TSupplement: TypeAlias = dict[str, Any] | None
@@ -67,6 +72,8 @@ Token = NewType('Token', ByteString)
 """Message token"""
 RoutingID = NewType('RoutingID', ByteString)
 """Routing ID"""
+GenericCallable: TypeAlias = Callable[..., Any]
+"""Generic callable type"""
 
 # Constants
 #: Platform OID (`firebird.butler.platform.saturnin`)
@@ -81,11 +88,11 @@ VENDOR_OID: Final[str] = '1.3.6.1.4.1.53446.1.2.0'
 VENDOR_UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, VENDOR_OID)
 
 #: MIME type for protobuf messages
-MIME_TYPE_PROTO: Final[str] = MIME('application/x.fb.proto')
+MIME_TYPE_PROTO: Final[strMIME] = MIME('application/x.fb.proto')
 #: MIME type for plain text
-MIME_TYPE_TEXT: Final[str] = MIME('text/plain')
+MIME_TYPE_TEXT: Final[MIME] = MIME('text/plain')
 #: MIME type for binary data
-MIME_TYPE_BINARY: Final[str] = MIME('application/octet-stream')
+MIME_TYPE_BINARY: Final[strMIME] = MIME('application/octet-stream')
 
 #: Configuration section name for local service addresses
 SECTION_LOCAL_ADDRESS: Final[str] = 'local_address'
@@ -119,7 +126,7 @@ class ClientError(Error):
     "Error raised by Client"
 
 class StopError(Error):
-    "Exception that should stop furter processing."
+    "Exception that should stop further processing."
 
 class RestartError(Error):
     "Exception signaling that restart is needed for further processing."
@@ -143,10 +150,11 @@ class Origin(IntEnum):
     PROVIDER = SERVICE
     CONSUMER = CLIENT
     def peer_role(self) -> Origin:
-        """Returns peer's role, i.e. complementary to current (CLIENT/SERVICE,
-        PROVIDER/CONSULER) value.
+        """Returns the peer's role, which is the logical opposite of this instance's role.
 
-        Note: Returns current value if it's `ANY` or `UNKNOWN`.
+        For example, if this origin is `Origin.SERVICE` (or `Origin.PROVIDER`),
+        the peer's role returned will be `Origin.CLIENT` (or `Origin.CONSUMER`).
+        If this origin is `Origin.ANY` or `Origin.UNKNOWN`, it returns itself.
         """
         if self in (Origin.ANY, Origin.UNKNOWN):
             return self
@@ -226,12 +234,30 @@ class ButlerInterface(IntEnum):
 
 # Dataclasses
 @dataclass(eq=True, order=False, frozen=True)
+class ComponentSpecification(Distinct):
+    """Component specification dataclass.
+
+    Arguments:
+        uid: Component ID
+        version_spec: Component version specification
+    """
+    uid: uuid.UUID
+    version_spec: SpecifierSet = None
+    def get_key(self) -> uuid.UUID:
+        """Returns `uid` (instance key). Used for instance hash computation."""
+        return self.uid
+    def copy(self) -> Self:
+        """Returns copy of this ComponentSpecification instance.
+        """
+        return _dcls_replace(self)
+    def replace(self, **changes) -> Self:
+        """Creates a new `ComponentSpecification`, replacing fields with values from `changes`.
+        """
+        return _dcls_replace(self, **changes)
+
+@dataclass(eq=True, order=False, frozen=True)
 class AgentDescriptor(Distinct):
     """Service or Client descriptor dataclass.
-
-    Note:
-        Because this is a `dataclass`, the class variables are those attributes that have
-        default value. Other attributes are created in constructor.
 
     Arguments:
         uid: Agent ID
@@ -254,11 +280,11 @@ class AgentDescriptor(Distinct):
     def get_key(self) -> uuid.UUID:
         """Returns `uid` (instance key). Used for instance hash computation."""
         return self.uid
-    def copy(self) -> AgentDescriptor:
+    def copy(self) -> Self:
         """Returns copy of this AgentDescriptor instance.
         """
         return _dcls_replace(self)
-    def replace(self, **changes) -> AgentDescriptor:
+    def replace(self, **changes) -> Self:
         """Creates a new `AgentDescriptor`, replacing fields with values from `changes`.
         """
         return _dcls_replace(self, **changes)
@@ -284,7 +310,7 @@ class PeerDescriptor(Distinct):
         """Returns `firebird.butler.PeerIdentification` protobuf message initialized
         from instance data.
         """
-        msg = create_message(PROTO_PEER)
+        msg: PeerIdentification = create_message(PROTO_PEER)
         msg.uid = self.uid.bytes
         msg.pid = self.pid
         msg.host = self.host
@@ -296,12 +322,12 @@ class PeerDescriptor(Distinct):
         """Returns copy of this PeerDescriptor instance.
         """
         return _dcls_replace(self)
-    def replace(self, **changes) -> PeerDescriptor:
+    def replace(self, **changes) -> Self:
         """Creates a new `PeerDescriptor`, replacing fields with values from `changes`.
         """
         return _dcls_replace(self, **changes)
     @classmethod
-    def from_proto(cls, proto: Any) -> PeerDescriptor:
+    def from_proto(cls, proto: Any) -> Self:
         """Creates new PeerDescriptor from `firebird.butler.PeerIdentification` protobuf
         message.
         """
@@ -326,8 +352,8 @@ class ServiceDescriptor(Distinct):
        api: Service FBSP API description or `None` for microservice
        description: Text describing the service
        facilities: List of Saturnin facilities that this service uses
-       factory: Locator string for service factory
-       config: Service configuration factory
+       factory: Locator string for service factory (e.g. like 'my_package.my_module:my_svc_factory_class')
+       config: Service configuration factory (a callable that returns a `Config` object)
     """
     agent: AgentDescriptor
     api: list[ButlerInterface]
@@ -350,8 +376,8 @@ class ApplicationDescriptor(Distinct):
        vendor_uid: Vendor ID
        classification: Application classification string
        description: Text describing the application
-       factory: Locator string for application `typer` command
-       config: Locator string for application configuration factory
+       cli_command: Locator string for application `typer` command (e.g. like 'my_app.cli:app_cmd')
+       recipe_factory: Locator string for application recipe factory (a callable that returns string)
     """
     uid: uuid.UUID
     name: str
@@ -359,8 +385,8 @@ class ApplicationDescriptor(Distinct):
     vendor_uid: uuid.UUID
     classification: str
     description: str
-    factory: str
-    config: str
+    cli_command: str | None = None
+    recipe_factory: str | None = None
     def get_key(self) -> uuid.UUID:
         """Returns `uid` (instance key). Used for instance hash computation."""
         return self.uid
@@ -380,3 +406,5 @@ class PrioritizedItem:
 load_registered('firebird.butler.protobuf')
 load_registered('firebird.base.protobuf')
 del load_registered
+register_convertor(SpecifierSet)
+del register_convertor

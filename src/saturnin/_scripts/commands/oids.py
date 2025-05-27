@@ -33,8 +33,12 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin OID registry management commands
+"""Typer commands for managing Saturnin's Object Identifier (OID) registry.
 
+This includes listing registered OIDs, updating the registry from remote
+specifications, and displaying detailed information about individual OIDs.
+The OID registry helps in uniquely identifying various entities like vendors,
+platforms, services, and applications within the Saturnin ecosystem.
 """
 
 from __future__ import annotations
@@ -44,6 +48,7 @@ from uuid import UUID
 
 import typer
 from rich import box
+from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from saturnin._scripts.completers import oid_completer
@@ -57,11 +62,15 @@ app = typer.Typer(rich_markup_mode="rich", help="Saturnin OID management.")
 
 @app.command()
 def list_oids(
-    with_name: Annotated[str, typer.Option(help="List only OIDs with this string in name")]='',
+    with_name: Annotated[str, typer.Option(help="Filter: List only OIDs whose full name contains this string.")]='',
     *,
-    show_oids: Annotated[bool, typer.Option('--show-oids', help="Should OIDs instead UUIDs")]=False
+    show_oids: Annotated[bool, typer.Option('--show-oids',
+                                            help="Display OIDs in dotted decimal notation instead of UUIDs.")]=False
     ) -> None:
-    """List registered OIDs.
+    """Lists registered OIDs, optionally filtering by name.
+
+    By default, OIDs are displayed as UUIDs. Use the `--show-oids` option
+    to display them in their dotted decimal notation (e.g., 1.3.6.1.4.1.53446).
     """
     table = Table(title='Registered OIDs' if not with_name
                   else f"Registered OIDs with name containing '{with_name}'",
@@ -70,30 +79,42 @@ def list_oids(
     table.add_column('OID' if show_oids else 'UUID')
     if oid_registry:
         node: OIDNode
-        for node in oid_registry.values():
-            if with_name in node.full_name:
-                if show_oids:
-                    table.add_row(*[node.full_name, Text(node.oid, style='number')])
-                else:
-                    table.add_row(*[node.full_name, Text(str(node.uid), style='uuid')])
+        # Sort for consistent output
+        sorted_nodes = sorted(oid_registry.values(), key=lambda n: n.full_name)
+        nodes_to_display = [node for node in sorted_nodes if with_name in node.full_name]
+
+        if not nodes_to_display:
+            console.print(f"No OIDs found with full name containing '{with_name}'.")
+            return
+
+        for node in nodes_to_display:
+            identifier = Text(node.oid, style='number') if show_oids else Text(str(node.uid), style='uuid')
+            table.add_row(node.full_name, identifier)
         console.print(table)
     else:
         console.print("No OIDs are registered.")
 
 @app.command()
 def update_oids(
-    url: Annotated[str, typer.Argument(help="URL to OID node specification", metavar='URL')]=ROOT_SPEC
+    url: Annotated[str, typer.Argument(help="URL to the root OID node specification "
+                                       "Defaults to the Firebird root specification.",
+                                       metavar='URL')]=ROOT_SPEC
     ):
-    """Update OID registry from specification(s).
+    """Updates the local OID registry by downloading and parsing specifications.
+
+    This command fetches OID specifications starting from the given URL.
+    The specifications can be linked, forming a tree of OID definitions.
+    The local registry (stored in `oids.toml`) is then updated with the
+    parsed information.
     """
-    console.print("Downloading OID specifications ... ", end='')
+    console.print(f"Downloading OID specifications starting from: [link={url}]{url}[/link] ... ", end='')
     specifications, errors = get_specifications(url)
     if errors:
         console.print(RICH_ERROR)
-        console.print_error("Errors occured during download:")
+        console.print_error("Errors occurred during specification download:")
         for err_url, error in errors:
-            console.print_error(f"URL: {err_url}")
-            console.print_error(f"error: {error}")
+            console.print_error(f"  URL: [url]{err_url}[/url]")
+            console.print_error(f"  Error: {error}")
         return
     console.print(RICH_OK)
     console.print("Parsing OID specifications ... ", end='')
@@ -102,8 +123,8 @@ def update_oids(
         console.print(RICH_ERROR)
         console.print_error("Errors detected while parsing OID specifications:")
         for err_url, error in errors:
-            console.print_error(f"URL: {err_url}")
-            console.print_error(f"error: {error}")
+            console.print_error(f"  URL: [url]{err_url}[/url]")
+            console.print_error(f"  Error: {error}")
         return
     console.print(RICH_OK)
     #
@@ -112,13 +133,19 @@ def update_oids(
         oid_registry.update_from_specifications(specifications)
     except Exception as exc:
         console.print(RICH_ERROR)
-        console.print_error(exc)
+        console.print_error(f"Failed to update registry from specifications:\n{exc}")
+        return # Do not save if update itself failed
     console.print(RICH_OK)
-    directory_scheme.site_oids_toml.write_text(oid_registry.as_toml())
+    try:
+        directory_scheme.site_oids_toml.write_text(oid_registry.as_toml())
+        console.print(f"OID registry saved to: [path]{directory_scheme.site_oids_toml}[/path]")
+    except Exception as exc:
+        console.print_error(f"Failed to save OID registry to file: {exc}")
 
 @app.command()
 def show_oid(
-    oid: Annotated[str, typer.Argument(help="OID name or GUID", autocompletion=oid_completer)]
+    oid: Annotated[str, typer.Argument(help="The OID to display, specified by its full name or UUID.",
+                                       autocompletion=oid_completer)]
     ) -> None:
     """Show information about OID.
     """
@@ -127,32 +154,39 @@ def show_oid(
     node: OIDNode = None
     try:
         uid = UUID(oid)
-    except Exception:
+    except ValueError: # Not a valid UUID string
         name = oid
+    except Exception: # Other potential errors during UUID conversion
+        console.print_error(f"Invalid OID identifier format: [item]{oid}[/item]")
+        return
 
     if uid is not None:
         node = oid_registry.get(uid)
     else:
         node = oid_registry.find(lambda x: x.full_name.startswith(name))
     if node is None:
-        console.print_error('OID not registered!')
+        console.print_error(f"OID '[item]{oid}[/]' not found in the registry.")
         return
 
-    table = Table.grid()
-    table.add_column(style='green')
-    table.add_column()
-    table.add_row('OID:', Text(node.oid, style='number'))
-    table.add_row('UID:', _h(Text(str(node.uid))))
-    table.add_row('Node name:', Text(node.name))
-    table.add_row('Full name:', Text(node.full_name))
-    table.add_row('Description:', Text(node.description))
-    table.add_row('Contact:', Text(node.contact))
-    table.add_row('E-mail:', _h(Text(node.email)))
-    table.add_row('Site:', _h(Text(node.site)))
-    table.add_row('Node spec.:', _h(Text(str(node.node_spec))))
-    table.add_row('Node type:', _h(Text(node.node_type.name)))
-    table.add_row('Parent spec.: ', _h(Text(str(node.parent_spec))))
-    console.print(table)
+    table = Table.grid(padding=(0, 1))
+    table.add_column(style='green', justify="right")
+    table.add_column(overflow="fold")
+
+    table.add_row('OID (Dotted Decimal):', Text(node.oid, style='number'))
+    table.add_row('UUID:', _h(Text(str(node.uid))))
+    table.add_row('Node Name:', Text(node.name))
+    table.add_row('Full Name:', Text(node.full_name))
+    table.add_row('Description:', Text(node.description or "[dim]Not provided[/dim]"))
+    table.add_row('Contact:', Text(node.contact or "[dim]Not provided[/dim]"))
+    table.add_row('E-mail:', _h(Text(node.email or "[dim]Not provided[/dim]")))
+    table.add_row('Info Site URL:', _h(Text(node.site or "[dim]Not provided[/dim]")))
+    table.add_row('Node Specification URL:', _h(Text(str(node.node_spec) or "[dim]Not provided[/dim]")))
+    table.add_row('Node Type:', _h(Text(node.node_type.name)))
+    table.add_row('Parent Specification URL:', _h(Text(str(node.parent_spec) or "[dim]Root node[/dim]")))
+
+    console.print(Panel(table, title=f"[b]Details for OID: {node.full_name}[/b]",
+                        border_style="dim", expand=False))
+
 
 
 if directory_scheme.site_oids_toml.is_file():

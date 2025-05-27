@@ -33,9 +33,11 @@
 # Contributor(s): Pavel Císař (original code)
 #                 ______________________________________
 
-"""Saturnin package manager commands
+"""Typer commands for managing Saturnin components and Python packages within its environment.
 
-
+This includes listing and inspecting registered services and applications,
+updating Saturnin's component registries, and wrappers around `pip` for
+installing and uninstalling packages while ensuring registry consistency.
 """
 
 from __future__ import annotations
@@ -56,7 +58,7 @@ from saturnin.base import RESTART, directory_scheme
 from saturnin.component.apps import ApplicationInfo, application_registry
 from saturnin.component.recipe import recipe_registry
 from saturnin.component.registry import ServiceInfo, service_registry
-from saturnin.lib.console import RICH_NO, RICH_YES, _h, console
+from saturnin.lib.console import RICH_NO, RICH_YES, RICH_NA, _h, console
 from saturnin.lib.metadata import distribution
 
 from firebird.uuid import OIDNode, oid_registry
@@ -64,11 +66,14 @@ from firebird.uuid import OIDNode, oid_registry
 #: Typer command group for package management commands
 app = typer.Typer(rich_markup_mode="rich", help="Package management.")
 
+APP_TYPE_CMD = 'Command'
+APP_TYPE_RECIPE = 'Recipe'
+
 @app.command()
 def list_services(
     with_name: Annotated[str, typer.Option(help="List only services with this string in name")]=''
     ):
-    "Lists installed Saturnin services."
+    "Lists Saturnin services registered in the local environment."
     services = list(service_registry.filter(lambda x: with_name in x.name))
     services.sort(key=attrgetter('name'))
     if services:
@@ -89,7 +94,7 @@ def show_service(
     service_id: Annotated[str, typer.Argument(help="Service UID or name",
                                               autocompletion=service_completer)]=''
     ):
-    "Show information about installed service."
+    "Shows detailed information about a specific registered Saturnin service."
     svc: ServiceInfo = None
     try:
         svc = service_registry.get(UUID(service_id))
@@ -125,7 +130,9 @@ def show_service(
 def list_applications(
     with_name: Annotated[str, typer.Option(help="List only applications with this string in name")]=''
     ):
-    "Lists installed Saturnin applications."
+    """Lists Saturnin applications registered in the local environment.
+    Includes an indicator if the application is currently used by any installed recipe.
+    """
     apps = list(application_registry.filter(lambda x: with_name in x.name))
     apps.sort(key=attrgetter('name'))
     if apps:
@@ -134,14 +141,20 @@ def list_applications(
                       box=box.ROUNDED)
         table.add_column('Application', style='green')
         table.add_column('Version', style='number')
+        table.add_column('Type')
         table.add_column('Used', width=9, justify='center')
         table.add_column('Description')
-        #app: ApplicationInfo
-        for app in apps:
-            table.add_row(app.name, app.version, RICH_YES if
-                          recipe_registry.any(lambda x: x.application is not None
-                                              and x.application == app.uid)
-                          else RICH_NO, get_first_line(app.description))
+        app_info: ApplicationInfo
+        for app_info in apps:
+            if app_info.recipe_factory:
+                is_used = RICH_YES if recipe_registry.any(lambda x: x.application is not None
+                                                          and x.application.uid == app_info.uid) else RICH_NO
+                app_type = APP_TYPE_RECIPE
+            else:
+                is_used = RICH_NA
+                app_type = APP_TYPE_CMD
+            table.add_row(app_info.name, app_info.version, app_type, is_used,
+                          get_first_line(app_info.description))
         console.print(table)
     else:
         console.print("There are no Saturnin applications registered.")
@@ -151,7 +164,7 @@ def show_application(
     app_id: Annotated[str, typer.Argument(help="Application UID or name",
                                           autocompletion=application_completer)]=''
     ):
-    "Show information about installed application."
+    "Shows detailed information about a specific registered Saturnin application."
     app: ApplicationInfo = None
     try:
         app = application_registry.get(UUID(app_id))
@@ -172,17 +185,18 @@ def show_application(
     table.add_row('Version:', _h(Text(app.version)))
     table.add_row('Vendor:', vendor)
     table.add_row('Classification: ', Text(app.classification))
+    table.add_row('Type: ', Text(APP_TYPE_RECIPE if app.recipe_factory else APP_TYPE_CMD))
     table.add_row('Description:', Text(app.description))
     table.add_row('Distribution:', Text(app.distribution))
     console.print(table)
 
 @app.command()
 def list_packages():
-    """Lists installed distribution packages with Saturnin components.
+    """Lists installed distribution packages that provide Saturnin components.
 
-    This command does not list ALL packages installed in Saturnin virtual environment, but
-    only those that contain registered Saturnin components. To list all installed packages,
-    use: **pip list**.
+    This command does not list ALL packages installed in Saturnin's virtual environment,
+    but only those that have registered Saturnin services or applications.
+    To list all installed packages, use the `pip list` command.
     """
     packages = set(service_registry.report('item.distribution'))
     packages.update(application_registry.report('item.distribution'))
@@ -190,19 +204,25 @@ def list_packages():
         table = Table(title='Installed Saturnin packages', box=box.ROUNDED)
         table.add_column('Package', style='green')
         table.add_column('Version', style='number')
-        for dist in (distribution(pkg) for pkg in packages):
-            table.add_row(dist.metadata['name'], dist.version)
+        for pkg_name in sorted(packages): # Sort for consistent output
+            dist_obj = distribution(pkg_name)
+            if dist_obj: # Ensure distribution object was found
+                table.add_row(dist_obj.metadata['name'], dist_obj.version)
+            else:
+                table.add_row(pkg_name, "[dim]version unknown[/dim]") # Handle if dist somehow not found
         console.print(table)
     else:
-        console.print("No Saturnin packages are installed.")
+        console.print("No packages with Saturnin components are installed..")
 
 @app.command()
 def update_registry():
-    """Updates registry of installed Saturnin components.
+    """Updates Saturnin's registries of installed services and applications.
 
-    The registry is updated automatically when Saturnin packages are manipulated with
-    built-in **install**, **uninstall** or **pip** commands. Manual update is required only
-    when packages are added/updated/removed in differet way.
+    The registries are updated automatically when Saturnin packages are managed
+    with the built-in `install-package`, `uninstall-package`, or `pip install/uninstall`
+    commands. Manual update is required only when packages are added, updated,
+    or removed in a different way (e.g., using an external `pip` directly or
+    manually altering the Python environment).
     """
     console.print('Updating Saturnin service registry ... ', end='')
     try:
@@ -225,26 +245,56 @@ def update_registry():
 
 @app.command()
 def pip(args: Annotated[list[str] | None, typer.Argument(help="Arguments for pip.")]=None):
-    """Runs 'pip' package manager in Saturnin virtual environment.
+    """Runs the 'pip' package manager within Saturnin's virtual environment.
+
+    This command acts as a direct passthrough to `pip`, allowing access to all
+    its functionalities (e.g., `pip search`, `pip show`, `pip freeze`).
+
+    For installing or uninstalling packages that provide Saturnin components,
+    it's generally recommended to use the more specific `install-package`
+    and `uninstall-package` commands. These ensure that Saturnin's internal
+    component registries are updated automatically.
+
+    However, if `pip install` or `pip uninstall` are invoked via this generic
+    `pip` command, Saturnin will subsequently attempt to update its component
+    registries to reflect potential changes.
+
+    The output of `pip --help` (or help for any pip subcommand) is also available
+    by passing the respective arguments.
     """
+    if args is None:
+        args = []
     pip_cmd = directory_scheme.get_pip_cmd()
-    pip_cmd.extend(args)
-    if '--help' in args:
+    pip_cmd.extend(args) # Ensure args is not None
+    if ('--help' in args) or ('-h' in args):
         result = subprocess.run(pip_cmd, capture_output=True, text=True, check=False)
-        console.print(_h(Text(pip.__doc__ + result.stdout)))
+        if len(args) == 1 and args[0] == '--help':
+            # Show our docstring first, then pip's output
+            help_text = pip.__doc__ + "\n--- pip output ---\n" + result.stdout
+        else:
+            # Show only pip's output
+            help_text = result.stdout
+        console.print(_h(Text(help_text)))
     else:
         result = subprocess.run(pip_cmd, check=False)
     if result.returncode != 0:
-        console.err_console.print(result.stderr)
+        # pip already prints its errors to stderr, so no need to print result.stderr
+        # unless it was suppressed, which it isn't here.
+        # We might log this failure if Saturnin had more extensive internal logging.
+        console.print_error(f"'pip {' '.join(args or [])}' failed with exit code {result.returncode}.")
     elif '--help' not in args and ('install' in args or 'uninstall' in args):
         update_registry()
 
 @app.command()
 def install_package(args: Annotated[list[str], typer.Argument(help="Arguments for pip install.")]):
-    """Installs Python package into Saturnin virtual environment via 'pip'.
+    """Installs or upgrades Python packages in Saturnin's virtual environment using 'pip'.
 
-Note:
-   This command is used also to upgrade installed packages using '-U' or '--upgrade' option.
+    After the pip operation, Saturnin's component registries (services, applications)
+    are automatically updated to reflect any changes. This command is recommended
+    for managing packages that provide Saturnin components.
+
+    Supports all standard `pip install` options, including upgrading packages
+    (e.g., using `-U` or `--upgrade`).
     """
     pip_cmd = directory_scheme.get_pip_cmd('install')
     pip_cmd.extend(args)
@@ -258,17 +308,27 @@ Note:
         return None
     #
     with Progress(SpinnerColumn(), TextColumn("{task.description}")) as progress:
-        progress.add_task("Installing...", total=1)
+        progress.add_task("Installing packages...", total=None)
         result = subprocess.run(pip_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                 text=True, check=False)
     if result.returncode != 0:
-        console.err_console.print(result.stdout)
+        console.print("[bold red]Installation failed. Output from pip:[/bold red]")
+        console.print(result.stdout) # Show pip output on failure
+    else:
+        console.print("[bold green]Installation successful.[/bold green]")
     update_registry()
     return RESTART
 
 @app.command()
 def uninstall_package(args: Annotated[list[str], typer.Argument(help="Arguments for pip uninstall.")]):
-    """Uninstalls Python package from Saturnin virtual environment via `pip`.
+    """Uninstalls Python packages from Saturnin's virtual environment using 'pip'.
+
+    After the pip operation, Saturnin's component registries (services, applications)
+    are automatically updated. This command is recommended for removing packages
+    that provide Saturnin components.
+
+    The `--yes` option is automatically passed to `pip uninstall` to avoid
+    interactive prompts from pip.
     """
     pip_cmd = directory_scheme.get_pip_cmd('uninstall')
     pip_cmd.append('--yes')
@@ -283,10 +343,13 @@ def uninstall_package(args: Annotated[list[str], typer.Argument(help="Arguments 
         return None
     #
     with Progress(SpinnerColumn(), TextColumn("{task.description}")) as progress:
-        progress.add_task("Uninstalling...", total=1)
+        progress.add_task("Uninstalling packages...", total=None)
         result = subprocess.run(pip_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                 text=True, check=False)
     if result.returncode != 0:
-        console.err_console.print(result.stdout)
+        console.print("[bold red]Uninstallation failed. Output from pip:[/bold red]")
+        console.print(result.stdout)
+    else:
+        console.print("[bold green]Uninstallation successful.[/bold green]")
     update_registry()
     return RESTART

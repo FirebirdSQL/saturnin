@@ -35,6 +35,10 @@
 
 """Saturnin console manager for terminal configuration and output.
 
+This module leverages the `rich` library to provide styled and formatted
+console output. It includes a default theme, a custom highlighter for
+Saturnin-specific syntax, and a `ConsoleManager` class to manage
+standard and error output streams.
 """
 
 from __future__ import annotations
@@ -113,6 +117,8 @@ RICH_OK: Text = Text('OK', style='ok')
 RICH_WARNING: Text = Text('WARNING', style='warning')
 #: Standard rich text for ERROR
 RICH_ERROR: Text = Text('ERROR', style='error')
+#: Standard rich N/A (Not Available/Aplicable)
+RICH_NA: Text = Text('N/A', style='dim')
 
 def _combine_regex(*regexes: str) -> str:
     """Combine a number of regexes in to a single regex.
@@ -123,7 +129,10 @@ def _combine_regex(*regexes: str) -> str:
     return "|".join(regexes)
 
 class SaturninHighlighter(RegexHighlighter):
-    """Highlights our special options."""
+    """Custom RegexHighlighter for Saturnin console output, designed to highlight
+    command-line options, syntax elements like paths, URLs, UUIDs, dates, times, and other
+    Saturnin-specific or common data patterns.
+    """
     #: Regular expressions used by `.highlight`.
     highlights: ClassVar[list[str]] = [
         r"(^|\W)(?P<switch>\-\w+)(?![a-zA-Z0-9])",
@@ -201,10 +210,13 @@ class SaturninHighlighter(RegexHighlighter):
         )
     ]
     def highlight(self, text: Text) -> Text:
-        """Highlight `~rich.text.Text` using regular expressions.
+        """Highlight a `~rich.text.Text` object using the defined regular expressions.
+
+        This method iterates through the `highlights` list, applying each
+        regex to the input `text` to style matching patterns.
 
         Arguments:
-            text: Text to highlighted.
+            text: The `~rich.text.Text` object to be highlighted.
         """
         highlight_regex = text.highlight_regex
         for re_highlight in self.highlights:
@@ -217,7 +229,8 @@ highlighter: SaturninHighlighter = SaturninHighlighter()
 _h = highlighter.highlight
 
 class ConsoleManager:
-    """Saturnin site manager.
+    """Manages Rich Console instances for standard output and error streams within Saturnin,
+    providing themed and highlighted output capabilities.
     """
     def __init__(self):
         #: Suppress output flag
@@ -236,12 +249,17 @@ class ConsoleManager:
         self.err_console: Console = Console(stderr=True, style='bold red', tab_size=4, #emoji=False,
                                             force_terminal=FORCE_TERMINAL)
     def print_info(self, message='') -> None:
-        "Prints information message to console."
+        """Prints an informational message to the standard console, styled in yellow.
+        Output is conditional on `.verbose` being True and `.quiet` being False.
+        """
         if self.verbose and not self.quiet:
             if message:
                 self.std_console.print(message, style='yellow')
             else:
                 self.std_console.print()
+    def print_warning(self, message) -> None:
+        "Prints warning message to error console."
+        self.err_console.print(message)
     def print_error(self, message) -> None:
         "Prints error message to error console."
         self.err_console.print(message)
@@ -249,7 +267,9 @@ class ConsoleManager:
         "Prints exception to error console."
         self.err_console.print_exception()
     def print(self, message = '', end='\n') -> None:
-        "Prints message to console."
+        """Prints a message to the standard console. Output is suppressed if `.quiet` is
+        true. Highlighting is applied by default.
+        """
         if not self.quiet:
             self.std_console.print(message, end=end, highlight=True)
 
