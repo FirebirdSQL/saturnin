@@ -46,16 +46,18 @@ for representing loaded recipes, and a `RecipeRegistry` to manage them.
 from __future__ import annotations
 
 from collections.abc import Hashable
-from configparser import ConfigParser, ExtendedInterpolation
+from configparser import ConfigParser
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
+from uuid import UUID
 
 from saturnin.base.config import directory_scheme
 from saturnin.base.types import ComponentSpecification
 
 from firebird.base.collections import Registry
-from firebird.base.config import Config, EnumOption, PathOption, StrOption, DataclassOption
+from firebird.base.config import (Config, EnumOption, PathOption, StrOption, DataclassOption,
+                                  EnvExtendedInterpolation)
 from firebird.base.types import Distinct, Error
 
 
@@ -136,7 +138,7 @@ class RecipeRegistry(Registry):
           ignore_errors: When True, errors are ignored, otherwise `.Error` is raised.
         """
         recipe_cfg: SaturninRecipe = SaturninRecipe()
-        cfg_file: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
+        cfg_file: ConfigParser = ConfigParser(interpolation=EnvExtendedInterpolation())
         for filename in directory.glob('*.cfg'):
             try:
                 cfg_file.clear()
@@ -159,6 +161,14 @@ class RecipeRegistry(Registry):
                                   recipe_cfg.application.value,
                                   recipe_cfg.description.value,
                                   filename))
+    def app_is_used(self, app_uid: UUID) -> bool:
+        """Returns True if application is used in any installed recipe.
+        """
+        return self.any(lambda x: x.application is not None and x.application.uid == app_uid)
+    def get_recipes_with_app(self, app_uid: UUID) -> list[RecipeInfo]:
+        """Returns list of recipes that use specified application.
+        """
+        return self.filter(lambda x: x.application is not None and x.application.uid == app_uid)
 
 #: Global RecipeRegistryinstance, automatically populated from the `.directory_scheme.recipes`
 #: directory upon module import if it exists.

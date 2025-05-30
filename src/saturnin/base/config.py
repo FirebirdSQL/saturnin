@@ -44,11 +44,12 @@ from __future__ import annotations
 import os
 import sys
 import sysconfig
-from configparser import ConfigParser, ExtendedInterpolation
+from configparser import ConfigParser
 from pathlib import Path
 from typing import Final
 
-from firebird.base.config import Config, DirectoryScheme, StrOption, get_directory_scheme
+from firebird.base.config import (Config, DirectoryScheme, StrOption, get_directory_scheme,
+                                  EnvExtendedInterpolation)
 
 #: filename for Saturnin configuration file
 SATURNIN_CFG: Final[str] = 'saturnin.conf'
@@ -222,7 +223,7 @@ directory_scheme: SaturninScheme = SaturninScheme()
 #: Saturnin configuration object
 saturnin_config: SaturninConfig = SaturninConfig()
 
-parser: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
+parser: ConfigParser = ConfigParser(interpolation=EnvExtendedInterpolation())
 parser.read([directory_scheme.site_conf, directory_scheme.user_conf])
 if parser.has_section('saturnin'):
     saturnin_config.load_config(parser)

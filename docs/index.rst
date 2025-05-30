@@ -3,7 +3,7 @@
 Saturnin - The `Firebird Butler`_ platform for Python
 #####################################################
 
-.. note:: Requires Python 3.8+
+.. note:: Requires Python 3.11+
 
 .. tip:: You can download docset for Dash_ (MacOS) or Zeal_ (Windows / Linux) documentation
    readers from releases_ at github.

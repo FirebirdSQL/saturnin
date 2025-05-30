@@ -188,6 +188,5 @@ def show_oid(
                         border_style="dim", expand=False))
 
 
-
 if directory_scheme.site_oids_toml.is_file():
     oid_registry.update_from_toml(directory_scheme.site_oids_toml.read_text())

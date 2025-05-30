@@ -46,10 +46,10 @@ from __future__ import annotations
 
 import logging
 from argparse import Action, ArgumentDefaultsHelpFormatter, ArgumentParser
-from configparser import ConfigParser, ExtendedInterpolation
+from configparser import ConfigParser
 from logging.config import fileConfig
 
-from saturnin.base import SECTION_SERVICE, directory_scheme
+from saturnin.base import SECTION_SERVICE, directory_scheme, EnvExtendedInterpolation
 from saturnin.component.controller import Outcome
 from saturnin.component.single import SingleExecutor
 
@@ -127,7 +127,7 @@ def main(description: str | None=None, service_config: str | None=None):
 
     args = parser.parse_args()
 
-    main_config: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
+    main_config: ConfigParser = ConfigParser(interpolation=EnvExtendedInterpolation())
     cfg_files = [str(directory_scheme.logging_conf)]
     if args.config:
         cfg_files.extend(args.config)

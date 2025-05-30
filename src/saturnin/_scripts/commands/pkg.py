@@ -50,13 +50,14 @@ from uuid import UUID
 
 import typer
 from rich import box
+from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 from saturnin._scripts.completers import application_completer, get_first_line, service_completer
 from saturnin.base import RESTART, directory_scheme
 from saturnin.component.apps import ApplicationInfo, application_registry
-from saturnin.component.recipe import recipe_registry
+from saturnin.component.recipe import RecipeInfo, recipe_registry
 from saturnin.component.registry import ServiceInfo, service_registry
 from saturnin.lib.console import RICH_NO, RICH_YES, RICH_NA, _h, console
 from saturnin.lib.metadata import distribution
@@ -112,7 +113,7 @@ def show_service(
     vendor: OIDNode = oid_registry.get(svc.vendor)
     vendor: Text = Text(str(svc.vendor), style='yellow') if vendor is None else Text(vendor.description)
 
-    table = Table.grid()
+    table = Table.grid(padding=(0, 1, 0, 1))
     table.add_column(style='green')
     table.add_column()
     table.add_row('UID:', Text(str(svc.uid), style='yellow'))
@@ -124,7 +125,8 @@ def show_service(
     table.add_row('Facilities:', Text(', '.join(svc.facilities)))
     table.add_row('API:', Text(', '.join(api), style='yellow'))
     table.add_row('Distribution:', Text(svc.distribution))
-    console.print(table)
+    console.print(Panel(table, title='[title]Saturnin service', title_align='left',
+                        box=box.ROUNDED, padding=(1,2)))
 
 @app.command()
 def list_applications(
@@ -146,13 +148,12 @@ def list_applications(
         table.add_column('Description')
         app_info: ApplicationInfo
         for app_info in apps:
-            if app_info.recipe_factory:
-                is_used = RICH_YES if recipe_registry.any(lambda x: x.application is not None
-                                                          and x.application.uid == app_info.uid) else RICH_NO
-                app_type = APP_TYPE_RECIPE
-            else:
+            if app_info.is_command():
                 is_used = RICH_NA
                 app_type = APP_TYPE_CMD
+            else:
+                is_used = RICH_YES if recipe_registry.app_is_used(app_info.uid) else RICH_NO
+                app_type = APP_TYPE_RECIPE
             table.add_row(app_info.name, app_info.version, app_type, is_used,
                           get_first_line(app_info.description))
         console.print(table)
@@ -177,18 +178,23 @@ def show_application(
     vendor: OIDNode = oid_registry.get(app.vendor)
     vendor = _h(Text(str(app.vendor) if vendor is None else vendor.description))
 
-    table = Table.grid()
+    table = Table.grid(padding=(0, 1, 0, 1))
     table.add_column(style='green')
     table.add_column()
     table.add_row('UID:', _h(Text(str(app.uid))))
     table.add_row('Name:', Text(app.name))
     table.add_row('Version:', _h(Text(app.version)))
     table.add_row('Vendor:', vendor)
-    table.add_row('Classification: ', Text(app.classification))
-    table.add_row('Type: ', Text(APP_TYPE_RECIPE if app.recipe_factory else APP_TYPE_CMD))
+    table.add_row('Classification:', Text(app.classification))
+    table.add_row('Type:', Text(APP_TYPE_CMD if app.is_command() else APP_TYPE_RECIPE))
+    if not app.is_command():
+        recipe_list = ', '.join(recipe.name for recipe in recipe_registry.get_recipes_with_app(app.uid))
+        if recipe_list:
+            table.add_row('Installed recipes: ', recipe_list)
     table.add_row('Description:', Text(app.description))
     table.add_row('Distribution:', Text(app.distribution))
-    console.print(table)
+    console.print(Panel(table, title='[title]Saturnin application', title_align='left',
+                        box=box.ROUNDED, padding=(1,2)))
 
 @app.command()
 def list_packages():

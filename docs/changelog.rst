@@ -3,7 +3,7 @@ Changelog
 #########
 
 Version 0.10.0
-=============
+==============
 
 * Minimal Python version raised to 3.11
 * Type hints adjusted to Python 3.11 standards

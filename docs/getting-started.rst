@@ -12,7 +12,7 @@ Getting Started
 Installation
 ************
 
-You will need Python v3.8 or later to install Saturnin.
+You will need Python v3.11 or later to install Saturnin.
 
 For regular deployments, we recommend installing using the pipx_ tool, which installs into
 a separate virtual Python environment and exposes all executable commands in the search path.
@@ -105,12 +105,12 @@ Saturnin recipes
 ****************
 
 Recipes are Saturnin-specific configuration files with instructions for running Butler
-services built for Saturnin. Recipes can be created with the create recipe command, which
+services built for Saturnin. Recipes can be created with the `create recipe` command, which
 creates a recipe template that typically needs to be modified further (because it only
 contains default values). Recipes created independently (e.g. by a solution supplier or
 provided by installed Saturnin application) must be installed with the `install recipe` command.
 
-Created or installed recipes can be run with the `run recipe-name` command. You can get
+Created or installed recipes can be run with the `run recipe` command. You can get
 a list of recipes that can be started with the `list recipes` command.
 
 .. seealso::

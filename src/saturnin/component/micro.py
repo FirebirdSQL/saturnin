@@ -126,7 +126,7 @@ class MicroService(Component, TracedMixin, metaclass=conjunctive):
         Must raise an exception if configuration fails for any reason.
 
         By default, the component does not support run-time configuration, so it raises
-        NotImplementedError.
+        `NotImplementedError`.
 
         Arguments:
            config: New configuration provided by controller.

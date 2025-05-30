@@ -46,7 +46,7 @@ from __future__ import annotations
 
 import uuid
 import warnings
-from configparser import DEFAULTSECT, ConfigParser, ExtendedInterpolation
+from configparser import DEFAULTSECT, ConfigParser
 from pathlib import Path
 from typing import Self
 
@@ -63,7 +63,7 @@ from saturnin.base import (
     Error,
 )
 
-from firebird.base.config import ConfigListOption
+from firebird.base.config import ConfigListOption, EnvExtendedInterpolation
 from firebird.base.logging import FStrMessage as _m
 from firebird.base.logging import get_logger
 from firebird.base.trace import TracedMixin
@@ -101,7 +101,7 @@ class BundleThreadController(TracedMixin):
             self.mngr = ChannelManager(zmq.Context.instance())
         #: ConfigParser with service bundle configuration
         self.config: ConfigParser = \
-            ConfigParser(interpolation=ExtendedInterpolation()) if parser is None else parser
+            ConfigParser(interpolation=EnvExtendedInterpolation()) if parser is None else parser
         #: List with ThreadControllers for all service instances in bundle
         self.services: list[ThreadController] = []
         #: Registry with ServiceDescriptors for services that could be run

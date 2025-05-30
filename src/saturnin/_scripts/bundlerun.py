@@ -46,13 +46,14 @@ from __future__ import annotations
 
 import logging
 from argparse import Action, ArgumentDefaultsHelpFormatter, ArgumentParser
-from configparser import ConfigParser, ExtendedInterpolation
+from configparser import ConfigParser
 from logging.config import fileConfig
 
 from saturnin.base import SECTION_BUNDLE, directory_scheme
 from saturnin.component.bundle import BundleExecutor
 from saturnin.component.controller import Outcome
 
+from firebird.base.config import EnvExtendedInterpolation
 from firebird.base.logging import get_logger
 from firebird.base.trace import trace_manager
 
@@ -123,7 +124,7 @@ def main(description: str | None=None, bundle_config: str | None=None):
 
     args = parser.parse_args()
 
-    main_config: ConfigParser = ConfigParser(interpolation=ExtendedInterpolation())
+    main_config: ConfigParser = ConfigParser(interpolation=EnvExtendedInterpolation())
     cfg_files = [str(directory_scheme.logging_conf)]
     if args.config:
         cfg_files.extend(args.config)

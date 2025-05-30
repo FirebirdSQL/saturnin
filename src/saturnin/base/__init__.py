@@ -41,7 +41,8 @@ from firebird.base.config import Config, ConfigProto
 from firebird.base.types import ANY, DEFAULT, UNDEFINED, Error, ZMQAddress, load
 
 from .component import Component, ComponentConfig, create_config
-from .config import CONFIG_HDR, SaturninConfig, SaturninScheme, directory_scheme, is_virtual, saturnin_config, venv
+from .config import (CONFIG_HDR, SaturninConfig, SaturninScheme, directory_scheme, is_virtual,
+                     saturnin_config, venv, EnvExtendedInterpolation)
 from .transport import (
     INTERNAL_ROUTE,
     Channel,

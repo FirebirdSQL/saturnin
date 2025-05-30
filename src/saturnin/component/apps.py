@@ -126,6 +126,12 @@ class ApplicationInfo(Distinct):
         dots, only part after last dot is returned. Otherwise it returns the application name.
         """
         return self.name.split('.')[-1]
+    def is_command(self) -> bool:
+        """Returns tru if application is console command.
+
+        Such applications are not installed via recipe, but directly into console.
+        """
+        return self.recipe_factory is None
     @property
     def descriptor_obj(self) -> ApplicationDescriptor:
         """Application descriptor object. If it's not assigned directly, then it's loaded
