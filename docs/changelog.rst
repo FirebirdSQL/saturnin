@@ -9,7 +9,7 @@ Version 0.10.0
 * Type hints adjusted to Python 3.11 standards
 * Improved documentation.
 * Dependencies updated to firebird-butler-protobuf ~= 2.0, firebird-base ~= 2.0,
-  firebird-uuid >= 0.4.0", packaging ~= 25.0, pyzmq ~= 26.4, prompt-toolkit ~= 3.0,
+  firebird-uuid ~= 1.0, packaging ~= 25.0, pyzmq ~= 26.4, prompt-toolkit ~= 3.0,
   protobuf ~= 5.29, psutil ~= 7.0, rich ~= 14.0, tomli-w~=1.2, typer~=0.15.
 * pytest tests for FBDP protocol
 * Old logging cleanup.
