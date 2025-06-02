@@ -88,11 +88,11 @@ VENDOR_OID: Final[str] = '1.3.6.1.4.1.53446.1.2.0'
 VENDOR_UID: Final[uuid.UUID] = uuid.uuid5(uuid.NAMESPACE_OID, VENDOR_OID)
 
 #: MIME type for protobuf messages
-MIME_TYPE_PROTO: Final[strMIME] = MIME('application/x.fb.proto')
+MIME_TYPE_PROTO: Final[MIME] = MIME('application/x.fb.proto')
 #: MIME type for plain text
 MIME_TYPE_TEXT: Final[MIME] = MIME('text/plain')
 #: MIME type for binary data
-MIME_TYPE_BINARY: Final[strMIME] = MIME('application/octet-stream')
+MIME_TYPE_BINARY: Final[MIME] = MIME('application/octet-stream')
 
 #: Configuration section name for local service addresses
 SECTION_LOCAL_ADDRESS: Final[str] = 'local_address'

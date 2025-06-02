@@ -82,6 +82,7 @@ installed recipes.
 
 from __future__ import annotations
 
+import os
 import sys
 from collections.abc import Callable
 
@@ -281,6 +282,8 @@ def cli_loop(*, restart: bool) -> bool:
         app(standalone_mode=False) # standalone_mode=False is important for REPL to work correctly with exceptions
     except Exception as exc:
         console.print_error(exc)
+        if os.getenv('SATURNIN_DEBUG') is not None:
+            console.print_exception()
     return app._restart # Return the restart flag determined by the REPL or commands
 
 def main():

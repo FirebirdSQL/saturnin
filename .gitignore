@@ -142,6 +142,7 @@ big-dist/
 
 # Local
 home*/
+local/
 
 # Sphinx build
 docs/_build

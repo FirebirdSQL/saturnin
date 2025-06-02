@@ -654,7 +654,8 @@ class DataFilterMicro(MicroService):
         if (code is not ErrorCode.OK and self.propagate_input_error) or not self.output:
             if not self.closing:
                 self.closing = True
-                for _session in self.pipe_out_chn.sessions:
+                # Sending close discards session, so we shoyuld end with empty session list
+                for _session in list(self.pipe_out_chn.sessions.values()):
                     cast(FBDPServer, self.pipe_out_chn.protocol).send_close(self.pipe_out_chn,
                                                                             _session, code, exc)
             # Request service to stop
@@ -692,7 +693,7 @@ class DataFilterMicro(MicroService):
         # Close the input pipe if it's still open
         if not self.closing:
             self.closing = True
-            for _session in self.pipe_in_chn.sessions:
+            for _session in list(self.pipe_in_chn.sessions.values()):
                 cast(FBDPServer, self.pipe_in_chn.protocol).send_close(self.pipe_in_chn,
                                                                        _session, code, exc)
         # Request service to stop
