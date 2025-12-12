@@ -5,6 +5,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/saturnin.svg)](https://pypi.org/project/saturnin)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/saturnin.svg)](https://pypi.org/project/saturnin)
 [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/FirebirdSQL/saturnin)
 
 Saturnin is an implementation of Firebird Butler platform for Python.
 
